@@ -48,11 +48,19 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={onClose} style={{ padding: '1rem' }}>
       <div 
         className="modal-content glass-card" 
         onClick={(e) => e.stopPropagation()}
-        style={{ background: 'white', padding: '2.5rem' }}
+        style={{
+          background: 'white',
+          padding: 'clamp(1.25rem, 5vw, 2.5rem)',
+          width: '100%',
+          maxWidth: '500px',
+          maxHeight: '92vh',
+          overflowY: 'auto',
+          borderRadius: 'clamp(16px, 4vw, 32px)'
+        }}
       >
         <button 
           onClick={onClose}
@@ -77,8 +85,8 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
           </div>
         ) : (
           <>
-            <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem', fontStyle: 'italic' }}>Join the <span style={{ color: 'var(--kids-orange)' }}>Mission</span></h2>
-            <p style={{ color: '#64748b', marginBottom: '2rem' }}>Fill in the details below to start the journey.</p>
+            <h2 style={{ fontSize: 'clamp(1.5rem, 6vw, 2rem)', marginBottom: '0.5rem', fontStyle: 'italic' }}>Join the <span style={{ color: 'var(--kids-orange)' }}>Mission</span></h2>
+            <p style={{ color: '#64748b', marginBottom: '1.5rem', fontSize: 'clamp(0.85rem, 3vw, 1rem)' }}>Fill in the details below to start the journey.</p>
             
             <form onSubmit={handleSubmit}>
               <div className="input-group">
@@ -97,7 +105,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   onChange={(e) => setFormData({...formData, studentName: e.target.value})}
                 />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem' }}>
                 <div className="input-group">
                   <label>Email</label>
                   <input 
