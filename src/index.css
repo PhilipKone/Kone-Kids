@@ -225,3 +225,20 @@ h1, h2, h3 {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* Mascot Eye Blink Animation */
+@keyframes blink {
+  0%, 90%, 100% { transform: scaleY(1); }
+  95%            { transform: scaleY(0.05); }
+}
+
+.mascot-eye {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mascot-eye-blinking {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 0.4s ease-in-out;
+}
