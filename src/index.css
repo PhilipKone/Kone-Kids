@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;600;700&display=swap');
+
+:root {
+  --kids-blue: #0ea5e9;
+  --kids-orange: #f97316;
+  --kids-bg: #f8fafc;
+  --kids-dark: #0f172a;
+}
+
+body {
+  margin: 0;
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--kids-bg);
+  color: var(--kids-dark);
+  overflow-x: hidden;
+}
+
+h1, h2, h3 {
+  font-family: 'Baloo 2', cursive;
+}
+
+.kids-app {
+  min-height: 100vh;
+}
+
+/* Playful Hero Typography */
+.hero-tagline {
+  font-size: 3.5rem;
+  color: var(--kids-orange);
+  transform: rotate(-3deg);
+  display: inline-block;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.hero-tagline::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: var(--kids-orange);
+  border-radius: 10px;
+  opacity: 0.3;
+}
+
+/* Program List Styles */
+.program-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.program-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Baloo 2', cursive;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #334155;
+  transition: transform 0.2s ease;
+}
+
+.program-item:hover {
+  transform: translateX(10px);
+}
+
+.bullet-orange {
+  width: 16px;
+  height: 16px;
+  background: var(--kids-orange);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--kids-orange);
+}
+
+.text-outline {
+  -webkit-text-stroke: 1px #334155;
+  color: transparent;
+}
+
+.kids-button {
+  background: var(--kids-orange);
+  color: white;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 10px 0 #ea580c;
+  transition: all 0.1s;
+}
+
+.kids-button:active {
+  transform: translateY(4px);
+  box-shadow: 0 6px 0 #ea580c;
+}
+
+/* Layout Utilities */
+.section-padding {
+  padding: clamp(2rem, 8vw, 6rem) 5%;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .hero-tagline {
+    font-size: clamp(2rem, 10vw, 3rem);
+    transform: rotate(-2deg);
+    text-align: center;
+    width: 100%;
+  }
+  
+  .program-item {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+  
+  .section-padding {
+    padding: 3rem 5%;
+  }
+}
+
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  width: 90%;
+  max-width: 500px;
+  border-radius: 32px;
+  padding: 3rem;
+  position: relative;
+  animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalPop {
+  from { transform: scale(0.8) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.kids-input {
+  width: 100%;
+  padding: 0.8rem 1.2rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  transition: border-color 0.2s;
+}
+
+.kids-input:focus {
+  outline: none;
+  border-color: var(--kids-blue);
+}
+/* Premium Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+}
+
+.program-details-page {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/mascot.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Kone Kids Academy - Coding, Robotics, and AI programs for the next generation of tech leaders. Do it Right." />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://kids.koneacademy.io/" />
+    <meta property="og:title" content="Kone Kids | Coding, Robotics & AI" />
+    <meta property="og:description" content="Fun, hands-on engineering programs for children. Start their tech journey today." />
+    <meta property="og:image" content="https://kids.koneacademy.io/og-image.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://kids.koneacademy.io/" />
+    <meta name="twitter:title" content="Kone Kids | Coding, Robotics & AI" />
+    <meta name="twitter:description" content="Fun, hands-on engineering programs for children. Start their tech journey today." />
+    <meta name="twitter:image" content="https://kids.koneacademy.io/og-image.png" />
+
+    <title>Kone Kids | Coding, Robotics & AI</title>
+  </head>
+  <body>
+    <!-- GitHub Pages SPA redirect handler -->
+    <script type="text/javascript">
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
