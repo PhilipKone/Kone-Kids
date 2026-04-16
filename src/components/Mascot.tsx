@@ -101,6 +101,8 @@ const Mascot: React.FC = () => {
           <circle cx="245" cy="215" r="16" fill="#0f172a" />
           <circle cx="168" cy="208" r="6" fill="white" fillOpacity="0.8" />
           <circle cx="248" cy="208" r="6" fill="white" fillOpacity="0.8" />
+          {/* Smile */}
+          <path d="M 178 248 Q 200 268 222 248" stroke="#0f172a" strokeWidth="5" strokeLinecap="round" fill="none" />
         </g>
 
         {/* Waving Arm Group */}
