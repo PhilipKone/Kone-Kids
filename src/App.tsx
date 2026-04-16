@@ -69,17 +69,21 @@ function Home() {
       
       {/* Footer */}
       <footer style={{ 
-        padding: '2rem 10%', 
+        padding: 'clamp(1.5rem, 4vw, 2rem) 5%', 
         background: 'white', 
         borderTop: '1px solid #e2e8f0',
         display: 'flex',
+        flexWrap: 'wrap',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        gap: '0.75rem'
       }}>
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-          <span style={{ color: '#64748b', fontSize: '0.9rem' }}>© 2026 Kone Kids. All rights reserved.</span>
-        </div>
-        <p style={{ fontSize: '1.1rem', color: 'var(--kids-orange)', fontWeight: 'bold' }}>+233 55 199 3820</p>
+        <span style={{ color: '#64748b', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
+          © 2026 Kone Kids. All rights reserved.
+        </span>
+        <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
+          +233 55 199 3820
+        </p>
       </footer>
     </div>
   )
