@@ -34,9 +34,24 @@ const Mascot: React.FC = () => {
     startBlinking(false) // back to slow blink
   }
 
+  const speak = (text: string) => {
+    if (!('speechSynthesis' in window)) return
+    window.speechSynthesis.cancel() // stop any ongoing speech
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.pitch = 1.3   // slightly higher — friendlier, kid-like
+    utterance.rate = 0.95   // just a touch slower for clarity
+    utterance.volume = 1
+    // Prefer a friendly voice if available
+    const voices = window.speechSynthesis.getVoices()
+    const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Karen'))
+    if (preferred) utterance.voice = preferred
+    window.speechSynthesis.speak(utterance)
+  }
+
   const handleClick = () => {
     setIsWaving(true)
     setShowBubble(true)
+    speak('Hi! Ready to build the future?')
     setTimeout(() => setIsWaving(false), 2000)
     setTimeout(() => setShowBubble(false), 4000)
   }
