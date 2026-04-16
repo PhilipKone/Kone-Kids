@@ -72,18 +72,23 @@ function Home() {
         padding: 'clamp(1.5rem, 4vw, 2rem) 5%', 
         background: 'white', 
         borderTop: '1px solid #e2e8f0',
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: '0.75rem'
       }}>
-        <span style={{ color: '#64748b', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
-          © 2026 Kone Kids. All rights reserved.
-        </span>
-        <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
-          +233 55 199 3820
-        </p>
+        <div style={{
+          maxWidth: '1200px',
+          margin: '0 auto',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '0.75rem'
+        }}>
+          <span style={{ color: '#64748b', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
+            © 2026 Kone Kids. All rights reserved.
+          </span>
+          <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
+            +233 55 199 3820
+          </p>
+        </div>
       </footer>
     </div>
   )
