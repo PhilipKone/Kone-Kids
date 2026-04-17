@@ -10,6 +10,31 @@ const KidsIDE: React.FC = () => {
   const mascotRef = useRef<MascotHandle>(null);
   const { unlockBadge } = useGamification();
   const [isRunning, setIsRunning] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Responsive breakpoints and Blockly resizing
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+    };
+
+    const observer = new ResizeObserver(() => {
+      if (workspace.current) {
+        Blockly.svgResize(workspace.current);
+      }
+    });
+
+    if (blocklyDiv.current) {
+      observer.observe(blocklyDiv.current);
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      observer.disconnect();
+    };
+  }, []);
 
   // Define Blocks & Generators
   useEffect(() => {
@@ -86,7 +111,8 @@ const KidsIDE: React.FC = () => {
         trashcan: true,
         scrollbars: true,
         move: { scrollbars: true, drag: true, wheel: true },
-        zoom: { controls: true, wheel: true, startScale: 1.1, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 }
+        zoom: { controls: true, wheel: true, startScale: 1.1, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 },
+        renderer: 'geras' // Using a clean renderer
       });
 
       // Simple pre-loaded script
@@ -146,45 +172,77 @@ const KidsIDE: React.FC = () => {
   return (
     <div className="kids-ide-container glass-card" style={{ 
       margin: '2rem 0', 
-      padding: '2rem', 
+      padding: isMobile ? '1.5rem' : '2rem', 
       borderRadius: '32px',
       overflow: 'hidden',
       background: 'white',
-      border: '8px solid rgba(255,255,255,0.5)'
+      border: isMobile ? '4px solid rgba(255,255,255,0.8)' : '8px solid rgba(255,255,255,0.5)'
     }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: isMobile ? 'column' : 'row',
+        justifyContent: 'space-between', 
+        alignItems: isMobile ? 'flex-start' : 'center', 
+        gap: '1.5rem',
+        marginBottom: '2rem' 
+      }}>
         <div>
-          <h3 style={{ margin: 0, fontSize: '1.8rem', color: 'var(--kids-dark)' }}>The Coding Lab 🧪</h3>
-          <p style={{ margin: 0, color: '#64748b' }}>Drag blocks to program your robot friend!</p>
+          <h3 style={{ margin: 0, fontSize: isMobile ? '1.5rem' : '1.8rem', color: 'var(--kids-dark)' }}>The Coding Lab 🧪</h3>
+          <p style={{ margin: 0, color: '#64748b', fontSize: isMobile ? '0.9rem' : '1rem' }}>Program your robot friend!</p>
         </div>
         <button 
           className="kids-button" 
           onClick={runCode}
           disabled={isRunning}
           style={{ 
+            width: isMobile ? '100%' : 'auto',
             background: isRunning ? '#94a3b8' : 'var(--kids-blue)',
             boxShadow: isRunning ? 'none' : '0 10px 0 #0369a1',
-            transform: isRunning ? 'translateY(5px)' : 'none'
+            transform: isRunning ? 'translateY(5px)' : 'none',
+            fontSize: isMobile ? '1.2rem' : '1.3rem',
+            padding: isMobile ? '1rem 2rem' : '1rem 2.5rem'
           }}
         >
           {isRunning ? 'Running...' : '🚀 Launch Code!'}
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 240px', gap: '1.5rem', height: '500px' }}>
-        <div ref={blocklyDiv} style={{ height: '100%', width: '100%', borderRadius: '16px', overflow: 'hidden', border: '2px solid #e2e8f0' }} />
-        
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: isMobile ? 'column' : 'row',
+        gap: '1.5rem', 
+        height: isMobile ? 'auto' : '500px'
+      }}>
+        {/* Mascot Preview on Top on Mobile */}
         <div style={{ 
+          order: isMobile ? 1 : 2,
           background: 'var(--kids-bg)', 
           borderRadius: '16px', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
           padding: '1rem',
-          border: '2px solid #e2e8f0'
+          border: '2px solid #e2e8f0',
+          width: isMobile ? '100%' : '240px',
+          height: isMobile ? '200px' : 'auto',
+          margin: isMobile ? '0 auto' : '0'
         }}>
           <Mascot ref={mascotRef} />
         </div>
+
+        {/* Blockly Workspace */}
+        <div 
+          ref={blocklyDiv} 
+          style={{ 
+            order: isMobile ? 2 : 1,
+            flex: 1,
+            height: isMobile ? '400px' : '100%', 
+            width: '100%', 
+            borderRadius: '16px', 
+            overflow: 'hidden', 
+            border: '2px solid #e2e8f0' 
+          }} 
+        />
       </div>
     </div>
   );
