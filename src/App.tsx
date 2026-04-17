@@ -1,4 +1,12 @@
+import React, { useState } from 'react'
+import { Routes, Route, Link } from 'react-router-dom'
+import './index.css'
+import ProgramDetails from './components/ProgramDetails'
+import Mascot from './components/Mascot'
+import EnrollmentModal from './components/EnrollmentModal'
 import BadgeTray from './components/BadgeTray'
+import { GamificationProvider, useGamification } from './context/GamificationContext'
+import Celebration from './components/Celebration'
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -14,13 +22,6 @@ function Home() {
 
       {/* Hero Section */}
       <header className="section-padding">
-        {/* ... existing hero content ... */}
-      </header>
-
-      {/* Achievement Gallery */}
-      <BadgeTray />
-      
-      {/* Footer */}
         <div className="container" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
@@ -69,6 +70,9 @@ function Home() {
         </div>
       </header>
       
+      {/* Achievement Gallery */}
+      <BadgeTray />
+      
       {/* Footer */}
       <footer style={{ 
         padding: 'clamp(1.5rem, 4vw, 2rem) 5%', 
@@ -96,58 +100,54 @@ function Home() {
   )
 }
 
-import { GamificationProvider, useGamification } from './context/GamificationContext'
-
-import Celebration from './components/Celebration'
-
 function AppContent() {
   const { markVisited } = useGamification();
   
   // Track visits to pages
   React.useEffect(() => {
     markVisited(window.location.pathname);
-  }, [window.location.pathname]);
+  }, [window.location.pathname, markVisited]);
 
   return (
     <>
       <Celebration />
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* ... existing routes ... */}
-      <Route 
-        path="/coding" 
-        element={
-          <ProgramDetails 
-            title="Coding 4 Kids" 
-            image="/programs/coding.png" 
-            description="Learn the language of the future through fun, interactive projects. Master the logic of the digital world through interactive and visual programming." 
-            accentColor="var(--kids-orange)"
-          />
-        } 
-      />
-      <Route 
-        path="/robotics" 
-        element={
-          <ProgramDetails 
-            title="Robotics 4 Kids" 
-            image="/programs/robotics.png" 
-            description="Build and program your own robots in hands-on engineering labs. Bring machines to life with hands-on electronics and hardware engineering." 
-            accentColor="var(--kids-blue)"
-          />
-        } 
-      />
-      <Route 
-        path="/ai" 
-        element={
-          <ProgramDetails 
-            title="AI 4 Kids" 
-            image="/programs/ai.png" 
-            description="Explore the world of artificial intelligence and machine learning in a kid-friendly way. Understand how the future is built with machine learning." 
-            accentColor="#a855f7"
-          />
-        } 
-      />
-    </Routes>
+        <Route 
+          path="/coding" 
+          element={
+            <ProgramDetails 
+              title="Coding 4 Kids" 
+              image="/programs/coding.png" 
+              description="Learn the language of the future through fun, interactive projects. Master the logic of the digital world through interactive and visual programming." 
+              accentColor="var(--kids-orange)"
+            />
+          } 
+        />
+        <Route 
+          path="/robotics" 
+          element={
+            <ProgramDetails 
+              title="Robotics 4 Kids" 
+              image="/programs/robotics.png" 
+              description="Build and program your own robots in hands-on engineering labs. Bring machines to life with hands-on electronics and hardware engineering." 
+              accentColor="var(--kids-blue)"
+            />
+          } 
+        />
+        <Route 
+          path="/ai" 
+          element={
+            <ProgramDetails 
+              title="AI 4 Kids" 
+              image="/programs/ai.png" 
+              description="Explore the world of artificial intelligence and machine learning in a kid-friendly way. Understand how the future is built with machine learning." 
+              accentColor="#a855f7"
+            />
+          } 
+        />
+      </Routes>
+    </>
   )
 }
 

@@ -102,7 +102,7 @@ const KidsIDE: React.FC = () => {
           </next>
         </block>
       </xml>`;
-      Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(initialXml), workspace.current);
+      Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), workspace.current as any);
     }
 
     return () => workspace.current?.dispose();

@@ -1,3 +1,6 @@
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import EnrollmentModal from './EnrollmentModal'
 import KidsIDE from './KidsIDE'
 
 interface ProgramDetailsProps {
