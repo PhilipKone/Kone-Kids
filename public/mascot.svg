@@ -51,6 +51,8 @@
     <circle cx="245" cy="215" r="16" fill="#0f172a" />
     <circle cx="168" cy="208" r="6" fill="white" fill-opacity="0.8" />
     <circle cx="248" cy="208" r="6" fill="white" fill-opacity="0.8" />
+    <!-- Smile -->
+    <path d="M 178 262 Q 200 282 222 262" stroke="#0f172a" stroke-width="5" stroke-linecap="round" fill="none" />
   </g>
 
   <!-- Arms/Hands (In front of desk) -->
