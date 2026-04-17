@@ -35,7 +35,18 @@ const BadgeTray: React.FC = () => {
                 border: badge.unlocked ? '3px solid var(--kids-blue)' : '2px dashed #cbd5e1'
               }}
             >
-              <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>{badge.icon}</div>
+              <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'center' }}>
+                <img 
+                  src={badge.icon} 
+                  alt={badge.name} 
+                  style={{ 
+                    width: '80px', 
+                    height: '80px', 
+                    objectFit: 'contain',
+                    filter: badge.unlocked ? 'drop-shadow(0 5px 10px rgba(14, 165, 233, 0.2))' : 'none'
+                  }} 
+                />
+              </div>
               <h4 style={{ margin: '0 0 0.5rem', fontSize: '1.2rem', color: 'var(--kids-dark)' }}>{badge.name}</h4>
               <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b', lineHeight: '1.4' }}>
                 {badge.unlocked ? 'Mission Complete!' : badge.description}

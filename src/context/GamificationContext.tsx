@@ -16,10 +16,10 @@ interface GamificationContextType {
 }
 
 const INITIAL_BADGES: Badge[] = [
-  { id: 'first_hello', name: 'First Hello', icon: '🏷️', description: 'Run your first code script!', unlocked: false },
-  { id: 'explorer', name: 'Explorer', icon: '🔍', description: 'Visit Coding, Robotics, and AI pages!', unlocked: false },
-  { id: 'mascot_master', name: 'Mascot Master', icon: '🎉', description: 'Click on the mascot 5 times!', unlocked: false },
-  { id: 'future_hero', name: 'Future Hero', icon: '🚀', description: 'Enroll in a program!', unlocked: false },
+  { id: 'first_hello', name: 'First Hello', icon: '/badges/hello.png', description: 'Run your first code script!', unlocked: false },
+  { id: 'explorer', name: 'Explorer', icon: '/badges/explorer.png', description: 'Visit Coding, Robotics, and AI pages!', unlocked: false },
+  { id: 'mascot_master', name: 'Mascot Master', icon: '/badges/mascot.png', description: 'Click on the mascot 5 times!', unlocked: false },
+  { id: 'future_hero', name: 'Future Hero', icon: '/badges/hero.png', description: 'Enroll in a program!', unlocked: false },
 ];
 
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined);

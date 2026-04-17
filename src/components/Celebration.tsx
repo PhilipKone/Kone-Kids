@@ -83,7 +83,18 @@ const Celebration: React.FC = () => {
         width: '90%',
         animation: 'modalPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both'
       }}>
-        <div style={{ fontSize: '5rem', marginBottom: '1.5rem' }}>{activeBadge.icon}</div>
+        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+          <img 
+            src={activeBadge.icon} 
+            alt={activeBadge.name} 
+            style={{ 
+              width: '120px', 
+              height: '120px', 
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))'
+            }} 
+          />
+        </div>
         <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem', color: 'var(--kids-blue)' }}>Badge Unlocked!</h2>
         <h3 style={{ fontSize: '1.8rem', margin: '0 0 1rem', color: 'var(--kids-dark)' }}>{activeBadge.name}</h3>
         <p style={{ fontSize: '1.2rem', color: '#64748b', lineHeight: '1.5' }}>{activeBadge.description}</p>
