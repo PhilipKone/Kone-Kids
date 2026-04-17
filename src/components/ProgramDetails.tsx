@@ -1,6 +1,4 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import EnrollmentModal from './EnrollmentModal'
+import KidsIDE from './KidsIDE'
 
 interface ProgramDetailsProps {
   title: string
@@ -12,6 +10,8 @@ interface ProgramDetailsProps {
 const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, description, accentColor = 'var(--kids-orange)' }) => {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const isCodingProgram = title === 'Coding 4 Kids'
 
   return (
     <div className="program-details-page" style={{ padding: '2rem 5%', minHeight: '100vh', background: 'white' }}>
@@ -35,28 +35,30 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
         <h1 style={{ margin: 0, fontSize: 'clamp(2rem, 8vw, 3rem)', color: accentColor }}>{title}</h1>
       </div>
 
-      {/* Program Image with Precise Footer Crop & Premium Polish */}
-      <div className="animate-float glass-card" style={{ 
-        width: '100%', 
-        maxWidth: '900px', 
-        margin: '0 auto 3rem',
-        borderRadius: 'clamp(16px, 4vw, 32px)',
-        overflow: 'hidden', 
-        border: 'clamp(4px, 2vw, 12px) solid white',
-        boxShadow: `0 30px 60px -12px rgba(0,0,0,0.2), 0 0 40px ${accentColor}15`,
-        animationDelay: '0.2s'
-      }}>
-        <img 
-          src={image} 
-          alt={title} 
-          style={{ 
-            width: '100%', 
-            display: 'block',
-            clipPath: 'inset(0 0 15.78% 0)',
-            marginBottom: '-14%'
-          }} 
-        />
-      </div>
+      {/* Program Image */}
+      {!isCodingProgram && (
+        <div className="animate-float glass-card" style={{ 
+          width: '100%', 
+          maxWidth: '900px', 
+          margin: '0 auto 3rem',
+          borderRadius: 'clamp(16px, 4vw, 32px)',
+          overflow: 'hidden', 
+          border: 'clamp(4px, 2vw, 12px) solid white',
+          boxShadow: `0 30px 60px -12px rgba(0,0,0,0.2), 0 0 40px ${accentColor}15`,
+          animationDelay: '0.2s'
+        }}>
+          <img 
+            src={image} 
+            alt={title} 
+            style={{ 
+              width: '100%', 
+              display: 'block',
+              clipPath: 'inset(0 0 15.78% 0)',
+              marginBottom: '-14%'
+            }} 
+          />
+        </div>
+      )}
 
       {/* Description Content */}
       <div className="container animate-fade-in-up" style={{ maxWidth: '800px', textAlign: 'center', animationDelay: '0.4s' }}>
@@ -68,6 +70,9 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
         }}>
           {description}
         </p>
+
+        {/* Kids IDE for Coding Program */}
+        {isCodingProgram && <KidsIDE />}
         
         <div style={{ marginTop: '3rem' }}>
           <button 
@@ -79,7 +84,7 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
             }}
             onClick={() => setIsModalOpen(true)}
           >
-            Enroll Now!
+            {isCodingProgram ? 'Keep Learning - Enroll Now!' : 'Enroll Now!'}
           </button>
         </div>
       </div>

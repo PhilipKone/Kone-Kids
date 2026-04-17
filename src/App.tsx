@@ -1,9 +1,4 @@
-import React, { useState } from 'react'
-import { Routes, Route, Link } from 'react-router-dom'
-import './index.css'
-import ProgramDetails from './components/ProgramDetails'
-import Mascot from './components/Mascot'
-import EnrollmentModal from './components/EnrollmentModal'
+import BadgeTray from './components/BadgeTray'
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -19,6 +14,13 @@ function Home() {
 
       {/* Hero Section */}
       <header className="section-padding">
+        {/* ... existing hero content ... */}
+      </header>
+
+      {/* Achievement Gallery */}
+      <BadgeTray />
+      
+      {/* Footer */}
         <div className="container" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
@@ -94,10 +96,24 @@ function Home() {
   )
 }
 
-function App() {
+import { GamificationProvider, useGamification } from './context/GamificationContext'
+
+import Celebration from './components/Celebration'
+
+function AppContent() {
+  const { markVisited } = useGamification();
+  
+  // Track visits to pages
+  React.useEffect(() => {
+    markVisited(window.location.pathname);
+  }, [window.location.pathname]);
+
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
+    <>
+      <Celebration />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        {/* ... existing routes ... */}
       <Route 
         path="/coding" 
         element={
@@ -132,6 +148,14 @@ function App() {
         } 
       />
     </Routes>
+  )
+}
+
+function App() {
+  return (
+    <GamificationProvider>
+      <AppContent />
+    </GamificationProvider>
   )
 }
 
