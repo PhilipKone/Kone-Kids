@@ -27,7 +27,14 @@ const GamificationContext = createContext<GamificationContextType | undefined>(u
 export const GamificationProvider: React.FC = ({ children }) => {
   const [badges, setBadges] = useState<Badge[]>(() => {
     const saved = localStorage.getItem('kone_kids_badges');
-    return saved ? JSON.parse(saved) : INITIAL_BADGES;
+    if (!saved) return INITIAL_BADGES;
+    
+    // Migration logic: Keep the 'unlocked' status but use latest names/icons/descriptions
+    const savedBadges = JSON.parse(saved) as Badge[];
+    return INITIAL_BADGES.map(initial => {
+      const saved = savedBadges.find(s => s.id === initial.id);
+      return saved ? { ...initial, unlocked: saved.unlocked } : initial;
+    });
   });
 
   const [hasVisited, setHasVisited] = useState<{ [key: string]: boolean }>(() => {
