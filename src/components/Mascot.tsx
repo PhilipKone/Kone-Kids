@@ -15,39 +15,68 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
   const [bubbleText, setBubbleText] = useState('Hi! Ready to build the future?')
   const [isHovering, setIsHovering] = useState(false)
   const [isBlinking, setIsBlinking] = useState(false)
+  const [isActive, setIsActive] = useState(false) // Tracks if mascot is executing a command
+  
   const blinkIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const activeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Coordinating active state to pause idle behavior
+  const setMascotActive = (duration: number = 3000) => {
+    setIsActive(true)
+    if (blinkIntervalRef.current) {
+      clearInterval(blinkIntervalRef.current)
+      blinkIntervalRef.current = null
+    }
+    
+    if (activeTimeoutRef.current) clearTimeout(activeTimeoutRef.current)
+    activeTimeoutRef.current = setTimeout(() => {
+      setIsActive(false)
+      startBlinking(false)
+    }, duration)
+  }
 
   // Exposed API via ref
   useImperativeHandle(ref, () => ({
     speak: (text: string) => {
+      setMascotActive(4500)
       setBubbleText(text)
       setShowBubble(true)
       speakAction(text)
       setTimeout(() => setShowBubble(false), 4000)
     },
     wave: (duration = 2000) => {
+      setMascotActive(duration + 1000)
       setIsWaving(true)
       setTimeout(() => setIsWaving(false), duration)
     },
     blink: () => {
+      setMascotActive(1500)
       setIsBlinking(true)
       setTimeout(() => setIsBlinking(false), 400)
     }
   }))
 
   const startBlinking = (fast: boolean = false) => {
+    // Don't start idle blinking if we're active
+    if (isActive) return;
+
     if (blinkIntervalRef.current) clearInterval(blinkIntervalRef.current)
     const interval = fast ? 1200 : 3500
     blinkIntervalRef.current = setInterval(() => {
-      setIsBlinking(true)
-      setTimeout(() => setIsBlinking(false), 400)
+      if (!isActive) { // Double check inside interval
+        setIsBlinking(true)
+        setTimeout(() => setIsBlinking(false), 400)
+      }
     }, interval)
   }
 
   useEffect(() => {
     startBlinking(false)
-    return () => { if (blinkIntervalRef.current) clearInterval(blinkIntervalRef.current) }
-  }, [])
+    return () => { 
+      if (blinkIntervalRef.current) clearInterval(blinkIntervalRef.current)
+      if (activeTimeoutRef.current) clearTimeout(activeTimeoutRef.current)
+    }
+  }, [isActive]) // Re-run when active state changes to resume correctly
 
   const handleMouseEnter = () => {
     setIsHovering(true)
@@ -82,6 +111,7 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       unlockBadge('mascot_master')
     }
 
+    setMascotActive(3000)
     setIsWaving(true)
     setBubbleText('Hi! Ready to build the future?')
     setShowBubble(true)
@@ -98,6 +128,18 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       onMouseLeave={handleMouseLeave}
       style={{ position: 'relative', cursor: 'pointer', display: 'inline-block' }}
     >
+      {/* Thinking Glow Indicator */}
+      {isActive && (
+        <div style={{
+          position: 'absolute',
+          inset: '-20px',
+          background: 'radial-gradient(circle, rgba(14, 165, 233, 0.2) 0%, rgba(14, 165, 233, 0) 70%)',
+          borderRadius: '50%',
+          zIndex: -1,
+          animation: 'pulse 1.5s ease-in-out infinite'
+        }} />
+      )}
+
       {/* Speech Bubble */}
       {showBubble && (
         <div style={{
@@ -137,7 +179,7 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
         viewBox="0 0 400 420"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        style={{ transition: 'transform 0.3s', maxWidth: '500px' }}
+        style={{ transition: 'all 0.3s', maxWidth: '500px', filter: isActive ? 'drop-shadow(0 0 10px rgba(14, 165, 233, 0.3))' : 'none' }}
         className={isWaving ? '' : 'animate-float'}
       >
         <defs>
