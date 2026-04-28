@@ -156,7 +156,9 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
           fontWeight: 700,
           color: 'var(--kids-dark)',
           border: '3px solid var(--kids-blue)',
-          whiteSpace: 'nowrap',
+          whiteSpace: 'pre-wrap',
+          wordWrap: 'break-word',
+          maxWidth: 'clamp(200px, 50vw, 300px)',
           animation: 'modalPop 0.3s ease-out'
         }}>
           {bubbleText} {bubbleText.includes('future') && '🚀'}

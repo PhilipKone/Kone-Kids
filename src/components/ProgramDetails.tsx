@@ -17,7 +17,7 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
   const isCodingProgram = title === 'Coding 4 Kids'
 
   return (
-    <div className="program-details-page" style={{ padding: '2rem 5%', minHeight: '100vh', background: 'white' }}>
+    <div className="program-details-page" style={{ padding: 'clamp(1.5rem, 6vw, 4rem) 5%', minHeight: '100vh', background: 'white' }}>
       <EnrollmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} programTitle={title} />
       
       {/* Header with Back button */}
@@ -82,8 +82,7 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
             className="kids-button" 
             style={{ 
               background: accentColor, 
-              boxShadow: `0 10px 0 ${accentColor}cc`,
-              width: window.innerWidth < 768 ? '100%' : 'auto'
+              boxShadow: `0 10px 0 ${accentColor}cc`
             }}
             onClick={() => setIsModalOpen(true)}
           >

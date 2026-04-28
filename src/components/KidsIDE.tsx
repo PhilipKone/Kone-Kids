@@ -36,6 +36,18 @@ const KidsIDE: React.FC = () => {
     };
   }, []);
 
+  // Force Blockly to resize when switching between mobile/desktop layouts
+  useEffect(() => {
+    if (workspace.current) {
+      // Use requestAnimationFrame to ensure the browser has finished the layout pass
+      requestAnimationFrame(() => {
+        if (workspace.current) {
+          Blockly.svgResize(workspace.current);
+        }
+      });
+    }
+  }, [isMobile]);
+
   // Define Blocks & Generators
   useEffect(() => {
     // 1. Speak Block
@@ -172,7 +184,7 @@ const KidsIDE: React.FC = () => {
   return (
     <div className="kids-ide-container glass-card" style={{ 
       margin: '2rem 0', 
-      padding: isMobile ? '1.5rem' : '2rem', 
+      padding: isMobile ? '1.25rem' : '2rem', 
       borderRadius: '32px',
       overflow: 'hidden',
       background: 'white',
@@ -182,11 +194,11 @@ const KidsIDE: React.FC = () => {
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between', 
-        alignItems: isMobile ? 'flex-start' : 'center', 
-        gap: '1.5rem',
-        marginBottom: '2rem' 
+        alignItems: isMobile ? 'stretch' : 'center', 
+        gap: '1rem',
+        marginBottom: isMobile ? '1.5rem' : '2rem' 
       }}>
-        <div>
+        <div style={{ textAlign: isMobile ? 'center' : 'left', width: isMobile ? '100%' : 'auto' }}>
           <h3 style={{ margin: 0, fontSize: isMobile ? '1.5rem' : '1.8rem', color: 'var(--kids-dark)' }}>The Coding Lab 🧪</h3>
           <p style={{ margin: 0, color: '#64748b', fontSize: isMobile ? '0.9rem' : '1rem' }}>Program your robot friend!</p>
         </div>
@@ -210,37 +222,47 @@ const KidsIDE: React.FC = () => {
       <div style={{ 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
-        gap: '1.5rem', 
+        gap: isMobile ? '1rem' : '1.5rem', 
         height: isMobile ? 'auto' : '500px'
       }}>
         {/* Mascot Preview on Top on Mobile */}
         <div style={{ 
           order: isMobile ? 1 : 2,
-          background: 'var(--kids-bg)', 
-          borderRadius: '16px', 
+          background: 'rgba(248, 250, 252, 0.5)', 
+          borderRadius: '24px', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
-          padding: '1rem',
-          border: '2px solid #e2e8f0',
-          width: isMobile ? '100%' : '240px',
-          height: isMobile ? '200px' : 'auto',
-          margin: isMobile ? '0 auto' : '0'
+          padding: isMobile ? '0.5rem' : '1rem',
+          border: '2px solid rgba(226, 232, 240, 0.6)',
+          width: isMobile ? '100%' : '260px',
+          height: isMobile ? '220px' : 'auto',
+          margin: isMobile ? '0 auto' : '0',
+          position: 'relative',
+          overflow: 'hidden'
         }}>
-          <Mascot ref={mascotRef} />
+          <div style={{ transform: isMobile ? 'scale(0.9) translateY(10px)' : 'none' }}>
+            <Mascot ref={mascotRef} />
+          </div>
         </div>
 
-        {/* Blockly Workspace */}
+        {/* Blockly Workspace container hardened for mobile */}
         <div 
           ref={blocklyDiv} 
+          className="blockly-wrapper"
           style={{ 
             order: isMobile ? 2 : 1,
             flex: 1,
-            height: isMobile ? '400px' : '100%', 
+            display: 'block', // Force block to prevent inline collapse
+            height: isMobile ? '450px' : '100%', 
+            minHeight: isMobile ? '450px' : '400px', 
             width: '100%', 
-            borderRadius: '16px', 
+            borderRadius: '24px', 
             overflow: 'hidden', 
-            border: '2px solid #e2e8f0' 
+            border: '2px solid rgba(226, 232, 240, 0.8)',
+            boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.05)',
+            background: 'white',
+            position: 'relative'
           }} 
         />
       </div>

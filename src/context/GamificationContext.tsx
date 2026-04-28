@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 
 export interface Badge {
   id: string;
@@ -57,23 +57,29 @@ export const GamificationProvider: React.FC = ({ children }) => {
     }
   }, [hasVisited]);
 
-  const unlockBadge = (id: string) => {
+  const unlockBadge = useCallback((id: string) => {
     setBadges(prev => prev.map(badge => {
       if (badge.id === id && !badge.unlocked) {
-        // Trigger celebration (this could be handled by a listener or global event)
         console.log(`[Gamification] Badge unlocked: ${badge.name}`);
         return { ...badge, unlocked: true };
       }
       return badge;
     }));
-  };
+  }, []);
 
-  const markVisited = (page: string) => {
-    setHasVisited(prev => ({ ...prev, [page]: true }));
-  };
+  const markVisited = useCallback((page: string) => {
+    setHasVisited(prev => {
+      if (prev[page]) return prev; // Already visited — return SAME reference, no re-render
+      return { ...prev, [page]: true };
+    });
+  }, []);
+
+  const contextValue = useMemo(() => ({
+    badges, unlockBadge, hasVisited, markVisited
+  }), [badges, unlockBadge, hasVisited, markVisited]);
 
   return (
-    <GamificationContext.Provider value={{ badges, unlockBadge, hasVisited, markVisited }}>
+    <GamificationContext.Provider value={contextValue}>
       {children}
     </GamificationContext.Provider>
   );

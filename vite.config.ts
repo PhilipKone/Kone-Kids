@@ -4,7 +4,10 @@ import type { UserConfig } from 'vite'
 const config: UserConfig = {
   base: '/',
   jsx: 'react',
-  plugins: [reactPlugin]
+  plugins: [reactPlugin],
+  optimizeDeps: {
+    include: ['blockly', 'blockly/javascript']
+  }
 }
 
 export default config

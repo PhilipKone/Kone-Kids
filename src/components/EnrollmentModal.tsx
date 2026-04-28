@@ -52,31 +52,21 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ padding: '1rem', zIndex: 1000 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1000 }}>
       <div 
         className="modal-content glass-card" 
         onClick={(e) => e.stopPropagation()}
-        style={{
-          background: 'white',
-          padding: 'clamp(1.5rem, 5vw, 3rem)',
-          width: '100%',
-          maxWidth: '550px',
-          maxHeight: '92vh',
-          overflowY: 'auto',
-          borderRadius: '40px',
-          border: '8px solid rgba(255,255,255,0.8)',
-          boxShadow: '0 50px 100px -20px rgba(0,0,0,0.25)',
-          animation: 'modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both'
-        }}
       >
         <button 
           onClick={onClose}
+          className="modal-close-btn"
           style={{ 
             position: 'absolute', top: '25px', right: '25px', 
             background: '#f1f5f9', border: 'none', width: '40px', height: '40px', 
             borderRadius: '50%', fontSize: '1.2rem', cursor: 'pointer',
             color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'all 0.2s'
+            transition: 'all 0.2s',
+            zIndex: 10
           }}
           onMouseOver={(e) => (e.currentTarget.style.background = '#e2e8f0')}
           onMouseOut={(e) => (e.currentTarget.style.background = '#f1f5f9')}
@@ -85,12 +75,12 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
         </button>
 
         {status === 'success' ? (
-          <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-            <div style={{ marginBottom: '1.5rem', transform: 'scale(1.2)' }}>
+          <div style={{ textAlign: 'center', padding: '1rem 0' }}>
+            <div style={{ marginBottom: '1.5rem' }}>
               <Mascot />
             </div>
-            <h2 style={{ fontSize: '3rem', color: 'var(--kids-blue)', margin: '1rem 0' }}>Welcome, Hero! 🚀</h2>
-            <p style={{ fontSize: '1.4rem', color: '#475569', lineHeight: '1.6' }}>
+            <h2 style={{ color: 'var(--kids-blue)', margin: '1rem 0', fontSize: 'clamp(1.8rem, 6vw, 2.5rem)' }}>Welcome, Hero! 🚀</h2>
+            <p style={{ color: '#475569', maxWidth: '400px', margin: '0 auto' }}>
               Your mission starts here! A Kone Academy representative will contact you soon to begin your journey.
             </p>
             <button className="kids-button" style={{ marginTop: '2.5rem', width: '100%' }} onClick={onClose}>
@@ -100,10 +90,10 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h2 style={{ fontSize: 'clamp(2rem, 8vw, 2.5rem)', marginBottom: '0.5rem', fontStyle: 'italic' }}>
+              <h2 style={{ marginBottom: '0.5rem', fontStyle: 'italic', fontSize: 'clamp(1.8rem, 6vw, 2.4rem)' }}>
                 Join the <span style={{ color: 'var(--kids-orange)' }}>Mission</span>
               </h2>
-              <p style={{ color: '#64748b', fontSize: '1.1rem' }}>Ready to build the physical and digital future? 🤖✨</p>
+              <p style={{ color: '#64748b' }}>Ready to build the physical and digital future? 🤖✨</p>
             </div>
             
             <form onSubmit={handleSubmit}>
@@ -133,7 +123,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
                 <div className="input-group">
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span>📧</span> Email Address
@@ -143,7 +133,6 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                     placeholder="hello@example.com"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    style={{ borderRadius: '16px', padding: '1rem 1.25rem' }}
                   />
                 </div>
                 <div className="input-group">
@@ -155,7 +144,6 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                     placeholder="e.g. 8"
                     value={formData.age}
                     onChange={(e) => setFormData({...formData, age: e.target.value})}
-                    style={{ borderRadius: '16px', padding: '1rem 1.25rem' }}
                   />
                 </div>
               </div>
@@ -183,8 +171,6 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 style={{ 
                   width: '100%', 
                   marginTop: '1.5rem', 
-                  fontSize: '1.3rem',
-                  padding: '1.25rem',
                   background: 'var(--kids-blue)',
                   boxShadow: '0 10px 0 #0369a1'
                 }}

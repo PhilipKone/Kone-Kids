@@ -7,6 +7,7 @@ import EnrollmentModal from './components/EnrollmentModal'
 import BadgeTray from './components/BadgeTray'
 import { GamificationProvider, useGamification } from './context/GamificationContext'
 import Celebration from './components/Celebration'
+import InstallBanner from './components/InstallBanner'
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -22,19 +23,14 @@ function Home() {
 
       {/* Hero Section */}
       <header className="section-padding">
-        <div className="container" style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-          gap: '2rem',
-          alignItems: 'center'
-        }}>
+        <div className="container hero-grid">
           {/* Mascot Section */}
-          <div style={{ textAlign: 'center', order: window.innerWidth < 768 ? 2 : 1 }}>
+          <div className="mascot-wrapper">
             <Mascot />
           </div>
 
           {/* Tagline & Program List */}
-          <div style={{ order: window.innerWidth < 768 ? 1 : 2 }}>
+          <div className="hero-content">
             <h2 className="hero-tagline">Do it Right</h2>
             
             <ul className="program-list">
@@ -58,7 +54,7 @@ function Home() {
               </li>
             </ul>
 
-            <div style={{ marginTop: '3rem' }}>
+            <div style={{ marginTop: '2.5rem' }}>
               <button 
                 className="kids-button"
                 onClick={() => setIsModalOpen(true)}
@@ -147,6 +143,7 @@ function AppContent() {
           } 
         />
       </Routes>
+      <InstallBanner />
     </>
   )
 }
@@ -159,4 +156,5 @@ function App() {
   )
 }
 
-export default App
+export default App;
+console.log("Kone Kids v1.0.2-live");
