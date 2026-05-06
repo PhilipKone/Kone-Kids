@@ -4,20 +4,10 @@
   "description": "Fun, hands-on STEM programs for the next generation of tech leaders.",
   "icons": [
     {
-      "src": "mascot.svg",
+      "src": "favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"
-    },
-    {
-      "src": "mascot.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "mascot.png",
-      "sizes": "512x512",
-      "type": "image/png"
     }
   ],
   "start_url": "/",
@@ -30,19 +20,19 @@
       "name": "Coding 4 Kids",
       "url": "/coding",
       "description": "Go to the Coding program page",
-      "icons": [{ "src": "mascot.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "Robotics 4 Kids",
       "url": "/robotics",
       "description": "Go to the Robotics program page",
-      "icons": [{ "src": "mascot.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
     },
     {
       "name": "AI 4 Kids",
       "url": "/ai",
       "description": "Go to the AI program page",
-      "icons": [{ "src": "mascot.svg", "sizes": "any", "type": "image/svg+xml" }]
+      "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
     }
   ]
 }
