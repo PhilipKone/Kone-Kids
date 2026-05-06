@@ -156,5 +156,4 @@ function App() {
   )
 }
 
-export default App;
-console.log("Kone Kids v1.0.2-live");
+export default App
