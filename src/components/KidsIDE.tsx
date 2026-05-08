@@ -360,10 +360,10 @@ const KidsIDE: React.FC = () => {
                   background: activeTab === 'blocks' ? 'rgba(255,255,255,0.1)' : 'transparent',
                   border: 'none',
                   color: 'white',
-                  padding: '0.4rem 0.8rem',
+                  padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
                   borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '0.8rem',
+                  fontSize: isMobile ? '0.75rem' : '0.8rem',
                   fontWeight: 'bold'
                 }}
               >
@@ -375,10 +375,10 @@ const KidsIDE: React.FC = () => {
                   background: activeTab === 'code' ? 'rgba(255,255,255,0.1)' : 'transparent',
                   border: 'none',
                   color: 'white',
-                  padding: '0.4rem 0.8rem',
+                  padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
                   borderRadius: '8px',
                   cursor: 'pointer',
-                  fontSize: '0.8rem',
+                  fontSize: isMobile ? '0.75rem' : '0.8rem',
                   fontWeight: 'bold'
                 }}
               >
@@ -400,10 +400,10 @@ const KidsIDE: React.FC = () => {
                 background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent',
                 border: 'none',
                 color: language === 'javascript' ? 'white' : '#cbd5e1',
-                padding: '0.4rem 0.8rem',
+                padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
                 borderRadius: '8px',
                 cursor: 'pointer',
-                fontSize: '0.8rem',
+                fontSize: isMobile ? '0.75rem' : '0.8rem',
                 fontWeight: 'bold',
                 transition: 'all 0.2s'
               }}
@@ -416,10 +416,10 @@ const KidsIDE: React.FC = () => {
                 background: language === 'python' ? 'var(--kids-blue)' : 'transparent',
                 border: 'none',
                 color: language === 'python' ? 'white' : '#cbd5e1',
-                padding: '0.4rem 0.8rem',
+                padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
                 borderRadius: '8px',
                 cursor: 'pointer',
-                fontSize: '0.8rem',
+                fontSize: isMobile ? '0.75rem' : '0.8rem',
                 fontWeight: 'bold',
                 transition: 'all 0.2s'
               }}
@@ -462,10 +462,10 @@ const KidsIDE: React.FC = () => {
               style={{ 
                 background: isRunning ? '#1e293b' : '#22c55e',
                 boxShadow: isRunning ? 'none' : '0 4px 0 #16a34a',
-                padding: '0.6rem 1.2rem',
-                fontSize: '1rem',
-                minHeight: '44px',
-                borderRadius: '8px'
+                padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.2rem',
+                fontSize: isMobile ? '0.85rem' : '1rem',
+                minHeight: isMobile ? '38px' : '44px',
+                borderRadius: '50px' // Sleek Pill Shape
               }}
             >
               {isRunning ? '▶️ RUNNING' : '▶️ RUN'}
@@ -478,10 +478,10 @@ const KidsIDE: React.FC = () => {
               style={{ 
                 background: isRunning ? '#ef4444' : '#1e293b',
                 boxShadow: isRunning ? '0 4px 0 #b91c1c' : 'none',
-                padding: '0.6rem 1.2rem',
-                fontSize: '1rem',
-                minHeight: '44px',
-                borderRadius: '8px',
+                padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.2rem',
+                fontSize: isMobile ? '0.85rem' : '1rem',
+                minHeight: isMobile ? '38px' : '44px',
+                borderRadius: '50px', // Sleek Pill Shape
                 color: isRunning ? 'white' : '#64748b'
               }}
             >
