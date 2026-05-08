@@ -528,30 +528,34 @@ const KidsIDE: React.FC = () => {
                 <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }}></div>
                 <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }}></div>
               </div>
-              <pre style={{ margin: 0, whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
-                {language === 'javascript' ? (
-                  <>
-                    <code style={{ color: '#ec4899' }}>async function</code> <code style={{ color: 'var(--kids-blue)' }}>run()</code> {'{\n'}
-                    {generatedCode ? generatedCode.split('\n').map((line, i) => (
-                      <div key={i} style={{ display: 'flex' }}>
-                        <span style={{ color: 'rgba(255,255,255,0.2)', width: '2rem', userSelect: 'none', fontSize: '0.7rem' }}>{i + 1}</span>
-                        <span style={{ color: '#cbd5e1' }}>{line}</span>
-                      </div>
-                    )) : <div style={{ color: 'rgba(255,255,255,0.2)' }}>  // Drag blocks to generate code...</div>}
-                    {'}'}
-                  </>
-                ) : (
-                  <>
-                    <code style={{ color: '#ec4899' }}>import</code> <code style={{ color: '#10b981' }}>time</code>{'\n\n'}
-                    <code style={{ color: '#ec4899' }}>def</code> <code style={{ color: 'var(--kids-blue)' }}>run():</code>{'\n'}
-                    {generatedCode ? generatedCode.split('\n').map((line, i) => (
-                      <div key={i} style={{ display: 'flex' }}>
-                        <span style={{ color: 'rgba(255,255,255,0.2)', width: '2rem', userSelect: 'none', fontSize: '0.7rem' }}>{i + 1}</span>
-                        <span style={{ color: '#cbd5e1' }}>  {line}</span>
-                      </div>
-                    )) : <div style={{ color: 'rgba(255,255,255,0.2)' }}>  # Drag blocks to generate code...</div>}
-                  </>
-                )}
+              <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all', lineHeight: '1.5', fontFamily: 'monospace' }}>
+                {(() => {
+                  const fullCode = language === 'javascript' 
+                    ? `async function run() {\n${generatedCode.split('\n').filter(l => l.trim()).map(l => '  ' + l).join('\n')}\n}`
+                    : `import time\n\ndef run():\n${generatedCode ? generatedCode.split('\n').filter(l => l.trim()).map(l => '    ' + l).join('\n') : '    pass'}`;
+                  
+                  return fullCode.split('\n').map((line, i) => (
+                    <div key={i} style={{ display: 'flex', width: '100%' }}>
+                      <span style={{ 
+                        color: 'rgba(255,255,255,0.2)', 
+                        minWidth: '2.5rem', 
+                        userSelect: 'none', 
+                        fontSize: '0.8rem',
+                        textAlign: 'right',
+                        paddingRight: '1rem'
+                      }}>{i + 1}</span>
+                      <span style={{ color: '#cbd5e1', flex: 1 }}>
+                        {line.split(/(async function|run|await|import|def|time)/g).map((part, idx) => {
+                          if (part === 'async function' || part === 'import' || part === 'def') return <span key={idx} style={{color: '#ec4899'}}>{part}</span>;
+                          if (part === 'run') return <span key={idx} style={{color: '#0ea5e9'}}>{part}</span>;
+                          if (part === 'await') return <span key={idx} style={{color: '#f59e0b'}}>{part}</span>;
+                          if (part === 'time') return <span key={idx} style={{color: '#10b981'}}>{part}</span>;
+                          return part;
+                        })}
+                      </span>
+                    </div>
+                  ));
+                })()}
               </pre>
             </div>
           )}
