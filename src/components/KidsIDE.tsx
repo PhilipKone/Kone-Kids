@@ -462,13 +462,21 @@ const KidsIDE: React.FC = () => {
               style={{ 
                 background: isRunning ? '#1e293b' : '#22c55e',
                 boxShadow: isRunning ? 'none' : '0 4px 0 #16a34a',
-                padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.2rem',
+                padding: isMobile ? '0.5rem' : '0.6rem 1.2rem',
                 fontSize: isMobile ? '0.85rem' : '1rem',
-                minHeight: isMobile ? '38px' : '44px',
-                borderRadius: '50px' // Sleek Pill Shape
+                minHeight: isMobile ? '40px' : '44px',
+                minWidth: isMobile ? '40px' : 'auto',
+                borderRadius: '50px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
             >
-              {isRunning ? '▶️ RUNNING' : '▶️ RUN'}
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="white" style={{ display: 'block' }}>
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              {!isMobile && (isRunning ? 'RUNNING' : 'RUN')}
             </button>
             <button 
               className="kids-button" 
@@ -478,14 +486,22 @@ const KidsIDE: React.FC = () => {
               style={{ 
                 background: isRunning ? '#ef4444' : '#1e293b',
                 boxShadow: isRunning ? '0 4px 0 #b91c1c' : 'none',
-                padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.2rem',
+                padding: isMobile ? '0.5rem' : '0.6rem 1.2rem',
                 fontSize: isMobile ? '0.85rem' : '1rem',
-                minHeight: isMobile ? '38px' : '44px',
-                borderRadius: '50px', // Sleek Pill Shape
-                color: isRunning ? 'white' : '#64748b'
+                minHeight: isMobile ? '40px' : '44px',
+                minWidth: isMobile ? '40px' : 'auto',
+                borderRadius: '50px',
+                color: isRunning ? 'white' : '#64748b',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px'
               }}
             >
-              ⏹️ STOP
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style={{ display: 'block' }}>
+                <rect x="6" y="6" width="12" height="12" />
+              </svg>
+              {!isMobile && 'STOP'}
             </button>
           </div>
         </div>

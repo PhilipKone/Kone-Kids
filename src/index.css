@@ -97,24 +97,24 @@ p {
   background: var(--kids-orange);
   color: white;
   border: none;
-  padding: 1.25rem 2.5rem;
+  padding: 0.8rem 2rem;
   font-family: 'Baloo 2', cursive;
-  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-size: clamp(1rem, 3vw, 1.2rem);
   font-weight: 800;
   border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 10px 0 #ea580c;
+  box-shadow: 0 6px 0 #ea580c;
   transition: all 0.1s;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  min-height: 56px; /* Optimized for thumb-taps */
+  min-height: 48px; /* Refined for professional look while remaining touch-friendly */
 }
 
 .kids-button:active {
-  transform: translateY(4px);
-  box-shadow: 0 6px 0 #ea580c;
+  transform: translateY(3px);
+  box-shadow: 0 3px 0 #ea580c;
 }
 
 /* Layout Utilities */
@@ -181,8 +181,9 @@ p {
 
   .kids-button {
     width: 100%;
-    padding: 1.25rem;
-    font-size: 1.3rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    min-height: 44px;
   }
   
   .modal-close-btn {

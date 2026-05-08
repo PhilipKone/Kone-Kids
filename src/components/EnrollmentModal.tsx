@@ -172,7 +172,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   width: '100%', 
                   marginTop: '1.5rem', 
                   background: 'var(--kids-blue)',
-                  boxShadow: '0 10px 0 #0369a1'
+                  boxShadow: '0 6px 0 #0369a1'
                 }}
                 disabled={status === 'sending'}
               >
