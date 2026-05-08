@@ -384,3 +384,109 @@ p {
 html {
   scroll-behavior: smooth;
 }
+/* Engineering Lab & IDE Optimization - Brand Aligned */
+.engineering-lab-wrapper {
+  background: var(--kids-dark) !important; /* Using the official Kone-Kids dark navy */
+  border: 4px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.4) !important;
+}
+
+.lab-title {
+  color: var(--kids-orange); /* Solid brand color */
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+}
+
+.code-preview-panel {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  padding: 1.25rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+}
+
+.neon-glow-button {
+  background: var(--kids-orange) !important;
+  box-shadow: 0 8px 0 #ea580c !important;
+  border: none !important;
+}
+
+.neon-glow-button:hover:not(:disabled) {
+  box-shadow: 0 10px 0 #ea580c !important;
+  transform: translateY(-2px);
+}
+
+.neon-glow-button:hover:not(:disabled) {
+  box-shadow: 0 0 25px rgba(14, 165, 233, 0.6), 0 8px 0 #034d75 !important;
+  transform: translateY(-2px);
+}
+
+.neon-glow-button:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.4), 0 4px 0 #034d75 !important;
+}
+
+/* Blockly Dark Theme Overrides */
+.blocklyMainBackground {
+  fill: #0b0e14 !important;
+}
+
+.blocklyFlyoutBackground {
+  fill: #151921 !important;
+  fill-opacity: 0.9 !important;
+}
+
+.blocklyToolboxDiv {
+  background-color: #151921 !important;
+  color: #fff !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.blocklyTreeLabel {
+  color: #cbd5e1 !important;
+  font-family: 'Baloo 2', cursive !important;
+  font-size: 1rem !important;
+}
+
+.blocklyTreeRow.blocklyTreeSelected {
+  background-color: rgba(14, 165, 233, 0.2) !important;
+}
+
+.blocklyTreeRow:hover:not(.blocklyTreeSelected) {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.blocklyScrollbarHandle {
+  fill: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Custom Scrollbar for Code Preview */
+.code-preview-panel::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.code-preview-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-preview-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.code-preview-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes neonPulse {
+  0% { box-shadow: 0 0 15px rgba(14, 165, 233, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(14, 165, 233, 0.7); }
+  100% { box-shadow: 0 0 15px rgba(14, 165, 233, 0.4); }
+}
+
+.pulse-neon {
+  animation: neonPulse 2s infinite;
+}

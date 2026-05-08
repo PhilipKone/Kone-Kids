@@ -6,7 +6,7 @@ const config: UserConfig = {
   jsx: 'react',
   plugins: [reactPlugin],
   optimizeDeps: {
-    include: ['blockly', 'blockly/javascript']
+    include: ['blockly', 'blockly/javascript', 'blockly/python', 'firebase/app', 'firebase/firestore', 'firebase/auth']
   }
 }
 

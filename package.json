@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "postbuild": "node scripts/postbuild.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
@@ -12,6 +13,7 @@
     "@emailjs/browser": "^4.4.1",
     "blockly": "^12.5.1",
     "canvas-confetti": "^1.9.4",
+    "firebase": "^12.12.1",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-router-dom": "^6.30.3"

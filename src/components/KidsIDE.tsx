@@ -1,8 +1,41 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as Blockly from 'blockly';
 import { javascriptGenerator } from 'blockly/javascript';
+import { pythonGenerator } from 'blockly/python';
 import Mascot, { MascotHandle } from './Mascot';
 import { useGamification } from '../context/GamificationContext';
+
+// Define a premium dark theme for Blockly
+const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
+  name: 'kone_dark',
+  base: Blockly.Themes.Classic,
+  componentStyles: {
+    workspaceBackgroundColour: '#0f172a', // Using --kids-dark
+    toolboxBackgroundColour: '#1e293b',
+    toolboxForegroundColour: '#cbd5e1',
+    flyoutBackgroundColour: '#1e293b',
+    flyoutForegroundColour: '#cbd5e1',
+    insertionMarkerColour: '#f97316', // Using --kids-orange
+    insertionMarkerOpacity: 0.3,
+    scrollbarColour: '#334155',
+    scrollbarOpacity: 0.4,
+    cursorColour: '#0ea5e9', // Using --kids-blue
+  },
+  blockStyles: {
+    logic_blocks: { colourPrimary: '#a855f7', colourSecondary: '#9333ea', colourTertiary: '#7e22ce' }, // AI Purple
+    loop_blocks: { colourPrimary: '#0ea5e9', colourSecondary: '#0284c7', colourTertiary: '#0369a1' }, // Robotics Blue
+    math_blocks: { colourPrimary: '#10b981', colourSecondary: '#059669', colourTertiary: '#047857' },
+    procedure_blocks: { colourPrimary: '#ec4899', colourSecondary: '#db2777', colourTertiary: '#be185d' },
+    variable_blocks: { colourPrimary: '#f97316', colourSecondary: '#ea580c', colourTertiary: '#c2410c' }, // Coding Orange
+  },
+  categoryStyles: {
+    logic_category: { colour: '#a855f7' },
+    loop_category: { colour: '#0ea5e9' },
+    math_category: { colour: '#10b981' },
+    procedure_category: { colour: '#ec4899' },
+    variable_category: { colour: '#f97316' },
+  }
+});
 
 const KidsIDE: React.FC = () => {
   const blocklyDiv = useRef<HTMLDivElement>(null);
@@ -11,6 +44,11 @@ const KidsIDE: React.FC = () => {
   const { unlockBadge } = useGamification();
   const [isRunning, setIsRunning] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [generatedCode, setGeneratedCode] = useState('');
+  const [showCode, setShowCode] = useState(true);
+  const [language, setLanguage] = useState<'javascript' | 'python'>('javascript');
+  const [isStopping, setIsStopping] = useState(false);
+  const abortController = useRef<AbortController | null>(null);
 
   // Responsive breakpoints and Blockly resizing
   useEffect(() => {
@@ -50,6 +88,12 @@ const KidsIDE: React.FC = () => {
 
   // Define Blocks & Generators
   useEffect(() => {
+    // Override Blockly's prompt to ensure it works in this environment
+    Blockly.dialog.setPrompt((message, defaultValue, callback) => {
+      const name = window.prompt(message, defaultValue);
+      callback(name);
+    });
+
     // 1. Speak Block
     Blockly.Blocks['mascot_speak'] = {
       init: function() {
@@ -65,6 +109,10 @@ const KidsIDE: React.FC = () => {
       const text = block.getFieldValue('TEXT');
       return `await mascot.speak("${text}");\n`;
     };
+    pythonGenerator.forBlock['mascot_speak'] = (block: any) => {
+      const text = block.getFieldValue('TEXT');
+      return `mascot.speak("${text}")\n`;
+    };
 
     // 2. Wave Block
     Blockly.Blocks['mascot_wave'] = {
@@ -77,6 +125,7 @@ const KidsIDE: React.FC = () => {
       }
     };
     javascriptGenerator.forBlock['mascot_wave'] = () => `await mascot.wave();\n`;
+    pythonGenerator.forBlock['mascot_wave'] = () => `mascot.wave()\n`;
 
     // 3. Blink Block
     Blockly.Blocks['mascot_blink'] = {
@@ -89,6 +138,7 @@ const KidsIDE: React.FC = () => {
       }
     };
     javascriptGenerator.forBlock['mascot_blink'] = () => `await mascot.blink();\n`;
+    pythonGenerator.forBlock['mascot_blink'] = () => `mascot.blink()\n`;
 
     // 4. Wait Block
     Blockly.Blocks['mascot_wait'] = {
@@ -106,31 +156,97 @@ const KidsIDE: React.FC = () => {
       const seconds = block.getFieldValue('SECONDS');
       return `await new Promise(resolve => setTimeout(resolve, ${seconds * 1000}));\n`;
     };
+    pythonGenerator.forBlock['mascot_wait'] = (block: any) => {
+      const seconds = block.getFieldValue('SECONDS');
+      return `time.sleep(${seconds})\n`;
+    };
 
     // Inject Workspace
     if (blocklyDiv.current) {
-      workspace.current = Blockly.inject(blocklyDiv.current, {
+      const ws = Blockly.inject(blocklyDiv.current, {
         toolbox: {
-          kind: 'flyoutToolbox',
+          kind: 'categoryToolbox',
           contents: [
-            { kind: 'block', type: 'mascot_speak' },
-            { kind: 'block', type: 'mascot_wave' },
-            { kind: 'block', type: 'mascot_blink' },
-            { kind: 'block', type: 'mascot_wait' },
-            { kind: 'block', type: 'controls_repeat_ext', inputs: { TIMES: { shadow: { type: 'math_number', fields: { NUM: 3 } } } } },
+            {
+              kind: 'category',
+              name: '🤖 Mascot',
+              colour: '#0ea5e9',
+              contents: [
+                { kind: 'block', type: 'mascot_speak' },
+                { kind: 'block', type: 'mascot_wave' },
+                { kind: 'block', type: 'mascot_blink' },
+                { kind: 'block', type: 'mascot_wait' },
+              ]
+            },
+            {
+              kind: 'category',
+              name: '🧠 Logic',
+              categorystyle: 'logic_category',
+              contents: [
+                { kind: 'block', type: 'controls_if' },
+                { kind: 'block', type: 'logic_compare' },
+                { kind: 'block', type: 'logic_operation' },
+                { kind: 'block', type: 'logic_boolean' },
+              ]
+            },
+            {
+              kind: 'category',
+              name: '🔄 Loops',
+              categorystyle: 'loop_category',
+              contents: [
+                { kind: 'block', type: 'controls_repeat_ext', inputs: { TIMES: { shadow: { type: 'math_number', fields: { NUM: 3 } } } } },
+                { kind: 'block', type: 'controls_whileUntil' },
+              ]
+            },
+            {
+              kind: 'category',
+              name: '🔢 Math',
+              categorystyle: 'math_category',
+              contents: [
+                { kind: 'block', type: 'math_number' },
+                { kind: 'block', type: 'math_arithmetic' },
+                { kind: 'block', type: 'math_single' },
+              ]
+            },
+            {
+              kind: 'category',
+              name: '📦 Variables',
+              categorystyle: 'variable_category',
+              custom: 'VARIABLE'
+            },
+            {
+              kind: 'category',
+              name: '🧩 Functions',
+              categorystyle: 'procedure_category',
+              custom: 'PROCEDURE'
+            }
           ]
         },
+        theme: KoneDark,
         trashcan: true,
         scrollbars: true,
         move: { scrollbars: true, drag: true, wheel: true },
-        zoom: { controls: true, wheel: true, startScale: 1.1, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 },
-        renderer: 'geras' // Using a clean renderer
+        zoom: { controls: true, wheel: true, startScale: 1.0, maxScale: 3, minScale: 0.3, scaleSpeed: 1.2 },
+        renderer: 'zelos' // Using zelos for a more modern, Scratch-like yet professional look
+      });
+      workspace.current = ws;
+
+      // Listen for workspace changes to update code preview
+      ws.addChangeListener((event: any) => {
+        if (event.type === Blockly.Events.BLOCK_MOVE || 
+            event.type === Blockly.Events.BLOCK_CHANGE || 
+            event.type === Blockly.Events.BLOCK_DELETE ||
+            event.type === Blockly.Events.BLOCK_CREATE) {
+          const generator = language === 'javascript' ? javascriptGenerator : pythonGenerator;
+          const code = generator.workspaceToCode(ws);
+          setGeneratedCode(code);
+        }
       });
 
       // Simple pre-loaded script
       const initialXml = `<xml xmlns="https://developers.google.com/blockly/xml">
         <block type="mascot_speak" x="20" y="20">
-          <field name="TEXT">Welcome to the future! 🚀</field>
+          <field name="TEXT">Kone Engineering Active! ⚡</field>
           <next>
             <block type="mascot_wave">
               <next>
@@ -141,130 +257,305 @@ const KidsIDE: React.FC = () => {
         </block>
       </xml>`;
       Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), workspace.current as any);
+      const generator = language === 'javascript' ? javascriptGenerator : pythonGenerator;
+      setGeneratedCode(generator.workspaceToCode(ws));
     }
+  }, [language]); // Re-run effect when language changes to refresh generators
 
+  useEffect(() => {
     return () => workspace.current?.dispose();
   }, []);
 
   const runCode = async () => {
     if (!workspace.current || isRunning) return;
+    
     setIsRunning(true);
+    setIsStopping(false);
     unlockBadge('first_hello');
 
     const code = javascriptGenerator.workspaceToCode(workspace.current);
     
-    // Create an execution bridge
+    // Create an execution bridge that checks for stop signal
+    const checkStop = () => {
+      if (isStopping) throw new Error('Execution stopped');
+    };
+
     const mascot = {
-      speak: (text: string) => new Promise((res) => {
+      speak: (text: string) => new Promise((res, rej) => {
+        if (isStopping) return rej('Stopped');
         mascotRef.current?.speak(text);
-        setTimeout(res, 2500); // Wait for speech bubble
+        setTimeout(res, 2500); 
       }),
-      wave: () => new Promise((res) => {
+      wave: () => new Promise((res, rej) => {
+        if (isStopping) return rej('Stopped');
         mascotRef.current?.wave(2000);
         setTimeout(res, 2200);
       }),
-      blink: () => new Promise((res) => {
+      blink: () => new Promise((res, rej) => {
+        if (isStopping) return rej('Stopped');
         mascotRef.current?.blink();
         setTimeout(res, 600);
       })
     };
 
     try {
-      // Use AsyncFunction to handle the 'await' in generated code
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
       const fn = new AsyncFunction('mascot', code);
       await fn(mascot);
     } catch (e) {
-      console.error('IDE Error:', e);
+      if (e !== 'Stopped') {
+        console.error('IDE Error:', e);
+      }
     } finally {
       setIsRunning(false);
+      setIsStopping(false);
+    }
+  };
+
+  const stopCode = () => {
+    setIsStopping(true);
+    setIsRunning(false);
+    // Cancel any pending speech
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
     }
   };
 
   return (
-    <div className="kids-ide-container glass-card" style={{ 
+    <div className="kids-ide-container engineering-lab-wrapper" style={{ 
       margin: '2rem 0', 
-      padding: isMobile ? '1.25rem' : '2rem', 
-      borderRadius: '32px',
+      padding: isMobile ? '1rem' : '1.5rem', 
+      borderRadius: '24px',
       overflow: 'hidden',
-      background: 'white',
-      border: isMobile ? '4px solid rgba(255,255,255,0.8)' : '8px solid rgba(255,255,255,0.5)'
+      position: 'relative'
     }}>
+      {/* Header */}
       <div style={{ 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
         justifyContent: 'space-between', 
         alignItems: isMobile ? 'stretch' : 'center', 
         gap: '1rem',
-        marginBottom: isMobile ? '1.5rem' : '2rem' 
+        marginBottom: '1.5rem',
+        padding: '0 0.5rem'
       }}>
-        <div style={{ textAlign: isMobile ? 'center' : 'left', width: isMobile ? '100%' : 'auto' }}>
-          <h3 style={{ margin: 0, fontSize: isMobile ? '1.5rem' : '1.8rem', color: 'var(--kids-dark)' }}>The Coding Lab 🧪</h3>
-          <p style={{ margin: 0, color: '#64748b', fontSize: isMobile ? '0.9rem' : '1rem' }}>Program your robot friend!</p>
+        <div>
+          <h3 className="lab-title" style={{ margin: 0, fontSize: isMobile ? '1.4rem' : '1.8rem' }}>KONE KIDS IDE</h3>
+          <p style={{ margin: 0, color: 'rgba(255,255,255,0.5)', fontSize: isMobile ? '0.8rem' : '0.9rem' }}>Build the future, one block at a time!</p>
         </div>
-        <button 
-          className="kids-button" 
-          onClick={runCode}
-          disabled={isRunning}
-          style={{ 
-            width: isMobile ? '100%' : 'auto',
-            background: isRunning ? '#94a3b8' : 'var(--kids-blue)',
-            boxShadow: isRunning ? 'none' : '0 10px 0 #0369a1',
-            transform: isRunning ? 'translateY(5px)' : 'none',
-            fontSize: isMobile ? '1.2rem' : '1.3rem',
-            padding: isMobile ? '1rem 2rem' : '1rem 2.5rem'
-          }}
-        >
-          {isRunning ? 'Running...' : '🚀 Launch Code!'}
-        </button>
+        
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          {!isMobile && (
+            <div style={{ 
+              display: 'flex', 
+              background: 'rgba(255,255,255,0.05)', 
+              borderRadius: '12px', 
+              padding: '4px',
+              border: '1px solid rgba(255,255,255,0.1)'
+            }}>
+              <button 
+                onClick={() => setLanguage('javascript')}
+                style={{
+                  background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent',
+                  border: 'none',
+                  color: language === 'javascript' ? 'white' : '#cbd5e1',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  fontWeight: 'bold',
+                  transition: 'all 0.2s'
+                }}
+              >
+                JS
+              </button>
+              <button 
+                onClick={() => setLanguage('python')}
+                style={{
+                  background: language === 'python' ? 'var(--kids-blue)' : 'transparent',
+                  border: 'none',
+                  color: language === 'python' ? 'white' : '#cbd5e1',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.8rem',
+                  fontWeight: 'bold',
+                  transition: 'all 0.2s'
+                }}
+              >
+                PY
+              </button>
+            </div>
+          )}
+          {!isMobile && (
+            <button 
+              onClick={() => setShowCode(!showCode)}
+              title={showCode ? "Hide Code Panel" : "Show Code Panel"}
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#cbd5e1',
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.2rem',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)')}
+            >
+              {showCode ? '📂' : '📁'}
+            </button>
+          )}
+
+          <div style={{ display: 'flex', gap: '4px', background: 'rgba(0,0,0,0.2)', padding: '4px', borderRadius: '12px' }}>
+            <button 
+              className={`kids-button ${isRunning ? '' : 'pulse-neon'}`} 
+              onClick={runCode}
+              disabled={isRunning}
+              title="Run Code"
+              style={{ 
+                background: isRunning ? '#1e293b' : '#22c55e',
+                boxShadow: isRunning ? 'none' : '0 4px 0 #16a34a',
+                padding: '0.6rem 1.2rem',
+                fontSize: '1rem',
+                minHeight: '44px',
+                borderRadius: '8px'
+              }}
+            >
+              {isRunning ? '▶️ RUNNING' : '▶️ RUN'}
+            </button>
+            <button 
+              className="kids-button" 
+              onClick={stopCode}
+              disabled={!isRunning}
+              title="Stop Code"
+              style={{ 
+                background: isRunning ? '#ef4444' : '#1e293b',
+                boxShadow: isRunning ? '0 4px 0 #b91c1c' : 'none',
+                padding: '0.6rem 1.2rem',
+                fontSize: '1rem',
+                minHeight: '44px',
+                borderRadius: '8px',
+                color: isRunning ? 'white' : '#64748b'
+              }}
+            >
+              ⏹️ STOP
+            </button>
+          </div>
+        </div>
       </div>
 
       <div style={{ 
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
-        gap: isMobile ? '1rem' : '1.5rem', 
-        height: isMobile ? 'auto' : '500px'
+        gap: '1rem', 
+        height: isMobile ? 'auto' : '550px'
       }}>
-        {/* Mascot Preview on Top on Mobile */}
+        {/* Main Workspace Area */}
         <div style={{ 
-          order: isMobile ? 1 : 2,
-          background: 'rgba(248, 250, 252, 0.5)', 
-          borderRadius: '24px', 
+          flex: 2, 
           display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          padding: isMobile ? '0.5rem' : '1rem',
-          border: '2px solid rgba(226, 232, 240, 0.6)',
-          width: isMobile ? '100%' : '260px',
-          height: isMobile ? '220px' : 'auto',
-          margin: isMobile ? '0 auto' : '0',
-          position: 'relative',
-          overflow: 'hidden'
+          flexDirection: 'column', 
+          gap: '1rem',
+          height: isMobile ? '450px' : '100%' 
         }}>
-          <div style={{ transform: isMobile ? 'scale(0.9) translateY(10px)' : 'none' }}>
-            <Mascot ref={mascotRef} />
-          </div>
+          <div 
+            ref={blocklyDiv} 
+            className="blockly-wrapper"
+            style={{ 
+              flex: 1,
+              width: '100%', 
+              borderRadius: '20px', 
+              overflow: 'hidden', 
+              border: '1px solid rgba(255,255,255,0.1)',
+              background: '#0b0e14',
+              position: 'relative'
+            }} 
+          />
         </div>
 
-        {/* Blockly Workspace container hardened for mobile */}
-        <div 
-          ref={blocklyDiv} 
-          className="blockly-wrapper"
-          style={{ 
-            order: isMobile ? 2 : 1,
-            flex: 1,
-            display: 'block', // Force block to prevent inline collapse
-            height: isMobile ? '450px' : '100%', 
-            minHeight: isMobile ? '450px' : '400px', 
-            width: '100%', 
-            borderRadius: '24px', 
-            overflow: 'hidden', 
-            border: '2px solid rgba(226, 232, 240, 0.8)',
-            boxShadow: 'inset 0 4px 15px rgba(0,0,0,0.05)',
-            background: 'white',
-            position: 'relative'
-          }} 
-        />
+        {/* Side Panel: Code Preview & Mascot */}
+        <div style={{ 
+          flex: 1, 
+          display: 'flex', 
+          flexDirection: 'column', 
+          gap: '1rem',
+          minWidth: isMobile ? '100%' : '300px'
+        }}>
+          {/* Mascot Preview */}
+          <div style={{ 
+            background: '#151921', 
+            borderRadius: '20px', 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            padding: '1.5rem',
+            border: '1px solid rgba(255, 255, 255, 0.05)',
+            height: isMobile ? '200px' : '220px',
+            position: 'relative',
+            overflow: 'hidden'
+          }}>
+            <div style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              background: 'radial-gradient(circle at center, rgba(0, 242, 255, 0.1) 0%, transparent 70%)'
+            }} />
+            <div style={{ transform: 'scale(0.85)', position: 'relative', zIndex: 1 }}>
+              <Mascot ref={mascotRef} />
+            </div>
+          </div>
+
+          {/* Code Preview Panel */}
+          {showCode && !isMobile && (
+            <div className="code-preview-panel" style={{ 
+              flex: 1,
+              border: '1px solid rgba(255,255,255,0.1)',
+              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3)'
+            }}>
+              <div style={{
+                display: 'flex',
+                gap: '6px',
+                marginBottom: '12px',
+                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                paddingBottom: '8px'
+              }}>
+                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f56' }}></div>
+                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }}></div>
+                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }}></div>
+              </div>
+              <pre style={{ margin: 0, whiteSpace: 'pre-wrap', lineHeight: '1.5' }}>
+                {language === 'javascript' ? (
+                  <>
+                    <code style={{ color: '#ec4899' }}>async function</code> <code style={{ color: 'var(--kids-blue)' }}>run()</code> {'{\n'}
+                    {generatedCode ? generatedCode.split('\n').map((line, i) => (
+                      <div key={i} style={{ display: 'flex' }}>
+                        <span style={{ color: 'rgba(255,255,255,0.2)', width: '2rem', userSelect: 'none', fontSize: '0.7rem' }}>{i + 1}</span>
+                        <span style={{ color: '#cbd5e1' }}>{line}</span>
+                      </div>
+                    )) : <div style={{ color: 'rgba(255,255,255,0.2)' }}>  // Drag blocks to generate code...</div>}
+                    {'}'}
+                  </>
+                ) : (
+                  <>
+                    <code style={{ color: '#ec4899' }}>import</code> <code style={{ color: '#10b981' }}>time</code>{'\n\n'}
+                    <code style={{ color: '#ec4899' }}>def</code> <code style={{ color: 'var(--kids-blue)' }}>run():</code>{'\n'}
+                    {generatedCode ? generatedCode.split('\n').map((line, i) => (
+                      <div key={i} style={{ display: 'flex' }}>
+                        <span style={{ color: 'rgba(255,255,255,0.2)', width: '2rem', userSelect: 'none', fontSize: '0.7rem' }}>{i + 1}</span>
+                        <span style={{ color: '#cbd5e1' }}>  {line}</span>
+                      </div>
+                    )) : <div style={{ color: 'rgba(255,255,255,0.2)' }}>  # Drag blocks to generate code...</div>}
+                  </>
+                )}
+              </pre>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
