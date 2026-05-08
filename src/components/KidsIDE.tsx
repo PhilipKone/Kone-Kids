@@ -43,7 +43,8 @@ const KidsIDE: React.FC = () => {
   const mascotRef = useRef<MascotHandle>(null);
   const { unlockBadge } = useGamification();
   const [isRunning, setIsRunning] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024); // Increased threshold for tablets
+  const [activeTab, setActiveTab] = useState<'blocks' | 'code'>('blocks');
   const [generatedCode, setGeneratedCode] = useState('');
   const [showCode, setShowCode] = useState(true);
   const [language, setLanguage] = useState<'javascript' | 'python'>('javascript');
@@ -53,7 +54,7 @@ const KidsIDE: React.FC = () => {
   // Responsive breakpoints and Blockly resizing
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < 768;
+      const mobile = window.innerWidth < 1024;
       setIsMobile(mobile);
     };
 
@@ -345,7 +346,7 @@ const KidsIDE: React.FC = () => {
         </div>
         
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          {!isMobile && (
+          {isMobile && (
             <div style={{ 
               display: 'flex', 
               background: 'rgba(255,255,255,0.05)', 
@@ -354,39 +355,79 @@ const KidsIDE: React.FC = () => {
               border: '1px solid rgba(255,255,255,0.1)'
             }}>
               <button 
-                onClick={() => setLanguage('javascript')}
+                onClick={() => setActiveTab('blocks')}
                 style={{
-                  background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent',
+                  background: activeTab === 'blocks' ? 'rgba(255,255,255,0.1)' : 'transparent',
                   border: 'none',
-                  color: language === 'javascript' ? 'white' : '#cbd5e1',
+                  color: 'white',
                   padding: '0.4rem 0.8rem',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '0.8rem',
-                  fontWeight: 'bold',
-                  transition: 'all 0.2s'
+                  fontWeight: 'bold'
                 }}
               >
-                JS
+                Blocks
               </button>
               <button 
-                onClick={() => setLanguage('python')}
+                onClick={() => setActiveTab('code')}
                 style={{
-                  background: language === 'python' ? 'var(--kids-blue)' : 'transparent',
+                  background: activeTab === 'code' ? 'rgba(255,255,255,0.1)' : 'transparent',
                   border: 'none',
-                  color: language === 'python' ? 'white' : '#cbd5e1',
+                  color: 'white',
                   padding: '0.4rem 0.8rem',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   fontSize: '0.8rem',
-                  fontWeight: 'bold',
-                  transition: 'all 0.2s'
+                  fontWeight: 'bold'
                 }}
               >
-                PY
+                Code
               </button>
             </div>
           )}
+
+          <div style={{ 
+            display: 'flex', 
+            background: 'rgba(255,255,255,0.05)', 
+            borderRadius: '12px', 
+            padding: '4px',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <button 
+              onClick={() => setLanguage('javascript')}
+              style={{
+                background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent',
+                border: 'none',
+                color: language === 'javascript' ? 'white' : '#cbd5e1',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                fontWeight: 'bold',
+                transition: 'all 0.2s'
+              }}
+            >
+              JS
+            </button>
+            <button 
+              onClick={() => setLanguage('python')}
+              style={{
+                background: language === 'python' ? 'var(--kids-blue)' : 'transparent',
+                border: 'none',
+                color: language === 'python' ? 'white' : '#cbd5e1',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.8rem',
+                fontWeight: 'bold',
+                transition: 'all 0.2s'
+              }}
+            >
+              PY
+            </button>
+          </div>
+
           {!isMobile && (
             <button 
               onClick={() => setShowCode(!showCode)}
@@ -454,15 +495,17 @@ const KidsIDE: React.FC = () => {
         display: 'flex', 
         flexDirection: isMobile ? 'column' : 'row',
         gap: '1rem', 
-        height: isMobile ? 'auto' : '550px'
+        height: isMobile ? 'auto' : '600px', // Increased height slightly
+        width: '100%'
       }}>
         {/* Main Workspace Area */}
         <div style={{ 
           flex: 2, 
-          display: 'flex', 
+          display: (isMobile && activeTab !== 'blocks') ? 'none' : 'flex', 
           flexDirection: 'column', 
           gap: '1rem',
-          height: isMobile ? '450px' : '100%' 
+          height: isMobile ? '500px' : '100%',
+          width: '100%'
         }}>
           <div 
             ref={blocklyDiv} 
@@ -481,11 +524,12 @@ const KidsIDE: React.FC = () => {
 
         {/* Side Panel: Code Preview & Mascot */}
         <div style={{ 
-          flex: 1, 
+          flex: (isMobile && activeTab === 'code') ? 1 : (isMobile ? 'none' : 1), 
           display: 'flex', 
           flexDirection: 'column', 
           gap: '1rem',
-          minWidth: isMobile ? '100%' : '300px'
+          minWidth: isMobile ? '100%' : '350px',
+          height: isMobile ? 'auto' : '100%'
         }}>
           {/* Mascot Preview */}
           <div style={{ 
@@ -496,9 +540,10 @@ const KidsIDE: React.FC = () => {
             justifyContent: 'center',
             padding: '1.5rem',
             border: '1px solid rgba(255, 255, 255, 0.05)',
-            height: isMobile ? '200px' : '220px',
+            height: isMobile ? '220px' : '220px',
             position: 'relative',
-            overflow: 'hidden'
+            overflow: 'hidden',
+            order: isMobile ? -1 : 0 // Mascot on top in mobile
           }}>
             <div style={{ 
               position: 'absolute', 
@@ -511,7 +556,7 @@ const KidsIDE: React.FC = () => {
           </div>
 
           {/* Code Preview Panel */}
-          {showCode && !isMobile && (
+          {((showCode && !isMobile) || (isMobile && activeTab === 'code')) && (
             <div className="code-preview-panel" style={{ 
               flex: 1,
               background: '#1e1e1e', // Standard VS Code dark theme background
@@ -520,7 +565,8 @@ const KidsIDE: React.FC = () => {
               boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
               display: 'flex',
               flexDirection: 'column',
-              overflow: 'hidden'
+              overflow: 'hidden',
+              minHeight: isMobile ? '400px' : '0'
             }}>
               {/* IDE Top Bar (macOS dots + Tabs) */}
               <div style={{
