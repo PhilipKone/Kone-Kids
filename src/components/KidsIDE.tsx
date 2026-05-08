@@ -596,7 +596,8 @@ const KidsIDE: React.FC = () => {
                   margin: 0, 
                   padding: '16px 16px 16px 8px', 
                   whiteSpace: 'pre-wrap', 
-                  wordBreak: 'break-all', 
+                  wordBreak: 'normal', /* Fixed from break-all which ruins indentation */
+                  overflowWrap: 'anywhere',
                   lineHeight: '1.6', 
                   fontFamily: "'Fira Code', 'Courier New', monospace",
                   fontSize: '0.85rem',
@@ -608,22 +609,39 @@ const KidsIDE: React.FC = () => {
                       ? `async function run() {\n${generatedCode.split('\n').filter(l => l.trim()).map(l => '  ' + l).join('\n')}\n}`
                       : `import time\n\ndef run():\n${generatedCode ? generatedCode.split('\n').filter(l => l.trim()).map(l => '    ' + l).join('\n') : '    pass'}`;
                     
-                    return fullCode.split('\n').map((line, i) => (
-                      <div key={i} style={{ display: 'flex', width: '100%' }}>
-                        <span style={{ color: '#d4d4d4', flex: 1 }}>
-                          {line.split(/(async function|run|await|import|def|time|pass)/g).map((part, idx) => {
-                            if (part === 'async function' || part === 'import' || part === 'def') return <span key={idx} style={{color: '#c586c0'}}>{part}</span>;
-                            if (part === 'run') return <span key={idx} style={{color: '#dcdcaa'}}>{part}</span>;
-                            if (part === 'await') return <span key={idx} style={{color: '#c586c0'}}>{part}</span>;
-                            if (part === 'time') return <span key={idx} style={{color: '#4ec9b0'}}>{part}</span>;
-                            if (part === 'pass') return <span key={idx} style={{color: '#c586c0'}}>{part}</span>;
-                            // Basic string highlighting detection
-                            if (part.includes('"') || part.includes("'")) return <span key={idx} style={{color: '#ce9178'}}>{part}</span>;
-                            return part;
-                          })}
-                        </span>
-                      </div>
-                    ));
+                    return fullCode.split('\n').map((line, i) => {
+                      // Custom Syntax Highlighter matching the reference design exactly
+                      const tokens = line.split(/(\bfunction\b|\bconst\b|\bif\b|\belse\b|\basync\b|\bawait\b|\bimport\b|\bdef\b|\btime\b|\bpass\b|=>|\b\d+\b|\b\w+(?=\()|\b\w+\b|[(){};.])/g).filter(Boolean);
+                      
+                      return (
+                        <div key={i} style={{ display: 'flex', width: '100%' }}>
+                          <span style={{ color: '#f8f8f2', flex: 1 }}>
+                            {tokens.map((part, idx) => {
+                              // Keywords (Pink)
+                              if (/^(function|const|if|else|async|await|import|def|pass)$/.test(part)) return <span key={idx} style={{color: '#f92672'}}>{part}</span>;
+                              // Methods/Functions (Green) - matches word before '('
+                              if (/^(run|onStart|setSpeed|loop|detectObstacle|stop|moveForward|speak|wave|blink)$/.test(part)) return <span key={idx} style={{color: '#a6e22e'}}>{part}</span>;
+                              // Numbers (Purple)
+                              if (/^\d+$/.test(part)) return <span key={idx} style={{color: '#ae81ff'}}>{part}</span>;
+                              // Arrows (Cyan)
+                              if (part === '=>') return <span key={idx} style={{color: '#66d9ef'}}>{part}</span>;
+                              // Special Library (Green)
+                              if (part === 'time') return <span key={idx} style={{color: '#a6e22e'}}>{part}</span>;
+                              // Strings (Yellowish)
+                              if (part.includes('"') || part.includes("'")) return <span key={idx} style={{color: '#e6db74'}}>{part}</span>;
+                              
+                              // Preserve spaces explicitly to ensure perfect indentation
+                              if (part.trim() === '') {
+                                return <span key={idx} style={{ whiteSpace: 'pre' }}>{part}</span>;
+                              }
+                              
+                              // Default Text (White)
+                              return <span key={idx}>{part}</span>;
+                            })}
+                          </span>
+                        </div>
+                      );
+                    });
                   })()}
                 </pre>
               </div>
