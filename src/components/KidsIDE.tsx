@@ -498,13 +498,12 @@ const KidsIDE: React.FC = () => {
         height: isMobile ? 'auto' : '600px', // Increased height slightly
         width: '100%'
       }}>
-        {/* Main Workspace Area */}
         <div style={{ 
-          flex: 2, 
+          flex: isMobile ? 'none' : 2, 
           display: (isMobile && activeTab !== 'blocks') ? 'none' : 'flex', 
           flexDirection: 'column', 
           gap: '1rem',
-          height: isMobile ? '500px' : '100%',
+          height: isMobile ? '450px' : '100%', // Guaranteed height on mobile
           width: '100%'
         }}>
           <div 
@@ -512,6 +511,7 @@ const KidsIDE: React.FC = () => {
             className="blockly-wrapper"
             style={{ 
               flex: 1,
+              height: '100%',
               width: '100%', 
               borderRadius: '20px', 
               overflow: 'hidden', 
