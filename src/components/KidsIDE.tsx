@@ -514,49 +514,119 @@ const KidsIDE: React.FC = () => {
           {showCode && !isMobile && (
             <div className="code-preview-panel" style={{ 
               flex: 1,
-              border: '1px solid rgba(255,255,255,0.1)',
-              boxShadow: 'inset 0 0 20px rgba(0,0,0,0.3)'
+              background: '#1e1e1e', // Standard VS Code dark theme background
+              borderRadius: '12px',
+              border: '1px solid #333333',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
             }}>
+              {/* IDE Top Bar (macOS dots + Tabs) */}
               <div style={{
                 display: 'flex',
-                gap: '6px',
-                marginBottom: '12px',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                paddingBottom: '8px'
+                alignItems: 'flex-end',
+                background: '#252526', // VS Code title bar color
+                padding: '0 12px',
+                borderBottom: '1px solid #333333',
+                height: '40px'
               }}>
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f56' }}></div>
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }}></div>
-                <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }}></div>
+                <div style={{ display: 'flex', gap: '6px', paddingBottom: '14px', marginRight: '20px' }}>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ff5f56' }}></div>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#ffbd2e' }}></div>
+                  <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#27c93f' }}></div>
+                </div>
+                
+                {/* Active File Tab */}
+                <div style={{
+                  background: '#1e1e1e',
+                  padding: '8px 16px',
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#e2e8f0',
+                  fontSize: '0.85rem',
+                  fontFamily: 'sans-serif',
+                  borderTop: '1px solid #333333',
+                  borderRight: '1px solid #333333',
+                  borderLeft: '1px solid #333333',
+                  position: 'relative',
+                  bottom: '-1px' // Cover the bottom border
+                }}>
+                  <span style={{ 
+                    color: language === 'javascript' ? '#f7df1e' : '#3776ab',
+                    fontWeight: 'bold',
+                    fontSize: '1rem'
+                  }}>
+                    {language === 'javascript' ? 'JS' : 'PY'}
+                  </span>
+                  main.{language === 'javascript' ? 'js' : 'py'}
+                </div>
               </div>
-              <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all', lineHeight: '1.5', fontFamily: 'monospace' }}>
-                {(() => {
-                  const fullCode = language === 'javascript' 
-                    ? `async function run() {\n${generatedCode.split('\n').filter(l => l.trim()).map(l => '  ' + l).join('\n')}\n}`
-                    : `import time\n\ndef run():\n${generatedCode ? generatedCode.split('\n').filter(l => l.trim()).map(l => '    ' + l).join('\n') : '    pass'}`;
-                  
-                  return fullCode.split('\n').map((line, i) => (
-                    <div key={i} style={{ display: 'flex', width: '100%' }}>
-                      <span style={{ 
-                        color: 'rgba(255,255,255,0.2)', 
-                        minWidth: '2.5rem', 
-                        userSelect: 'none', 
-                        fontSize: '0.8rem',
-                        textAlign: 'right',
-                        paddingRight: '1rem'
-                      }}>{i + 1}</span>
-                      <span style={{ color: '#cbd5e1', flex: 1 }}>
-                        {line.split(/(async function|run|await|import|def|time)/g).map((part, idx) => {
-                          if (part === 'async function' || part === 'import' || part === 'def') return <span key={idx} style={{color: '#ec4899'}}>{part}</span>;
-                          if (part === 'run') return <span key={idx} style={{color: '#0ea5e9'}}>{part}</span>;
-                          if (part === 'await') return <span key={idx} style={{color: '#f59e0b'}}>{part}</span>;
-                          if (part === 'time') return <span key={idx} style={{color: '#10b981'}}>{part}</span>;
-                          return part;
-                        })}
-                      </span>
-                    </div>
-                  ));
-                })()}
-              </pre>
+
+              {/* IDE Editor Area */}
+              <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+                {/* Line Numbers Gutter */}
+                <div style={{
+                  padding: '16px 8px 16px 16px',
+                  background: '#1e1e1e',
+                  color: '#858585',
+                  fontFamily: "'Fira Code', 'Courier New', monospace",
+                  fontSize: '0.85rem',
+                  lineHeight: '1.6',
+                  textAlign: 'right',
+                  userSelect: 'none',
+                  minWidth: '2.5rem'
+                }}>
+                  {(() => {
+                    const fullCode = language === 'javascript' 
+                      ? `async function run() {\n${generatedCode.split('\n').filter(l => l.trim()).map(l => '  ' + l).join('\n')}\n}`
+                      : `import time\n\ndef run():\n${generatedCode ? generatedCode.split('\n').filter(l => l.trim()).map(l => '    ' + l).join('\n') : '    pass'}`;
+                    
+                    return fullCode.split('\n').map((_, i) => (
+                      <div key={i}>{i + 1}</div>
+                    ));
+                  })()}
+                </div>
+
+                {/* Code Content */}
+                <pre style={{ 
+                  margin: 0, 
+                  padding: '16px 16px 16px 8px', 
+                  whiteSpace: 'pre-wrap', 
+                  wordBreak: 'break-all', 
+                  lineHeight: '1.6', 
+                  fontFamily: "'Fira Code', 'Courier New', monospace",
+                  fontSize: '0.85rem',
+                  flex: 1,
+                  overflowY: 'auto'
+                }}>
+                  {(() => {
+                    const fullCode = language === 'javascript' 
+                      ? `async function run() {\n${generatedCode.split('\n').filter(l => l.trim()).map(l => '  ' + l).join('\n')}\n}`
+                      : `import time\n\ndef run():\n${generatedCode ? generatedCode.split('\n').filter(l => l.trim()).map(l => '    ' + l).join('\n') : '    pass'}`;
+                    
+                    return fullCode.split('\n').map((line, i) => (
+                      <div key={i} style={{ display: 'flex', width: '100%' }}>
+                        <span style={{ color: '#d4d4d4', flex: 1 }}>
+                          {line.split(/(async function|run|await|import|def|time|pass)/g).map((part, idx) => {
+                            if (part === 'async function' || part === 'import' || part === 'def') return <span key={idx} style={{color: '#c586c0'}}>{part}</span>;
+                            if (part === 'run') return <span key={idx} style={{color: '#dcdcaa'}}>{part}</span>;
+                            if (part === 'await') return <span key={idx} style={{color: '#c586c0'}}>{part}</span>;
+                            if (part === 'time') return <span key={idx} style={{color: '#4ec9b0'}}>{part}</span>;
+                            if (part === 'pass') return <span key={idx} style={{color: '#c586c0'}}>{part}</span>;
+                            // Basic string highlighting detection
+                            if (part.includes('"') || part.includes("'")) return <span key={idx} style={{color: '#ce9178'}}>{part}</span>;
+                            return part;
+                          })}
+                        </span>
+                      </div>
+                    ));
+                  })()}
+                </pre>
+              </div>
             </div>
           )}
         </div>
