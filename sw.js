@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kone-kids-cache-v2';
+const CACHE_NAME = 'kone-kids-cache-v3';
 const STATIC_ASSETS = [
   './mascot.svg',
   './programs/coding.png',
