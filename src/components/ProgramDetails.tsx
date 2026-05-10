@@ -14,10 +14,15 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const isCodingProgram = title === 'Coding 4 Kids'
+  const isCodingProgram = title === 'Mission Lab' || title === 'Coding 4 Kids'
 
   return (
-    <div className="program-details-page" style={{ padding: 'clamp(1.5rem, 6vw, 4rem) 5%', minHeight: '100vh', background: 'white' }}>
+    <div className="program-details-page" style={{ 
+      padding: 'clamp(1.5rem, 6vw, 4rem) 5%', 
+      minHeight: '100vh', 
+      background: 'var(--kids-dark)',
+      color: 'white'
+    }}>
       <EnrollmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} programTitle={title} />
       
       {/* Header with Back button */}
@@ -29,69 +34,46 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
         flexWrap: 'wrap'
       }}>
         <button 
-          onClick={() => navigate('/')}
+          onClick={() => navigate(-1)}
           className="kids-button"
-          style={{ padding: '0.8rem 1.5rem', fontSize: '1.1rem' }}
+          style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', boxShadow: 'none', padding: '0.8rem 1.5rem', fontSize: '1.1rem' }}
         >
-          ← Back
+          ← Back to Map
         </button>
         <h1 style={{ margin: 0, fontSize: 'clamp(2rem, 8vw, 3rem)', color: accentColor }}>{title}</h1>
       </div>
 
-      {/* Program Image */}
-      {!isCodingProgram && (
-        <div className="animate-float glass-card" style={{ 
-          width: '100%', 
-          maxWidth: '900px', 
-          margin: '0 auto 3rem',
-          borderRadius: 'clamp(16px, 4vw, 32px)',
-          overflow: 'hidden', 
-          border: 'clamp(4px, 2vw, 12px) solid white',
-          boxShadow: `0 30px 60px -12px rgba(0,0,0,0.2), 0 0 40px ${accentColor}15`,
-          animationDelay: '0.2s'
-        }}>
-          <img 
-            src={image} 
-            alt={title} 
-            style={{ 
-              width: '100%', 
-              display: 'block',
-              clipPath: 'inset(0 0 15.78% 0)',
-              marginBottom: '-14%'
-            }} 
-          />
-        </div>
-      )}
-
       {/* Description Content */}
-      <div className="container animate-fade-in-up" style={{ maxWidth: '800px', textAlign: 'center', animationDelay: '0.4s' }}>
+      <div className="container animate-fade-in-up" style={{ maxWidth: '1200px', animationDelay: '0.4s' }}>
         <p style={{ 
-          fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', 
+          fontSize: '1.2rem', 
           lineHeight: '1.6', 
-          color: '#475569',
-          fontFamily: 'Nunito, sans-serif'
+          color: 'rgba(255,255,255,0.7)',
+          fontFamily: 'Nunito, sans-serif',
+          marginBottom: '2rem'
         }}>
           {description}
         </p>
 
-        {/* Kids IDE for Coding Program */}
-        {isCodingProgram && <KidsIDE />}
+        {/* Kids IDE for Missions */}
+        <KidsIDE />
         
-        <div style={{ marginTop: '3rem' }}>
+        <div style={{ marginTop: '3rem', textAlign: 'center' }}>
           <button 
             className="kids-button" 
             style={{ 
               background: accentColor, 
-              boxShadow: `0 10px 0 ${accentColor}cc`
+              boxShadow: `0 8px 0 ${accentColor}aa`
             }}
             onClick={() => setIsModalOpen(true)}
           >
-            {isCodingProgram ? 'Keep Learning - Enroll Now!' : 'Enroll Now!'}
+            Enroll for Certificate
           </button>
         </div>
       </div>
     </div>
   )
 }
+
 
 export default ProgramDetails

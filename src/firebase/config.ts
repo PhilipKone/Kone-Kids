@@ -13,6 +13,8 @@ interface FirebaseConfig {
     measurementId?: string;
 }
 
+// These values are pulled from your .env file
+// Ensure you have VITE_FIREBASE_API_KEY, etc. defined there!
 const firebaseConfig: FirebaseConfig = {
     apiKey: (import.meta.env.VITE_FIREBASE_API_KEY || 'dummy_key') as string,
     authDomain: (import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'dummy_domain') as string,
@@ -29,9 +31,11 @@ let db: Firestore;
 let analytics: Analytics | undefined;
 
 try {
+    // Safety check for missing environment variables
     if (firebaseConfig.apiKey === 'dummy_key') {
-        console.warn('Firebase Hub: Missing VITE_FIREBASE_API_KEY. Initializing in offline simulation mode.');
+        console.warn('Kone Kids Firebase: Missing environment variables. Running in local simulation mode.');
     }
+    
     app = initializeApp(firebaseConfig);
     auth = getAuth(app);
     db = getFirestore(app);
@@ -41,7 +45,8 @@ try {
         analytics = getAnalytics(app);
     }
 } catch (error) {
-    console.error('Firebase Hub: Critical Initialization Error. Forcing local fallback.');
+    console.error('Kone Kids Firebase: Critical Initialization Error. Forcing local fallback.');
+    // Provide safe empty objects to prevent application crashes
     app = {} as any;
     auth = {} as any;
     db = {} as any;

@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import { useGamification } from '../context/GamificationContext'
 import Mascot from './Mascot'
+import CertificatePreview from './CertificatePreview'
 
 interface EnrollmentModalProps {
   isOpen: boolean
@@ -185,6 +186,29 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 </p>
               )}
             </form>
+
+            {/* Certificate Preview Section */}
+            {(formData.studentName || formData.program) && (
+              <div style={{ marginTop: '3rem', borderTop: '2px dashed #e2e8f0', paddingTop: '2rem' }}>
+                <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#64748b', fontSize: '0.9rem', letterSpacing: '2px' }}>
+                  PREVIEW YOUR FUTURE CERTIFICATE
+                </h3>
+                <div style={{ 
+                  transform: `scale(${window.innerWidth < 480 ? 0.5 : 0.8})`, 
+                  transformOrigin: 'top center',
+                  margin: '0 auto',
+                  width: 'fit-content'
+                }}>
+                  <CertificatePreview 
+                    pathway={formData.program} 
+                    studentName={formData.studentName || 'Future Engineer'} 
+                  />
+                </div>
+                <p style={{ textAlign: 'center', marginTop: '-2rem', color: '#94a3b8', fontSize: '0.8rem' }}>
+                  Complete your program to earn your official signed certificate!
+                </p>
+              </div>
+            )}
           </>
         )}
       </div>

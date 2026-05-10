@@ -4,6 +4,8 @@ import { javascriptGenerator } from 'blockly/javascript';
 import { pythonGenerator } from 'blockly/python';
 import Mascot, { MascotHandle } from './Mascot';
 import { useGamification } from '../context/GamificationContext';
+import { useParams, useNavigate } from 'react-router-dom';
+import { CODING_MISSIONS } from '../data/missions';
 
 // Define a premium dark theme for Blockly
 const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
@@ -41,7 +43,6 @@ const KidsIDE: React.FC = () => {
   const blocklyDiv = useRef<HTMLDivElement>(null);
   const workspace = useRef<Blockly.WorkspaceSvg | null>(null);
   const mascotRef = useRef<MascotHandle>(null);
-  const { unlockBadge } = useGamification();
   const [isRunning, setIsRunning] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024); // Increased threshold for tablets
   const [activeTab, setActiveTab] = useState<'blocks' | 'code'>('blocks');
@@ -50,13 +51,18 @@ const KidsIDE: React.FC = () => {
   const [language, setLanguage] = useState<'javascript' | 'python'>('javascript');
   const [isStopping, setIsStopping] = useState(false);
   const abortController = useRef<AbortController | null>(null);
+  
+  const { missionId } = useParams<{ missionId: string }>();
+  const navigate = useNavigate();
+  const { unlockBadge, completeMission, completedMissions } = useGamification();
+  const mission = CODING_MISSIONS.find(m => m.id === missionId);
+  const isMissionCompleted = completedMissions.includes(missionId || '');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Responsive breakpoints and Blockly resizing
   useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 1024;
-      setIsMobile(mobile);
-    };
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
 
     const observer = new ResizeObserver(() => {
       if (workspace.current) {
@@ -146,7 +152,7 @@ const KidsIDE: React.FC = () => {
       init: function() {
         this.appendDummyInput()
             .appendField("⏳ Wait")
-            .appendField(new Blockly.FieldNumber(1, 0.1), "SECONDS")
+            .appendField(new Blockly.FieldTextInput("1"), "SECONDS")
             .appendField("seconds");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -155,73 +161,132 @@ const KidsIDE: React.FC = () => {
     };
     javascriptGenerator.forBlock['mascot_wait'] = (block: any) => {
       const seconds = block.getFieldValue('SECONDS');
-      return `await new Promise(resolve => setTimeout(resolve, ${seconds * 1000}));\n`;
+      return `await new Promise(resolve => setTimeout(resolve, ${parseFloat(seconds) * 1000}));\n`;
     };
     pythonGenerator.forBlock['mascot_wait'] = (block: any) => {
       const seconds = block.getFieldValue('SECONDS');
       return `time.sleep(${seconds})\n`;
     };
 
+    // --- Specialized Pathway Blocks ---
+
+    // Mobile Blocks
+    Blockly.Blocks['mobile_screen'] = {
+      init: function() {
+        this.appendDummyInput().appendField("📱 New Screen").appendField(new Blockly.FieldTextInput("Welcome"), "NAME");
+        this.setNextStatement(true, null);
+        this.setColour('#22d3ee');
+      }
+    };
+    javascriptGenerator.forBlock['mobile_screen'] = (block: any) => `await mascot.speak("Creating mobile screen: ${block.getFieldValue('NAME')}");\n`;
+
+    Blockly.Blocks['mobile_button'] = {
+      init: function() {
+        this.appendDummyInput().appendField("🔘 Add Button").appendField(new Blockly.FieldTextInput("Click Me"), "TEXT");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#22d3ee');
+      }
+    };
+    javascriptGenerator.forBlock['mobile_button'] = (block: any) => `await mascot.speak("Adding button: ${block.getFieldValue('TEXT')}");\n`;
+
+    // Robotics Blocks
+    Blockly.Blocks['robot_motor'] = {
+      init: function() {
+        this.appendDummyInput().appendField("🦾 Spin Motor").appendField(new Blockly.FieldDropdown([["Left", "LEFT"], ["Right", "RIGHT"]]), "SIDE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#0ea5e9');
+      }
+    };
+    javascriptGenerator.forBlock['robot_motor'] = (block: any) => `await mascot.speak("Spinning ${block.getFieldValue('SIDE')} motor...");\nawait mascot.wave();\n`;
+
+    // AI Blocks
+    Blockly.Blocks['ai_train'] = {
+      init: function() {
+        this.appendDummyInput().appendField("🧠 Train AI on").appendField(new Blockly.FieldDropdown([["Shapes", "SHAPES"], ["Colors", "COLORS"], ["Faces", "FACES"]]), "TYPE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#a855f7');
+      }
+    };
+    javascriptGenerator.forBlock['ai_train'] = (block: any) => `await mascot.speak("Training AI model for ${block.getFieldValue('TYPE')}...");\nawait mascot.blink();\n`;
+
+    // Logic Blocks Commentary
+    javascriptGenerator.forBlock['controls_if'] = (block: any) => {
+      const code = javascriptGenerator.statementToCode(block, 'DO0');
+      return `await mascot.speak("Checking logic...");\nif (true) {\n${code}\n}\n`;
+    };
+
+    javascriptGenerator.forBlock['controls_repeat_ext'] = (block: any) => {
+      const repeats = javascriptGenerator.valueToCode(block, 'TIMES', 0) || '0';
+      const branch = javascriptGenerator.statementToCode(block, 'DO');
+      return `await mascot.speak("Repeating this ${repeats} times!");\nfor (var i = 0; i < ${repeats}; i++) {\n${branch}\n}\n`;
+    };
+
     // Inject Workspace
     if (blocklyDiv.current) {
+      const toolboxContents: any[] = [
+        {
+          kind: 'category',
+          name: '🤖 Mascot',
+          colour: '#0ea5e9',
+          contents: [
+            { kind: 'block', type: 'mascot_speak' },
+            { kind: 'block', type: 'mascot_wave' },
+            { kind: 'block', type: 'mascot_blink' },
+            { kind: 'block', type: 'mascot_wait' },
+          ]
+        }
+      ];
+
+      // Add pathway-specific categories
+      if (mission?.pathway === 'Mobile App Dev') {
+        toolboxContents.push({
+          kind: 'category',
+          name: '📱 Mobile',
+          colour: '#22d3ee',
+          contents: [
+            { kind: 'block', type: 'mobile_screen' },
+            { kind: 'block', type: 'mobile_button' },
+          ]
+        });
+      }
+
+      if (mission?.pathway === 'Robotics (AI 4 Kids)') {
+        toolboxContents.push({
+          kind: 'category',
+          name: '🦾 Robotics',
+          colour: '#0ea5e9',
+          contents: [
+            { kind: 'block', type: 'robot_motor' },
+          ]
+        });
+      }
+
+      if (mission?.pathway?.includes('AI') || mission?.pathway?.includes('ML')) {
+        toolboxContents.push({
+          kind: 'category',
+          name: '✨ AI Lab',
+          colour: '#a855f7',
+          contents: [
+            { kind: 'block', type: 'ai_train' },
+          ]
+        });
+      }
+
+      // Add standard categories
+      toolboxContents.push(
+        { kind: 'category', name: '🧠 Logic', categorystyle: 'logic_category', contents: [{ kind: 'block', type: 'controls_if' }, { kind: 'block', type: 'logic_compare' }] },
+        { kind: 'category', name: '🔄 Loops', categorystyle: 'loop_category', contents: [{ kind: 'block', type: 'controls_repeat_ext' }] },
+        { kind: 'category', name: '🔢 Math', categorystyle: 'math_category', contents: [{ kind: 'block', type: 'math_number' }] },
+        { kind: 'category', name: '📦 Variables', categorystyle: 'variable_category', custom: 'VARIABLE' }
+      );
+
       const ws = Blockly.inject(blocklyDiv.current, {
         toolbox: {
           kind: 'categoryToolbox',
-          contents: [
-            {
-              kind: 'category',
-              name: '🤖 Mascot',
-              colour: '#0ea5e9',
-              contents: [
-                { kind: 'block', type: 'mascot_speak' },
-                { kind: 'block', type: 'mascot_wave' },
-                { kind: 'block', type: 'mascot_blink' },
-                { kind: 'block', type: 'mascot_wait' },
-              ]
-            },
-            {
-              kind: 'category',
-              name: '🧠 Logic',
-              categorystyle: 'logic_category',
-              contents: [
-                { kind: 'block', type: 'controls_if' },
-                { kind: 'block', type: 'logic_compare' },
-                { kind: 'block', type: 'logic_operation' },
-                { kind: 'block', type: 'logic_boolean' },
-              ]
-            },
-            {
-              kind: 'category',
-              name: '🔄 Loops',
-              categorystyle: 'loop_category',
-              contents: [
-                { kind: 'block', type: 'controls_repeat_ext', inputs: { TIMES: { shadow: { type: 'math_number', fields: { NUM: 3 } } } } },
-                { kind: 'block', type: 'controls_whileUntil' },
-              ]
-            },
-            {
-              kind: 'category',
-              name: '🔢 Math',
-              categorystyle: 'math_category',
-              contents: [
-                { kind: 'block', type: 'math_number' },
-                { kind: 'block', type: 'math_arithmetic' },
-                { kind: 'block', type: 'math_single' },
-              ]
-            },
-            {
-              kind: 'category',
-              name: '📦 Variables',
-              categorystyle: 'variable_category',
-              custom: 'VARIABLE'
-            },
-            {
-              kind: 'category',
-              name: '🧩 Functions',
-              categorystyle: 'procedure_category',
-              custom: 'PROCEDURE'
-            }
-          ]
+          contents: toolboxContents
         },
         theme: KoneDark,
         trashcan: true,
@@ -244,24 +309,40 @@ const KidsIDE: React.FC = () => {
         }
       });
 
-      // Simple pre-loaded script
-      const initialXml = `<xml xmlns="https://developers.google.com/blockly/xml">
-        <block type="mascot_speak" x="20" y="20">
-          <field name="TEXT">Kone Engineering Active! ⚡</field>
-          <next>
-            <block type="mascot_wave">
-              <next>
-                <block type="mascot_blink"></block>
-              </next>
-            </block>
-          </next>
-        </block>
-      </xml>`;
-      Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), workspace.current as any);
+      // Only load initial script if NOT in a mission
+      if (!missionId) {
+        const initialXml = `<xml xmlns="https://developers.google.com/blockly/xml">
+          <block type="mascot_speak" x="20" y="20">
+            <field name="TEXT">Kone Engineering Active! ⚡</field>
+            <next>
+              <block type="mascot_wave">
+                <next>
+                  <block type="mascot_blink"></block>
+                </next>
+              </block>
+            </next>
+          </block>
+        </xml>`;
+        Blockly.Xml.domToWorkspace(Blockly.utils.xml.textToDom(initialXml), workspace.current as any);
+      } else {
+        workspace.current?.clear();
+      }
+      
       const generator = language === 'javascript' ? javascriptGenerator : pythonGenerator;
       setGeneratedCode(generator.workspaceToCode(ws));
     }
-  }, [language]); // Re-run effect when language changes to refresh generators
+  }, [language, missionId, mission?.pathway]); // Re-run when missionId or pathway changes
+
+  // Mascot Mission Briefing
+  useEffect(() => {
+    if (mission && mascotRef.current) {
+      const timer = setTimeout(() => {
+        mascotRef.current?.speak(`Hi! I'm your lab assistant. Today's mission is: ${mission.name}. ${mission.description}`);
+        mascotRef.current?.wave(2000);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [missionId]);
 
   useEffect(() => {
     return () => workspace.current?.dispose();
@@ -310,6 +391,34 @@ const KidsIDE: React.FC = () => {
     } finally {
       setIsRunning(false);
       setIsStopping(false);
+      
+      // Mission Success Check
+      if (mission && !isMissionCompleted) {
+        // Simple heuristic: check if required blocks exist in the workspace
+        const xml = Blockly.Xml.workspaceToDom(workspace.current!);
+        const xmlText = Blockly.Xml.domToText(xml);
+        
+        const allBlocksPresent = mission.requiredBlocks?.every(blockType => 
+          xmlText.includes(`type="${blockType}"`)
+        );
+
+        if (allBlocksPresent) {
+          completeMission(mission.id, mission.xpReward);
+          unlockBadge('mission_complete');
+          setShowSuccessModal(true);
+        }
+      }
+    }
+  };
+
+  const handleNextMission = () => {
+    const currentIndex = CODING_MISSIONS.findIndex(m => m.id === missionId);
+    if (currentIndex < CODING_MISSIONS.length - 1) {
+      const nextMission = CODING_MISSIONS[currentIndex + 1];
+      setShowSuccessModal(false);
+      navigate(`/coding/mission/${nextMission.id}`);
+    } else {
+      navigate('/coding');
     }
   };
 
@@ -522,6 +631,30 @@ const KidsIDE: React.FC = () => {
           height: isMobile ? '450px' : '100%', // Guaranteed height on mobile
           width: '100%'
         }}>
+          {/* Mission Briefing Panel */}
+          {mission && (
+            <div style={{
+              background: 'rgba(14, 165, 233, 0.1)',
+              border: '1px solid rgba(14, 165, 233, 0.3)',
+              borderRadius: '16px',
+              padding: '1rem',
+              display: 'flex',
+              gap: '1rem',
+              alignItems: 'center'
+            }}>
+              <div style={{ fontSize: '2rem' }}>🎯</div>
+              <div>
+                <h4 style={{ margin: 0, color: 'var(--kids-blue)', fontSize: '0.9rem', textTransform: 'uppercase' }}>Current Mission: {mission.name}</h4>
+                <p style={{ margin: '0.2rem 0 0 0', color: 'white', fontSize: '1rem', fontWeight: 600 }}>{mission.objective}</p>
+              </div>
+              {isMissionCompleted && (
+                <div style={{ marginLeft: 'auto', background: '#22c55e', color: 'white', padding: '4px 12px', borderRadius: '20px', fontSize: '0.8rem', fontWeight: 800 }}>
+                  COMPLETED
+                </div>
+              )}
+            </div>
+          )}
+
           <div 
             ref={blocklyDiv} 
             className="blockly-wrapper"
@@ -711,6 +844,63 @@ const KidsIDE: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Success Modal Overlay */}
+      {showSuccessModal && mission && (
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(15, 23, 42, 0.9)',
+          backdropFilter: 'blur(10px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 2000,
+          animation: 'fadeIn 0.3s ease-out',
+          borderRadius: '24px'
+        }}>
+          <div style={{
+            background: '#1e293b',
+            padding: '3rem',
+            borderRadius: '32px',
+            textAlign: 'center',
+            maxWidth: '450px',
+            width: '90%',
+            border: '2px solid var(--kids-blue)',
+            boxShadow: '0 0 50px rgba(14, 165, 233, 0.3)',
+            animation: 'modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)'
+          }}>
+            <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🏆</div>
+            <h2 className="lab-title" style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>MISSION COMPLETE!</h2>
+            <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '2rem' }}>
+              Awesome work, Engineer! You earned <strong style={{ color: 'var(--kids-blue)' }}>{mission.xpReward} XP</strong>.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <button 
+                className="kids-button pulse-neon" 
+                onClick={handleNextMission}
+                style={{ width: '100%', fontSize: '1.2rem', padding: '1rem' }}
+              >
+                NEXT MISSION 🚀
+              </button>
+              <button 
+                className="kids-button" 
+                onClick={() => navigate('/coding')}
+                style={{ 
+                  width: '100%', 
+                  background: 'transparent', 
+                  boxShadow: 'none', 
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  fontSize: '1rem' 
+                }}
+              >
+                BACK TO MAP
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

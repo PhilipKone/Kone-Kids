@@ -5,7 +5,10 @@ import { useGamification, Badge } from '../context/GamificationContext';
 const Celebration: React.FC = () => {
   const { badges } = useGamification();
   const [activeBadge, setActiveBadge] = useState<Badge | null>(null);
-  const [lastUnlockedIds, setLastUnlockedIds] = useState<Set<string>>(new Set());
+  const [lastUnlockedIds, setLastUnlockedIds] = useState<Set<string>>(() => {
+    // On mount, assume already unlocked badges don't need a celebration
+    return new Set(badges.filter(b => b.unlocked).map(b => b.id));
+  });
 
   useEffect(() => {
     // Detect newly unlocked badges
@@ -15,7 +18,7 @@ const Celebration: React.FC = () => {
       triggerCelebration(newlyUnlocked);
       setLastUnlockedIds(prev => new Set([...prev, newlyUnlocked.id]));
     }
-  }, [badges]);
+  }, [badges, lastUnlockedIds]);
 
   const triggerCelebration = (badge: Badge) => {
     setActiveBadge(badge);
@@ -84,16 +87,22 @@ const Celebration: React.FC = () => {
         animation: 'modalPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both'
       }}>
         <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-          <img 
-            src={activeBadge.icon} 
-            alt={activeBadge.name} 
-            style={{ 
-              width: '120px', 
-              height: '120px', 
-              objectFit: 'contain',
-              filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))'
-            }} 
-          />
+          {activeBadge.icon.length > 2 ? (
+            <img 
+              src={activeBadge.icon} 
+              alt={activeBadge.name} 
+              style={{ 
+                width: '120px', 
+                height: '120px', 
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))'
+              }} 
+            />
+          ) : (
+            <div style={{ fontSize: '6rem', filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.1))' }}>
+              {activeBadge.icon}
+            </div>
+          )}
         </div>
         <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem', color: 'var(--kids-blue)' }}>Badge Unlocked!</h2>
         <h3 style={{ fontSize: '1.8rem', margin: '0 0 1rem', color: 'var(--kids-dark)' }}>{activeBadge.name}</h3>

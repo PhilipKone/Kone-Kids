@@ -3,17 +3,46 @@
 :root {
   --kids-blue: #0ea5e9;
   --kids-orange: #f97316;
+  --kids-purple: #a855f7;
+  
+  /* Default (Light) */
   --kids-bg: #f8fafc;
+  --kids-surface: #ffffff;
+  --kids-text: #0f172a;
+  --kids-text-muted: #64748b;
+  --kids-border: #e2e8f0;
   --kids-dark: #0f172a;
+
+  /* Blockly Theme (Light) */
+  --blockly-main-bg: #ffffff;
+  --blockly-flyout-bg: #f1f5f9;
+  --blockly-toolbox-bg: #f8fafc;
+  --blockly-text: #0f172a;
+}
+
+[data-theme='dark'] {
+  --kids-bg: #0f172a;
+  --kids-surface: #1e293b;
+  --kids-text: #f8fafc;
+  --kids-text-muted: #94a3b8;
+  --kids-border: rgba(255, 255, 255, 0.1);
+
+  /* Blockly Theme (Dark) */
+  --blockly-main-bg: #0b0e14;
+  --blockly-flyout-bg: #151921;
+  --blockly-toolbox-bg: #151921;
+  --blockly-text: #f8fafc;
 }
 
 body {
   margin: 0;
   font-family: 'Nunito', sans-serif;
   background-color: var(--kids-bg);
-  color: var(--kids-dark);
+  color: var(--kids-text);
   overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
 }
+
 
 h1, h2, h3 {
   font-family: 'Baloo 2', cursive;
@@ -429,24 +458,24 @@ html {
   box-shadow: 0 0 10px rgba(14, 165, 233, 0.4), 0 4px 0 #034d75 !important;
 }
 
-/* Blockly Dark Theme Overrides */
+/* Blockly Theme Overrides */
 .blocklyMainBackground {
-  fill: #0b0e14 !important;
+  fill: var(--blockly-main-bg) !important;
 }
 
 .blocklyFlyoutBackground {
-  fill: #151921 !important;
+  fill: var(--blockly-flyout-bg) !important;
   fill-opacity: 0.9 !important;
 }
 
 .blocklyToolboxDiv {
-  background-color: #151921 !important;
-  color: #fff !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background-color: var(--blockly-toolbox-bg) !important;
+  color: var(--blockly-text) !important;
+  border-right: 1px solid var(--kids-border) !important;
 }
 
 .blocklyTreeLabel {
-  color: #cbd5e1 !important;
+  color: var(--blockly-text) !important;
   font-family: 'Baloo 2', cursive !important;
   font-size: 1rem !important;
 }
@@ -491,3 +520,52 @@ html {
 .pulse-neon {
   animation: neonPulse 2s infinite;
 }
+
+/* Pathway Filters UI */
+.pathway-filters {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  margin-bottom: 3rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.pathway-filters::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.pathway-tab {
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.75rem 1.5rem;
+  border-radius: 100px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pathway-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pathway-tab-active {
+  background: var(--kids-blue) !important;
+  color: white !important;
+  border-color: var(--kids-blue) !important;
+  box-shadow: 0 0 20px rgba(14, 165, 233, 0.4);
+}
+
+.pathway-tab-icon {
+  font-size: 1.2rem;
+}
+

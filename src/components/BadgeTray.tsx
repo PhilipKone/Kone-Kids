@@ -40,17 +40,30 @@ const BadgeTray: React.FC = () => {
                 alignItems: 'center'
               }}
             >
-              <div style={{ marginBottom: '1rem' }}>
-                <img 
-                  src={badge.icon} 
-                  alt={badge.name} 
-                  style={{ 
-                    width: 'clamp(60px, 15vw, 80px)', 
-                    height: 'clamp(60px, 15vw, 80px)', 
-                    objectFit: 'contain',
-                    filter: badge.unlocked ? 'drop-shadow(0 5px 10px rgba(14, 165, 233, 0.2))' : 'none'
-                  }} 
-                />
+              <div style={{ 
+                marginBottom: '1rem',
+                fontSize: '3.5rem',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '80px'
+              }}>
+                {badge.icon.startsWith('/') || badge.icon.includes('http') ? (
+                  <img 
+                    src={badge.icon} 
+                    alt={badge.name} 
+                    style={{ 
+                      width: '80px', 
+                      height: '80px', 
+                      objectFit: 'contain',
+                      filter: badge.unlocked ? 'drop-shadow(0 5px 10px rgba(14, 165, 233, 0.2))' : 'none'
+                    }} 
+                  />
+                ) : (
+                  <span style={{ filter: badge.unlocked ? 'drop-shadow(0 5px 10px rgba(0,0,0,0.1))' : 'grayscale(1)' }}>
+                    {badge.icon}
+                  </span>
+                )}
               </div>
               <h4 style={{ margin: '0 0 0.5rem', fontSize: '1.1rem', color: 'var(--kids-dark)', lineHeight: '1.2' }}>{badge.name}</h4>
               <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: '1.3' }}>

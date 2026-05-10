@@ -6,8 +6,10 @@ import Mascot from './components/Mascot'
 import EnrollmentModal from './components/EnrollmentModal'
 import BadgeTray from './components/BadgeTray'
 import { GamificationProvider, useGamification } from './context/GamificationContext'
+import { ThemeProvider } from './context/ThemeContext'
 import Celebration from './components/Celebration'
 import InstallBanner from './components/InstallBanner'
+import MissionMap from './components/MissionMap'
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -111,37 +113,50 @@ function AppContent() {
         <Route path="/" element={<Home />} />
         <Route 
           path="/coding" 
+          element={<MissionMap hub="coding" />} 
+        />
+        <Route 
+          path="/robotics" 
+          element={<MissionMap hub="robotics" />} 
+        />
+        <Route 
+          path="/ai" 
+          element={<MissionMap hub="ai" />} 
+        />
+        <Route 
+          path="/coding/mission/:missionId" 
           element={
             <ProgramDetails 
-              title="Coding 4 Kids" 
+              title="Coding Lab" 
               image="/programs/coding.png" 
-              description="Learn the language of the future through fun, interactive projects. Master the logic of the digital world through interactive and visual programming." 
+              description="Master the mission! Follow the instructions on the left to earn XP and unlock the next level." 
               accentColor="var(--kids-orange)"
             />
           } 
         />
         <Route 
-          path="/robotics" 
+          path="/robotics/mission/:missionId" 
           element={
             <ProgramDetails 
-              title="Robotics 4 Kids" 
+              title="Robotics Lab" 
               image="/programs/robotics.png" 
-              description="Build and program your own robots in hands-on engineering labs. Bring machines to life with hands-on electronics and hardware engineering." 
+              description="Build and program your robot! Earn XP as you master hardware control." 
               accentColor="var(--kids-blue)"
             />
           } 
         />
         <Route 
-          path="/ai" 
+          path="/ai/mission/:missionId" 
           element={
             <ProgramDetails 
-              title="AI 4 Kids" 
+              title="AI Studio" 
               image="/programs/ai.png" 
-              description="Explore the world of artificial intelligence and machine learning in a kid-friendly way. Understand how the future is built with machine learning." 
+              description="Train your first AI model! Explore the world of Artificial Intelligence." 
               accentColor="#a855f7"
             />
           } 
         />
+
       </Routes>
       <InstallBanner />
     </>
@@ -150,10 +165,13 @@ function AppContent() {
 
 function App() {
   return (
-    <GamificationProvider>
-      <AppContent />
-    </GamificationProvider>
+    <ThemeProvider>
+      <GamificationProvider>
+        <AppContent />
+      </GamificationProvider>
+    </ThemeProvider>
   )
 }
+
 
 export default App
