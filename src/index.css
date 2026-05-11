@@ -569,3 +569,50 @@ html {
   font-size: 1.2rem;
 }
 
+/* Mission Map Pulsing Paths */
+.path-pulsing {
+  stroke-dasharray: 20 15;
+  animation: pathDashOffset 3s linear infinite;
+}
+
+.path-solid-pulse {
+  animation: pathGlow 2s ease-in-out infinite;
+}
+
+@keyframes pathDashOffset {
+  from { stroke-dashoffset: 70; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes pathGlow {
+  0% { stroke-opacity: 0.4; filter: drop-shadow(0 0 2px var(--kids-blue)); }
+  50% { stroke-opacity: 1; filter: drop-shadow(0 0 8px var(--kids-blue)); }
+  100% { stroke-opacity: 0.4; filter: drop-shadow(0 0 2px var(--kids-blue)); }
+}
+
+.mission-node-unlocked {
+  animation: nodePulse 2s infinite;
+}
+
+@keyframes nodePulse {
+  0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
+  70% { box-shadow: 0 0 0 15px rgba(14, 165, 233, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
+}
+
+@keyframes pulse {
+  0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+  50% { transform: translateX(-50%) scale(1.05); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

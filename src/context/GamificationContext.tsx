@@ -14,6 +14,7 @@ export interface Badge {
 
 interface GamificationContextType {
   badges: Badge[];
+  latestBadge: Badge | null;
   unlockBadge: (id: string) => void;
   hasVisited: { [key: string]: boolean };
   markVisited: (page: string) => void;
@@ -23,6 +24,14 @@ interface GamificationContextType {
   completedMissions: string[];
   completeMission: (missionId: string, baseXP: number) => void;
   user: any;
+  hasCompletedOnboarding: boolean;
+  completeOnboarding: () => void;
+  // Shop Economy
+  coins: number;
+  inventory: string[];
+  equippedItems: { [key: string]: string };
+  purchaseItem: (itemId: string, price: number) => boolean;
+  equipItem: (type: string, itemId: string) => void;
 }
 
 const INITIAL_BADGES: Badge[] = [
@@ -86,6 +95,44 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     }
   });
 
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_onboarding');
+      return saved === 'true';
+    } catch (e) {
+      return false;
+    }
+  });
+
+  const [coins, setCoins] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_coins');
+      return saved ? parseInt(saved, 10) : 100; // Start with 100 bonus coins
+    } catch (e) {
+      return 100;
+    }
+  });
+
+  const [inventory, setInventory] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_inventory');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  const [equippedItems, setEquippedItems] = useState<{ [key: string]: string }>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_equipped');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      return {};
+    }
+  });
+
+  const [latestBadge, setLatestBadge] = useState<Badge | null>(null);
+
   const level = useMemo(() => {
     // Level 1: 0-250 XP
     // Level 2: 250-750 XP
@@ -132,19 +179,23 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     if (user && db && (db as any).app) {
       const syncData = async () => {
         try {
-          await setDoc(doc(db, 'users', user.uid), {
-            xp,
-            completedMissions,
-            badges: badges.filter(b => b.unlocked).map(b => b.id),
-            lastSync: new Date().toISOString()
-          }, { merge: true });
+            await setDoc(doc(db, 'users', user.uid), {
+              xp,
+              completedMissions,
+              badges: badges.filter(b => b.unlocked).map(b => b.id),
+              hasCompletedOnboarding,
+              coins,
+              inventory,
+              equippedItems,
+              lastSync: new Date().toISOString()
+            }, { merge: true });
         } catch (e) {
           console.warn('Firebase Sync: Failed to save user data.', e);
         }
       };
       syncData();
     }
-  }, [xp, completedMissions, badges, user]);
+  }, [xp, completedMissions, badges, user, hasCompletedOnboarding, coins, inventory, equippedItems]);
 
   useEffect(() => {
     localStorage.setItem('kone_kids_badges', JSON.stringify(badges));
@@ -165,13 +216,32 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     localStorage.setItem('kone_kids_missions', JSON.stringify(completedMissions));
   }, [completedMissions]);
 
+  useEffect(() => {
+    localStorage.setItem('kone_kids_onboarding', hasCompletedOnboarding.toString());
+  }, [hasCompletedOnboarding]);
+
+  useEffect(() => {
+    localStorage.setItem('kone_kids_coins', coins.toString());
+  }, [coins]);
+
+  useEffect(() => {
+    localStorage.setItem('kone_kids_inventory', JSON.stringify(inventory));
+  }, [inventory]);
+
+  useEffect(() => {
+    localStorage.setItem('kone_kids_equipped', JSON.stringify(equippedItems));
+  }, [equippedItems]);
+
   const unlockBadge = useCallback((id: string) => {
     setBadges(prev => prev.map(badge => {
       if (badge.id === id && !badge.unlocked) {
         if (badge.xpReward) {
           setXp(curr => curr + badge.xpReward!);
+          setCoins(curr => curr + Math.floor(badge.xpReward! / 2)); // Earn coins on badges
         }
-        return { ...badge, unlocked: true };
+        const unlockedBadge = { ...badge, unlocked: true };
+        setLatestBadge(unlockedBadge);
+        return unlockedBadge;
       }
       return badge;
     }));
@@ -192,6 +262,7 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       if (prev.includes(missionId)) return prev;
       const nextMissions = [...prev, missionId];
       setXp(curr => curr + baseXP);
+      setCoins(curr => curr + baseXP); // 1:1 Mission XP to Coins
       
       // Auto-unlock pathway badges
       import('../data/missions').then(({ CODING_MISSIONS }) => {
@@ -216,9 +287,32 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     });
   }, [unlockBadge]);
 
+  const completeOnboarding = useCallback(() => {
+    setHasCompletedOnboarding(true);
+    unlockBadge('future_hero');
+  }, [unlockBadge]);
+
+  const purchaseItem = useCallback((itemId: string, price: number) => {
+    if (coins >= price) {
+      setCoins(curr => curr - price);
+      setInventory(prev => [...prev, itemId]);
+      return true;
+    }
+    return false;
+  }, [coins]);
+
+  const equipItem = useCallback((type: string, itemId: string) => {
+    setEquippedItems(prev => ({
+      ...prev,
+      [type]: itemId
+    }));
+  }, []);
+
   const contextValue = useMemo(() => ({
-    badges, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user
-  }), [badges, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user]);
+    badges, latestBadge, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
+    coins, inventory, equippedItems, purchaseItem, equipItem
+  }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
+       coins, inventory, equippedItems, purchaseItem, equipItem]);
 
   return (
     <GamificationContext.Provider value={contextValue}>

@@ -19,6 +19,7 @@ export interface Mission {
   requiredBlocks?: string[];
   level: number;
   pathway: Pathway;
+  briefing?: string;
 }
 
 export const CODING_MISSIONS: Mission[] = [
@@ -32,7 +33,8 @@ export const CODING_MISSIONS: Mission[] = [
     objective: 'Drag a "Say" block and make the mascot say "Hello World!"',
     xpReward: 100,
     difficulty: 'easy',
-    requiredBlocks: ['mascot_speak']
+    requiredBlocks: ['mascot_speak'],
+    briefing: "Welcome to the Lab, Engineer! I'm your assistant. Let's start by teaching me how to talk. Can you drag the 'Say' block into the workspace?"
   },
   {
     id: 'm2_rhythm',
@@ -268,7 +270,8 @@ export const CODING_MISSIONS: Mission[] = [
     objective: 'Spin the left motor for 2 seconds.',
     xpReward: 350,
     difficulty: 'hard',
-    requiredBlocks: ['robot_motor', 'mascot_wait']
+    requiredBlocks: ['robot_motor', 'mascot_wait'],
+    briefing: "Whoa! We've moved to the Robotics Lab. See that virtual car? It's waiting for your commands. Let's try spinning the motors to see it move!"
   },
   {
     id: 'robotics_2',

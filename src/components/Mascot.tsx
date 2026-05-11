@@ -8,7 +8,7 @@ export interface MascotHandle {
 }
 
 const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
-  const { unlockBadge } = useGamification()
+  const { unlockBadge, equippedItems } = useGamification()
   const [clickCount, setClickCount] = useState(0)
   const [isWaving, setIsWaving] = useState(false)
   const [showBubble, setShowBubble] = useState(false)
@@ -186,9 +186,9 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       >
         <defs>
           <radialGradient id="body-radial" cx="200" cy="180" r="160" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#38bdf8" />
-            <stop offset="60%" stopColor="#0ea5e9" />
-            <stop offset="100%" stopColor="#1d4ed8" />
+            <stop offset="0%" stopColor={equippedItems.skin === 'neon_glow' ? '#22d3ee' : (equippedItems.skin === 'gold_chrome' ? '#fbbf24' : '#38bdf8')} />
+            <stop offset="60%" stopColor={equippedItems.skin === 'neon_glow' ? '#0891b2' : (equippedItems.skin === 'gold_chrome' ? '#d97706' : '#0ea5e9')} />
+            <stop offset="100%" stopColor={equippedItems.skin === 'neon_glow' ? '#0e7490' : (equippedItems.skin === 'gold_chrome' ? '#92400e' : '#1d4ed8')} />
           </radialGradient>
           <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
             <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
@@ -234,6 +234,23 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
             </>
           )}
 
+          {/* ACCESSORY: Glasses */}
+          {equippedItems.glasses === 'cool_shades' && (
+            <g transform="translate(130, 185)">
+              <rect x="0" y="0" width="140" height="40" rx="10" fill="#0f172a" />
+              <rect x="5" y="5" width="60" height="30" rx="8" fill="#1e293b" />
+              <rect x="75" y="5" width="60" height="30" rx="8" fill="#1e293b" />
+            </g>
+          )}
+
+          {equippedItems.glasses === 'vr_goggles' && (
+            <g transform="translate(125, 180)">
+              <rect x="0" y="0" width="150" height="50" rx="12" fill="#1e293b" stroke="#22d3ee" strokeWidth="2" />
+              <rect x="10" y="10" width="130" height="30" rx="6" fill="#0ea5e9" fillOpacity="0.5" />
+              <path d="M 20 25 L 130 25" stroke="#22d3ee" strokeWidth="1" strokeDasharray="4 2" />
+            </g>
+          )}
+
           {/* Mouth */}
           {isHovering ? (
             <g>
@@ -244,6 +261,39 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
             <path d="M 178 262 Q 200 282 222 262" stroke="#0f172a" strokeWidth="5" strokeLinecap="round" fill="none" />
           )}
         </g>
+
+        {/* ACCESSORY: Hats */}
+        {equippedItems.hat === 'engineer_cap' && (
+          <g transform="translate(140, 50)">
+            <path d="M 0 40 Q 60 0 120 40 L 130 50 Q 60 70 -10 50 Z" fill="#1d4ed8" />
+            <path d="M 10 40 Q 60 10 110 40" fill="none" stroke="white" strokeWidth="2" />
+          </g>
+        )}
+
+        {equippedItems.hat === 'space_helmet' && (
+          <g transform="translate(125, 45)">
+            <circle cx="75" cy="75" r="70" fill="rgba(255,255,255,0.1)" stroke="white" strokeWidth="2" />
+            <rect x="25" y="120" width="100" height="15" rx="5" fill="#cbd5e1" />
+          </g>
+        )}
+
+        {equippedItems.hat === 'crown' && (
+          <g transform="translate(140, 30)">
+            <path d="M 0 50 L 20 20 L 40 50 L 60 10 L 80 50 L 100 20 L 120 50 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="2" />
+            <circle cx="60" cy="10" r="5" fill="#ef4444" />
+          </g>
+        )}
+
+        {/* ACCESSORY: Pet */}
+        {equippedItems.accessory === 'robot_pet' && (
+          <g transform="translate(320, 320) scale(0.6)">
+            <rect x="0" y="0" width="80" height="80" rx="10" fill="#94a3b8" />
+            <rect x="10" y="10" width="60" height="40" rx="5" fill="#1e293b" />
+            <circle cx="25" cy="25" r="5" fill="#22d3ee" />
+            <circle cx="55" cy="25" r="5" fill="#22d3ee" />
+            <path d="M 10 90 L 30 110 M 70 90 L 50 110" stroke="white" strokeWidth="8" strokeLinecap="round" />
+          </g>
+        )}
 
         {/* Waving Arm */}
         <g style={{

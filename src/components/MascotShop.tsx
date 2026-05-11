@@ -1,0 +1,257 @@
+import React, { useState } from 'react';
+import { useGamification } from '../context/GamificationContext';
+import { SHOP_ITEMS, ShopItem } from '../data/shopItems';
+import { ShoppingBag, Coins, CheckCircle2, Lock } from 'lucide-react';
+import Mascot from './Mascot';
+
+interface MascotShopProps {
+  onClose: () => void;
+}
+
+const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
+  const { coins, inventory, equippedItems, purchaseItem, equipItem, level } = useGamification();
+  const [activeCategory, setActiveCategory] = useState<ShopItem['type'] | 'all'>('all');
+  const [purchaseSuccess, setPurchaseSuccess] = useState<string | null>(null);
+
+  const filteredItems = activeCategory === 'all' 
+    ? SHOP_ITEMS 
+    : SHOP_ITEMS.filter(item => item.type === activeCategory);
+
+  const handleAction = (item: ShopItem) => {
+    if (inventory.includes(item.id)) {
+      equipItem(item.type, item.id);
+    } else {
+      if (item.unlockedAtLevel && level < item.unlockedAtLevel) return;
+      
+      if (purchaseItem(item.id, item.price)) {
+        setPurchaseSuccess(item.id);
+        setTimeout(() => setPurchaseSuccess(null), 2000);
+      }
+    }
+  };
+
+  return (
+    <div style={{
+      position: 'fixed',
+      inset: 0,
+      zIndex: 2000,
+      background: 'rgba(15, 23, 42, 0.95)',
+      backdropFilter: 'blur(10px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2rem'
+    }}>
+      <div className="glass-card" style={{
+        width: '1000px',
+        maxWidth: '95vw',
+        height: '800px',
+        maxHeight: '90vh',
+        background: '#1e293b',
+        borderRadius: '32px',
+        border: '2px solid rgba(255,255,255,0.1)',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        position: 'relative'
+      }}>
+        {/* Header */}
+        <div style={{
+          padding: '2rem',
+          background: 'rgba(255,255,255,0.02)',
+          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
+        }}>
+          <div>
+            <h2 className="lab-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <ShoppingBag className="text-orange-500" />
+              MASCOT GEAR SHOP
+            </h2>
+            <p style={{ margin: 0, color: '#94a3b8' }}>Customize your lab assistant with epic gear!</p>
+          </div>
+
+          <div style={{
+            background: 'rgba(0,0,0,0.3)',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            border: '2px solid #fbbf24',
+            boxShadow: '0 0 20px rgba(251, 191, 36, 0.2)'
+          }}>
+            <Coins className="text-yellow-400" />
+            <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white' }}>{coins}</span>
+          </div>
+
+          <button 
+            onClick={onClose}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'white',
+              fontSize: '2rem',
+              cursor: 'pointer',
+              padding: '0.5rem'
+            }}
+          >
+            ×
+          </button>
+        </div>
+
+        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+          {/* Sidebar / Preview */}
+          <div style={{
+            width: '350px',
+            padding: '2rem',
+            borderRight: '1px solid rgba(255,255,255,0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '2rem',
+            background: 'rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ 
+              width: '100%', 
+              height: '280px', 
+              background: '#0f172a', 
+              borderRadius: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              border: '1px solid rgba(14, 165, 233, 0.2)',
+              position: 'relative'
+            }}>
+              <div style={{ transform: 'scale(0.8)' }}>
+                <Mascot />
+              </div>
+              <div style={{ position: 'absolute', bottom: '1rem', color: '#64748b', fontSize: '0.8rem' }}>PREVIEW MODE</div>
+            </div>
+
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {(['all', 'hat', 'glasses', 'skin', 'accessory'] as const).map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    padding: '1rem',
+                    borderRadius: '12px',
+                    border: 'none',
+                    background: activeCategory === cat ? 'var(--kids-blue)' : 'rgba(255,255,255,0.05)',
+                    color: 'white',
+                    textAlign: 'left',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    textTransform: 'capitalize'
+                  }}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Items Grid */}
+          <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem', alignContent: 'start' }}>
+            {filteredItems.map(item => {
+              const isOwned = inventory.includes(item.id);
+              const isEquipped = equippedItems[item.type] === item.id;
+              const isLocked = item.unlockedAtLevel && level < item.unlockedAtLevel;
+              const canAfford = coins >= item.price;
+
+              return (
+                <div 
+                  key={item.id}
+                  className="glass-card"
+                  style={{
+                    padding: '1.5rem',
+                    borderRadius: '20px',
+                    background: isEquipped ? 'rgba(14, 165, 233, 0.1)' : 'rgba(255,255,255,0.03)',
+                    border: isEquipped ? '2px solid var(--kids-blue)' : '1px solid rgba(255,255,255,0.1)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    transition: 'all 0.3s',
+                    position: 'relative',
+                    opacity: isLocked ? 0.6 : 1
+                  }}
+                >
+                  <div style={{ fontSize: '3rem' }}>{item.icon}</div>
+                  <div style={{ textAlign: 'center' }}>
+                    <h4 style={{ margin: 0, fontSize: '1.1rem' }}>{item.name}</h4>
+                    <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>{item.description}</p>
+                  </div>
+
+                  <button
+                    disabled={isLocked || (isOwned && isEquipped)}
+                    onClick={() => handleAction(item)}
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem',
+                      borderRadius: '12px',
+                      border: 'none',
+                      background: isEquipped ? '#10b981' : (isOwned ? 'rgba(255,255,255,0.1)' : (canAfford ? 'var(--kids-orange)' : '#475569')),
+                      color: 'white',
+                      fontWeight: 800,
+                      cursor: (isLocked || (isOwned && isEquipped)) ? 'default' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem'
+                    }}
+                  >
+                    {isLocked ? (
+                      <>
+                        <Lock size={16} />
+                        LVL {item.unlockedAtLevel}
+                      </>
+                    ) : (
+                      isOwned ? (
+                        isEquipped ? (
+                          <>
+                            <CheckCircle2 size={16} />
+                            EQUIPPED
+                          </>
+                        ) : 'EQUIP'
+                      ) : (
+                        <>
+                          <Coins size={16} />
+                          {item.price}
+                        </>
+                      )
+                    )}
+                  </button>
+
+                  {purchaseSuccess === item.id && (
+                    <div style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'rgba(16, 185, 129, 0.9)',
+                      borderRadius: '20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontWeight: 800,
+                      animation: 'fadeIn 0.2s ease-out'
+                    }}>
+                      <div style={{ fontSize: '2rem' }}>🎉</div>
+                      PURCHASED!
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MascotShop;

@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
+import { ShoppingBag, Coins } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { CODING_MISSIONS, Pathway } from '../data/missions';
 import Mascot from './Mascot';
+import MascotShop from './MascotShop';
 
 type HubType = 'coding' | 'robotics' | 'ai';
 
@@ -63,7 +65,8 @@ const HUB_PATHWAYS: Record<HubType, Pathway[]> = {
 
 const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const navigate = useNavigate();
-  const { xp, level, completedMissions } = useGamification();
+  const [showShop, setShowShop] = useState(false);
+  const { xp, level, completedMissions, coins } = useGamification();
   const { theme, toggleTheme } = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -123,6 +126,54 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
         transition: 'all 0.8s ease',
         opacity: 0.6
       }} />
+
+      {/* Shop Button */}
+      <div style={{
+        position: 'absolute',
+        top: '2rem',
+        right: '2rem',
+        zIndex: 100,
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
+        alignItems: 'flex-end'
+      }}>
+        <div style={{
+          background: 'rgba(15, 23, 42, 0.8)',
+          backdropFilter: 'blur(10px)',
+          padding: '0.5rem 1rem',
+          borderRadius: '16px',
+          border: '2px solid #fbbf24',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem',
+          color: 'white',
+          fontWeight: 800,
+          boxShadow: '0 10px 25px rgba(251, 191, 36, 0.2)'
+        }}>
+          <Coins className="text-yellow-400" size={20} />
+          {coins}
+        </div>
+
+        <button 
+          onClick={() => setShowShop(true)}
+          className="kids-button pulse-neon"
+          style={{
+            padding: '1rem 1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            background: 'var(--kids-orange)',
+            boxShadow: '0 8px 0 #9a3412',
+            fontSize: '1.1rem'
+          }}
+        >
+          <ShoppingBag size={24} />
+          MASCOT SHOP
+        </button>
+      </div>
+
+      {showShop && <MascotShop onClose={() => setShowShop(false)} />}
 
       {/* Game Header */}
       <header style={{
@@ -262,7 +313,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               stroke={world.color} 
               strokeWidth="12" 
               strokeLinecap="round"
-              strokeDasharray="20 15"
+              className="path-pulsing"
             />
           )}
           {world.pathStyle === 'circuit' && (
@@ -272,7 +323,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               stroke={world.color} 
               strokeWidth="8" 
               strokeLinejoin="round"
-              strokeDasharray="15 10"
+              className="path-pulsing"
             />
           )}
           {world.pathStyle === 'pixel' && (
@@ -281,6 +332,8 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               fill="none" 
               stroke={world.color} 
               strokeWidth="10" 
+              className="path-solid-pulse"
+              style={{ '--kids-blue': world.color } as React.CSSProperties}
             />
           )}
           {world.pathStyle === 'dots' && (
@@ -291,6 +344,8 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               strokeWidth="6" 
               strokeDasharray="1 20" 
               strokeLinecap="round"
+              className="path-solid-pulse"
+              style={{ '--kids-blue': world.color } as React.CSSProperties}
             />
           )}
           {world.pathStyle === 'wave' && (
@@ -300,6 +355,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               stroke={world.color} 
               strokeWidth="14" 
               strokeLinecap="round"
+              className="path-pulsing"
               opacity={0.4}
             />
           )}
@@ -326,6 +382,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             >
               <div 
                 onClick={() => isUnlocked && navigate(`/${hub}/mission/${mission.id}`)}
+                className={isUnlocked ? 'animate-float mission-node-unlocked' : ''}
                 style={{
                   width: isMobile ? '90px' : '110px',
                   height: isMobile ? '90px' : '110px',
@@ -341,9 +398,9 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
                   transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
                   transform: isUnlocked ? 'scale(1)' : 'scale(0.9)',
                   color: isUnlocked ? 'white' : 'var(--kids-text-muted)',
-                  position: 'relative'
-                }}
-                className={isUnlocked ? 'animate-float' : ''}
+                  position: 'relative',
+                  '--kids-blue': world.color // Custom property for the pulsing glow
+                } as React.CSSProperties}
               >
                 {!isUnlocked ? (
                   <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>🔒</span>

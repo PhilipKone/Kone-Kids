@@ -10,6 +10,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import Celebration from './components/Celebration'
 import InstallBanner from './components/InstallBanner'
 import MissionMap from './components/MissionMap'
+import BadgeNotification from './components/BadgeNotification'
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -99,7 +100,14 @@ function Home() {
 }
 
 function AppContent() {
-  const { markVisited } = useGamification();
+  const { markVisited, latestBadge } = useGamification();
+  const [activeBadge, setActiveBadge] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    if (latestBadge) {
+      setActiveBadge(latestBadge);
+    }
+  }, [latestBadge]);
   
   // Track visits to pages
   React.useEffect(() => {
@@ -109,6 +117,10 @@ function AppContent() {
   return (
     <>
       <Celebration />
+      <BadgeNotification 
+        badge={activeBadge} 
+        onClose={() => setActiveBadge(null)} 
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route 
