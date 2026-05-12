@@ -138,22 +138,22 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             }}>
               {level}
             </div>
-            {!isMobile && <span style={{ fontWeight: 800 }}>{hub.toUpperCase()}</span>}
+            {!isMobile && <span style={{ fontWeight: 800, marginLeft: '0.25rem' }}>{hub.toUpperCase()}</span>}
           </div>
 
-          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: isMobile ? '0.4rem' : '0.75rem', alignItems: 'center' }}>
             <div style={{
               background: 'rgba(251,191,36,0.1)',
-              padding: '0.4rem 0.8rem',
+              padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.8rem',
               borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.35rem',
               color: '#fbbf24',
               fontWeight: 700,
-              fontSize: '0.9rem'
+              fontSize: isMobile ? '0.75rem' : '0.9rem'
             }}>
-              <Coins size={16} />
+              <Coins size={isMobile ? 14 : 16} />
               {coins}
             </div>
             
@@ -161,18 +161,19 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               onClick={() => setShowShop(true)}
               className="kids-button"
               style={{
-                padding: '0.4rem 0.8rem',
+                padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 1rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem',
+                gap: '0.5rem',
                 background: 'var(--kids-orange)',
                 border: 'none',
                 borderRadius: '12px',
                 color: 'white',
-                fontWeight: 700
+                fontWeight: 700,
+                fontSize: isMobile ? '0.75rem' : '0.85rem'
               }}
             >
-              <ShoppingBag size={16} />
+              <ShoppingBag size={isMobile ? 14 : 16} />
               {!isMobile && 'SHOP'}
             </button>
 
@@ -244,8 +245,9 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             className={`pathway-tab ${selectedPathway === pathway ? 'pathway-tab-active' : ''}`}
             style={{
               '--tab-color': world.color,
-              '--tab-shadow': `${world.color}dd`,
-              fontSize: isMobile ? '0.8rem' : '0.9rem'
+              fontSize: isMobile ? '0.75rem' : '0.9rem',
+              padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.4rem',
+              gap: '0.75rem'
             } as any}
             onClick={() => setSelectedPathway(pathway)}
           >
