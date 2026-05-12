@@ -424,7 +424,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
                 {/* Mission Label */}
                 <div style={{
                   position: 'absolute',
-                  [isMobile ? 'top' : (index % 2 === 0 ? 'right' : 'left')]: isMobile ? '105px' : '135px',
+                  [isMobile ? 'top' : (index % 2 === 0 ? 'right' : 'left')]: isMobile ? '120px' : '160px',
                   [!isMobile ? 'top' : '']: isMobile ? '' : '50%',
                   transform: isMobile ? 'translateX(-50%)' : 'translateY(-50%)',
                   left: isMobile ? '50%' : '',
