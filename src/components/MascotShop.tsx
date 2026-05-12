@@ -58,33 +58,34 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
       }}>
         {/* Header */}
         <div style={{
-          padding: '2rem',
+          padding: isMobile ? '1rem' : '2rem',
           background: 'rgba(255,255,255,0.02)',
           borderBottom: '1px solid rgba(255,255,255,0.1)',
           display: 'flex',
           justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          flexShrink: 0
         }}>
           <div>
-            <h2 className="lab-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <ShoppingBag className="text-orange-500" />
-              MASCOT GEAR SHOP
+            <h2 className="lab-title" style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: isMobile ? '1rem' : '1.5rem' }}>
+              <ShoppingBag size={isMobile ? 18 : 24} className="text-orange-500" />
+              {isMobile ? 'SHOP' : 'MASCOT GEAR SHOP'}
             </h2>
-            <p style={{ margin: 0, color: '#94a3b8' }}>Customize your lab assistant with epic gear!</p>
+            {!isMobile && <p style={{ margin: 0, color: '#94a3b8' }}>Customize your lab assistant with epic gear!</p>}
           </div>
 
           <div style={{
             background: 'rgba(0,0,0,0.3)',
-            padding: '0.75rem 1.5rem',
-            borderRadius: '20px',
+            padding: isMobile ? '0.4rem 0.8rem' : '0.75rem 1.5rem',
+            borderRadius: '16px',
             display: 'flex',
             alignItems: 'center',
-            gap: '1rem',
+            gap: '0.5rem',
             border: '2px solid #fbbf24',
-            boxShadow: '0 0 20px rgba(251, 191, 36, 0.2)'
+            boxShadow: '0 0 15px rgba(251, 191, 36, 0.2)'
           }}>
-            <Coins className="text-yellow-400" />
-            <span style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white' }}>{coins}</span>
+            <Coins size={isMobile ? 14 : 20} className="text-yellow-400" />
+            <span style={{ fontSize: isMobile ? '1rem' : '1.5rem', fontWeight: 800, color: 'white' }}>{coins}</span>
           </div>
 
           <button 
@@ -93,63 +94,76 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
               background: 'transparent',
               border: 'none',
               color: 'white',
-              fontSize: '2rem',
+              fontSize: isMobile ? '1.5rem' : '2rem',
               cursor: 'pointer',
-              padding: '0.5rem'
+              padding: '0.25rem'
             }}
           >
             ×
           </button>
         </div>
 
-        <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', flex: 1, overflow: 'hidden' }}>
           {/* Sidebar / Preview */}
           <div style={{
-            width: '350px',
-            padding: '2rem',
-            borderRight: '1px solid rgba(255,255,255,0.1)',
+            width: isMobile ? '100%' : '350px',
+            padding: isMobile ? '1rem' : '2rem',
+            borderRight: isMobile ? 'none' : '1px solid rgba(255,255,255,0.1)',
+            borderBottom: isMobile ? '1px solid rgba(255,255,255,0.1)' : 'none',
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: isMobile ? 'row' : 'column',
             alignItems: 'center',
-            gap: '2rem',
-            background: 'rgba(0,0,0,0.1)'
+            gap: isMobile ? '1rem' : '2rem',
+            background: 'rgba(0,0,0,0.1)',
+            flexShrink: 0
           }}>
             <div style={{ 
-              width: '100%', 
-              height: '280px', 
+              width: isMobile ? '120px' : '100%', 
+              height: isMobile ? '120px' : '280px', 
               background: '#0f172a', 
               borderRadius: '24px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               border: '1px solid rgba(14, 165, 233, 0.2)',
-              position: 'relative'
+              position: 'relative',
+              flexShrink: 0
             }}>
-              <div style={{ transform: 'scale(0.8)' }}>
+              <div style={{ transform: isMobile ? 'scale(0.35)' : 'scale(0.8)' }}>
                 <Mascot />
               </div>
-              <div style={{ position: 'absolute', bottom: '1rem', color: '#64748b', fontSize: '0.8rem' }}>PREVIEW MODE</div>
+              {!isMobile && <div style={{ position: 'absolute', bottom: '1rem', color: '#64748b', fontSize: '0.8rem' }}>PREVIEW MODE</div>}
             </div>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ 
+              width: '100%', 
+              display: 'flex', 
+              flexDirection: isMobile ? 'row' : 'column', 
+              gap: '0.75rem',
+              overflowX: isMobile ? 'auto' : 'visible',
+              paddingBottom: isMobile ? '0.5rem' : '0',
+              scrollbarWidth: 'none'
+            }}>
               {(['all', 'hat', 'glasses', 'skin', 'accessory'] as const).map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   style={{
-                    padding: '0.6rem 1rem',
+                    padding: isMobile ? '0.4rem 0.8rem' : '0.6rem 1rem',
                     borderRadius: '12px',
                     border: activeCategory === cat ? 'none' : '2px solid var(--kids-border)',
                     background: activeCategory === cat ? 'var(--kids-blue)' : 'var(--kids-surface)',
                     boxShadow: activeCategory === cat ? (isMobile ? '0 4px 0 #0369a1' : '0 6px 0 #0369a1') : (isMobile ? '0 3px 0 var(--kids-border)' : '0 5px 0 var(--kids-border)'),
                     color: 'white',
-                    textAlign: 'left',
+                    textAlign: 'center',
                     fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.2s',
                     textTransform: 'capitalize',
-                    fontSize: '0.85rem',
-                    transform: activeCategory === cat ? (isMobile ? 'translateY(4px)' : 'translateY(6px)') : 'none'
+                    fontSize: isMobile ? '0.75rem' : '0.85rem',
+                    transform: activeCategory === cat ? (isMobile ? 'translateY(4px)' : 'translateY(6px)') : 'none',
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0
                   }}
                 >
                   {cat}
@@ -159,7 +173,15 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
           </div>
 
           {/* Items Grid */}
-          <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.5rem', alignContent: 'start' }}>
+          <div style={{ 
+            flex: 1, 
+            padding: isMobile ? '1rem' : '2rem', 
+            overflowY: 'auto', 
+            display: 'grid', 
+            gridTemplateColumns: isMobile ? 'repeat(auto-fill, minmax(140px, 1fr))' : 'repeat(auto-fill, minmax(200px, 1fr))', 
+            gap: isMobile ? '0.75rem' : '1.5rem', 
+            alignContent: 'start' 
+          }}>
             {filteredItems.map(item => {
               const isOwned = inventory.includes(item.id);
               const isEquipped = equippedItems[item.type] === item.id;
