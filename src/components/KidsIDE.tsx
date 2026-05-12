@@ -261,9 +261,30 @@ const KidsIDE: React.FC = () => {
         toolbox: { kind: 'categoryToolbox', contents: toolboxContents },
         theme: KoneDark,
         trashcan: true,
-        renderer: 'zelos'
+        renderer: 'zelos',
+        zoom: {
+          controls: true,
+          wheel: true,
+          startScale: isMobile ? 0.8 : 1.0,
+          maxScale: 3,
+          minScale: 0.3,
+          scaleSpeed: 1.2
+        },
+        move: {
+          scrollbars: {
+            horizontal: true,
+            vertical: true
+          },
+          drag: true,
+          wheel: true
+        }
       });
       workspace.current = ws;
+
+      const handleResize = () => {
+        if (ws) Blockly.svgResize(ws);
+      };
+      window.addEventListener('resize', handleResize);
 
       ws.addChangeListener((event: any) => {
         if (onboardingStep === 1 && event.type === Blockly.Events.UI && event.element === 'category') {
@@ -278,8 +299,14 @@ const KidsIDE: React.FC = () => {
           setGeneratedCode(generator.workspaceToCode(ws));
         }
       });
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        ws.dispose();
+        workspace.current = null;
+      };
     }
-  }, [onboardingStep, language]);
+  }, [onboardingStep, language, isMobile]);
 
   const runCode = async () => {
     if (!workspace.current || isRunning) return;
@@ -516,7 +543,14 @@ const KidsIDE: React.FC = () => {
               💡 Hint ({hintIndex % (mission.hints.length) === 0 && hintIndex > 0 ? 'all used!' : `${mission.hints.length - (hintIndex % mission.hints.length)} left`})
             </button>
           )}
-          <div ref={blocklyDiv} style={{ flex: 1, borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: '#0b0e14', minHeight: isMobile ? '350px' : '0' }} />
+          <div ref={blocklyDiv} style={{ 
+            height: isMobile ? '450px' : '100%', 
+            minHeight: isMobile ? '400px' : '500px',
+            borderRadius: '20px', 
+            overflow: 'hidden', 
+            border: '1px solid rgba(255,255,255,0.1)', 
+            background: '#0b0e14' 
+          }} />
         </div>
 
         {/* Side Panel */}

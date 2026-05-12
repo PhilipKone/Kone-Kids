@@ -359,8 +359,27 @@ p {
 }
 
 .blocklyFlyoutBackground {
-  fill: #f1f5f9 !important;
+  fill: var(--blockly-flyout-bg) !important;
   fill-opacity: 0.8 !important;
+}
+
+.blocklyToolboxDiv {
+  background-color: var(--blockly-toolbox-bg) !important;
+  border-right: 1px solid var(--kids-border) !important;
+}
+
+@media (max-width: 768px) {
+  .blocklyToolboxDiv {
+    width: 60px !important;
+  }
+  .blocklyTreeLabel {
+    display: none !important;
+  }
+  .blocklyTreeRow {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    margin-bottom: 8px !important;
+  }
 }
 
 /* Badge Tray & Celebrations */
