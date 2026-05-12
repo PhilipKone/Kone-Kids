@@ -47,6 +47,7 @@ interface OnboardingTourProps {
 
 const OnboardingTour: React.FC<OnboardingTourProps> = ({ currentStep, onNext, onSkip }) => {
   const [spotlightRect, setSpotlightRect] = useState<DOMRect | null>(null);
+  const [isMobile] = useState(window.innerWidth < 768);
   const isLastStep = currentStep === ONBOARDING_STEPS.length - 1;
 
   const updateSpotlight = useCallback(() => {
@@ -132,13 +133,13 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ currentStep, onNext, on
           onClick={onSkip}
           style={{
             position: 'absolute',
-            top: '1.5rem',
-            right: '1.5rem',
+            top: isMobile ? '1rem' : '1.5rem',
+            right: isMobile ? '1rem' : '1.5rem',
             background: 'rgba(255,255,255,0.1)',
             border: '1px solid rgba(255,255,255,0.25)',
             color: 'white',
             borderRadius: '12px',
-            padding: '0.5rem 1.1rem',
+            padding: isMobile ? '0.4rem 0.8rem' : '0.5rem 1.1rem',
             cursor: 'pointer',
             fontSize: '0.9rem',
             fontFamily: 'Baloo 2, sans-serif',
@@ -191,22 +192,23 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ currentStep, onNext, on
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '1rem',
-        width: '320px',
+        gap: isMobile ? '0.75rem' : '1rem',
+        width: isMobile ? '280px' : '340px',
         pointerEvents: 'all'
       }}>
         {/* Speech bubble */}
         <div style={{
-          padding: '1.5rem',
+          padding: isMobile ? '1rem' : '1.5rem',
           borderRadius: '24px',
           background: 'white',
           position: 'relative',
           color: '#1e293b',
           fontWeight: 700,
-          fontSize: '1.05rem',
+          fontSize: isMobile ? '0.9rem' : '1.1rem',
           textAlign: 'center',
-          lineHeight: 1.5,
-          boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+          lineHeight: 1.4,
+          boxShadow: '0 20px 40px rgba(0,0,0,0.3)',
+          border: '4px solid rgba(0,0,0,0.05)'
         }}>
           {step.text}
           {/* Tail */}
@@ -223,14 +225,18 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ currentStep, onNext, on
         </div>
 
         {/* Mascot avatar */}
-        <div style={{ width: '120px' }}>
+        <div style={{ width: isMobile ? '100px' : '130px' }}>
           <Mascot />
         </div>
 
         {/* Next / Got it — shown on EVERY step */}
         <button
-          className="kids-button"
-          style={{ padding: '0.75rem 2.5rem', pointerEvents: 'all' }}
+          className="kids-button pulse-neon"
+          style={{ 
+            padding: isMobile ? '0.6rem 2rem' : '0.8rem 3rem', 
+            pointerEvents: 'all',
+            fontSize: isMobile ? '1rem' : '1.1rem'
+          }}
           onClick={onNext}
         >
           {isLastStep ? 'Got it! 🚀' : 'Next →'}

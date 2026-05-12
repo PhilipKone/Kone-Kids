@@ -5,16 +5,14 @@ import KidsIDE from './KidsIDE'
 
 interface ProgramDetailsProps {
   title: string
-  image: string
-  description: string
+  image?: string
+  description?: string
   accentColor?: string
 }
 
-const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, description, accentColor = 'var(--kids-orange)' }) => {
+const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, accentColor = 'var(--kids-orange)' }) => {
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
-
-  const isCodingProgram = title === 'Mission Lab' || title === 'Coding 4 Kids'
 
   return (
     <div className="program-details-page" style={{ 
@@ -29,33 +27,32 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
       <div className="container animate-fade-in-up" style={{ 
         display: 'flex', 
         alignItems: 'center', 
-        gap: 'clamp(1rem, 4vw, 2rem)', 
-        marginBottom: '3rem',
+        justifyContent: 'space-between',
+        gap: '1rem', 
+        marginBottom: '2.5rem',
         flexWrap: 'wrap'
       }}>
-        <button 
-          onClick={() => navigate(-1)}
-          className="kids-button"
-          style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.2)', boxShadow: 'none', padding: '0.8rem 1.5rem', fontSize: '1.1rem' }}
-        >
-          ← Back to Map
-        </button>
-        <h1 style={{ margin: 0, fontSize: 'clamp(2rem, 8vw, 3rem)', color: accentColor }}>{title}</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <button 
+            onClick={() => navigate(-1)}
+            className="kids-button"
+            style={{ 
+              background: 'rgba(255,255,255,0.05)', 
+              border: '1px solid rgba(255,255,255,0.1)', 
+              boxShadow: 'none', 
+              padding: '0.6rem 1.2rem', 
+              fontSize: '1rem',
+              minHeight: '40px'
+            }}
+          >
+            ← Back
+          </button>
+          <h1 style={{ margin: 0, fontSize: 'clamp(1.8rem, 6vw, 2.5rem)', color: accentColor }}>{title}</h1>
+        </div>
       </div>
 
-      {/* Description Content */}
-      <div className="container animate-fade-in-up" style={{ maxWidth: '1200px', animationDelay: '0.4s' }}>
-        <p style={{ 
-          fontSize: '1.2rem', 
-          lineHeight: '1.6', 
-          color: 'rgba(255,255,255,0.7)',
-          fontFamily: 'Nunito, sans-serif',
-          marginBottom: '2rem'
-        }}>
-          {description}
-        </p>
-
-        {/* Kids IDE for Missions */}
+      {/* Kids IDE for Missions */}
+      <div className="container animate-fade-in-up" style={{ maxWidth: '1200px', animationDelay: '0.2s' }}>
         <KidsIDE />
         
         <div style={{ marginTop: '3rem', textAlign: 'center' }}>
@@ -77,3 +74,4 @@ const ProgramDetails: React.FC<ProgramDetailsProps> = ({ title, image, descripti
 
 
 export default ProgramDetails
+

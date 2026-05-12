@@ -121,3 +121,40 @@
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-5px); }
 }
+
+@media (max-width: 768px) {
+  .badge-notification-container {
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .badge-card {
+    min-width: 0;
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1.25rem;
+    gap: 1rem;
+    border-radius: 16px;
+  }
+
+  .badge-icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+  }
+
+  .badge-emoji {
+    font-size: 1.8rem;
+  }
+
+  .badge-name {
+    font-size: 1.05rem;
+  }
+
+  .badge-desc {
+    font-size: 0.75rem;
+  }
+}

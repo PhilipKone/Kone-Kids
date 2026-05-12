@@ -31,12 +31,14 @@ const RoboticsSimulator = forwardRef<RoboticsHandle>((_, ref) => {
           const elapsed = Date.now() - startTime;
           if (elapsed < duration) {
             setPos(prev => {
+              if (!containerRef.current) return prev;
+              const { width, height } = containerRef.current.getBoundingClientRect();
               const rad = (rotation * Math.PI) / 180;
               const newX = prev.x + Math.cos(rad) * speed;
               const newY = prev.y + Math.sin(rad) * speed;
               
-              // Simple bounds check
-              if (newX < 10 || newX > 290 || newY < 10 || newY > 290) return prev;
+              // Simple bounds check with dynamic margins
+              if (newX < 20 || newX > width - 20 || newY < 20 || newY > height - 20) return prev;
               return { x: newX, y: newY };
             });
             animationRef.current = requestAnimationFrame(animate);
@@ -85,15 +87,17 @@ const RoboticsSimulator = forwardRef<RoboticsHandle>((_, ref) => {
   // Update distance sensor reading
   useEffect(() => {
     const updateSensor = () => {
+      if (!containerRef.current) return;
+      const { width, height } = containerRef.current.getBoundingClientRect();
       const rad = (rotation * Math.PI) / 180;
       const dx = Math.cos(rad);
       const dy = Math.sin(rad);
       
       // Calculate distance to nearest wall in current direction
-      let distToWall = 300;
-      if (dx > 0) distToWall = Math.min(distToWall, (300 - pos.x) / dx);
+      let distToWall = Math.max(width, height);
+      if (dx > 0) distToWall = Math.min(distToWall, (width - pos.x) / dx);
       if (dx < 0) distToWall = Math.min(distToWall, (pos.x) / -dx);
-      if (dy > 0) distToWall = Math.min(distToWall, (300 - pos.y) / dy);
+      if (dy > 0) distToWall = Math.min(distToWall, (height - pos.y) / dy);
       if (dy < 0) distToWall = Math.min(distToWall, (pos.y) / -dy);
       
       setDistance(Math.round(distToWall));
@@ -101,6 +105,14 @@ const RoboticsSimulator = forwardRef<RoboticsHandle>((_, ref) => {
     
     updateSensor();
   }, [pos, rotation]);
+
+  // Initial position centering
+  useEffect(() => {
+    if (containerRef.current) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setPos({ x: width / 2, y: height / 2 });
+    }
+  }, []);
 
   return (
     <div className="robotics-simulator glass-panel" ref={containerRef}>

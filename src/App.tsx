@@ -11,6 +11,8 @@ import Celebration from './components/Celebration'
 import InstallBanner from './components/InstallBanner'
 import MissionMap from './components/MissionMap'
 import BadgeNotification from './components/BadgeNotification'
+import { useLocation } from 'react-router-dom'
+import { Home as HomeIcon, Code, Cpu, Brain, Sparkles } from 'lucide-react'
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -36,33 +38,45 @@ function Home() {
           <div className="hero-content">
             <h2 className="hero-tagline">Do it Right</h2>
             
-            <ul className="program-list">
-              <li>
-                <Link to="/coding" className="program-item" style={{ textDecoration: 'none' }}>
-                  <span className="bullet-orange"></span>
-                  <span>Coding 4 <span style={{ color: 'var(--kids-orange)' }}>Kids</span></span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/robotics" className="program-item" style={{ textDecoration: 'none' }}>
-                  <span className="bullet-orange" style={{ background: 'var(--kids-blue)', boxShadow: '0 0 10px var(--kids-blue)' }}></span>
-                  <span>Robotics 4 <span style={{ color: 'var(--kids-blue)' }}>Kids</span></span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/ai" className="program-item" style={{ textDecoration: 'none' }}>
-                  <span className="bullet-orange" style={{ background: '#a855f7', boxShadow: '0 0 10px #a855f7' }}></span>
-                  <span>AI 4 <span style={{ color: '#a855f7' }}>Kids</span></span>
-                </Link>
-              </li>
-            </ul>
+            <div className="app-tiles-grid">
+              <Link to="/coding" className="app-tile" style={{ '--tile-color': 'var(--kids-orange)' } as any}>
+                <div className="app-tile-icon" style={{ background: 'rgba(249, 115, 22, 0.1)', color: 'var(--kids-orange)' }}>
+                  <Code size={32} />
+                </div>
+                <div style={{ textAlign: 'left', flex: 1 }}>
+                  <h3 className="app-tile-title">Coding 4 Kids</h3>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Build games and apps!</p>
+                </div>
+              </Link>
 
-            <div style={{ marginTop: '2.5rem' }}>
+              <Link to="/robotics" className="app-tile" style={{ '--tile-color': 'var(--kids-blue)' } as any}>
+                <div className="app-tile-icon" style={{ background: 'rgba(14, 165, 233, 0.1)', color: 'var(--kids-blue)' }}>
+                  <Cpu size={32} />
+                </div>
+                <div style={{ textAlign: 'left', flex: 1 }}>
+                  <h3 className="app-tile-title">Robotics 4 Kids</h3>
+                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Bring machines to life!</p>
+                </div>
+              </Link>
+
+              <Link to="/ai" className="app-tile" style={{ '--tile-color': 'var(--kids-purple)' } as any}>
+                <div className="app-tile-icon" style={{ background: 'rgba(168, 85, 247, 0.1)', color: 'var(--kids-purple)' }}>
+                  <Brain size={32} />
+                </div>
+                <div style={{ textAlign: 'left', flex: 1 }}>
+                  <h3 className="app-tile-title">AI 4 Kids</h3>
+                  <p style={{ margin: '0.15rem 0 0', fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Train your own AI!</p>
+                </div>
+              </Link>
+            </div>
+
+            <div style={{ marginTop: '2rem' }}>
               <button 
-                className="kids-button"
+                className="kids-button pulse-neon"
                 onClick={() => setIsModalOpen(true)}
+                style={{ width: '100%', maxWidth: '300px' }}
               >
-                Get Started Soon
+                Join the Academy 🚀
               </button>
             </div>
           </div>
@@ -102,6 +116,15 @@ function Home() {
 function AppContent() {
   const { markVisited, latestBadge } = useGamification();
   const [activeBadge, setActiveBadge] = React.useState<any>(null);
+  const location = useLocation();
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+  const isMissionPage = location.pathname.includes('/mission/');
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   React.useEffect(() => {
     if (latestBadge) {
@@ -121,55 +144,71 @@ function AppContent() {
         badge={activeBadge} 
         onClose={() => setActiveBadge(null)} 
       />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route 
-          path="/coding" 
-          element={<MissionMap hub="coding" />} 
-        />
-        <Route 
-          path="/robotics" 
-          element={<MissionMap hub="robotics" />} 
-        />
-        <Route 
-          path="/ai" 
-          element={<MissionMap hub="ai" />} 
-        />
-        <Route 
-          path="/coding/mission/:missionId" 
-          element={
-            <ProgramDetails 
-              title="Coding Lab" 
-              image="/programs/coding.png" 
-              description="Master the mission! Follow the instructions on the left to earn XP and unlock the next level." 
-              accentColor="var(--kids-orange)"
-            />
-          } 
-        />
-        <Route 
-          path="/robotics/mission/:missionId" 
-          element={
-            <ProgramDetails 
-              title="Robotics Lab" 
-              image="/programs/robotics.png" 
-              description="Build and program your robot! Earn XP as you master hardware control." 
-              accentColor="var(--kids-blue)"
-            />
-          } 
-        />
-        <Route 
-          path="/ai/mission/:missionId" 
-          element={
-            <ProgramDetails 
-              title="AI Studio" 
-              image="/programs/ai.png" 
-              description="Train your first AI model! Explore the world of Artificial Intelligence." 
-              accentColor="#a855f7"
-            />
-          } 
-        />
+      
+      <div style={{ paddingBottom: (isMobile && !isMissionPage) ? '80px' : '0' }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/coding" element={<MissionMap hub="coding" />} />
+          <Route path="/robotics" element={<MissionMap hub="robotics" />} />
+          <Route path="/ai" element={<MissionMap hub="ai" />} />
+          {/* ... other routes ... */}
+          <Route 
+            path="/coding/mission/:missionId" 
+            element={
+              <ProgramDetails 
+                title="Coding Lab" 
+                image="/programs/coding.png" 
+                description="Master the mission!" 
+                accentColor="var(--kids-orange)"
+              />
+            } 
+          />
+          <Route 
+            path="/robotics/mission/:missionId" 
+            element={
+              <ProgramDetails 
+                title="Robotics Lab" 
+                image="/programs/robotics.png" 
+                description="Build and program your robot!" 
+                accentColor="var(--kids-blue)"
+              />
+            } 
+          />
+          <Route 
+            path="/ai/mission/:missionId" 
+            element={
+              <ProgramDetails 
+                title="AI Studio" 
+                image="/programs/ai.png" 
+                description="Train your first AI model!" 
+                accentColor="#a855f7"
+              />
+            } 
+          />
+        </Routes>
+      </div>
 
-      </Routes>
+      {isMobile && !isMissionPage && (
+        <div className="mobile-bottom-nav">
+          <Link to="/" className={`nav-item ${location.pathname === '/' ? 'nav-item-active' : ''}`}>
+            <HomeIcon size={24} className="nav-icon" />
+            <span>Home</span>
+          </Link>
+          <Link to="/coding" className={`nav-item ${location.pathname === '/coding' ? 'nav-item-active' : ''}`}>
+            <Code size={24} className="nav-icon" />
+            <span>Coding</span>
+          </Link>
+          <Link to="/robotics" className={`nav-item ${location.pathname === '/robotics' ? 'nav-item-active' : ''}`}>
+            <Cpu size={24} className="nav-icon" />
+            <span>Robots</span>
+          </Link>
+          <Link to="/ai" className={`nav-item ${location.pathname === '/ai' ? 'nav-item-active' : ''}`}>
+            <Brain size={24} className="nav-icon" />
+            <span>AI Lab</span>
+          </Link>
+        </div>
+      )}
+
       <InstallBanner />
     </>
   )

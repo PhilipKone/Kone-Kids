@@ -12,6 +12,7 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
   const { coins, inventory, equippedItems, purchaseItem, equipItem, level } = useGamification();
   const [activeCategory, setActiveCategory] = useState<ShopItem['type'] | 'all'>('all');
   const [purchaseSuccess, setPurchaseSuccess] = useState<string | null>(null);
+  const isMobile = window.innerWidth <= 768;
 
   const filteredItems = activeCategory === 'all' 
     ? SHOP_ITEMS 
@@ -130,22 +131,25 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
               <div style={{ position: 'absolute', bottom: '1rem', color: '#64748b', fontSize: '0.8rem' }}>PREVIEW MODE</div>
             </div>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {(['all', 'hat', 'glasses', 'skin', 'accessory'] as const).map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
                   style={{
-                    padding: '1rem',
+                    padding: '0.6rem 1rem',
                     borderRadius: '12px',
-                    border: 'none',
-                    background: activeCategory === cat ? 'var(--kids-blue)' : 'rgba(255,255,255,0.05)',
+                    border: activeCategory === cat ? 'none' : '2px solid var(--kids-border)',
+                    background: activeCategory === cat ? 'var(--kids-blue)' : 'var(--kids-surface)',
+                    boxShadow: activeCategory === cat ? (isMobile ? '0 4px 0 #0369a1' : '0 6px 0 #0369a1') : (isMobile ? '0 3px 0 var(--kids-border)' : '0 5px 0 var(--kids-border)'),
                     color: 'white',
                     textAlign: 'left',
-                    fontWeight: 700,
+                    fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.2s',
-                    textTransform: 'capitalize'
+                    textTransform: 'capitalize',
+                    fontSize: '0.85rem',
+                    transform: activeCategory === cat ? (isMobile ? 'translateY(4px)' : 'translateY(6px)') : 'none'
                   }}
                 >
                   {cat}
@@ -191,17 +195,22 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
                     onClick={() => handleAction(item)}
                     style={{
                       width: '100%',
-                      padding: '0.75rem',
+                      padding: '0.6rem 0.75rem',
                       borderRadius: '12px',
                       border: 'none',
                       background: isEquipped ? '#10b981' : (isOwned ? 'rgba(255,255,255,0.1)' : (canAfford ? 'var(--kids-orange)' : '#475569')),
+                      boxShadow: isEquipped ? '0 5px 0 #047857' : (isOwned ? '0 5px 0 rgba(0,0,0,0.2)' : (canAfford ? '0 5px 0 #9a3412' : '0 3px 0 #1e293b')),
                       color: 'white',
                       fontWeight: 800,
                       cursor: (isLocked || (isOwned && isEquipped)) ? 'default' : 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.5rem'
+                      gap: '0.5rem',
+                      fontSize: '0.85rem',
+                      transition: 'all 0.15s',
+                      position: 'relative',
+                      top: 0
                     }}
                   >
                     {isLocked ? (

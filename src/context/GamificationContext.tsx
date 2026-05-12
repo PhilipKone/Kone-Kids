@@ -250,12 +250,9 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
   const markVisited = useCallback((page: string) => {
     setHasVisited(prev => {
       if (prev[page]) return prev;
-      if (Object.keys(prev).length === 0) {
-        unlockBadge('welcome_hero');
-      }
       return { ...prev, [page]: true };
     });
-  }, [unlockBadge]);
+  }, []);
 
   const completeMission = useCallback((missionId: string, baseXP: number) => {
     setCompletedMissions(prev => {
@@ -263,22 +260,34 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       const nextMissions = [...prev, missionId];
       setXp(curr => curr + baseXP);
       setCoins(curr => curr + baseXP); // 1:1 Mission XP to Coins
+
+      // First mission ever completed
+      if (nextMissions.length === 1) {
+        unlockBadge('mission_complete');
+      }
+      // 3 missions completed across any pathway
+      if (nextMissions.length === 3) {
+        unlockBadge('welcome_hero');
+      }
       
       // Auto-unlock pathway badges
       import('../data/missions').then(({ CODING_MISSIONS }) => {
         const checkPathway = (pathway: string, badgeId: string) => {
           const pathwayMissions = CODING_MISSIONS.filter(m => m.pathway.includes(pathway));
           const completedInPathway = pathwayMissions.filter(m => nextMissions.includes(m.id));
+          // Strict: ALL missions in the pathway must be done
           if (pathwayMissions.length > 0 && completedInPathway.length === pathwayMissions.length) {
             unlockBadge(badgeId);
           }
         };
 
+        // future_hero: complete ALL Fundamentals missions
+        checkPathway('Fundamentals', 'future_hero');
         checkPathway('Mobile', 'app_builder');
         checkPathway('Web', 'web_wizard');
         checkPathway('Game', 'game_master');
-        checkPathway('AI', 'ai_genius');
-        checkPathway('ML', 'ai_genius');
+        checkPathway('AI (AI 4 Kids)', 'ai_genius');
+        checkPathway('ML (AI 4 Kids)', 'ai_genius');
         checkPathway('Robotics', 'robot_commander');
         checkPathway('Data Science', 'data_scientist');
       });
@@ -289,8 +298,8 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
 
   const completeOnboarding = useCallback(() => {
     setHasCompletedOnboarding(true);
-    unlockBadge('future_hero');
-  }, [unlockBadge]);
+    // future_hero is now earned by completing all Fundamentals, not just the tutorial
+  }, []);
 
   const purchaseItem = useCallback((itemId: string, price: number) => {
     if (coins >= price) {

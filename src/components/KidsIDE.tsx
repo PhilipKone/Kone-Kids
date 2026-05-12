@@ -10,6 +10,7 @@ import { useGamification } from '../context/GamificationContext';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { CODING_MISSIONS } from '../data/missions';
 import { Play, Square, FileCode, Blocks, Eye, EyeOff } from 'lucide-react';
+import MascotShop from './MascotShop';
 
 // Define a premium dark theme for Blockly
 const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
@@ -57,6 +58,8 @@ const KidsIDE: React.FC = () => {
   const [showCode, setShowCode] = useState(true);
   const [language, setLanguage] = useState<'javascript' | 'python'>('javascript');
   const [hasStartedMission, setHasStartedMission] = useState(false);
+  const [blockError, setBlockError] = useState<string[] | null>(null);
+  const [hintIndex, setHintIndex] = useState(0);
   
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
@@ -65,9 +68,14 @@ const KidsIDE: React.FC = () => {
   const mission = CODING_MISSIONS.find(m => m.id === missionId);
   const isMissionCompleted = completedMissions.includes(missionId || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showShop, setShowShop] = useState(false);
 
-  // Derive the hub (/coding, /robotics, /ai) from the current URL
-  const hubPath = '/' + (location.pathname.split('/')[1] || 'coding');
+  // Derive the hub from the URL — values are hardcoded literals, never from location, preventing open redirect (CWE-601)
+  const _rawSegment = location.pathname.split('/')[1];
+  const hubPath: string =
+    _rawSegment === 'robotics' ? '/robotics' :
+    _rawSegment === 'ai'       ? '/ai'       :
+                                 '/coding';
 
   useEffect(() => {
     if (missionId && !hasCompletedOnboarding) {
@@ -120,6 +128,21 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['mascot_speak'] = (block: any) => `await mascot.speak("${block.getFieldValue('TEXT')}");\n`;
+    }
+
+    if (!Blockly.Blocks['mascot_wait']) {
+      Blockly.Blocks['mascot_wait'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("🕐 Wait")
+              .appendField(new Blockly.FieldNumber(1, 0.1, 30), "SECS")
+              .appendField("seconds");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(20);
+        }
+      };
+      javascriptGenerator.forBlock['mascot_wait'] = (block: any) => `await new Promise(res => setTimeout(res, ${block.getFieldValue('SECS')} * 1000));\n`;
     }
 
     if (!Blockly.Blocks['mascot_wave']) {
@@ -215,6 +238,7 @@ const KidsIDE: React.FC = () => {
             { kind: 'block', type: 'mascot_speak' },
             { kind: 'block', type: 'mascot_wave' },
             { kind: 'block', type: 'mascot_blink' },
+            { kind: 'block', type: 'mascot_wait' },
           ]
         },
         {
@@ -259,9 +283,55 @@ const KidsIDE: React.FC = () => {
 
   const runCode = async () => {
     if (!workspace.current || isRunning) return;
+
+    // ── 1. Empty workspace guard ──────────────────────────────────────────────
+    const allBlocks = workspace.current.getAllBlocks(true);
+    if (allBlocks.length === 0) {
+      setBlockError(['Your workspace is empty! Drag some blocks in first. 👆']);
+      setTimeout(() => setBlockError(null), 4000);
+      mascotRef.current?.speak("Your workspace is empty! Drag some blocks in first.");
+      return;
+    }
+
+    // ── 2. Required block validation ─────────────────────────────────────────
+    if (mission?.requiredBlocks && mission.requiredBlocks.length > 0) {
+      const presentTypes = new Set(allBlocks.map((b: any) => b.type));
+      const missing = mission.requiredBlocks.filter(req => !presentTypes.has(req));
+      if (missing.length > 0) {
+        const friendlyNames: Record<string, string> = {
+          mascot_speak: '🗣️ Say block',
+          mascot_wave: '👋 Wave Hand block',
+          mascot_blink: '👁️ Blink Eyes block',
+          mascot_wait: '🕐 Wait block',
+          controls_repeat_ext: '🔄 Repeat block',
+          variables_set: '📦 Set Variable block',
+          math_number: '🔢 Number block',
+          controls_if: '🧠 If block',
+          robot_move: '🚜 Move block',
+          robot_turn: '🔄 Turn block',
+          robot_stop: '🛑 Stop Robot block',
+          robot_distance: '📏 Distance Sensor block',
+        };
+        const missingLabels = missing.map(m => friendlyNames[m] || m);
+        setBlockError(missingLabels);
+        setTimeout(() => setBlockError(null), 5000);
+        mascotRef.current?.speak(`You're missing the ${missingLabels[0]}! Check the toolbox.`);
+        return;
+      }
+    }
+
+    // ── 3. Minimum block count check ─────────────────────────────────────────
+    const minBlocks = mission?.minBlocks ?? 1;
+    if (allBlocks.length < minBlocks) {
+      setBlockError([`You need at least ${minBlocks} blocks for this mission. Keep building!`]);
+      setTimeout(() => setBlockError(null), 4000);
+      return;
+    }
+
     setIsRunning(true);
     setIsStopping(false);
-    
+    setBlockError(null);
+
     if (onboardingStep === 3) {
       completeOnboarding();
       setOnboardingStep(-1);
@@ -281,15 +351,18 @@ const KidsIDE: React.FC = () => {
       getDistance: () => robotRef.current?.getDistance()
     };
 
+    let ranSuccessfully = false;
     try {
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
       const fn = new AsyncFunction('mascot', 'robot', code);
       await fn(mascot, robot);
+      ranSuccessfully = true;
     } catch (e) {
       console.error(e);
     } finally {
       setIsRunning(false);
-      if (mission && !isMissionCompleted) {
+      // Only complete mission if code ran without errors and validation passed
+      if (ranSuccessfully && mission && !isMissionCompleted) {
         completeMission(mission.id, mission.xpReward);
         setShowSuccessModal(true);
       }
@@ -320,23 +393,73 @@ const KidsIDE: React.FC = () => {
   return (
     <div className="kids-ide-container engineering-lab-wrapper" style={{ margin: '2rem 0', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '24px', overflow: 'hidden', position: 'relative' }}>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: isMobile ? '1rem' : '1.5rem',
+        background: 'rgba(255,255,255,0.02)',
+        padding: isMobile ? '0.5rem 1rem' : '0',
+        margin: isMobile ? '-1rem -1rem 1rem -1rem' : '0 0 1.5rem 0',
+        borderBottom: isMobile ? '1px solid rgba(255,255,255,0.05)' : 'none'
+      }}>
         <div>
-          <h3 className="lab-title" style={{ margin: 0, fontSize: isMobile ? '1.4rem' : '1.8rem' }}>KONE KIDS IDE</h3>
-          <p style={{ margin: 0, color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem' }}>Build the future, one block at a time!</p>
+          <h3 className="lab-title" style={{ margin: 0, fontSize: isMobile ? '1.1rem' : '1.8rem' }}>KONE KIDS IDE</h3>
+          {!isMobile && <p style={{ margin: 0, color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem' }}>Build the future, one block at a time!</p>}
         </div>
         
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '4px' }}>
-            <button onClick={() => setLanguage('javascript')} className={`px-4 py-2 rounded-xl ${language === 'javascript' ? 'bg-orange-500' : 'bg-slate-700'}`} style={{ background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent', border: 'none', color: 'white', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer' }}>JS</button>
-            <button onClick={() => setLanguage('python')} className={`px-4 py-2 rounded-xl ${language === 'python' ? 'bg-blue-500' : 'bg-slate-700'}`} style={{ background: language === 'python' ? 'var(--kids-blue)' : 'transparent', border: 'none', color: 'white', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer' }}>PY</button>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px', gap: '4px' }}>
+            <button 
+              onClick={() => setLanguage('javascript')} 
+              style={{ 
+                background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent', 
+                border: 'none', 
+                color: 'white', 
+                padding: isMobile ? '0.3rem 0.6rem' : '0.5rem 1rem', 
+                borderRadius: '10px', 
+                cursor: 'pointer', 
+                fontSize: isMobile ? '0.7rem' : '0.85rem', 
+                fontWeight: 800,
+                boxShadow: language === 'javascript' ? '0 4px 0 #9a3412' : 'none',
+                transition: 'all 0.2s',
+                transform: language === 'javascript' ? 'translateY(2px)' : 'none'
+              }}
+            >JS</button>
+            <button 
+              onClick={() => setLanguage('python')} 
+              style={{ 
+                background: language === 'python' ? 'var(--kids-blue)' : 'transparent', 
+                border: 'none', 
+                color: 'white', 
+                padding: isMobile ? '0.3rem 0.6rem' : '0.5rem 1rem', 
+                borderRadius: '10px', 
+                cursor: 'pointer', 
+                fontSize: isMobile ? '0.7rem' : '0.85rem', 
+                fontWeight: 800,
+                boxShadow: language === 'python' ? '0 4px 0 #0369a1' : 'none',
+                transition: 'all 0.2s',
+                transform: language === 'python' ? 'translateY(2px)' : 'none'
+              }}
+            >PY</button>
           </div>
           
           <button 
             onClick={() => setShowCode(!showCode)}
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: 'white', padding: '0.5rem', borderRadius: '10px', cursor: 'pointer' }}
+            className="kids-button"
+            style={{ 
+              background: 'var(--kids-surface)', 
+              border: '2px solid var(--kids-border)', 
+              color: 'white', 
+              padding: '0.4rem', 
+              borderRadius: '10px', 
+              cursor: 'pointer',
+              width: isMobile ? '32px' : '40px',
+              height: isMobile ? '32px' : '40px',
+              boxShadow: isMobile ? '0 3px 0 var(--kids-border)' : '0 5px 0 var(--kids-border)'
+            }}
           >
-            {showCode ? <EyeOff size={20} /> : <Eye size={20} />}
+            {showCode ? <EyeOff size={isMobile ? 16 : 20} /> : <Eye size={isMobile ? 16 : 20} />}
           </button>
         </div>
       </div>
@@ -345,15 +468,55 @@ const KidsIDE: React.FC = () => {
         {/* Workspace */}
         <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {mission && (
-            <div style={{ background: 'rgba(14, 165, 233, 0.1)', border: '1px solid rgba(14, 165, 233, 0.3)', borderRadius: '16px', padding: '1rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div style={{ fontSize: '2rem' }}>🎯</div>
+            <div style={{ 
+              background: 'rgba(14, 165, 233, 0.08)', 
+              border: '1px solid rgba(14, 165, 233, 0.3)', 
+              borderRadius: '16px', 
+              padding: isMobile ? '0.75rem' : '1rem' 
+            }}>
+              <div style={{ display: 'flex', gap: isMobile ? '0.75rem' : '1rem', alignItems: 'flex-start', marginBottom: (mission.steps && !isMobile) ? '0.75rem' : '0' }}>
+                <div style={{ fontSize: isMobile ? '1.4rem' : '2rem', flexShrink: 0 }}>🎯</div>
+                <div>
+                  <h4 style={{ margin: 0, color: 'var(--kids-blue)', fontSize: isMobile ? '0.65rem' : '0.75rem', letterSpacing: '1px' }}>MISSION: {mission.name}</h4>
+                  <p style={{ margin: '0.15rem 0 0', color: 'white', fontWeight: 600, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>{mission.objective}</p>
+                </div>
+              </div>
+              {mission.steps && !isMobile && (
+                <div style={{ borderTop: '1px solid rgba(14, 165, 233, 0.2)', paddingTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                  {mission.steps.map((step, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)' }}>
+                      <span style={{ background: 'rgba(14,165,233,0.3)', color: 'var(--kids-blue)', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 800, flexShrink: 0 }}>{i+1}</span>
+                      <span>{step}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Block validation error banner */}
+          {blockError && (
+            <div style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: '12px', padding: '0.6rem 0.8rem', display: 'flex', gap: '0.6rem', alignItems: 'flex-start', animation: 'slideDown 0.3s ease' }}>
+              <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>⚠️</span>
               <div>
-                <h4 style={{ margin: 0, color: 'var(--kids-blue)', fontSize: '0.8rem' }}>MISSION: {mission.name}</h4>
-                <p style={{ margin: 0, color: 'white', fontWeight: 600 }}>{mission.objective}</p>
+                <p style={{ margin: 0, color: '#fca5a5', fontWeight: 700, fontSize: isMobile ? '0.75rem' : '0.85rem' }}>Missing required blocks:</p>
+                <ul style={{ margin: '0.2rem 0 0', paddingLeft: '1.2rem', color: '#fca5a5', fontSize: isMobile ? '0.7rem' : '0.8rem' }}>
+                  {blockError.map((err, i) => <li key={i}>{err}</li>)}
+                </ul>
               </div>
             </div>
           )}
-          <div ref={blocklyDiv} style={{ flex: 1, borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: '#0b0e14', minHeight: isMobile ? '400px' : '0' }} />
+
+          {/* Hint button */}
+          {mission?.hints && mission.hints.length > 0 && !isMissionCompleted && (
+            <button
+              onClick={() => { mascotRef.current?.speak(mission.hints[hintIndex % mission.hints.length]); setHintIndex(h => h + 1); }}
+              style={{ alignSelf: 'flex-start', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.4)', color: '#fbbf24', padding: '0.35rem 0.8rem', borderRadius: '10px', cursor: 'pointer', fontSize: isMobile ? '0.75rem' : '0.82rem', fontWeight: 700 }}
+            >
+              💡 Hint ({hintIndex % (mission.hints.length) === 0 && hintIndex > 0 ? 'all used!' : `${mission.hints.length - (hintIndex % mission.hints.length)} left`})
+            </button>
+          )}
+          <div ref={blocklyDiv} style={{ flex: 1, borderRadius: '20px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: '#0b0e14', minHeight: isMobile ? '350px' : '0' }} />
         </div>
 
         {/* Side Panel */}
@@ -370,6 +533,28 @@ const KidsIDE: React.FC = () => {
             position: 'relative',
             overflow: 'hidden'
           }}>
+            {/* Mascot Shop button */}
+            <button
+              onClick={() => setShowShop(true)}
+              className="kids-button pulse-neon"
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                zIndex: 10,
+                padding: isMobile ? '0.35rem 0.75rem' : '0.45rem 1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: 'var(--kids-orange)',
+                boxShadow: '0 3px 0 #9a3412',
+                fontSize: isMobile ? '0.75rem' : '0.85rem',
+                whiteSpace: 'nowrap',
+                minHeight: isMobile ? '32px' : '40px'
+              }}
+            >
+              🛒 Shop
+            </button>
             {mission?.pathway === 'Robotics (AI 4 Kids)' ? (
               <RoboticsSimulator ref={robotRef} />
             ) : (
@@ -392,15 +577,15 @@ const KidsIDE: React.FC = () => {
       </div>
 
       {/* Footer Actions */}
-      <div style={{ position: 'absolute', bottom: '1.25rem', right: '1.25rem', zIndex: 50, display: 'flex', gap: '0.75rem' }}>
+      <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', zIndex: 50, display: 'flex', gap: '0.6rem' }}>
         {!isRunning ? (
-          <button id="run-code-btn" className="neon-glow-button kids-button" style={{ padding: '0.65rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem' }} onClick={runCode}>
+          <button id="run-code-btn" className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px', boxShadow: '0 8px 0 #9a3412' }} onClick={runCode}>
             <Play size={18} fill="currentColor" />
             <span>Run Code</span>
           </button>
         ) : (
-          <button className="kids-button" style={{ padding: '0.65rem 1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1rem', background: '#ef4444', boxShadow: '0 6px 0 #991b1b' }} onClick={stopCode}>
-            <Square size={18} fill="currentColor" />
+          <button className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', background: '#ef4444', boxShadow: '0 8px 0 #991b1b', minHeight: '44px' }} onClick={stopCode}>
+            <Square size={16} fill="currentColor" />
             <span>Stop</span>
           </button>
         )}
@@ -420,9 +605,9 @@ const KidsIDE: React.FC = () => {
             <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🏆</div>
             <h2 className="lab-title" style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>MISSION COMPLETE!</h2>
             <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '2rem' }}> Awesome work, Engineer! You earned <strong style={{ color: 'var(--kids-blue)' }}>{mission.xpReward} XP</strong>.</p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <button className="kids-button pulse-neon" onClick={handleNextMission} style={{ width: '100%', fontSize: '1.2rem' }}> NEXT MISSION 🚀 </button>
-              <button className="kids-button" onClick={() => navigate(hubPath)} style={{ width: '100%', background: 'transparent', boxShadow: 'none', border: '1px solid rgba(255,255,255,0.2)' }}> BACK TO MAP </button>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+              <button className="kids-button pulse-neon" onClick={handleNextMission} style={{ width: '100%', fontSize: '1.05rem', padding: '0.85rem', boxShadow: '0 8px 0 #9a3412' }}> NEXT MISSION 🚀 </button>
+              <button className="kids-button" onClick={() => navigate(hubPath)} style={{ width: '100%', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', fontSize: '0.95rem', color: 'var(--kids-text)', boxShadow: '0 6px 0 var(--kids-border)' }}> BACK TO MAP </button>
             </div>
           </div>
         </div>
@@ -435,6 +620,7 @@ const KidsIDE: React.FC = () => {
           onStart={() => setHasStartedMission(true)} 
         />
       )}
+      {showShop && <MascotShop onClose={() => setShowShop(false)} />}
     </div>
   );
 };

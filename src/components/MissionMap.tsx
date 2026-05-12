@@ -99,6 +99,108 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
       transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)'
     }}>
       {/* Background Glows */}
+      <header style={{ 
+        position: 'sticky', 
+        top: '0', 
+        zIndex: 100, 
+        padding: isMobile ? '0.5rem' : '1rem 5%',
+        display: 'flex',
+        justifyContent: 'center',
+        width: '100%',
+        boxSizing: 'border-box'
+      }}>
+        <div style={{
+          background: theme === 'dark' ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: isMobile ? '16px' : '24px',
+          padding: isMobile ? '0.5rem 0.75rem' : '0.75rem 2rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: isMobile ? '0.5rem' : '1.5rem',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          maxWidth: '1200px',
+          width: '100%',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.5rem' : '1rem' }}>
+            <div style={{
+              background: world.color,
+              width: isMobile ? '32px' : '40px',
+              height: isMobile ? '32px' : '40px',
+              borderRadius: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '0.9rem',
+              fontWeight: 800,
+              color: 'white'
+            }}>
+              {level}
+            </div>
+            {!isMobile && <span style={{ fontWeight: 800 }}>{hub.toUpperCase()}</span>}
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <div style={{
+              background: 'rgba(251,191,36,0.1)',
+              padding: '0.4rem 0.8rem',
+              borderRadius: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              color: '#fbbf24',
+              fontWeight: 700,
+              fontSize: '0.9rem'
+            }}>
+              <Coins size={16} />
+              {coins}
+            </div>
+            
+            <button
+              onClick={() => setShowShop(true)}
+              className="kids-button"
+              style={{
+                padding: '0.4rem 0.8rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: 'var(--kids-orange)',
+                border: 'none',
+                borderRadius: '12px',
+                color: 'white',
+                fontWeight: 700
+              }}
+            >
+              <ShoppingBag size={16} />
+              {!isMobile && 'SHOP'}
+            </button>
+
+            <button 
+              onClick={toggleTheme}
+              style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer' }}
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+
+            <button 
+              onClick={() => navigate('/')}
+              style={{ 
+                background: '#ef4444', 
+                border: 'none', 
+                padding: '0.4rem 0.8rem',
+                borderRadius: '12px',
+                color: 'white',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              Exit
+            </button>
+          </div>
+        </div>
+      </header>
+
       <div style={{
         position: 'absolute',
         top: '20%',
@@ -127,163 +229,29 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
         opacity: 0.6
       }} />
 
-      {/* Shop Button */}
-      <div style={{
-        position: 'absolute',
-        top: '2rem',
-        right: '2rem',
-        zIndex: 100,
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        alignItems: 'flex-end'
-      }}>
-        <div style={{
-          background: 'rgba(15, 23, 42, 0.8)',
-          backdropFilter: 'blur(10px)',
-          padding: '0.5rem 1rem',
-          borderRadius: '16px',
-          border: '2px solid #fbbf24',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-          color: 'white',
-          fontWeight: 800,
-          boxShadow: '0 10px 25px rgba(251, 191, 36, 0.2)'
-        }}>
-          <Coins className="text-yellow-400" size={20} />
-          {coins}
-        </div>
-
-        <button 
-          onClick={() => setShowShop(true)}
-          className="kids-button pulse-neon"
-          style={{
-            padding: '1rem 1.5rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
-            background: 'var(--kids-orange)',
-            boxShadow: '0 8px 0 #9a3412',
-            fontSize: '1.1rem'
-          }}
-        >
-          <ShoppingBag size={24} />
-          MASCOT SHOP
-        </button>
-      </div>
-
       {showShop && <MascotShop onClose={() => setShowShop(false)} />}
 
-      {/* Game Header */}
-      <header style={{
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        justifyContent: 'space-between',
-        alignItems: isMobile ? 'stretch' : 'center',
-        background: 'var(--kids-surface)',
-        padding: isMobile ? '1rem' : '1.2rem 2rem',
-        borderRadius: '24px',
-        border: '1px solid var(--kids-border)',
-        backdropFilter: 'blur(10px)',
-        marginBottom: '2rem',
-        position: 'sticky',
-        top: '1rem',
-        zIndex: 100,
-        gap: isMobile ? '1rem' : '0',
-        boxShadow: theme === 'light' ? '0 10px 30px -10px rgba(0,0,0,0.1)' : 'none'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{
-            background: world.color,
-            width: '56px',
-            height: '56px',
-            borderRadius: '16px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.4rem',
-            fontWeight: 800,
-            boxShadow: `0 4px 0 ${world.color}88`,
-            color: 'white'
-          }}>
-            {level}
-          </div>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.1rem', letterSpacing: '1px' }}>{hub.toUpperCase()} HUB</h3>
-            <p style={{ margin: 0, color: 'var(--kids-text-muted)', fontSize: '0.85rem' }}>LVL {level} Engineer</p>
-          </div>
-        </div>
-
-        <div style={{ flex: 1, maxWidth: isMobile ? '100%' : '350px', margin: isMobile ? '0' : '0 2rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.85rem' }}>
-            <span style={{ fontWeight: 700 }}>XP: {xp}</span>
-            <span style={{ color: world.color, fontWeight: 700 }}>Next: {level * 1000}</span>
-          </div>
-          <div style={{ height: '10px', background: 'var(--kids-border)', borderRadius: '10px', overflow: 'hidden' }}>
-            <div style={{
-              width: `${Math.min(100, (xp % 1000) / 10)}%`,
-              height: '100%',
-              background: `linear-gradient(90deg, ${world.color}, ${theme === 'dark' ? 'white' : world.color})`,
-              boxShadow: `0 0 10px ${world.color}88`,
-              transition: 'width 0.5s ease-out'
-            }} />
-          </div>
-        </div>
-
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <button 
-            onClick={toggleTheme}
-            className="kids-button"
-            style={{ 
-              background: 'var(--kids-surface)', 
-              color: 'var(--kids-text)',
-              border: '1px solid var(--kids-border)',
-              boxShadow: 'none',
-              padding: '0.6rem',
-              width: '44px',
-              height: '44px',
-              borderRadius: '12px'
-            }}
-          >
-            {theme === 'light' ? '🌙' : '☀️'}
-          </button>
-          <button 
-            onClick={() => navigate('/')}
-            className="kids-button" 
-            style={{ 
-              background: 'transparent', 
-              boxShadow: 'none', 
-              border: '1px solid var(--kids-border)', 
-              padding: '0.6rem 1.2rem',
-              color: 'var(--kids-text)'
-            }}
-          >
-            Exit
-          </button>
-        </div>
-      </header>
 
       {/* Pathway Selector */}
-      <div className="pathway-filters">
+      <div className="pathway-filters" style={{ 
+        padding: isMobile ? '0.4rem 0' : '1rem 0', 
+        marginBottom: isMobile ? '1.5rem' : '2.5rem',
+        gap: isMobile ? '0.5rem' : '0.75rem' 
+      }}>
         {pathways.map(pathway => (
           <div 
             key={pathway}
             className={`pathway-tab ${selectedPathway === pathway ? 'pathway-tab-active' : ''}`}
-            style={selectedPathway === pathway ? {
-              background: world.color,
-              borderColor: world.color,
-              boxShadow: `0 0 20px ${world.color}66`
-            } : {
-              background: 'var(--kids-surface)',
-              color: 'var(--kids-text-muted)',
-              borderColor: 'var(--kids-border)'
-            }}
+            style={{
+              '--tab-color': world.color,
+              '--tab-shadow': `${world.color}dd`,
+              fontSize: isMobile ? '0.8rem' : '0.9rem'
+            } as any}
             onClick={() => setSelectedPathway(pathway)}
           >
-            <span className="pathway-tab-icon">
+            <span className="pathway-tab-icon" style={{ fontSize: isMobile ? '0.9rem' : '1.1rem' }}>
               {PATHWAY_WORLDS[pathway][theme].icon.length > 2 ? (
-                <img src={PATHWAY_WORLDS[pathway][theme].icon} alt="" style={{ width: '24px', height: '24px' }} />
+                <img src={PATHWAY_WORLDS[pathway][theme].icon} alt="" style={{ width: isMobile ? '16px' : '20px', height: isMobile ? '16px' : '20px' }} />
               ) : (
                 PATHWAY_WORLDS[pathway][theme].icon
               )}
@@ -292,6 +260,59 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
           </div>
         ))}
       </div>
+
+      {/* Pathway Progress Panel */}
+      {(() => {
+        const totalInPathway = filteredMissions.length;
+        const doneInPathway = filteredMissions.filter(m => completedMissions.includes(m.id)).length;
+        const xpRemaining = filteredMissions
+          .filter(m => !completedMissions.includes(m.id))
+          .reduce((sum, m) => sum + m.xpReward, 0);
+        const pct = totalInPathway > 0 ? (doneInPathway / totalInPathway) * 100 : 0;
+        return (
+          <div style={{
+            background: 'var(--kids-surface)',
+            border: '1px solid var(--kids-border)',
+            borderRadius: '16px',
+            padding: '1rem 1.5rem',
+            marginBottom: '2rem',
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? 'stretch' : 'center',
+            gap: '1rem'
+          }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.85rem' }}>
+                <span style={{ fontWeight: 700, color: 'var(--kids-text)' }}>
+                  {world.icon} {selectedPathway}
+                </span>
+                <span style={{ color: world.color, fontWeight: 700 }}>
+                  {doneInPathway} / {totalInPathway} missions
+                </span>
+              </div>
+              <div style={{ height: '8px', background: 'var(--kids-border)', borderRadius: '8px', overflow: 'hidden' }}>
+                <div style={{
+                  width: `${pct}%`,
+                  height: '100%',
+                  background: `linear-gradient(90deg, ${world.color}, ${world.color}cc)`,
+                  boxShadow: `0 0 8px ${world.color}88`,
+                  borderRadius: '8px',
+                  transition: 'width 0.6s ease-out'
+                }} />
+              </div>
+            </div>
+            <div style={{ display: 'flex', gap: '1.5rem', flexShrink: 0 }}>
+              {doneInPathway === totalInPathway && totalInPathway > 0 ? (
+                <span style={{ color: '#22c55e', fontWeight: 800, fontSize: '0.9rem' }}>✅ Pathway Complete!</span>
+              ) : (
+                <span style={{ color: 'var(--kids-text-muted)', fontSize: '0.85rem' }}>
+                  <strong style={{ color: world.color }}>{xpRemaining} XP</strong> remaining
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* The Winding Path */}
       <div style={{ 
@@ -382,25 +403,12 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             >
               <div 
                 onClick={() => isUnlocked && navigate(`/${hub}/mission/${mission.id}`)}
-                className={isUnlocked ? 'animate-float mission-node-unlocked' : ''}
+                className={`mission-node ${isUnlocked ? 'mission-node-unlocked' : 'mission-node-locked'} ${isCompleted ? 'mission-node-completed' : ''} ${isUnlocked ? 'animate-float' : ''}`}
                 style={{
-                  width: isMobile ? '90px' : '110px',
-                  height: isMobile ? '90px' : '110px',
-                  borderRadius: '50%',
-                  background: isCompleted ? 'var(--kids-blue)' : (isUnlocked ? world.color : 'var(--kids-surface)'),
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  '--node-color': world.color,
+                  '--node-shadow': `${world.color}dd`,
                   cursor: isUnlocked ? 'pointer' : 'not-allowed',
-                  border: `6px solid ${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)'}`,
-                  boxShadow: isUnlocked ? `0 15px 35px ${world.color}44` : 'none',
-                  transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                  transform: isUnlocked ? 'scale(1)' : 'scale(0.9)',
-                  color: isUnlocked ? 'white' : 'var(--kids-text-muted)',
-                  position: 'relative',
-                  '--kids-blue': world.color // Custom property for the pulsing glow
-                } as React.CSSProperties}
+                } as any}
               >
                 {!isUnlocked ? (
                   <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>🔒</span>

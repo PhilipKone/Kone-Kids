@@ -12,6 +12,7 @@ interface EnrollmentModalProps {
 
 const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, programTitle = '' }) => {
   const { unlockBadge } = useGamification()
+  const [isMobile] = useState(window.innerWidth < 768)
   const [formData, setFormData] = useState({
     parentName: '',
     studentName: '',
@@ -62,15 +63,13 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
           onClick={onClose}
           className="modal-close-btn"
           style={{ 
-            position: 'absolute', top: '25px', right: '25px', 
-            background: '#f1f5f9', border: 'none', width: '40px', height: '40px', 
+            position: 'absolute', top: isMobile ? '15px' : '25px', right: isMobile ? '15px' : '25px', 
+            background: 'var(--kids-bg)', border: '1px solid var(--kids-border)', width: '36px', height: '36px', 
             borderRadius: '50%', fontSize: '1.2rem', cursor: 'pointer',
-            color: '#64748b', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: 'var(--kids-text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'all 0.2s',
             zIndex: 10
           }}
-          onMouseOver={(e) => (e.currentTarget.style.background = '#e2e8f0')}
-          onMouseOut={(e) => (e.currentTarget.style.background = '#f1f5f9')}
         >
           ✕
         </button>
@@ -168,12 +167,15 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
 
               <button 
                 type="submit" 
-                className="kids-button" 
+                className="kids-button pulse-neon" 
                 style={{ 
                   width: '100%', 
                   marginTop: '1.5rem', 
                   background: 'var(--kids-blue)',
-                  boxShadow: '0 6px 0 #0369a1'
+                  boxShadow: '0 4px 0 #0369a1',
+                  minHeight: '40px',
+                  fontSize: '0.95rem',
+                  padding: '0.6rem 1rem'
                 }}
                 disabled={status === 'sending'}
               >
@@ -189,23 +191,25 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
 
             {/* Certificate Preview Section */}
             {(formData.studentName || formData.program) && (
-              <div style={{ marginTop: '3rem', borderTop: '2px dashed #e2e8f0', paddingTop: '2rem' }}>
-                <h3 style={{ textAlign: 'center', marginBottom: '1.5rem', color: '#64748b', fontSize: '0.9rem', letterSpacing: '2px' }}>
+              <div style={{ marginTop: isMobile ? '2rem' : '3rem', borderTop: '1px solid var(--kids-border)', paddingTop: '1.5rem' }}>
+                <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--kids-text-muted)', fontSize: '0.75rem', letterSpacing: '2px', fontWeight: 800 }}>
                   PREVIEW YOUR FUTURE CERTIFICATE
                 </h3>
                 <div style={{ 
-                  transform: `scale(${window.innerWidth < 480 ? 0.5 : 0.8})`, 
+                  transform: `scale(${isMobile ? 0.4 : 0.6})`, 
                   transformOrigin: 'top center',
                   margin: '0 auto',
-                  width: 'fit-content'
+                  width: 'fit-content',
+                  height: isMobile ? '180px' : '260px', // Prevent overflow
+                  overflow: 'hidden'
                 }}>
                   <CertificatePreview 
                     pathway={formData.program} 
                     studentName={formData.studentName || 'Future Engineer'} 
                   />
                 </div>
-                <p style={{ textAlign: 'center', marginTop: '-2rem', color: '#94a3b8', fontSize: '0.8rem' }}>
-                  Complete your program to earn your official signed certificate!
+                <p style={{ textAlign: 'center', marginTop: isMobile ? '0.5rem' : '1rem', color: 'var(--kids-text-muted)', fontSize: '0.75rem', fontWeight: 600 }}>
+                  Earn this official signed certificate!
                 </p>
               </div>
             )}
