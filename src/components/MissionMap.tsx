@@ -405,34 +405,49 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             >
               <div 
                 onClick={() => isUnlocked && navigate(`/${hub}/mission/${mission.id}`)}
-                className={`mission-node ${isUnlocked ? 'mission-node-unlocked' : 'mission-node-locked'} ${isCompleted ? 'mission-node-completed' : ''} ${isUnlocked ? 'animate-float' : ''}`}
+                className={`mission-item-container ${isUnlocked ? 'animate-float' : ''}`}
                 style={{
-                  '--node-color': world.color,
-                  '--node-shadow': `${world.color}dd`,
+                  display: 'flex',
+                  flexDirection: isMobile ? 'column' : (index % 2 === 0 ? 'row-reverse' : 'row'),
+                  alignItems: 'center',
+                  gap: isMobile ? '1.5rem' : '2.5rem',
                   cursor: isUnlocked ? 'pointer' : 'not-allowed',
-                } as any}
+                  width: isMobile ? '100%' : 'auto',
+                  transition: 'all 0.3s ease'
+                }}
               >
-                {!isUnlocked ? (
-                  <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>🔒</span>
-                ) : (
-                  <>
-                    <span style={{ fontSize: isMobile ? '1.8rem' : '2.2rem', fontWeight: 800 }}>{index + 1}</span>
-                    {isCompleted && <span style={{ fontSize: '0.75rem', position: 'absolute', bottom: '-10px', background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>DONE</span>}
-                  </>
-                )}
+                <div 
+                  className={`mission-node ${isUnlocked ? 'mission-node-unlocked' : 'mission-node-locked'} ${isCompleted ? 'mission-node-completed' : ''}`}
+                  style={{
+                    '--node-color': world.color,
+                    '--node-shadow': `${world.color}dd`,
+                    flexShrink: 0
+                  } as any}
+                >
+                  {!isUnlocked ? (
+                    <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>🔒</span>
+                  ) : (
+                    <>
+                      <span style={{ fontSize: isMobile ? '1.8rem' : '2.2rem', fontWeight: 800 }}>{index + 1}</span>
+                      {isCompleted && <span style={{ fontSize: '0.75rem', position: 'absolute', bottom: '-10px', background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>DONE</span>}
+                    </>
+                  )}
+                </div>
                 
                 {/* Mission Label */}
                 <div style={{
-                  position: 'absolute',
-                  [isMobile ? 'top' : (index % 2 === 0 ? 'right' : 'left')]: isMobile ? '120px' : '160px',
-                  [!isMobile ? 'top' : '']: isMobile ? '' : '50%',
-                  transform: isMobile ? 'translateX(-50%)' : 'translateY(-50%)',
-                  left: isMobile ? '50%' : '',
                   textAlign: isMobile ? 'center' : (index % 2 === 0 ? 'right' : 'left'),
-                  width: isMobile ? '180px' : '220px'
+                  width: isMobile ? '180px' : '240px',
+                  pointerEvents: 'none'
                 }}>
-                  <h4 style={{ margin: 0, color: isUnlocked ? 'var(--kids-text)' : 'var(--kids-text-muted)', fontSize: isMobile ? '1.1rem' : '1.25rem', fontFamily: 'Baloo 2, cursive' }}>{mission.name}</h4>
-                  <p style={{ margin: '0.1rem 0 0 0', color: 'var(--kids-text-muted)', fontSize: '0.75rem', fontWeight: 600 }}>{mission.xpReward} XP</p>
+                  <h4 style={{ 
+                    margin: 0, 
+                    color: isUnlocked ? 'var(--kids-text)' : 'var(--kids-text-muted)', 
+                    fontSize: isMobile ? '1.1rem' : '1.3rem', 
+                    fontFamily: 'Baloo 2, cursive',
+                    lineHeight: 1.2
+                  }}>{mission.name}</h4>
+                  <p style={{ margin: '0.2rem 0 0 0', color: 'var(--kids-text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>{mission.xpReward} XP</p>
                 </div>
               </div>
             </div>
