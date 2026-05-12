@@ -495,6 +495,70 @@ html {
   100% { stroke-opacity: 0.4; filter: drop-shadow(0 0 2px var(--kids-blue)); }
 }
 
+/* Hub UI Elements */
+.pathway-filters {
+  display: flex;
+  overflow-x: auto;
+  padding: 1rem 5%;
+  gap: 1rem;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  justify-content: center;
+}
+
+.pathway-filters::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .pathway-filters {
+    justify-content: flex-start;
+    padding: 0.5rem 5%;
+  }
+}
+
+.pathway-tab {
+  padding: 0.6rem 1.4rem;
+  border-radius: 16px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--kids-surface);
+  border: 2px solid var(--kids-border);
+  box-shadow: 0 6px 0 var(--kids-border);
+  position: relative;
+  top: 0;
+  color: var(--kids-text-muted);
+  text-decoration: none;
+}
+
+.pathway-tab:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 0 var(--kids-border);
+  color: var(--kids-text);
+}
+
+.pathway-tab:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 var(--kids-border);
+}
+
+.pathway-tab-active {
+  background: var(--tab-color, var(--kids-blue));
+  border-color: rgba(255, 255, 255, 0.2);
+  color: white !important;
+  box-shadow: 0 6px 0 var(--tab-shadow, #0369a1);
+}
+
+.pathway-tab-active:hover {
+  box-shadow: 0 8px 0 var(--tab-shadow, #0369a1);
+}
+
 
 
 @keyframes pulse {
