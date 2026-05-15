@@ -13,6 +13,13 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
   const [words, setWords] = useState<{ word: string, found: boolean }[]>([]);
   const [selectedCells, setSelectedCells] = useState<{r: number, c: number}[]>([]);
   const [isWon, setIsWon] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Derived difficulty and size for both logic and UI
   const difficulty = level <= 5 ? 'beginner' : (level <= 12 ? 'intermediate' : 'pro');
@@ -167,16 +174,33 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
             <Volume2 size={12} color="#94a3b8" />
           </div>
         </div>
-        <button onClick={onExit} style={{ 
-          background: 'rgba(255,255,255,0.1)', 
-          border: 'none', 
-          color: 'white', 
-          padding: '0.5rem 1rem',
-          borderRadius: '12px',
-          fontWeight: 800,
-          cursor: 'pointer',
-          fontSize: '0.85rem'
-        }}>Exit</button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          {selectedCells.length > 0 && (
+            <button 
+              onClick={() => setSelectedCells([])}
+              style={{ 
+                background: 'rgba(239, 68, 68, 0.2)', 
+                border: '1px solid #ef4444', 
+                color: '#ef4444', 
+                padding: isMobile ? '0.35rem 0.6rem' : '0.5rem 1rem',
+                borderRadius: '12px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                fontSize: isMobile ? '0.7rem' : '0.85rem'
+              }}
+            >Clear</button>
+          )}
+          <button onClick={onExit} style={{ 
+            background: 'rgba(255,255,255,0.1)', 
+            border: 'none', 
+            color: 'white', 
+            padding: isMobile ? '0.35rem 0.6rem' : '0.5rem 1rem',
+            borderRadius: '12px',
+            fontWeight: 800,
+            cursor: 'pointer',
+            fontSize: isMobile ? '0.7rem' : '0.85rem'
+          }}>{isMobile ? 'Exit' : 'Close Game'}</button>
+        </div>
       </div>
 
       {/* Grid */}
@@ -207,10 +231,11 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
                 borderRadius: gridSize > 12 ? '4px' : '6px',
                 fontWeight: 900,
                 cursor: 'pointer',
-                fontSize: gridSize > 12 ? '0.7rem' : 'clamp(0.8rem, 3.5vw, 1.1rem)',
+                fontSize: gridSize > 12 ? (isMobile ? '0.6rem' : '0.7rem') : 'clamp(0.8rem, 3.5vw, 1.1rem)',
                 userSelect: 'none',
                 transition: 'all 0.1s',
-                boxShadow: isSelected ? `0 0 10px #f472b688` : 'none'
+                boxShadow: isSelected ? `0 0 10px #f472b688` : 'none',
+                WebkitTapHighlightColor: 'transparent'
               }}
             >
               {char}

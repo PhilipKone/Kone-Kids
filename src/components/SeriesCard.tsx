@@ -11,14 +11,15 @@ interface SeriesCardProps {
 }
 
 const SeriesCard: React.FC<SeriesCardProps> = ({ series, isUnlocked, onPlay, onUnlock, progress }) => {
+  const isMobile = window.innerWidth < 768;
+
   return (
     <div className={`series-card ${!isUnlocked ? 'series-card-locked' : ''}`} style={{
       position: 'relative',
-      width: '220px',
-      height: '300px',
+      width: isMobile ? '160px' : '220px',
+      height: isMobile ? '240px' : '300px',
       perspective: '1000px',
       cursor: 'pointer',
-      margin: '1rem'
     }}
     onClick={() => isUnlocked ? onPlay() : onUnlock()}
     >
@@ -74,7 +75,7 @@ const SeriesCard: React.FC<SeriesCardProps> = ({ series, isUnlocked, onPlay, onU
           height: '100%',
           display: 'flex',
           flexDirection: 'column',
-          padding: '1.5rem',
+          padding: isMobile ? '1rem' : '1.5rem',
           color: 'white',
           justifyContent: 'space-between'
         }}>
@@ -101,7 +102,7 @@ const SeriesCard: React.FC<SeriesCardProps> = ({ series, isUnlocked, onPlay, onU
             </div>
             
             <h3 style={{
-              fontSize: '1.4rem',
+              fontSize: isMobile ? '1.1rem' : '1.4rem',
               fontFamily: '"Baloo 2", cursive',
               margin: '0.5rem 0',
               lineHeight: 1.2,
@@ -116,7 +117,7 @@ const SeriesCard: React.FC<SeriesCardProps> = ({ series, isUnlocked, onPlay, onU
               WebkitLineClamp: 3,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden'
-            }}>{series.description}</p>
+            }}>{isMobile ? series.title : series.description}</p>
           </div>
 
           <div>

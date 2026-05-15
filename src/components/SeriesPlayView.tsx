@@ -12,6 +12,8 @@ interface SeriesPlayViewProps {
 const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
   const { completedMissions, completeMission } = useGamification();
   const [playingLevel, setPlayingLevel] = React.useState<number | null>(null);
+  const isMobile = window.innerWidth < 768;
+
   
   // Generate 20 levels for the series
   const levels = Array.from({ length: series.gameCount }, (_, i) => ({
@@ -31,7 +33,7 @@ const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
 
   if (playingLevel !== null) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', padding: isMobile ? '1rem' : '2rem' }}>
         <WordSearchGame 
           level={playingLevel} 
           onComplete={handleComplete}
@@ -50,28 +52,45 @@ const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
       animation: 'slideUp 0.4s ease-out'
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: isMobile ? '0.75rem' : '1.5rem', 
+        marginBottom: isMobile ? '1rem' : '2rem' 
+      }}>
         <button 
           onClick={onBack}
           style={{
             background: 'rgba(255,255,255,0.1)',
             border: 'none',
             borderRadius: '12px',
-            padding: '0.6rem',
+            padding: isMobile ? '0.4rem' : '0.6rem',
             color: 'white',
             cursor: 'pointer'
           }}
         >
-          <ChevronLeft size={24} />
+          <ChevronLeft size={isMobile ? 20 : 24} />
         </button>
         <div>
-          <h2 style={{ fontSize: '2.5rem', fontFamily: '"Baloo 2", cursive', margin: 0, color: series.accentColor }}>
+          <h2 style={{ 
+            fontSize: isMobile ? '1.5rem' : '2.5rem', 
+            fontFamily: '"Baloo 2", cursive', 
+            margin: 0, 
+            color: series.accentColor,
+            lineHeight: 1.1
+          }}>
             {series.title}
           </h2>
-          <div style={{ display: 'flex', gap: '1rem', color: '#94a3b8', fontSize: '0.9rem', fontWeight: 700 }}>
+          <div style={{ 
+            display: 'flex', 
+            gap: isMobile ? '0.5rem' : '1rem', 
+            color: '#94a3b8', 
+            fontSize: isMobile ? '0.75rem' : '0.9rem', 
+            fontWeight: 700 
+          }}>
             <span>{series.gameCount} LEVELS</span>
             <span>•</span>
-            <span style={{ color: series.accentColor }}>{series.difficulty} MODE</span>
+            <span style={{ color: series.accentColor }}>{series.difficulty}</span>
           </div>
         </div>
       </div>
@@ -79,8 +98,8 @@ const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
       {/* Level Grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
-        gap: '1.5rem',
+        gridTemplateColumns: isMobile ? 'repeat(auto-fill, minmax(130px, 1fr))' : 'repeat(auto-fill, minmax(180px, 1fr))',
+        gap: isMobile ? '0.75rem' : '1.5rem',
         padding: '1rem 0'
       }}>
         {levels.map((level, idx) => (

@@ -16,6 +16,13 @@ const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose }) => {
   const [activePlaySeries, setActivePlaySeries] = useState<GameSeries | null>(null);
   const [showCoinStore, setShowCoinStore] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleUnlock = (series: GameSeries) => {
     if (coins < series.price) {
@@ -65,72 +72,79 @@ const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose }) => {
           <div>
             <h1 style={{
               color: 'white',
-              fontSize: '2.5rem',
+              fontSize: isMobile ? '1.8rem' : '2.5rem',
               fontFamily: '"Baloo 2", cursive',
               margin: 0,
               display: 'flex',
               alignItems: 'center',
-              gap: '1rem'
+              gap: '0.75rem'
             }}>
-              <Sparkles color="#fbbf24" size={32} />
-              Game Series Library
+              <Sparkles color="#fbbf24" size={isMobile ? 24 : 32} />
+              Game Series
             </h1>
-            <p style={{ color: '#94a3b8', margin: '0.5rem 0', fontSize: '1.1rem' }}>
-              Unlock special books filled with mini-games to chill and play!
+            <p style={{ color: '#94a3b8', margin: '0.25rem 0', fontSize: isMobile ? '0.9rem' : '1.1rem' }}>
+              Unlock mini-games to play!
             </p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: isMobile ? 'space-between' : 'flex-end',
+            gap: isMobile ? '0.75rem' : '1.5rem' 
+          }}>
             <div style={{
               background: 'rgba(251,191,36,0.1)',
-              padding: '0.6rem 1.2rem',
-              borderRadius: '16px',
+              padding: isMobile ? '0.4rem 0.8rem' : '0.6rem 1.2rem',
+              borderRadius: '12px',
               border: '1px solid #fbbf24',
               color: '#fbbf24',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.75rem',
+              gap: '0.5rem',
               fontWeight: 800,
-              fontSize: '1.2rem'
+              fontSize: isMobile ? '1rem' : '1.2rem'
             }}>
-              <Coins size={24} />
+              <Coins size={isMobile ? 18 : 24} />
               {coins}
             </div>
-            <button
-              onClick={() => setShowCoinStore(true)}
-              style={{
-                background: '#fbbf24',
-                border: 'none',
-                borderRadius: '16px',
-                padding: '0.6rem 1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                cursor: 'pointer',
-                color: '#1e293b',
-                fontWeight: 900,
-                fontSize: '1rem'
-              }}
-            >
-              <Plus size={18} /> Get Coins
-            </button>
-            <button 
-              onClick={onClose}
-              style={{
-                background: 'rgba(255,255,255,0.1)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '48px',
-                height: '48px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: 'white'
-              }}
-            >
-              <X size={24} />
-            </button>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <button
+                onClick={() => setShowCoinStore(true)}
+                style={{
+                  background: '#fbbf24',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: isMobile ? '0.4rem 0.8rem' : '0.6rem 1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  cursor: 'pointer',
+                  color: '#1e293b',
+                  fontWeight: 900,
+                  fontSize: isMobile ? '0.85rem' : '1rem'
+                }}
+              >
+                <Plus size={16} /> {!isMobile && 'Get Coins'}
+              </button>
+              <button 
+                onClick={onClose}
+                style={{
+                  background: 'rgba(255,255,255,0.1)',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: isMobile ? '36px' : '48px',
+                  height: isMobile ? '36px' : '48px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  color: 'white'
+                }}
+              >
+                <X size={isMobile ? 18 : 24} />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -157,8 +171,8 @@ const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose }) => {
         ) : (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-            gap: '2rem',
+            gridTemplateColumns: isMobile ? 'repeat(auto-fill, minmax(140px, 1fr))' : 'repeat(auto-fill, minmax(240px, 1fr))',
+            gap: isMobile ? '1rem' : '2rem',
             justifyItems: 'center'
           }}>
             {GAME_SERIES.map(series => (
