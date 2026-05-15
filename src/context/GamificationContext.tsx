@@ -32,6 +32,10 @@ interface GamificationContextType {
   equippedItems: { [key: string]: string };
   purchaseItem: (itemId: string, price: number) => boolean;
   equipItem: (type: string, itemId: string) => void;
+  addCoins: (amount: number) => void;
+  // Game Series
+  unlockedSeries: string[];
+  unlockSeries: (seriesId: string, cost: number) => boolean;
 }
 
 const INITIAL_BADGES: Badge[] = [
@@ -130,6 +134,15 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       return {};
     }
   });
+  
+  const [unlockedSeries, setUnlockedSeries] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_series');
+      return saved ? JSON.parse(saved) : ['series_word_search']; // Word search is free by default
+    } catch (e) {
+      return ['series_word_search'];
+    }
+  });
 
   const [latestBadge, setLatestBadge] = useState<Badge | null>(null);
 
@@ -164,6 +177,9 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
               if (cloudData.completedMissions?.length > completedMissions.length) {
                 setCompletedMissions(cloudData.completedMissions);
               }
+              if (cloudData.unlockedSeries?.length > unlockedSeries.length) {
+                setUnlockedSeries(cloudData.unlockedSeries);
+              }
             }
           } catch (e) {
             console.warn('Firebase Sync: Failed to load user data.', e);
@@ -187,6 +203,7 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
               coins,
               inventory,
               equippedItems,
+              unlockedSeries,
               lastSync: new Date().toISOString()
             }, { merge: true });
         } catch (e) {
@@ -231,6 +248,10 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
   useEffect(() => {
     localStorage.setItem('kone_kids_equipped', JSON.stringify(equippedItems));
   }, [equippedItems]);
+
+  useEffect(() => {
+    localStorage.setItem('kone_kids_series', JSON.stringify(unlockedSeries));
+  }, [unlockedSeries]);
 
   const unlockBadge = useCallback((id: string) => {
     setBadges(prev => prev.map(badge => {
@@ -310,6 +331,10 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     return false;
   }, [coins]);
 
+  const addCoins = useCallback((amount: number) => {
+    setCoins(curr => curr + amount);
+  }, []);
+
   const equipItem = useCallback((type: string, itemId: string) => {
     setEquippedItems(prev => ({
       ...prev,
@@ -317,11 +342,20 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     }));
   }, []);
 
+  const unlockSeries = useCallback((seriesId: string, cost: number) => {
+    if (coins >= cost) {
+      setCoins(curr => curr - cost);
+      setUnlockedSeries(prev => prev.includes(seriesId) ? prev : [...prev, seriesId]);
+      return true;
+    }
+    return false;
+  }, [coins]);
+
   const contextValue = useMemo(() => ({
     badges, latestBadge, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
-    coins, inventory, equippedItems, purchaseItem, equipItem
+    coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins
   }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
-       coins, inventory, equippedItems, purchaseItem, equipItem]);
+       coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins]);
 
   return (
     <GamificationContext.Provider value={contextValue}>

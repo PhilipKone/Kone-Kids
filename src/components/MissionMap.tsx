@@ -6,6 +6,8 @@ import { useTheme } from '../context/ThemeContext';
 import { CODING_MISSIONS, Pathway } from '../data/missions';
 import Mascot from './Mascot';
 import MascotShop from './MascotShop';
+import SeriesLibrary from './SeriesLibrary';
+import CoinStoreModal from './CoinStoreModal';
 
 type HubType = 'coding' | 'robotics' | 'ai';
 
@@ -66,6 +68,8 @@ const HUB_PATHWAYS: Record<HubType, Pathway[]> = {
 const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const navigate = useNavigate();
   const [showShop, setShowShop] = useState(false);
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [showCoinStore, setShowCoinStore] = useState(false);
   const { xp, level, completedMissions, coins } = useGamification();
   const { theme, toggleTheme } = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -156,6 +160,25 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               <Coins size={isMobile ? 14 : 16} />
               {coins}
             </div>
+
+            <button
+              onClick={() => setShowCoinStore(true)}
+              style={{
+                background: '#fbbf24',
+                border: 'none',
+                padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.8rem',
+                borderRadius: '12px',
+                color: '#1e293b',
+                fontWeight: 900,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                fontSize: isMobile ? '0.7rem' : '0.85rem'
+              }}
+            >
+              + Get
+            </button>
             
             <button
               onClick={() => setShowShop(true)}
@@ -231,6 +254,8 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
       }} />
 
       {showShop && <MascotShop onClose={() => setShowShop(false)} />}
+      {showLibrary && <SeriesLibrary onClose={() => setShowLibrary(false)} />}
+      <CoinStoreModal isOpen={showCoinStore} onClose={() => setShowCoinStore(false)} />
 
 
       {/* Pathway Selector */}
@@ -315,6 +340,53 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
           </div>
         );
       })()}
+
+      {/* Series Library Entry Point - Only for Game Dev */}
+      {selectedPathway === 'Game Dev' && (
+        <div style={{
+          background: 'linear-gradient(135deg, #f472b6, #ec4899)',
+          borderRadius: '20px',
+          padding: '1.5rem 2rem',
+          marginBottom: '2rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          color: 'white',
+          boxShadow: '0 10px 30px rgba(236, 72, 153, 0.2)',
+          border: '2px solid rgba(255,255,255,0.2)',
+          position: 'relative',
+          overflow: 'hidden'
+        }}>
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <h3 style={{ margin: 0, fontFamily: '"Baloo 2", cursive', fontSize: '1.5rem' }}>Want to chill? 🍦</h3>
+            <p style={{ margin: '0.2rem 0 0', opacity: 0.9, fontSize: '0.95rem' }}>
+              Explore the Game Series Library and play over 40+ mini-games!
+            </p>
+          </div>
+          <button 
+            onClick={() => setShowLibrary(true)}
+            style={{
+              background: 'white',
+              color: '#ec4899',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '14px',
+              fontWeight: 900,
+              fontSize: '1rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+              position: 'relative',
+              zIndex: 1
+            }}
+          >
+            Open Library 📚
+          </button>
+          
+          {/* Decorative icons */}
+          <div style={{ position: 'absolute', right: '150px', top: '-10px', fontSize: '3rem', opacity: 0.2, transform: 'rotate(15deg)' }}>🎮</div>
+          <div style={{ position: 'absolute', left: '40%', bottom: '-10px', fontSize: '2.5rem', opacity: 0.15, transform: 'rotate(-10deg)' }}>🧩</div>
+        </div>
+      )}
 
       {/* The Winding Path */}
       <div style={{ 

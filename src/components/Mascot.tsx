@@ -176,141 +176,158 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
         </div>
       )}
 
-      <svg
-        width="100%"
-        viewBox="0 0 400 420"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ transition: 'all 0.3s', maxWidth: '500px', filter: isActive ? 'drop-shadow(0 0 10px rgba(14, 165, 233, 0.3))' : 'none' }}
-        className={isWaving ? '' : 'animate-float'}
-      >
-        <defs>
-          <radialGradient id="body-radial" cx="200" cy="180" r="160" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor={equippedItems.skin === 'neon_glow' ? '#22d3ee' : (equippedItems.skin === 'gold_chrome' ? '#fbbf24' : '#38bdf8')} />
-            <stop offset="60%" stopColor={equippedItems.skin === 'neon_glow' ? '#0891b2' : (equippedItems.skin === 'gold_chrome' ? '#d97706' : '#0ea5e9')} />
-            <stop offset="100%" stopColor={equippedItems.skin === 'neon_glow' ? '#0e7490' : (equippedItems.skin === 'gold_chrome' ? '#92400e' : '#1d4ed8')} />
-          </radialGradient>
-          <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
-            <feOffset dx="0" dy="10" result="offsetblur" />
-            <feComponentTransfer><feFuncA type="linear" slope="0.3" /></feComponentTransfer>
-            <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-        </defs>
+      {equippedItems.pose && equippedItems.pose !== 'pose_standing' ? (
+        <div style={{ width: '100%', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '300px' }}>
+          <img 
+            src={`/mascot/${equippedItems.pose.replace('pose_', '')}.svg`} 
+            alt="Mascot Pose" 
+            style={{ 
+                width: '100%', 
+                height: 'auto', 
+                maxWidth: '400px', 
+                filter: isActive ? 'drop-shadow(0 0 15px rgba(14, 165, 233, 0.4))' : 'none',
+                transition: 'all 0.3s'
+            }}
+            className="animate-float"
+          />
+        </div>
+      ) : (
+        <svg
+          width="100%"
+          viewBox="0 0 400 420"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{ transition: 'all 0.3s', maxWidth: '500px', filter: isActive ? 'drop-shadow(0 0 10px rgba(14, 165, 233, 0.3))' : 'none' }}
+          className={isWaving ? '' : 'animate-float'}
+        >
+          <defs>
+            <radialGradient id="body-radial" cx="200" cy="180" r="160" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor={equippedItems.skin === 'neon_glow' ? '#22d3ee' : (equippedItems.skin === 'gold_chrome' ? '#fbbf24' : '#38bdf8')} />
+              <stop offset="60%" stopColor={equippedItems.skin === 'neon_glow' ? '#0891b2' : (equippedItems.skin === 'gold_chrome' ? '#d97706' : '#0ea5e9')} />
+              <stop offset="100%" stopColor={equippedItems.skin === 'neon_glow' ? '#0e7490' : (equippedItems.skin === 'gold_chrome' ? '#92400e' : '#1d4ed8')} />
+            </radialGradient>
+            <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
+              <feOffset dx="0" dy="10" result="offsetblur" />
+              <feComponentTransfer><feFuncA type="linear" slope="0.3" /></feComponentTransfer>
+              <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+          </defs>
 
-        {/* Legs & Feet */}
-        <g filter="url(#soft-shadow)">
-          <path d="M 180 320 Q 180 350 180 375" stroke="white" strokeWidth="24" strokeLinecap="round" fill="none" />
-          <path d="M 220 320 Q 220 350 220 375" stroke="white" strokeWidth="24" strokeLinecap="round" fill="none" />
-          <path d="M 180 375 Q 180 405 140 405 L 120 400 Q 100 380 150 365 Z" fill="white" />
-          <path d="M 220 375 Q 220 405 260 405 L 280 400 Q 300 380 250 365 Z" fill="white" />
-        </g>
+          {/* Legs & Feet */}
+          <g filter="url(#soft-shadow)">
+            <path d="M 180 320 Q 180 350 180 375" stroke="white" strokeWidth="24" strokeLinecap="round" fill="none" />
+            <path d="M 220 320 Q 220 350 220 375" stroke="white" strokeWidth="24" strokeLinecap="round" fill="none" />
+            <path d="M 180 375 Q 180 405 140 405 L 120 400 Q 100 380 150 365 Z" fill="white" />
+            <path d="M 220 375 Q 220 405 260 405 L 280 400 Q 300 380 250 365 Z" fill="white" />
+          </g>
 
-        {/* Desk & Laptop */}
-        <g filter="url(#soft-shadow)">
-          <path d="M 50 280 L 350 280 L 370 340 L 30 340 Z" fill="#b45309" />
-          <rect x="70" y="340" width="20" height="60" fill="#78350f" />
-          <rect x="310" y="340" width="20" height="60" fill="#78350f" />
-          <path d="M 120 280 L 280 280 L 290 270 L 110 270 Z" fill="#94a3b8" />
-          <rect x="130" y="210" width="140" height="60" rx="4" fill="#1e293b" />
-          <rect x="135" y="215" width="130" height="50" rx="2" fill="#10b981" />
-          <path d="M 185 240 L 195 250 L 215 230" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-        </g>
+          {/* Desk & Laptop */}
+          <g filter="url(#soft-shadow)">
+            <path d="M 50 280 L 350 280 L 370 340 L 30 340 Z" fill="#b45309" />
+            <rect x="70" y="340" width="20" height="60" fill="#78350f" />
+            <rect x="310" y="340" width="20" height="60" fill="#78350f" />
+            <path d="M 120 280 L 280 280 L 290 270 L 110 270 Z" fill="#94a3b8" />
+            <rect x="130" y="210" width="140" height="60" rx="4" fill="#1e293b" />
+            <rect x="135" y="215" width="130" height="50" rx="2" fill="#10b981" />
+            <path d="M 185 240 L 195 250 L 215 230" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+          </g>
 
-        {/* Body */}
-        <g filter="url(#soft-shadow)">
-          <path d="M 200 65 C 200 65 90 170 90 245 C 90 320 140 350 200 350 C 260 350 310 320 310 245 C 310 170 200 65 200 65 Z" fill="url(#body-radial)" />
+          {/* Body */}
+          <g filter="url(#soft-shadow)">
+            <path d="M 200 65 C 200 65 90 170 90 245 C 90 320 140 350 200 350 C 260 350 310 320 310 245 C 310 170 200 65 200 65 Z" fill="url(#body-radial)" />
 
-          {/* Eyes */}
-          <ellipse cx="160" cy="205" rx="32" ry={isBlinking ? 2 : 48} fill="white" style={{ transition: 'ry 0.08s ease-in-out' }} />
-          <ellipse cx="240" cy="205" rx="32" ry={isBlinking ? 2 : 48} fill="white" style={{ transition: 'ry 0.08s ease-in-out' }} />
+            {/* Eyes */}
+            <ellipse cx="160" cy="205" rx="32" ry={isBlinking ? 2 : 48} fill="white" style={{ transition: 'ry 0.08s ease-in-out' }} />
+            <ellipse cx="240" cy="205" rx="32" ry={isBlinking ? 2 : 48} fill="white" style={{ transition: 'ry 0.08s ease-in-out' }} />
 
-          {!isBlinking && (
-            <>
-              <circle cx="165" cy="215" r="16" fill="#0f172a" />
-              <circle cx="245" cy="215" r="16" fill="#0f172a" />
-              <circle cx="168" cy="208" r="6" fill="white" fillOpacity="0.8" />
-              <circle cx="248" cy="208" r="6" fill="white" fillOpacity="0.8" />
-            </>
-          )}
+            {!isBlinking && (
+              <>
+                <circle cx="165" cy="215" r="16" fill="#0f172a" />
+                <circle cx="245" cy="215" r="16" fill="#0f172a" />
+                <circle cx="168" cy="208" r="6" fill="white" fillOpacity="0.8" />
+                <circle cx="248" cy="208" r="6" fill="white" fillOpacity="0.8" />
+              </>
+            )}
 
-          {/* ACCESSORY: Glasses */}
-          {equippedItems.glasses === 'cool_shades' && (
-            <g transform="translate(130, 185)">
-              <rect x="0" y="0" width="140" height="40" rx="10" fill="#0f172a" />
-              <rect x="5" y="5" width="60" height="30" rx="8" fill="#1e293b" />
-              <rect x="75" y="5" width="60" height="30" rx="8" fill="#1e293b" />
+            {/* ACCESSORY: Glasses */}
+            {equippedItems.glasses === 'cool_shades' && (
+              <g transform="translate(130, 185)">
+                <rect x="0" y="0" width="140" height="40" rx="10" fill="#0f172a" />
+                <rect x="5" y="5" width="60" height="30" rx="8" fill="#1e293b" />
+                <rect x="75" y="5" width="60" height="30" rx="8" fill="#1e293b" />
+              </g>
+            )}
+
+            {equippedItems.glasses === 'vr_goggles' && (
+              <g transform="translate(125, 180)">
+                <rect x="0" y="0" width="150" height="50" rx="12" fill="#1e293b" stroke="#22d3ee" strokeWidth="2" />
+                <rect x="10" y="10" width="130" height="30" rx="6" fill="#0ea5e9" fillOpacity="0.5" />
+                <path d="M 20 25 L 130 25" stroke="#22d3ee" strokeWidth="1" strokeDasharray="4 2" />
+              </g>
+            )}
+
+            {/* Mouth */}
+            {isHovering ? (
+              <g>
+                <path d="M 178 262 Q 200 282 222 262 Q 200 302 178 262 Z" fill="#0f172a" />
+                <path d="M 183 265 Q 200 270 217 265" stroke="white" strokeWidth="3" fill="none" strokeLinecap="round"/>
+              </g>
+            ) : (
+              <path d="M 178 262 Q 200 282 222 262" stroke="#0f172a" strokeWidth="5" strokeLinecap="round" fill="none" />
+            )}
+          </g>
+
+          {/* ACCESSORY: Hats */}
+          {equippedItems.hat === 'engineer_cap' && (
+            <g transform="translate(140, 50)">
+              <path d="M 0 40 Q 60 0 120 40 L 130 50 Q 60 70 -10 50 Z" fill="#1d4ed8" />
+              <path d="M 10 40 Q 60 10 110 40" fill="none" stroke="white" strokeWidth="2" />
             </g>
           )}
 
-          {equippedItems.glasses === 'vr_goggles' && (
-            <g transform="translate(125, 180)">
-              <rect x="0" y="0" width="150" height="50" rx="12" fill="#1e293b" stroke="#22d3ee" strokeWidth="2" />
-              <rect x="10" y="10" width="130" height="30" rx="6" fill="#0ea5e9" fillOpacity="0.5" />
-              <path d="M 20 25 L 130 25" stroke="#22d3ee" strokeWidth="1" strokeDasharray="4 2" />
+          {equippedItems.hat === 'space_helmet' && (
+            <g transform="translate(125, 45)">
+              <circle cx="75" cy="75" r="70" fill="rgba(255,255,255,0.1)" stroke="white" strokeWidth="2" />
+              <rect x="25" y="120" width="100" height="15" rx="5" fill="#cbd5e1" />
             </g>
           )}
 
-          {/* Mouth */}
-          {isHovering ? (
-            <g>
-              <path d="M 178 262 Q 200 282 222 262 Q 200 302 178 262 Z" fill="#0f172a" />
-              <path d="M 183 265 Q 200 270 217 265" stroke="white" strokeWidth="3" fill="none" strokeLinecap="round"/>
+          {equippedItems.hat === 'crown' && (
+            <g transform="translate(140, 30)">
+              <path d="M 0 50 L 20 20 L 40 50 L 60 10 L 80 50 L 100 20 L 120 50 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="2" />
+              <circle cx="60" cy="10" r="5" fill="#ef4444" />
             </g>
-          ) : (
-            <path d="M 178 262 Q 200 282 222 262" stroke="#0f172a" strokeWidth="5" strokeLinecap="round" fill="none" />
           )}
-        </g>
 
-        {/* ACCESSORY: Hats */}
-        {equippedItems.hat === 'engineer_cap' && (
-          <g transform="translate(140, 50)">
-            <path d="M 0 40 Q 60 0 120 40 L 130 50 Q 60 70 -10 50 Z" fill="#1d4ed8" />
-            <path d="M 10 40 Q 60 10 110 40" fill="none" stroke="white" strokeWidth="2" />
+          {/* ACCESSORY: Pet */}
+          {equippedItems.accessory === 'robot_pet' && (
+            <g transform="translate(320, 320) scale(0.6)">
+              <rect x="0" y="0" width="80" height="80" rx="10" fill="#94a3b8" />
+              <rect x="10" y="10" width="60" height="40" rx="5" fill="#1e293b" />
+              <circle cx="25" cy="25" r="5" fill="#22d3ee" />
+              <circle cx="55" cy="25" r="5" fill="#22d3ee" />
+              <path d="M 10 90 L 30 110 M 70 90 L 50 110" stroke="white" strokeWidth="8" strokeLinecap="round" />
+            </g>
+          )}
+
+          {/* Waving Arm */}
+          <g style={{
+            transform: isWaving ? 'rotate(-25deg)' : 'rotate(0deg)',
+            transformOrigin: '100px 240px',
+            transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          }}>
+            <path d="M 100 240 Q 60 210 40 240" stroke="#1d4ed8" strokeWidth="26" strokeLinecap="round" fill="none" />
+            <path d="M 40 240 C 20 220 10 240 25 260 C 20 270 35 285 50 270 C 60 275 75 255 65 235 C 60 215 45 220 40 235" fill="white" stroke="#e2e8f0" strokeWidth="1" />
           </g>
-        )}
 
-        {equippedItems.hat === 'space_helmet' && (
-          <g transform="translate(125, 45)">
-            <circle cx="75" cy="75" r="70" fill="rgba(255,255,255,0.1)" stroke="white" strokeWidth="2" />
-            <rect x="25" y="120" width="100" height="15" rx="5" fill="#cbd5e1" />
+          {/* Resting Arm */}
+          <g filter="url(#soft-shadow)">
+            <path d="M 300 240 Q 320 280 270 310" stroke="#1d4ed8" strokeWidth="26" strokeLinecap="round" fill="none" />
+            <path d="M 270 310 C 250 330 220 310 230 290 C 225 275 245 260 265 275 C 285 270 300 290 285 310 C 280 320 275 315 270 310 Z" fill="white" stroke="#e2e8f0" strokeWidth="1" />
           </g>
-        )}
-
-        {equippedItems.hat === 'crown' && (
-          <g transform="translate(140, 30)">
-            <path d="M 0 50 L 20 20 L 40 50 L 60 10 L 80 50 L 100 20 L 120 50 Z" fill="#fbbf24" stroke="#d97706" strokeWidth="2" />
-            <circle cx="60" cy="10" r="5" fill="#ef4444" />
-          </g>
-        )}
-
-        {/* ACCESSORY: Pet */}
-        {equippedItems.accessory === 'robot_pet' && (
-          <g transform="translate(320, 320) scale(0.6)">
-            <rect x="0" y="0" width="80" height="80" rx="10" fill="#94a3b8" />
-            <rect x="10" y="10" width="60" height="40" rx="5" fill="#1e293b" />
-            <circle cx="25" cy="25" r="5" fill="#22d3ee" />
-            <circle cx="55" cy="25" r="5" fill="#22d3ee" />
-            <path d="M 10 90 L 30 110 M 70 90 L 50 110" stroke="white" strokeWidth="8" strokeLinecap="round" />
-          </g>
-        )}
-
-        {/* Waving Arm */}
-        <g style={{
-          transform: isWaving ? 'rotate(-25deg)' : 'rotate(0deg)',
-          transformOrigin: '100px 240px',
-          transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
-        }}>
-          <path d="M 100 240 Q 60 210 40 240" stroke="#1d4ed8" strokeWidth="26" strokeLinecap="round" fill="none" />
-          <path d="M 40 240 C 20 220 10 240 25 260 C 20 270 35 285 50 270 C 60 275 75 255 65 235 C 60 215 45 220 40 235" fill="white" stroke="#e2e8f0" strokeWidth="1" />
-        </g>
-
-        {/* Resting Arm */}
-        <g filter="url(#soft-shadow)">
-          <path d="M 300 240 Q 320 280 270 310" stroke="#1d4ed8" strokeWidth="26" strokeLinecap="round" fill="none" />
-          <path d="M 270 310 C 250 330 220 310 230 290 C 225 275 245 260 265 275 C 285 270 300 290 285 310 C 280 320 275 315 270 310 Z" fill="white" stroke="#e2e8f0" strokeWidth="1" />
-        </g>
-      </svg>
+        </svg>
+      )}
     </div>
   )
 })

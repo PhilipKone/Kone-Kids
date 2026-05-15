@@ -23,7 +23,54 @@ export interface Mission {
   level: number;
   pathway: Pathway;
   briefing?: string;
+  seriesId?: string; // Optional reference to a game series
 }
+
+export interface GameSeries {
+  id: string;
+  title: string;
+  description: string;
+  coverImage: string;
+  price: number;
+  difficulty: 'Beginner' | 'Intermediate' | 'Pro';
+  gameCount: number;
+  unlockedByDefault?: boolean;
+  accentColor: string;
+}
+
+export const GAME_SERIES: GameSeries[] = [
+  {
+    id: 'series_word_search',
+    title: 'Word Search Wonders',
+    description: 'Master the art of vocabulary with 20 levels of hidden word puzzles!',
+    coverImage: '/series/word-search-cover.png',
+    price: 0, // Free Starter Series
+    difficulty: 'Beginner',
+    gameCount: 20,
+    unlockedByDefault: true,
+    accentColor: '#f472b6'
+  },
+  {
+    id: 'series_retro_arcade',
+    title: 'Retro Arcade Classics',
+    description: 'Rebuild the classics! From Snake to Space Invaders.',
+    coverImage: '/series/retro-arcade-cover.png',
+    price: 500,
+    difficulty: 'Intermediate',
+    gameCount: 15,
+    accentColor: '#6366f1'
+  },
+  {
+    id: 'series_platformer_pro',
+    title: 'Platformer Paradise',
+    description: 'Level design, gravity, and power-ups. Build your own Mario-style world!',
+    coverImage: '/series/platformer-pro-cover.png',
+    price: 1000,
+    difficulty: 'Pro',
+    gameCount: 12,
+    accentColor: '#fbbf24'
+  }
+];
 
 export const CODING_MISSIONS: Mission[] = [
 

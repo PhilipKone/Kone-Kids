@@ -413,6 +413,17 @@ p {
 html {
   scroll-behavior: smooth;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 /* Engineering Lab & IDE Optimization - Brand Aligned */
 .engineering-lab-wrapper {
   background: var(--kids-dark) !important; /* Using the official Kone-Kids dark navy */

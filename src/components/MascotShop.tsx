@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useGamification } from '../context/GamificationContext';
 import { SHOP_ITEMS, ShopItem } from '../data/shopItems';
-import { ShoppingBag, Coins, CheckCircle2, Lock } from 'lucide-react';
+import { ShoppingBag, Coins, CheckCircle2, Lock, Plus } from 'lucide-react';
 import Mascot from './Mascot';
+import CoinStoreModal from './CoinStoreModal';
 
 interface MascotShopProps {
   onClose: () => void;
@@ -12,6 +13,7 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
   const { coins, inventory, equippedItems, purchaseItem, equipItem, level } = useGamification();
   const [activeCategory, setActiveCategory] = useState<ShopItem['type'] | 'all'>('all');
   const [purchaseSuccess, setPurchaseSuccess] = useState<string | null>(null);
+  const [showCoinStore, setShowCoinStore] = useState(false);
   const isMobile = window.innerWidth <= 768;
 
   const filteredItems = activeCategory === 'all' 
@@ -88,6 +90,25 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
             <span style={{ fontSize: isMobile ? '1rem' : '1.5rem', fontWeight: 800, color: 'white' }}>{coins}</span>
           </div>
 
+          <button
+            onClick={() => setShowCoinStore(true)}
+            style={{
+              background: '#fbbf24',
+              border: 'none',
+              borderRadius: '16px',
+              padding: isMobile ? '0.4rem 0.8rem' : '0.6rem 1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              cursor: 'pointer',
+              color: '#1e293b',
+              fontWeight: 900,
+              fontSize: isMobile ? '0.85rem' : '1rem'
+            }}
+          >
+            <Plus size={18} /> {!isMobile && 'Get Coins'}
+          </button>
+
           <button 
             onClick={onClose}
             style={{
@@ -132,19 +153,23 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
               <div style={{ transform: isMobile ? 'scale(0.35)' : 'scale(0.8)' }}>
                 <Mascot />
               </div>
-              {!isMobile && <div style={{ position: 'absolute', bottom: '1rem', color: '#64748b', fontSize: '0.8rem' }}>PREVIEW MODE</div>}
             </div>
 
-            <div style={{ 
-              width: '100%', 
-              display: 'flex', 
-              flexDirection: isMobile ? 'row' : 'column', 
-              gap: '0.75rem',
-              overflowX: isMobile ? 'auto' : 'visible',
-              paddingBottom: isMobile ? '0.5rem' : '0',
-              scrollbarWidth: 'none'
-            }}>
-              {(['all', 'hat', 'glasses', 'skin', 'accessory'] as const).map(cat => (
+            <div 
+              className="no-scrollbar"
+              style={{ 
+                width: '100%', 
+                display: 'flex', 
+                flexDirection: isMobile ? 'row' : 'column', 
+                gap: '0.75rem',
+                overflowX: isMobile ? 'auto' : 'hidden',
+                overflowY: isMobile ? 'hidden' : 'auto',
+                maxHeight: isMobile ? 'none' : '350px',
+                paddingBottom: isMobile ? '0.5rem' : '0',
+                paddingRight: isMobile ? '0' : '0.5rem',
+              }}
+            >
+              {(['all', 'pose', 'hat', 'glasses', 'skin', 'accessory'] as const).map(cat => (
                 <button
                   key={cat}
                   onClick={() => setActiveCategory(cat)}
@@ -154,7 +179,7 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
                     border: activeCategory === cat ? 'none' : '2px solid var(--kids-border)',
                     background: activeCategory === cat ? 'var(--kids-blue)' : 'var(--kids-surface)',
                     boxShadow: activeCategory === cat ? (isMobile ? '0 4px 0 #0369a1' : '0 6px 0 #0369a1') : (isMobile ? '0 3px 0 var(--kids-border)' : '0 5px 0 var(--kids-border)'),
-                    color: 'white',
+                    color: activeCategory === cat ? 'white' : 'var(--kids-text-muted)',
                     textAlign: 'center',
                     fontWeight: 800,
                     cursor: 'pointer',
@@ -173,15 +198,18 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
           </div>
 
           {/* Items Grid */}
-          <div style={{ 
-            flex: 1, 
-            padding: isMobile ? '1rem' : '2rem', 
-            overflowY: 'auto', 
-            display: 'grid', 
-            gridTemplateColumns: isMobile ? 'repeat(auto-fill, minmax(140px, 1fr))' : 'repeat(auto-fill, minmax(200px, 1fr))', 
-            gap: isMobile ? '0.75rem' : '1.5rem', 
-            alignContent: 'start' 
-          }}>
+          <div 
+            className="no-scrollbar"
+            style={{ 
+              flex: 1, 
+              padding: isMobile ? '1rem' : '2rem', 
+              overflowY: 'auto', 
+              display: 'grid', 
+              gridTemplateColumns: isMobile ? 'repeat(auto-fill, minmax(140px, 1fr))' : 'repeat(auto-fill, minmax(200px, 1fr))', 
+              gap: isMobile ? '0.75rem' : '1.5rem', 
+              alignContent: 'start' 
+            }}
+          >
             {filteredItems.map(item => {
               const isOwned = inventory.includes(item.id);
               const isEquipped = equippedItems[item.type] === item.id;
@@ -206,7 +234,20 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
                     opacity: isLocked ? 0.6 : 1
                   }}
                 >
-                  <div style={{ fontSize: '3rem' }}>{item.icon}</div>
+                  <div style={{ 
+                    width: '80px', 
+                    height: '80px', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    fontSize: '3rem' 
+                  }}>
+                    {item.icon.startsWith('/') ? (
+                      <img src={item.icon} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    ) : (
+                      item.icon
+                    )}
+                  </div>
                   <div style={{ textAlign: 'center' }}>
                     <h4 style={{ margin: 0, fontSize: '1.1rem' }}>{item.name}</h4>
                     <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>{item.description}</p>
@@ -281,6 +322,7 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
           </div>
         </div>
       </div>
+      <CoinStoreModal isOpen={showCoinStore} onClose={() => setShowCoinStore(false)} />
     </div>
   );
 };
