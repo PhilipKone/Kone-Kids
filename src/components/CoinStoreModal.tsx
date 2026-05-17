@@ -22,6 +22,13 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
   const [selectedPack, setSelectedPack] = useState<typeof PACKAGES[0] | null>(null);
   const [form, setForm] = useState({ email: '', phone: '' });
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -66,12 +73,14 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
       <div style={{
         background: 'linear-gradient(145deg, #1e293b, #0f172a)',
         border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '24px',
+        borderRadius: isMobile ? '20px' : '24px',
         width: '100%',
         maxWidth: '500px',
-        padding: '2rem',
+        padding: isMobile ? '1.5rem 1rem' : '2rem',
         position: 'relative',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+        maxHeight: '90vh',
+        overflowY: 'auto'
       }}>
         {/* Close Button */}
         {!isProcessing && !isSuccess && (
@@ -120,10 +129,19 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
         ) : !selectedPack ? (
           <>
             <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <h2 style={{ color: 'white', fontSize: '1.75rem', margin: 0, fontFamily: '"Baloo 2", cursive', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+              <h2 style={{ 
+                color: 'white', 
+                fontSize: isMobile ? '1.5rem' : '1.75rem', 
+                margin: 0, 
+                fontFamily: '"Baloo 2", cursive', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                gap: '0.5rem' 
+              }}>
                 <Coins color="#fbbf24" /> Get More Coins
               </h2>
-              <p style={{ color: '#94a3b8', margin: '0.5rem 0 0' }}>
+              <p style={{ color: '#94a3b8', margin: '0.5rem 0 0', fontSize: isMobile ? '0.85rem' : '1rem' }}>
                 Purchase Kone Coins via Mobile Money (MoMo)
               </p>
             </div>
@@ -136,7 +154,7 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
                   style={{
                     background: 'rgba(255,255,255,0.05)',
                     border: `2px solid ${pkg.popular ? pkg.color : 'transparent'}`,
-                    borderRadius: '16px', padding: '1rem 1.5rem',
+                    borderRadius: '16px', padding: isMobile ? '0.75rem 1rem' : '1rem 1.5rem',
                     display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                     cursor: 'pointer', transition: 'all 0.2s',
                     position: 'relative', overflow: 'hidden'
@@ -158,17 +176,17 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                     <div style={{
                       background: `${pkg.color}22`, color: pkg.color,
-                      width: '48px', height: '48px', borderRadius: '12px',
+                      width: isMobile ? '40px' : '48px', height: isMobile ? '40px' : '48px', borderRadius: '12px',
                       display: 'flex', alignItems: 'center', justifyContent: 'center'
                     }}>
-                      <Coins size={24} />
+                      <Coins size={isMobile ? 20 : 24} />
                     </div>
                     <div style={{ textAlign: 'left' }}>
-                      <div style={{ color: 'white', fontWeight: 800, fontSize: '1.1rem' }}>{pkg.coins} Coins</div>
-                      <div style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{pkg.name}</div>
+                      <div style={{ color: 'white', fontWeight: 800, fontSize: isMobile ? '1rem' : '1.1rem' }}>{pkg.coins} Coins</div>
+                      <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{pkg.name}</div>
                     </div>
                   </div>
-                  <div style={{ color: 'white', fontWeight: 900, fontSize: '1.25rem' }}>
+                  <div style={{ color: 'white', fontWeight: 900, fontSize: isMobile ? '1.1rem' : '1.25rem' }}>
                     ₵{pkg.priceGHS.toFixed(2)}
                   </div>
                 </button>
@@ -200,37 +218,51 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', marginBottom: '2rem' }}>
               <div>
-                <label style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '0.5rem', display: 'block' }}>Parent's Email for Receipt</label>
-                <div style={{ position: 'relative' }}>
-                  <Mail size={16} color="#64748b" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <label style={{ color: '#e2e8f0', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700 }}>
+                  Parent's Email for Receipt
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ position: 'absolute', left: '1.25rem', color: '#94a3b8', display: 'flex', alignItems: 'center' }}>
+                    <Mail size={18} />
+                  </div>
                   <input 
                     type="email" 
                     placeholder="parent@email.com"
                     value={form.email}
                     onChange={e => setForm({...form, email: e.target.value})}
                     style={{
-                      width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)',
-                      color: 'white', padding: '0.75rem 1rem 0.75rem 2.5rem', borderRadius: '12px', outline: 'none'
+                      width: '100%', background: 'rgba(0,0,0,0.3)', border: '2px solid rgba(255,255,255,0.1)',
+                      color: 'white', padding: '1rem 1.25rem 1rem 3.25rem', borderRadius: '16px', outline: 'none',
+                      fontSize: '1rem', transition: 'all 0.2s'
                     }}
+                    onFocus={e => e.currentTarget.style.borderColor = '#fbbf24'}
+                    onBlur={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
               </div>
               
               <div>
-                <label style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '0.5rem', display: 'block' }}>Mobile Money Number</label>
-                <div style={{ position: 'relative' }}>
-                  <Smartphone size={16} color="#64748b" style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)' }} />
+                <label style={{ color: '#e2e8f0', fontSize: '0.9rem', marginBottom: '0.6rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700 }}>
+                  Mobile Money Number
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div style={{ position: 'absolute', left: '1.25rem', color: '#94a3b8', display: 'flex', alignItems: 'center' }}>
+                    <Smartphone size={18} />
+                  </div>
                   <input 
                     type="tel" 
                     placeholder="e.g. 055 123 4567"
                     value={form.phone}
                     onChange={e => setForm({...form, phone: e.target.value})}
                     style={{
-                      width: '100%', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)',
-                      color: 'white', padding: '0.75rem 1rem 0.75rem 2.5rem', borderRadius: '12px', outline: 'none'
+                      width: '100%', background: 'rgba(0,0,0,0.3)', border: '2px solid rgba(255,255,255,0.1)',
+                      color: 'white', padding: '1rem 1.25rem 1rem 3.25rem', borderRadius: '16px', outline: 'none',
+                      fontSize: '1rem', transition: 'all 0.2s'
                     }}
+                    onFocus={e => e.currentTarget.style.borderColor = '#10b981'}
+                    onBlur={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'}
                   />
                 </div>
               </div>
@@ -241,12 +273,13 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
               disabled={isProcessing || !form.email || !form.phone}
               style={{
                 width: '100%', background: isProcessing ? '#475569' : '#10b981', color: 'white',
-                border: 'none', padding: '1rem', borderRadius: '12px',
-                fontWeight: 800, fontSize: '1.1rem', cursor: isProcessing ? 'not-allowed' : 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem'
+                border: 'none', padding: isMobile ? '0.85rem' : '1rem', borderRadius: '16px',
+                fontWeight: 800, fontSize: isMobile ? '1rem' : '1.1rem', cursor: isProcessing ? 'not-allowed' : 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
+                minHeight: '50px'
               }}
             >
-              {isProcessing ? 'Connecting to Paystack...' : `Pay ₵${selectedPack.priceGHS.toFixed(2)} with MoMo`}
+              {isProcessing ? 'Connecting to Paystack...' : `Pay ₵${selectedPack.priceGHS.toFixed(2)}`}
             </button>
           </>
         )}

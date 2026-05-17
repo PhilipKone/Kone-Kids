@@ -4,6 +4,7 @@ import { javascriptGenerator } from 'blockly/javascript';
 import { pythonGenerator } from 'blockly/python';
 import Mascot, { MascotHandle } from './Mascot';
 import RoboticsSimulator, { RoboticsHandle } from './RoboticsSimulator';
+import GameSimulator, { GameHandle } from './GameSimulator';
 import MissionBriefing from './MissionBriefing';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
 import { useGamification } from '../context/GamificationContext';
@@ -49,6 +50,7 @@ const KidsIDE: React.FC = () => {
   const workspace = useRef<Blockly.WorkspaceSvg | null>(null);
   const mascotRef = useRef<MascotHandle>(null);
   const robotRef = useRef<RoboticsHandle>(null);
+  const gameRef = useRef<GameHandle>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -227,6 +229,95 @@ const KidsIDE: React.FC = () => {
       javascriptGenerator.forBlock['robot_distance'] = () => [`robot.getDistance()`, (javascriptGenerator as any).ORDER_ATOMIC];
     }
 
+    // --- Game Dev Blocks ---
+    if (!Blockly.Blocks['game_physics']) {
+      Blockly.Blocks['game_physics'] = {
+        init: function() {
+          this.appendDummyInput().appendField("🕹️ Enable Physics Scene");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(200);
+        }
+      };
+      javascriptGenerator.forBlock['game_physics'] = () => `game.reset();\n`;
+    }
+
+    if (!Blockly.Blocks['game_gravity']) {
+      Blockly.Blocks['game_gravity'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("🌍 Set Gravity to")
+              .appendField(new Blockly.FieldNumber(9.8, 0, 50), "G");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(200);
+        }
+      };
+      javascriptGenerator.forBlock['game_gravity'] = (block: any) => `game.setGravity(${block.getFieldValue('G')});\n`;
+    }
+
+    if (!Blockly.Blocks['character_jump']) {
+      Blockly.Blocks['character_jump'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("🚀 Jump with force")
+              .appendField(new Blockly.FieldNumber(500, 100, 2000), "FORCE");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(200);
+        }
+      };
+      javascriptGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')});\n`;
+    }
+
+    if (!Blockly.Blocks['spawn_stars']) {
+      Blockly.Blocks['spawn_stars'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("✨ Spawn")
+              .appendField(new Blockly.FieldNumber(5, 1, 50), "COUNT")
+              .appendField("Stars");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(200);
+        }
+      };
+      javascriptGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawnStars(${block.getFieldValue('COUNT')});\n`;
+    }
+
+    if (!Blockly.Blocks['on_key_press']) {
+      Blockly.Blocks['on_key_press'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("⌨️ When")
+              .appendField(new Blockly.FieldDropdown([["Space", " "], ["Up Arrow", "ArrowUp"], ["Any Key", "any"]]), "KEY")
+              .appendField("is pressed");
+          this.appendStatementInput("DO").appendField("do");
+          this.setColour(200);
+          this.setTooltip("Run code when a key is pressed");
+        }
+      };
+      javascriptGenerator.forBlock['on_key_press'] = (block: any) => {
+        const branch = javascriptGenerator.statementToCode(block, 'DO');
+        return `game.onKeyPress("${block.getFieldValue('KEY')}", async () => {\n${branch}});\n`;
+      };
+    }
+
+    if (!Blockly.Blocks['update_score']) {
+      Blockly.Blocks['update_score'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("🏆 Add")
+              .appendField(new Blockly.FieldNumber(10, 1, 1000), "POINTS")
+              .appendField("to Score");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(200);
+        }
+      };
+      javascriptGenerator.forBlock['update_score'] = (block: any) => `game.updateScore(${block.getFieldValue('POINTS')});\n`;
+    }
+
     // Inject Workspace
     if (blocklyDiv.current && !workspace.current) {
       const toolboxContents: any[] = [
@@ -250,6 +341,19 @@ const KidsIDE: React.FC = () => {
             { kind: 'block', type: 'robot_turn' },
             { kind: 'block', type: 'robot_stop' },
             { kind: 'block', type: 'robot_distance' },
+          ]
+        },
+        {
+          kind: 'category',
+          name: '🎮 Game Dev',
+          colour: '#f472b6',
+          contents: [
+            { kind: 'block', type: 'game_physics' },
+            { kind: 'block', type: 'game_gravity' },
+            { kind: 'block', type: 'character_jump' },
+            { kind: 'block', type: 'on_key_press' },
+            { kind: 'block', type: 'spawn_stars' },
+            { kind: 'block', type: 'update_score' },
           ]
         },
         { kind: 'category', name: '🧠 Logic', categorystyle: 'logic_category', contents: [{ kind: 'block', type: 'controls_if' }] },
@@ -378,11 +482,20 @@ const KidsIDE: React.FC = () => {
       getDistance: () => robotRef.current?.getDistance()
     };
 
+    const game = {
+      reset: () => gameRef.current?.reset(),
+      setGravity: (g: number) => gameRef.current?.setGravity(g),
+      jump: (force: number) => gameRef.current?.jump(force),
+      spawnStars: (count: number) => gameRef.current?.spawnStars(count),
+      updateScore: (points: number) => gameRef.current?.updateScore(points),
+      onKeyPress: (key: string, callback: () => void) => gameRef.current?.onKeyPress(key, callback),
+    };
+
     let ranSuccessfully = false;
     try {
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      const fn = new AsyncFunction('mascot', 'robot', code);
-      await fn(mascot, robot);
+      const fn = new AsyncFunction('mascot', 'robot', 'game', code);
+      await fn(mascot, robot, game);
       ranSuccessfully = true;
     } catch (e) {
       console.error(e);
@@ -568,15 +681,15 @@ const KidsIDE: React.FC = () => {
             overflow: 'hidden'
           }}>
             {/* Mascot Shop button */}
-            <button
+            <button 
               onClick={() => setShowShop(true)}
-              className="kids-button pulse-neon"
+              className="kids-button"
               style={{
                 position: 'absolute',
-                top: '1rem',
-                right: '1rem',
-                zIndex: 10,
-                padding: isMobile ? '0.35rem 0.75rem' : '0.45rem 1rem',
+                top: '2rem',
+                right: '2rem',
+                zIndex: 30,
+                padding: '0.6rem 1.25rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.4rem',
@@ -591,6 +704,8 @@ const KidsIDE: React.FC = () => {
             </button>
             {mission?.pathway === 'Robotics (AI 4 Kids)' ? (
               <RoboticsSimulator ref={robotRef} />
+            ) : mission?.pathway === 'Game Dev' ? (
+              <GameSimulator ref={gameRef} />
             ) : (
               <Mascot ref={mascotRef} />
             )}

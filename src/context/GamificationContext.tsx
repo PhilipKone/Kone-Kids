@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import { updateAppBadge } from '../utils/pwa';
 import { db, auth } from '../firebase/config';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -9,6 +10,7 @@ export interface Badge {
   icon: string;
   description: string;
   unlocked: boolean;
+  viewed?: boolean;
   xpReward?: number;
 }
 
@@ -18,6 +20,7 @@ interface GamificationContextType {
   unlockBadge: (id: string) => void;
   hasVisited: { [key: string]: boolean };
   markVisited: (page: string) => void;
+  markBadgeViewed: (id: string) => void;
   // Game Stats
   xp: number;
   level: number;
@@ -63,7 +66,7 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       if (!Array.isArray(savedBadges)) return INITIAL_BADGES;
       return INITIAL_BADGES.map(initial => {
         const saved = savedBadges.find(s => s.id === initial.id);
-        return saved ? { ...initial, unlocked: saved.unlocked } : initial;
+        return saved ? { ...initial, unlocked: saved.unlocked, viewed: saved.viewed } : initial;
       });
     } catch (e) {
       console.error('Gamification: Error loading badges from local storage', e);
@@ -253,6 +256,11 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     localStorage.setItem('kone_kids_series', JSON.stringify(unlockedSeries));
   }, [unlockedSeries]);
 
+  useEffect(() => {
+    const unviewedCount = badges.filter(b => b.unlocked && !b.viewed).length;
+    updateAppBadge(unviewedCount);
+  }, [badges]);
+
   const unlockBadge = useCallback((id: string) => {
     setBadges(prev => prev.map(badge => {
       if (badge.id === id && !badge.unlocked) {
@@ -273,6 +281,15 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       if (prev[page]) return prev;
       return { ...prev, [page]: true };
     });
+  }, []);
+
+  const markBadgeViewed = useCallback((id: string) => {
+    setBadges(prev => prev.map(badge => {
+      if (badge.id === id) {
+        return { ...badge, viewed: true };
+      }
+      return badge;
+    }));
   }, []);
 
   const completeMission = useCallback((missionId: string, baseXP: number) => {
@@ -352,9 +369,9 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
   }, [coins]);
 
   const contextValue = useMemo(() => ({
-    badges, latestBadge, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
+    badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
     coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins
-  }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
+  }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
        coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins]);
 
   return (

@@ -70,14 +70,19 @@ function Home() {
               </Link>
             </div>
 
-            <div style={{ marginTop: '2rem' }}>
-              <button 
-                className="kids-button pulse-neon"
-                onClick={() => setIsModalOpen(true)}
-                style={{ width: '100%', maxWidth: '300px' }}
-              >
-                Join the Academy 🚀
-              </button>
+            <div className="academy-cta-wrapper" style={{ marginTop: '2.5rem' }}>
+              <div className="academy-cta-card">
+                <div className="cta-icon-float">🚀</div>
+                <h4 className="cta-title">Ready to start?</h4>
+                <p className="cta-text">Join 1,000+ kids learning to build the future!</p>
+                <button 
+                  className="kids-button pulse-neon"
+                  onClick={() => setIsModalOpen(true)}
+                  style={{ width: '100%', marginTop: '1rem' }}
+                >
+                  Join the Academy
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -114,7 +119,7 @@ function Home() {
 }
 
 function AppContent() {
-  const { markVisited, latestBadge } = useGamification();
+  const { markVisited, markBadgeViewed, latestBadge } = useGamification();
   const [activeBadge, setActiveBadge] = React.useState<any>(null);
   const location = useLocation();
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
@@ -142,7 +147,10 @@ function AppContent() {
       <Celebration />
       <BadgeNotification 
         badge={activeBadge} 
-        onClose={() => setActiveBadge(null)} 
+        onClose={() => {
+          if (activeBadge) markBadgeViewed(activeBadge.id);
+          setActiveBadge(null);
+        }} 
       />
       
       <div style={{ paddingBottom: (isMobile && !isMissionPage) ? '80px' : '0' }}>
@@ -200,7 +208,7 @@ function AppContent() {
           </Link>
           <Link to="/robotics" className={`nav-item ${location.pathname === '/robotics' ? 'nav-item-active' : ''}`}>
             <Cpu size={24} className="nav-icon" />
-            <span>Robots</span>
+            <span>Robotics</span>
           </Link>
           <Link to="/ai" className={`nav-item ${location.pathname === '/ai' ? 'nav-item-active' : ''}`}>
             <Brain size={24} className="nav-icon" />

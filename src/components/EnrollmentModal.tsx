@@ -123,7 +123,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))', 
+                gap: '1rem' 
+              }}>
                 <div className="input-group">
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span>📧</span> Email Address
@@ -196,12 +200,13 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   PREVIEW YOUR FUTURE CERTIFICATE
                 </h3>
                 <div style={{ 
-                  transform: `scale(${isMobile ? 0.4 : 0.6})`, 
+                  transform: `scale(${isMobile ? 0.35 : 0.6})`, 
                   transformOrigin: 'top center',
                   margin: '0 auto',
                   width: 'fit-content',
-                  height: isMobile ? '180px' : '260px', // Prevent overflow
-                  overflow: 'hidden'
+                  height: isMobile ? '130px' : '260px', 
+                  maxWidth: '100%',
+                  overflow: 'visible' // Changed from hidden to visible for debugging/better display
                 }}>
                   <CertificatePreview 
                     pathway={formData.program} 
