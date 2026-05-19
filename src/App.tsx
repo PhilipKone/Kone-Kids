@@ -39,9 +39,9 @@ function Home() {
         borderBottom: '1px solid #f1f5f9'
       }}>
         <Link to="/" style={{ 
-          fontFamily: 'Outfit, sans-serif', 
+          fontFamily: "'Baloo 2', cursive", 
           fontWeight: 800, 
-          fontSize: '1.3rem', 
+          fontSize: '1.4rem', 
           color: '#1e3a8a', 
           textDecoration: 'none',
           display: 'flex',
