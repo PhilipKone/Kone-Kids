@@ -13,7 +13,7 @@ interface EnrollmentModalProps {
 const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, programTitle = '' }) => {
   const { unlockBadge } = useGamification()
   const [isMobile] = useState(window.innerWidth < 768)
-  const [inquiryType, setInquiryType] = useState<'parent' | 'school'>('parent')
+  const [inquiryType, setInquiryType] = useState<'parent' | 'school' | 'online'>('parent')
   const [formData, setFormData] = useState({
     parentName: '',
     studentName: '',
@@ -47,7 +47,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
         PUBLIC_KEY
       )
       setStatus('success')
-      if (inquiryType === 'parent') {
+      if (inquiryType === 'parent' || inquiryType === 'online') {
         unlockBadge('future_hero') // Award badge on success for kids!
       }
     } catch (error) {
@@ -62,7 +62,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
         className="modal-content glass-card" 
         onClick={(e) => e.stopPropagation()}
         style={{
-          borderTop: inquiryType === 'school' ? '8px solid var(--kids-orange)' : '8px solid var(--kids-blue)',
+          borderTop: inquiryType === 'school' 
+            ? '8px solid var(--kids-orange)' 
+            : inquiryType === 'online' 
+            ? '8px solid var(--kids-purple)' 
+            : '8px solid var(--kids-blue)',
           padding: '2.5rem 2rem'
         }}
       >
@@ -86,12 +90,28 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
             <div style={{ marginBottom: '1.5rem' }}>
               <Mascot />
             </div>
-            <h2 style={{ color: inquiryType === 'school' ? 'var(--kids-orange)' : 'var(--kids-blue)', margin: '1rem 0', fontSize: 'clamp(1.8rem, 6vw, 2.5rem)', fontFamily: "'Baloo 2', cursive", fontWeight: 800 }}>
-              {inquiryType === 'school' ? 'Let\'s Partner! 🏫' : 'Welcome, Hero! 🚀'}
+            <h2 style={{ 
+              color: inquiryType === 'school' 
+                ? 'var(--kids-orange)' 
+                : inquiryType === 'online' 
+                ? 'var(--kids-purple)' 
+                : 'var(--kids-blue)', 
+              margin: '1rem 0', 
+              fontSize: 'clamp(1.8rem, 6vw, 2.5rem)', 
+              fontFamily: "'Baloo 2', cursive", 
+              fontWeight: 800 
+            }}>
+              {inquiryType === 'school' 
+                ? "Let's Partner! 🏫" 
+                : inquiryType === 'online' 
+                ? "Virtual Mission Launched! 🌐" 
+                : "Welcome, Hero! 🚀"}
             </h2>
             <p style={{ color: '#475569', maxWidth: '400px', margin: '0 auto', fontSize: '1.05rem', lineHeight: 1.5 }}>
               {inquiryType === 'school' 
                 ? 'Your partnership inquiry has been successfully received. A Kone Academy School Partnership specialist will reach out shortly to plan your Live Lab Demo!' 
+                : inquiryType === 'online'
+                ? "Your virtual training begins now! A Kone Academy Online Specialist will contact you soon to set up your kid's free 1-on-1 virtual onboarding session."
                 : 'Your mission starts here! A Kone Academy representative will contact you soon to begin your home tutoring journey.'}
             </p>
             <button 
@@ -99,8 +119,16 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
               style={{ 
                 marginTop: '2.5rem', 
                 width: '100%',
-                background: inquiryType === 'school' ? 'var(--kids-orange)' : 'var(--kids-blue)',
-                boxShadow: inquiryType === 'school' ? '0 4px 0 #9a3412' : '0 4px 0 #0369a1'
+                background: inquiryType === 'school' 
+                  ? 'var(--kids-orange)' 
+                  : inquiryType === 'online' 
+                  ? 'var(--kids-purple)' 
+                  : 'var(--kids-blue)',
+                boxShadow: inquiryType === 'school' 
+                  ? '0 4px 0 #9a3412' 
+                  : inquiryType === 'online' 
+                  ? '0 4px 0 #7e22ce' 
+                  : '0 4px 0 #0369a1'
               }} 
               onClick={onClose}
             >
@@ -116,7 +144,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 fontFamily: "'Baloo 2', cursive",
                 fontWeight: 800
               }}>
-                Join the <span style={{ color: 'var(--kids-orange)' }}>Mission</span>
+                Join the <span style={{ color: inquiryType === 'school' ? 'var(--kids-orange)' : inquiryType === 'online' ? 'var(--kids-purple)' : 'var(--kids-blue)' }}>Mission</span>
               </h2>
               <p style={{ color: '#64748b', fontSize: '0.95rem' }}>Ready to build the physical and digital future? 🤖✨</p>
             </div>
@@ -127,7 +155,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
               background: '#f1f5f9', 
               borderRadius: '30px', 
               padding: '0.25rem',
-              maxWidth: '320px',
+              maxWidth: '380px',
               margin: '0 auto 2rem',
               border: '1px solid #e2e8f0'
             }}>
@@ -145,9 +173,9 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   background: inquiryType === 'parent' ? 'white' : 'transparent',
                   color: inquiryType === 'parent' ? 'var(--kids-blue)' : '#64748b',
                   border: 'none',
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 0.5rem',
                   borderRadius: '25px',
-                  fontSize: '0.85rem',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   boxShadow: inquiryType === 'parent' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
@@ -155,7 +183,33 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   fontFamily: "'Baloo 2', cursive"
                 }}
               >
-                🏠 Home Tutoring
+                🏠 Home
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setInquiryType('online');
+                  setFormData({
+                    ...formData,
+                    program: 'Coding 4 Kids (Online)'
+                  });
+                }}
+                style={{
+                  flex: 1,
+                  background: inquiryType === 'online' ? 'white' : 'transparent',
+                  color: inquiryType === 'online' ? 'var(--kids-purple)' : '#64748b',
+                  border: 'none',
+                  padding: '0.5rem 0.5rem',
+                  borderRadius: '25px',
+                  fontSize: '0.8rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  boxShadow: inquiryType === 'online' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
+                  transition: 'all 0.2s',
+                  fontFamily: "'Baloo 2', cursive"
+                }}
+              >
+                🌐 Online
               </button>
               <button
                 type="button"
@@ -171,9 +225,9 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   background: inquiryType === 'school' ? 'white' : 'transparent',
                   color: inquiryType === 'school' ? 'var(--kids-orange)' : '#64748b',
                   border: 'none',
-                  padding: '0.5rem 1rem',
+                  padding: '0.5rem 0.5rem',
                   borderRadius: '25px',
-                  fontSize: '0.85rem',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   boxShadow: inquiryType === 'school' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
@@ -181,18 +235,18 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   fontFamily: "'Baloo 2', cursive"
                 }}
               >
-                🏫 School Demo
+                🏫 School
               </button>
             </div>
             
             <form onSubmit={handleSubmit}>
               <div className="input-group" style={{ marginBottom: '1.25rem' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <span>👤</span> {inquiryType === 'parent' ? 'What is your name (Parent/Guardian)?' : 'Your Name & Role (e.g. Principal)'}
+                  <span>👤</span> {inquiryType === 'school' ? 'Your Name & Role (e.g. Principal)' : 'What is your name (Parent/Guardian)?'}
                 </label>
                 <input 
                   type="text" required className="kids-input" 
-                  placeholder={inquiryType === 'parent' ? 'e.g. Ama Kone' : 'e.g. Kojo Mensah (Director)'}
+                  placeholder={inquiryType === 'school' ? 'e.g. Kojo Mensah (Director)' : 'e.g. Ama Kone'}
                   value={formData.parentName}
                   onChange={(e) => setFormData({...formData, parentName: e.target.value})}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
@@ -201,11 +255,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
 
               <div className="input-group" style={{ marginBottom: '1.25rem' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <span>{inquiryType === 'parent' ? '✨' : '🏫'}</span> {inquiryType === 'parent' ? "My Future Tech Leader's Name is..." : 'School Name'}
+                  <span>{inquiryType === 'school' ? '🏫' : '✨'}</span> {inquiryType === 'school' ? 'School Name' : "My Future Tech Leader's Name is..."}
                 </label>
                 <input 
                   type="text" required className="kids-input" 
-                  placeholder={inquiryType === 'parent' ? "Child's full name" : "e.g. Ridge International School"}
+                  placeholder={inquiryType === 'school' ? "e.g. Ridge International School" : "Child's full name"}
                   value={formData.studentName}
                   onChange={(e) => setFormData({...formData, studentName: e.target.value})}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
@@ -232,11 +286,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 </div>
                 <div className="input-group">
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                    <span>{inquiryType === 'parent' ? '🎂' : '👥'}</span> {inquiryType === 'parent' ? 'Student Age' : 'Approximate Students'}
+                    <span>{inquiryType === 'school' ? '👥' : '🎂'}</span> {inquiryType === 'school' ? 'Approximate Students' : 'Student Age'}
                   </label>
                   <input 
                     type="number" required className="kids-input" 
-                    placeholder={inquiryType === 'parent' ? 'e.g. 8' : 'e.g. 150'}
+                    placeholder={inquiryType === 'school' ? 'e.g. 150' : 'e.g. 8'}
                     value={formData.age}
                     onChange={(e) => setFormData({...formData, age: e.target.value})}
                     style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
@@ -246,7 +300,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
 
               <div className="input-group" style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <span>🎯</span> {inquiryType === 'parent' ? "I'm Interested In..." : 'Proposed Partnership...'}
+                  <span>🎯</span> {inquiryType === 'school' ? 'Proposed Partnership...' : "I'm Interested In..."}
                 </label>
                 <select 
                   className="kids-input"
@@ -254,19 +308,26 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   onChange={(e) => setFormData({...formData, program: e.target.value})}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1.05rem', fontFamily: "'Baloo 2', cursive", fontWeight: 700, width: '100%', boxSizing: 'border-box' }}
                 >
-                  {inquiryType === 'parent' ? (
-                    <>
-                      <option value="Coding 4 Kids">Coding 4 Kids</option>
-                      <option value="Robotics 4 Kids">Robotics 4 Kids</option>
-                      <option value="AI 4 Kids">AI 4 Kids</option>
-                      <option value="General Inquiry">General Inquiry</option>
-                    </>
-                  ) : (
+                  {inquiryType === 'school' ? (
                     <>
                       <option value="School ICT Partnership">School ICT Curriculum &amp; Partnership</option>
                       <option value="Coding & Robotics Club Setup">Coding &amp; Robotics Club Creation</option>
                       <option value="ICT Lab Hardware Infrastructure">ICT Lab Hardware Infrastructure</option>
                       <option value="General School Inquiry">General School Partnership Inquiry</option>
+                    </>
+                  ) : inquiryType === 'online' ? (
+                    <>
+                      <option value="Coding 4 Kids (Online)">Coding 4 Kids (Online Cohort)</option>
+                      <option value="Robotics 4 Kids (Online)">Robotics 4 Kids (Online Cohort)</option>
+                      <option value="AI 4 Kids (Online)">AI 4 Kids (Online Cohort)</option>
+                      <option value="General Online Classes">General Online Inquiry</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="Coding 4 Kids">Coding 4 Kids</option>
+                      <option value="Robotics 4 Kids">Robotics 4 Kids</option>
+                      <option value="AI 4 Kids">AI 4 Kids</option>
+                      <option value="General Inquiry">General Inquiry</option>
                     </>
                   )}
                 </select>
@@ -278,8 +339,16 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 style={{ 
                   width: '100%', 
                   marginTop: '0.5rem', 
-                  background: inquiryType === 'school' ? 'var(--kids-orange)' : 'var(--kids-blue)',
-                  boxShadow: inquiryType === 'school' ? '0 4px 0 #9a3412' : '0 4px 0 #0369a1',
+                  background: inquiryType === 'school' 
+                    ? 'var(--kids-orange)' 
+                    : inquiryType === 'online' 
+                    ? 'var(--kids-purple)' 
+                    : 'var(--kids-blue)',
+                  boxShadow: inquiryType === 'school' 
+                    ? '0 4px 0 #9a3412' 
+                    : inquiryType === 'online' 
+                    ? '0 4px 0 #7e22ce' 
+                    : '0 4px 0 #0369a1',
                   minHeight: '42px',
                   fontSize: '1rem',
                   padding: '0.75rem 1rem',
@@ -287,7 +356,13 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 }}
                 disabled={status === 'sending'}
               >
-                {status === 'sending' ? 'Transmitting Mission Data...' : inquiryType === 'school' ? 'Schedule Free School Demo! 🏫' : 'Launch Home Mission! 🚀'}
+                {status === 'sending' 
+                  ? 'Transmitting Mission Data...' 
+                  : inquiryType === 'school' 
+                  ? 'Schedule Free School Demo! 🏫' 
+                  : inquiryType === 'online'
+                  ? 'Launch Online Mission! 🚀'
+                  : 'Launch Home Mission! 🚀'}
               </button>
 
               {status === 'error' && (
@@ -297,8 +372,8 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
               )}
             </form>
 
-            {/* Certificate Preview Section (Only for parents) */}
-            {inquiryType === 'parent' && (formData.studentName || formData.program) && (
+            {/* Certificate Preview Section (Only for parents/online) */}
+            {inquiryType !== 'school' && (formData.studentName || formData.program) && (
               <div style={{ marginTop: isMobile ? '2rem' : '2.5rem', borderTop: '1px solid var(--kids-border)', paddingTop: '1.5rem' }}>
                 <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--kids-text-muted)', fontSize: '0.75rem', letterSpacing: '2px', fontWeight: 800 }}>
                   PREVIEW YOUR FUTURE CERTIFICATE
