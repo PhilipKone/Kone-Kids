@@ -635,5 +635,106 @@ export const blogArticles: BlogArticle[] = [
         content: 'At Kone Kids, our personalized 1-on-1 home tutoring and interactive school labs guide children through these vetted platforms. We match the perfect tool to your child\'s age, interests, and learning style to cultivate real lifelong engineering capability.'
       }
     ]
+  },
+  {
+    id: 'mobile-app-development-kids',
+    title: 'Mobile App Development for Kids: From Idea to App Store',
+    slug: 'mobile-app-development-kids',
+    summary: 'Can kids build actual mobile apps that run on phones? Discover the tools, step-by-step roadmap, and why building apps turns kids into real-world problem solvers.',
+    category: 'Coding & Logic',
+    publishDate: 'May 19, 2026',
+    readTime: '5 min read',
+    author: {
+      name: 'Philip Hotor',
+      role: 'Founder, Kone Kids',
+      avatar: '👨‍🏫'
+    },
+    accentColor: 'var(--kids-orange)',
+    coverGradient: 'linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%)',
+    content: [
+      {
+        type: 'heading',
+        content: 'The Shift: From Passive Users to Mobile Creators'
+      },
+      {
+        type: 'paragraph',
+        content: 'From the moment a toddler swipes on an iPad to play games or watch videos, their relationship with mobile apps begins. But there is a massive cognitive difference between opening an app that someone else built and developing one yourself. Mobile app development is the ultimate synthesis of creativity, logic, visual design, and user experience (UX) for children.'
+      },
+      {
+        type: 'paragraph',
+        content: 'In standard computer science education, abstract coding exercises (like sorting lists or basic math loops) can sometimes feel dry. Building a mobile app changes everything: kids can immediately install their creation on their parent\'s smartphone, demo it to their friends at school, and solve actual, tangible problems in their home communities.'
+      },
+      {
+        type: 'quote',
+        content: 'When a child builds a mobile app, they realize they aren\'t just playing in a digital sandbox—they are building tools that go straight into people\'s pockets.'
+      },
+      {
+        type: 'heading',
+        content: 'Why Mobile Development is the Ultimate STEM Builder'
+      },
+      {
+        type: 'paragraph',
+        content: 'Mobile development introduces children to systems-level thinking. To build a functional app, a student must master three core components that parallel professional software engineering:'
+      },
+      {
+        type: 'list',
+        content: 'The three dimensions of app creation:',
+        items: [
+          'UI/UX Design (User Interface & Experience): Designing screen layouts, coordinating color palettes, and mapping out the intuitive flow of button clicks.',
+          'Event-Driven Logic: Coding the behavior—defining what happens exactly when a user swipes, shakes the phone, presses a button, or takes a photo.',
+          'Data Storage: Setting up local databases to store user high scores, profiles, or shopping lists across app launches.'
+        ]
+      },
+      {
+        type: 'heading',
+        content: 'Vetted Tools: How Kids Build Apps Without Syntax Frustration'
+      },
+      {
+        type: 'paragraph',
+        content: 'In educational technology, forcing a 10-year-old to write lines of raw Java or Swift code is a recipe for dropout. Visual block-based mobile app builders allow children to focus on spatial structure and logic without typing mistakes.'
+      },
+      {
+        type: 'paragraph',
+        content: '1. MIT App Inventor: Developed by the Massachusetts Institute of Technology, this is the gold standard for teaching visual Android app creation. Kids drag-and-drop buttons, maps, text-to-speech engines, and accelerometers, then program them using visual blocks.'
+      },
+      {
+        type: 'paragraph',
+        content: '2. Thunkable: A modern, highly polished cross-platform builder that compiles native Android and iOS apps. It supports beautiful modern layouts and integrates easily with external APIs, maps, and databases.'
+      },
+      {
+        type: 'paragraph',
+        content: '3. Swift Playgrounds: For children interested in Apple\'s ecosystem, Swift Playgrounds guides kids through coding native iPad/Mac apps using professional Swift code inside an interactive 3D playground.'
+      },
+      {
+        type: 'heading',
+        content: 'The 4-Step App Creation Roadmap for Kids'
+      },
+      {
+        type: 'paragraph',
+        content: 'At Kone Kids, our app development pathway guides children through a structured, 4-step professional pipeline:'
+      },
+      {
+        type: 'list',
+        content: 'The App Creation Pipeline:',
+        items: [
+          'Phase 1: Brainstorming & User Wireframing. Kids map out who the app is for and draw simple sketches of each screen on paper.',
+          'Phase 2: Visual UI Layout. Dragging visual components (text inputs, images, charts) onto a mock screen canvas.',
+          'Phase 3: Coding the Logic. Snapping code blocks together to handle events (e.g., "When the user shakes the phone, speak the translation out loud").',
+          'Phase 4: Multi-device Testing & Sharing. Installing the app via QR codes to test on real hardware, and debugging on the fly.'
+        ]
+      },
+      {
+        type: 'callout',
+        content: 'Our Ghanaian students connect their app projects directly to local issues: from building simple automated English-to-Twi translator apps for their grandparents, to design-mocking smart shop billing trackers for local neighborhood table stores.'
+      },
+      {
+        type: 'heading',
+        content: 'What Parents Can Do to Start the Journey'
+      },
+      {
+        type: 'paragraph',
+        content: 'Encourage your child to look at the apps on their phone with analytical eyes. Ask questions like: "Why is that button placed there?" or "What do you think happens behind the scenes when you tap this search bar?". Partner with structured, project-based afterschool centers like Kone Kids to turn their creative app ideas into actual running software.'
+      }
+    ]
   }
 ];
