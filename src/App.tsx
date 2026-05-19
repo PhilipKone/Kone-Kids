@@ -52,10 +52,11 @@ function Home() {
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <Link to="/blog" style={{ 
+            fontFamily: "'Baloo 2', cursive",
             color: '#475569', 
             textDecoration: 'none', 
-            fontWeight: 700, 
-            fontSize: '0.9rem',
+            fontWeight: 800, 
+            fontSize: '1rem',
             transition: 'color 0.2s'
           }} className="hover-teal">
             Parent Hub
