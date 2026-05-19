@@ -48,7 +48,7 @@ function Home() {
           alignItems: 'center',
           gap: '0.4rem'
         }}>
-          <Sparkles size={18} style={{ color: '#0d9488' }} /> Kone Kids
+          <img src="/mascot.svg" alt="Kone Kids Logo" style={{ height: '24px', width: 'auto' }} /> Kone Kids
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <Link to="/blog" style={{ 
