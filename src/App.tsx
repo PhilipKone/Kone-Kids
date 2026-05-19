@@ -12,7 +12,11 @@ import InstallBanner from './components/InstallBanner'
 import MissionMap from './components/MissionMap'
 import BadgeNotification from './components/BadgeNotification'
 import { useLocation } from 'react-router-dom'
-import { Home as HomeIcon, Code, Cpu, Brain, Sparkles } from 'lucide-react'
+import { Home as HomeIcon, Code, Cpu, Brain, Sparkles, BookOpen, Clock, ArrowRight } from 'lucide-react'
+import Blog from './components/Blog'
+import ArticleReader from './components/ArticleReader'
+import { blogArticles } from './data/blogArticles'
+
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -22,8 +26,48 @@ function Home() {
       <EnrollmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
 
       {/* Navigation / Header */}
-      <nav style={{ padding: '2rem 5%', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
-        {/* Logo removed as requested */}
+      <nav style={{ 
+        padding: '1rem 5%', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        background: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(8px)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        borderBottom: '1px solid #f1f5f9'
+      }}>
+        <Link to="/" style={{ 
+          fontFamily: 'Outfit, sans-serif', 
+          fontWeight: 800, 
+          fontSize: '1.3rem', 
+          color: '#1e3a8a', 
+          textDecoration: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.4rem'
+        }}>
+          <Sparkles size={18} style={{ color: '#0d9488' }} /> Kone Kids
+        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <Link to="/blog" style={{ 
+            color: '#475569', 
+            textDecoration: 'none', 
+            fontWeight: 700, 
+            fontSize: '0.9rem',
+            transition: 'color 0.2s'
+          }} className="hover-teal">
+            Parent Hub
+          </Link>
+          <button 
+            className="kids-button" 
+            onClick={() => setIsModalOpen(true)}
+            style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
+          >
+            Join Hub
+          </button>
+        </div>
       </nav>
 
       {/* Hero Section */}
@@ -90,6 +134,208 @@ function Home() {
       
       {/* Achievement Gallery */}
       <BadgeTray />
+
+      {/* Featured Blog/Insights Section for Parents & Teachers */}
+      <section style={{
+        padding: '5rem 5% 6rem',
+        background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
+        borderTop: '1px solid #e2e8f0',
+        borderBottom: '1px solid #e2e8f0'
+      }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '3.5rem'
+          }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              background: 'rgba(13, 148, 136, 0.1)',
+              color: '#0d9488',
+              padding: '0.4rem 1rem',
+              borderRadius: '20px',
+              fontSize: '0.85rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.05em',
+              marginBottom: '1rem'
+            }}>
+              <Sparkles size={14} /> Parents &amp; Teachers Hub
+            </div>
+            <h2 style={{
+              fontFamily: "'Baloo 2', cursive",
+              fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
+              fontWeight: 800,
+              margin: '0 0 1rem 0',
+              color: '#1e3a8a'
+            }}>
+              Featured Insights &amp; STEM Wisdom
+            </h2>
+            <p style={{
+              fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
+              color: '#475569',
+              maxWidth: '650px',
+              margin: '0 auto',
+              lineHeight: 1.5
+            }}>
+              Explore practical, research-backed advice on screen time, computational literacy, robotics engineering, and raising the next generation of builders in Ghana.
+            </p>
+          </div>
+
+          {/* Cards Grid */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+            gap: '2rem',
+            marginBottom: '3.5rem'
+          }}>
+            {blogArticles.slice(0, 3).map((art) => (
+              <article
+                key={art.id}
+                style={{
+                  background: 'white',
+                  borderRadius: '24px',
+                  border: '1px solid #e2e8f0',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.02)',
+                  transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease'
+                }}
+                className="blog-card-hover"
+              >
+                {/* Card Header Cover */}
+                <div style={{
+                  background: art.coverGradient,
+                  height: '140px',
+                  padding: '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  position: 'relative'
+                }}>
+                  <span style={{
+                    background: 'white',
+                    color: art.accentColor,
+                    padding: '0.35rem 0.85rem',
+                    borderRadius: '12px',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.02em',
+                    alignSelf: 'flex-start',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
+                  }}>
+                    {art.category}
+                  </span>
+                  
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: '#1e293b'
+                  }}>
+                    <BookOpen size={16} style={{ color: art.accentColor }} />
+                    <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>Kone Kids Insights</span>
+                  </div>
+                </div>
+
+                {/* Card Content */}
+                <div style={{
+                  padding: '1.5rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  flex: 1,
+                  justifyContent: 'space-between'
+                }}>
+                  <div style={{ marginBottom: '1.25rem' }}>
+                    <h3 style={{
+                      fontFamily: "'Baloo 2', cursive",
+                      fontSize: '1.25rem',
+                      fontWeight: 800,
+                      margin: '0 0 0.5rem 0',
+                      lineHeight: 1.3,
+                      color: '#0f172a'
+                    }}>
+                      {art.title}
+                    </h3>
+                    <p style={{
+                      fontSize: '0.9rem',
+                      color: '#475569',
+                      margin: 0,
+                      lineHeight: 1.5,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden'
+                    }}>
+                      {art.summary}
+                    </p>
+                  </div>
+
+                  {/* Metadata & Button Row */}
+                  <div style={{
+                    borderTop: '1px solid #f1f5f9',
+                    paddingTop: '1rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <Clock size={14} style={{ color: '#94a3b8' }} />
+                      <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>{art.readTime}</span>
+                    </div>
+
+                    <Link to={`/blog/${art.slug}`} style={{
+                      background: 'rgba(13, 148, 136, 0.06)',
+                      color: '#0d9488',
+                      padding: '0.4rem 0.85rem',
+                      borderRadius: '12px',
+                      fontSize: '0.8rem',
+                      fontWeight: 800,
+                      textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem',
+                      transition: 'all 0.2s'
+                    }} className="btn-read-hover">
+                      Read <ArrowRight size={12} />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          {/* CTA Footer */}
+          <div style={{ textAlign: 'center' }}>
+            <Link
+              to="/blog"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                background: 'linear-gradient(135deg, #0d9488 0%, #0f766e 100%)',
+                color: 'white',
+                border: 'none',
+                padding: '0.85rem 2rem',
+                borderRadius: '50px',
+                fontSize: '1rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(13, 148, 136, 0.25)',
+                textDecoration: 'none',
+                fontFamily: "'Baloo 2', cursive",
+                transition: 'all 0.2s'
+              }}
+              className="btn-cta-hover"
+            >
+              📖 Visit Parent &amp; Teacher Hub
+            </Link>
+          </div>
+        </div>
+      </section>
       
       {/* Footer */}
       <footer style={{ 
@@ -156,6 +402,8 @@ function AppContent() {
       <div style={{ paddingBottom: (isMobile && !isMissionPage) ? '80px' : '0' }}>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<ArticleReader />} />
           <Route path="/coding" element={<MissionMap hub="coding" />} />
           <Route path="/robotics" element={<MissionMap hub="robotics" />} />
           <Route path="/ai" element={<MissionMap hub="ai" />} />

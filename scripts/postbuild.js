@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const distDir = path.join(__dirname, '..', 'dist');
-const pathways = ['coding', 'robotics', 'ai'];
+const pathways = ['coding', 'robotics', 'ai', 'blog', 'blog/best-coding-platforms-kids'];
 
 pathways.forEach(pathway => {
     const dir = path.join(distDir, pathway);

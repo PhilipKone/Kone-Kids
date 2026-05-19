@@ -920,3 +920,77 @@ html {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
+
+/* Kone Kids Parent Hub Blog Styles */
+.hover-teal:hover {
+  color: #0d9488 !important;
+}
+
+.blog-card-hover:hover {
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(13, 148, 136, 0.06) !important;
+  border-color: rgba(13, 148, 136, 0.3) !important;
+}
+
+.category-pill-hover:hover {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+  transform: translateY(-1px);
+}
+
+.btn-read-hover:hover {
+  background: #0d9488 !important;
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(13, 148, 136, 0.2);
+}
+
+.btn-cta-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.45) !important;
+}
+
+.btn-secondary-hover:hover {
+  background: #f1f5f9 !important;
+  border-color: #94a3b8 !important;
+  transform: translateY(-1px);
+}
+
+.blog-content-link {
+  color: #0d9488 !important;
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: all 0.2s ease;
+}
+
+.blog-content-link:hover {
+  color: #0f766e !important;
+  text-decoration-color: #0f766e;
+  background-color: rgba(13, 148, 136, 0.05);
+  border-radius: 4px;
+  padding: 1px 4px;
+  margin: -1px -4px;
+}
+
+/* Mobile-Friendly Optimizations for Blog & Article Reader */
+@media (max-width: 768px) {
+  .blog-cta-section {
+    padding: 2.25rem 1.25rem !important;
+    border-radius: 24px !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .blog-cta-section button, 
+  .blog-cta-section a {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 0.95rem 1.5rem !important;
+  }
+}
+
+
+
