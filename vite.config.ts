@@ -7,6 +7,9 @@ const config: UserConfig = {
   plugins: [reactPlugin],
   optimizeDeps: {
     include: ['blockly', 'blockly/javascript', 'blockly/python', 'firebase/app', 'firebase/firestore', 'firebase/auth']
+  },
+  build: {
+    target: 'es2015'
   }
 }
 

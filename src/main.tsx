@@ -5,13 +5,28 @@ import './index.css'
 import App from './App'
 import ErrorBoundary from './components/ErrorBoundary'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <ErrorBoundary appName="Kone-Kids">
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ErrorBoundary>
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+const rootElement = document.getElementById('root');
+
+if (rootElement && rootElement.hasChildNodes()) {
+  ReactDOM.hydrate(
+    <React.StrictMode>
+      <ErrorBoundary appName="Kone-Kids">
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ErrorBoundary>
+    </React.StrictMode>,
+    rootElement
+  );
+} else {
+  ReactDOM.render(
+    <React.StrictMode>
+      <ErrorBoundary appName="Kone-Kids">
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ErrorBoundary>
+    </React.StrictMode>,
+    rootElement
+  );
+}
