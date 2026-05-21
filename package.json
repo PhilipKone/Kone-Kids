@@ -31,7 +31,7 @@
     "vite-plugin-react": "^4.0.0"
   },
   "reactSnap": {
-    "source": "dist",
-    "puppeteerExecutablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    "source": "dist"
   }
 }
+
