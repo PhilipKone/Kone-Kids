@@ -1,42 +1,45 @@
 {
-  "name": "Kone-Kids",
-  "version": "0.0.0",
-  "homepage": "https://kids.koneacademy.io",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "postbuild": "react-snap",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --dotfiles"
-  },
-  "dependencies": {
-    "@emailjs/browser": "^4.4.1",
-    "blockly": "^12.5.1",
-    "canvas-confetti": "^1.9.4",
-    "firebase": "^12.12.1",
-    "lucide-react": "^1.14.0",
-    "prismjs": "^1.30.0",
-    "react": "^17.0.0",
-    "react-dom": "^17.0.0",
-    "react-router-dom": "^6.30.3"
-  },
-  "devDependencies": {
-    "@types/canvas-confetti": "^1.9.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
-    "gh-pages": "^6.3.0",
-    "react-snap": "^1.23.0",
-    "typescript": "^4.1.2",
-    "vite": "^1.0.0-rc.13",
-    "vite-plugin-react": "^4.0.0"
-  },
-  "reactSnap": {
-    "source": "dist",
-    "puppeteerArgs": [
-      "--no-sandbox",
-      "--disable-setuid-sandbox"
-    ]
-  }
+    "name":  "Kone-Kids",
+    "version":  "0.0.0",
+    "homepage":  "https://kids.koneacademy.io",
+    "scripts":  {
+                    "dev":  "vite",
+                    "build":  "tsc \u0026\u0026 vite build",
+                    "postbuild":  "react-snap",
+                    "predeploy":  "npm run build",
+                    "deploy":  "gh-pages -d dist --dotfiles"
+                },
+    "dependencies":  {
+                         "@emailjs/browser":  "^4.4.1",
+                         "blockly":  "^12.5.1",
+                         "canvas-confetti":  "^1.9.4",
+                         "firebase":  "^12.12.1",
+                         "lucide-react":  "^1.14.0",
+                         "prismjs":  "^1.30.0",
+                         "react":  "^17.0.0",
+                         "react-dom":  "^17.0.0",
+                         "react-router-dom":  "^6.30.3"
+                     },
+    "devDependencies":  {
+                            "@types/canvas-confetti":  "^1.9.0",
+                            "@types/react":  "^17.0.0",
+                            "@types/react-dom":  "^17.0.0",
+                            "gh-pages":  "^6.3.0",
+                            "react-snap":  "^1.23.0",
+                            "typescript":  "^4.1.2",
+                            "vite":  "^1.0.0-rc.13",
+                            "vite-plugin-react":  "^4.0.0"
+                        },
+    "reactSnap":  {
+                      "source":  "dist",
+                      "puppeteerArgs":  [
+                                            "--no-sandbox",
+                                            "--disable-setuid-sandbox"
+                                        ]
+                  },
+    "overrides":  {
+                      "react-snap":  {
+                                         "puppeteer":  "^22.0.0"
+                                     }
+                  }
 }
-
-
