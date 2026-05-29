@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase/config';
-import { doc, setDoc, collection, getDocs, deleteDoc } from 'firebase/firestore';
+import { db, auth } from '../firebase/config';
+import { doc, setDoc, collection, getDocs, deleteDoc, query, where } from 'firebase/firestore';
+import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from 'firebase/auth';
 import { Sparkles, Trash2, Printer, Plus, Users, Award, BookOpen } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -16,22 +17,67 @@ export default function TeacherDashboard() {
   const [editingName, setEditingName] = useState('');
   const [editingMascot, setEditingMascot] = useState('');
 
+  // Teacher Authentication States
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [authLoading, setAuthLoading] = useState(false);
+
   // Active Roster
   const [students, setStudents] = useState<any[]>([]);
 
-  // List of previously created sections (loaded from localStorage for ease)
-  const [mySections, setMySections] = useState<string[]>(() => {
+  // List of active sections loaded from Firestore
+  const [mySections, setMySections] = useState<string[]>([]);
+
+  const fetchMySections = async (userUid: string) => {
+    setLoading(true);
+    setError('');
     try {
-      const saved = localStorage.getItem('kone_teacher_sections');
-      return saved ? JSON.parse(saved) : [];
+      if (db && (db as any).app) {
+        const q = query(collection(db, 'sections'), where('teacherId', '==', userUid));
+        const querySnapshot = await getDocs(q);
+        const sectionsList = querySnapshot.docs.map(doc => doc.id);
+        setMySections(sectionsList);
+      } else {
+        const saved = localStorage.getItem('kone_teacher_sections');
+        setMySections(saved ? JSON.parse(saved) : []);
+      }
     } catch (e) {
-      return [];
+      console.error(e);
+      setError('Failed to load your classroom sections.');
+    } finally {
+      setLoading(false);
     }
-  });
+  };
 
   useEffect(() => {
-    localStorage.setItem('kone_teacher_sections', JSON.stringify(mySections));
-  }, [mySections]);
+    if (!auth || !(auth as any).app) {
+      setCurrentUser({
+        uid: 'mock_teacher_id',
+        email: 'tutor@koneacademy.io',
+        displayName: 'Kone Instructor',
+      } as any);
+      // Load mock items
+      const saved = localStorage.getItem('kone_teacher_sections');
+      setMySections(saved ? JSON.parse(saved) : []);
+      return;
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setCurrentUser(user);
+        fetchMySections(user.uid);
+      } else {
+        setCurrentUser(null);
+        setMySections([]);
+        setActiveCode('');
+        setStudents([]);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     if (activeCode) {
@@ -79,11 +125,15 @@ export default function TeacherDashboard() {
     const code = generateSectionCode();
 
     try {
-      if (db && (db as any).app) {
+      if (db && (db as any).app && currentUser) {
         await setDoc(doc(db, 'sections', code), {
           name: sectionName.trim(),
-          createdAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          teacherId: currentUser.uid
         });
+      } else {
+        const currentMock = [code, ...mySections];
+        localStorage.setItem('kone_teacher_sections', JSON.stringify(currentMock));
       }
       
       setActiveCode(code);
@@ -98,6 +148,65 @@ export default function TeacherDashboard() {
       });
     } catch (err) {
       setError('Could not create section. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setAuthLoading(true);
+    setError('');
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.8 }
+      });
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Google authentication failed.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!authEmail.trim() || !authPassword.trim()) return;
+
+    setAuthLoading(true);
+    setError('');
+    try {
+      if (isSignUp) {
+        await createUserWithEmailAndPassword(auth, authEmail.trim(), authPassword.trim());
+      } else {
+        await signInWithEmailAndPassword(auth, authEmail.trim(), authPassword.trim());
+      }
+      confetti({
+        particleCount: 80,
+        spread: 60,
+        origin: { y: 0.8 }
+      });
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Email authentication failed.');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      if (auth && (auth as any).app) {
+        await signOut(auth);
+      } else {
+        setCurrentUser(null);
+      }
+    } catch (err) {
+      setError('Logout failed.');
     } finally {
       setLoading(false);
     }
@@ -191,6 +300,185 @@ export default function TeacherDashboard() {
   const handlePrint = () => {
     window.print();
   };
+
+  if (!currentUser) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem'
+      }}>
+        <div style={{
+          background: 'white',
+          borderRadius: '32px',
+          padding: '3rem 2.5rem',
+          maxWidth: '450px',
+          width: '100%',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
+          border: '2px solid #e2e8f0',
+          textAlign: 'center'
+        }}>
+          <div style={{ marginBottom: '2rem' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(14, 165, 233, 0.1)',
+              color: 'var(--kids-blue)',
+              width: '64px',
+              height: '64px',
+              borderRadius: '20px',
+              fontSize: '2rem',
+              marginBottom: '1rem'
+            }}>
+              🔑
+            </div>
+            <h1 style={{
+              fontFamily: "'Baloo 2', cursive",
+              fontSize: '2.2rem',
+              fontWeight: 800,
+              color: '#1e3a8a',
+              margin: '0 0 0.5rem'
+            }}>
+              Teacher Portal
+            </h1>
+            <p style={{ color: 'var(--kids-text-muted)', fontSize: '0.95rem', margin: 0, lineHeight: 1.4 }}>
+              Authenticate to manage classroom codes, student rosters, and track progress.
+            </p>
+          </div>
+
+          {error && (
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.08)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              color: '#ef4444',
+              borderRadius: '12px',
+              padding: '0.75rem 1rem',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              marginBottom: '1.5rem',
+              textAlign: 'left'
+            }}>
+              ⚠️ {error}
+            </div>
+          )}
+
+          <button
+            onClick={handleGoogleSignIn}
+            disabled={authLoading}
+            style={{
+              width: '100%',
+              padding: '0.85rem 1.5rem',
+              background: 'white',
+              border: '2px solid #e2e8f0',
+              borderRadius: '16px',
+              color: '#334155',
+              fontSize: '1rem',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.75rem',
+              boxShadow: '0 4px 6px rgba(0,0,0,0.02)',
+              transition: 'all 0.2s',
+              fontFamily: 'inherit',
+              marginBottom: '1.5rem'
+            }}
+          >
+            <span style={{ fontSize: '1.25rem' }}>🚀</span>
+            {authLoading ? 'Signing in...' : 'Sign in with Google'}
+          </button>
+
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            color: '#94a3b8',
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            marginBottom: '1.5rem'
+          }}>
+            <div style={{ flex: 1, height: '1px', background: '#cbd5e1' }} />
+            <span>or email</span>
+            <div style={{ flex: 1, height: '1px', background: '#cbd5e1' }} />
+          </div>
+
+          <form onSubmit={handleEmailAuth} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
+            <div>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#475569', marginBottom: '0.4rem' }}>Email Address</label>
+              <input
+                type="email"
+                required
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                placeholder="teacher@koneacademy.io"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  border: '2px solid #cbd5e1',
+                  borderRadius: '12px',
+                  fontSize: '0.95rem',
+                  fontFamily: 'inherit'
+                }}
+              />
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 800, color: '#475569', marginBottom: '0.4rem' }}>Password</label>
+              <input
+                type="password"
+                required
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                placeholder="••••••••"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 1rem',
+                  border: '2px solid #cbd5e1',
+                  borderRadius: '12px',
+                  fontSize: '0.95rem',
+                  fontFamily: 'inherit'
+                }}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={authLoading}
+              className="kids-button"
+              style={{ width: '100%', padding: '0.85rem', fontSize: '1rem', marginTop: '0.5rem' }}
+            >
+              {authLoading ? 'Loading...' : (isSignUp ? 'Create Teacher Account 🎒' : 'Sign In 🔑')}
+            </button>
+          </form>
+
+          <div style={{ marginTop: '1.5rem', fontSize: '0.9rem', color: '#475569' }}>
+            {isSignUp ? 'Already have a teacher account?' : "Don't have a teacher account?"}{' '}
+            <button
+              onClick={() => { setIsSignUp(!isSignUp); setError(''); }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--kids-blue)',
+                fontWeight: 800,
+                cursor: 'pointer',
+                padding: 0,
+                fontSize: 'inherit',
+                textDecoration: 'underline'
+              }}
+            >
+              {isSignUp ? 'Sign In' : 'Sign Up Now'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
