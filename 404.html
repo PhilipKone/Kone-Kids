@@ -1,20 +1,60 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Kone Kids</title>
-    <script type="text/javascript">
-      // GitHub Pages SPA redirect hack
-      // Stores the current URL path in sessionStorage then redirects to root
-      var pathSegmentsToKeep = 0;
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
-    </script>
-  </head>
-</html>
+<!DOCTYPE html><html data-theme="light" lang="en"><head><meta charset="UTF-8"><meta content="width=device-width,initial-scale=1" name="viewport"><link href="https://fonts.googleapis.com" rel="preconnect"><link href="https://fonts.gstatic.com" rel="preconnect" crossorigin=""><link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet"><link href="/favicon.svg" rel="icon" type="image/svg+xml"><link href="/favicon.svg" rel="shortcut icon"><link href="/manifest.json" rel="manifest"><meta content="#f97316" name="theme-color"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="default" name="apple-mobile-web-app-status-bar-style"><link href="/apple-touch-icon.png" rel="apple-touch-icon"><meta content="Kone Kids" name="apple-mobile-web-app-title"><meta content="Kone Kids Academy - Coding, Robotics, and AI programs for the next generation of tech leaders. Do it Right." name="description"><link href="https://kids.koneacademy.io/404.html" rel="canonical"><!-- Open Graph / Facebook --><meta content="website" property="og:type"><meta content="https://kids.koneacademy.io/" property="og:url"><meta content="Kone Kids | Coding, Robotics & AI" property="og:title"><meta content="Fun, hands-on engineering programs for children. Start their tech journey today." property="og:description"><meta content="https://kids.koneacademy.io/og-image.png" property="og:image"><!-- Twitter --><meta content="summary_large_image" name="twitter:card"><meta content="https://kids.koneacademy.io/" name="twitter:url"><meta content="Kone Kids | Coding, Robotics & AI" name="twitter:title"><meta content="Fun, hands-on engineering programs for children. Start their tech journey today." name="twitter:description"><meta content="https://kids.koneacademy.io/og-image.png" name="twitter:image"><title>Kone Kids | Coding, Robotics & AI</title><!-- Structured Data (Invisible SEO) --><script type="application/ld+json">{
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Kone Kids",
+        "url": "https://kids.koneacademy.io/",
+        "parentOrganization": {
+          "@type": "Organization",
+          "name": "Kone Academy",
+          "url": "https://www.koneacademy.io/"
+        }
+      }</script><script type="application/ld+json">{
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Kone Kids Navigation",
+        "itemListElement": [
+          {
+            "@type": "SiteNavigationElement",
+            "position": 1,
+            "name": "Mission Map",
+            "url": "https://kids.koneacademy.io/#/missions"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 2,
+            "name": "Mascot Shop",
+            "url": "https://kids.koneacademy.io/#/shop"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 3,
+            "name": "Coding Sandbox",
+            "url": "https://kids.koneacademy.io/#/sandbox"
+          }
+        ]
+      }</script><script type="module" src="/_assets/index.c9817680.js"></script><link href="/_assets/style.5edbfe9d.css" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link href="https://fonts.gstatic.com" rel="preconnect"><link href="https://firebase.googleapis.com" rel="preconnect"><script src="https://www.googletagmanager.com/gtag/js?l=dataLayer&id=G-W1KGH910YG" async></script><link href="https://firebaseinstallations.googleapis.com" rel="preconnect"><link href="https://www.googletagmanager.com" rel="preconnect"><link href="https://www.google-analytics.com" rel="preconnect"><link href="https://fonts.googleapis.com" rel="preconnect"><link href="https://fonts.gstatic.com" rel="preconnect"><link href="https://firebase.googleapis.com" rel="preconnect"><link href="https://www.googletagmanager.com" rel="preconnect"></head><body><!-- GitHub Pages SPA redirect handler --><script type="text/javascript">(function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+            l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))</script><!-- PWA Splash Screen --><style>@keyframes splashPop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}@keyframes dotPulse{0%,100%,80%{transform:scale(.6);opacity:.4}40%{transform:scale(1.2);opacity:1}}</style><script>// Dismiss splash once the page is fully interactive
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var splash = document.getElementById('splash-screen');
+          if (splash) {
+            splash.style.opacity = '0';
+            splash.style.visibility = 'hidden';
+            setTimeout(function() { splash.remove(); }, 500);
+          }
+        }, 1200);
+      });</script><div id="root"><div style="padding-bottom:80px"></div><div class="mobile-bottom-nav"><a class="nav-item nav-item-active" href="/"><svg aria-hidden="true" class="lucide lucide-house nav-icon" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg><span>Home</span></a><a class="nav-item" href="/coding"><svg aria-hidden="true" class="lucide lucide-code nav-icon" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m16 18 6-6-6-6"></path><path d="m8 6-6 6 6 6"></path></svg><span>Coding</span></a><a class="nav-item" href="/robotics"><svg aria-hidden="true" class="lucide lucide-cpu nav-icon" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 20v2"></path><path d="M12 2v2"></path><path d="M17 20v2"></path><path d="M17 2v2"></path><path d="M2 12h2"></path><path d="M2 17h2"></path><path d="M2 7h2"></path><path d="M20 12h2"></path><path d="M20 17h2"></path><path d="M20 7h2"></path><path d="M7 20v2"></path><path d="M7 2v2"></path><rect height="16" rx="2" width="16" x="4" y="4"></rect><rect height="8" rx="1" width="8" x="8" y="8"></rect></svg><span>Robotics</span></a><a class="nav-item" href="/ai"><svg aria-hidden="true" class="lucide lucide-brain nav-icon" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18V5"></path><path d="M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4"></path><path d="M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5"></path><path d="M17.997 5.125a4 4 0 0 1 2.526 5.77"></path><path d="M18 18a4 4 0 0 0 2-7.464"></path><path d="M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517"></path><path d="M6 18a4 4 0 0 1-2-7.464"></path><path d="M6.003 5.125a4 4 0 0 0-2.526 5.77"></path></svg><span>AI Lab</span></a></div><div class="install-banner"><div class="install-banner-inner"><div class="install-banner-icon"><img alt="Kone Kids" height="48" src="/mascot.svg" width="48"></div><div class="install-banner-text"><div class="install-banner-title">Install Kone Kids</div><div class="install-banner-subtitle">Fun learning on your home screen!</div></div><div class="install-banner-actions"><button class="install-btn">Install</button><button class="install-dismiss" aria-label="Dismiss">✕</button></div></div></div></div><script>if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('[Kone Kids] SW registered:', reg.scope))
+            .catch(err => console.warn('[Kone Kids] SW registration failed:', err));
+        });
+      }</script></body></html>
