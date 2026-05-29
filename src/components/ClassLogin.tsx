@@ -7,13 +7,25 @@ import { ArrowLeft, Sparkles } from 'lucide-react';
 import Mascot from './Mascot';
 import confetti from 'canvas-confetti';
 
-const MASCOT_PASSWORDS = [
-  { emoji: '🧠', name: 'Brainy' },
-  { emoji: '🦾', name: 'Robo' },
-  { emoji: '🚀', name: 'Rocket' },
-  { emoji: '🎮', name: 'Gamer' },
-  { emoji: '📱', name: 'Appy' },
-  { emoji: '🎨', name: 'Artist' }
+const MASCOT_POOL = [
+  // Animals (75)
+  '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵',
+  '🐔','🐧','🐦','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐢','🐍','🦎','🐙',
+  '🦑','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🐊','🐘','🦛','🦏','🐪',
+  '🦒','🦘','🦬','🐿️','🦔','🦦','🦥','🦡','🦖','🦕','🐏','🐑','🐐','🦌','🐓',
+  '🦃','🦚','🦜','🦢','🦩','🕊️','🐇','🐈','🐕','🦭','🦋','🐌','🐞','🐜','🐝',
+  // Food & Treats (40)
+  '🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝',
+  '🍅','🍆','🥑','🥦','🥬','🥒','🌶️','🌽','🥕','🫑','🧅','🧄','🥔','🍠','🥐',
+  '🍞','🥖','🥨','🍕','🍟','🍔','🌭','🌮','🌯','🍿','🥚','🍳','🥞','🧇','🧀',
+  // Space, Vehicles & Nature (45)
+  '🚀','🛸','🚁','✈️','🪂','🛰️','🚂','🚌','🚑','🚒','🚓','🚕','🚗','🏎️','🚙',
+  '🛻','🚜','🚲','🛴','🛹','🛺','⛵','🚢','⚓','🌍','🌙','☀️','⭐','🪐','☄️',
+  '🌈','⚡','❄️','🔥','💧','🌴','🌲','🌵','🍀','🍁','🍄','🌻','🌸','🎈','🎉',
+  // Tools, Gadgets & Play (40)
+  '🧠','🦾','🎮','📱','💻','🖥️','⌨️','🖱️','🎧','🎙️','🕶️','👑','💎','🔔','🎁',
+  '🏆','🥇','🎖️','🧭','🔭','🔬','🧪','🧬','🦫','🪓','🔨','🛠️','🔧','🔩','⚙️',
+  '🧲','🛡️','🏹','🗝️','🔑','🧸','🪁','🪀','🎨','🧩'
 ];
 
 export default function ClassLogin() {
@@ -29,6 +41,7 @@ export default function ClassLogin() {
   // Section Data
   const [students, setStudents] = useState<any[]>([]);
   const [selectedStudent, setSelectedStudent] = useState<any>(null);
+  const [mascotOptions, setMascotOptions] = useState<string[]>([]);
 
   useEffect(() => {
     // If already logged in, redirect
@@ -106,6 +119,15 @@ export default function ClassLogin() {
 
   const handleStudentSelect = (student: any) => {
     setSelectedStudent(student);
+    
+    // Choose correct picture and select 5 random distractors from 200 emoji pool
+    const correct = student.secretPicture || '🚀';
+    const poolWithoutCorrect = MASCOT_POOL.filter(emoji => emoji !== correct);
+    const shuffledPool = [...poolWithoutCorrect].sort(() => 0.5 - Math.random());
+    const distractors = shuffledPool.slice(0, 5);
+    const combined = [correct, ...distractors].sort(() => 0.5 - Math.random());
+    setMascotOptions(combined);
+    
     setStep(3);
     if (mascotRef.current) {
       mascotRef.current.speak(`Hi ${student.name.split(' ')[0]}! What is your secret mascot?`);
@@ -384,10 +406,10 @@ export default function ClassLogin() {
                 gap: '12px',
                 marginBottom: '1.5rem'
               }}>
-                {MASCOT_PASSWORDS.map((pwd) => (
+                {mascotOptions.map((emoji) => (
                   <button
-                    key={pwd.emoji}
-                    onClick={() => handlePasswordSelect(pwd.emoji)}
+                    key={emoji}
+                    onClick={() => handlePasswordSelect(emoji)}
                     disabled={loading}
                     style={{
                       aspectRatio: '1',
@@ -396,10 +418,8 @@ export default function ClassLogin() {
                       borderRadius: '20px',
                       cursor: 'pointer',
                       display: 'flex',
-                      flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '6px',
                       transition: 'all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)'
                     }}
                     onMouseEnter={(e) => {
@@ -413,8 +433,7 @@ export default function ClassLogin() {
                       e.currentTarget.style.transform = 'scale(1)';
                     }}
                   >
-                    <span style={{ fontSize: '2.5rem' }}>{pwd.emoji}</span>
-                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'rgba(255,255,255,0.6)', fontFamily: "'Baloo 2', cursive" }}>{pwd.name}</span>
+                    <span style={{ fontSize: '3rem' }}>{emoji}</span>
                   </button>
                 ))}
               </div>
