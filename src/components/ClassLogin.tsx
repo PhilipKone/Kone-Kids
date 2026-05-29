@@ -46,10 +46,17 @@ export default function ClassLogin() {
   }, [step]);
 
   const handleCodeSubmit = async (codeToSubmit?: string) => {
-    const code = (codeToSubmit || sectionCode).trim().toUpperCase();
+    let code = (codeToSubmit || sectionCode).trim().toUpperCase();
     if (!code) {
       setError('Please enter a section code!');
       return;
+    }
+
+    // Auto-resolve abbreviated entry: ABCD -> KONE-ABCD
+    if (code.length === 4 && !code.startsWith('KONE-')) {
+      code = 'KONE-' + code;
+    } else if (code.length === 8 && code.startsWith('KONE')) {
+      code = 'KONE-' + code.substring(4);
     }
 
     setLoading(true);
@@ -148,7 +155,7 @@ export default function ClassLogin() {
     setError('');
     if (char === '⌫') {
       setSectionCode(curr => curr.slice(0, -1));
-    } else if (sectionCode.length < 6) {
+    } else if (sectionCode.length < 9) {
       setSectionCode(curr => (curr + char).toUpperCase());
     }
   };
@@ -219,7 +226,7 @@ export default function ClassLogin() {
               {/* Inputs */}
               <input 
                 type="text" 
-                maxLength={6}
+                maxLength={9}
                 value={sectionCode}
                 onChange={(e) => {
                   setError('');
@@ -255,7 +262,7 @@ export default function ClassLogin() {
                 padding: '8px',
                 borderRadius: '16px'
               }}>
-                {['A','B','C','D','E','F','1','2','3','4','5','⌫'].map((char) => (
+                {['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','1','2','3','4','5','6','7','8','9','⌫'].map((char) => (
                   <button
                     key={char}
                     onClick={() => handleVirtualKeypress(char)}
