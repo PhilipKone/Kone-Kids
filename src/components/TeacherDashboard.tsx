@@ -36,6 +36,10 @@ export default function TeacherDashboard() {
   const [editingName, setEditingName] = useState('');
   const [editingMascot, setEditingMascot] = useState('');
 
+  // Class Editing States
+  const [isEditingClassName, setIsEditingClassName] = useState(false);
+  const [newClassName, setNewClassName] = useState('');
+
   // Teacher Authentication States
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [authEmail, setAuthEmail] = useState('');
@@ -47,7 +51,7 @@ export default function TeacherDashboard() {
   const [students, setStudents] = useState<any[]>([]);
 
   // List of active sections loaded from Firestore
-  const [mySections, setMySections] = useState<string[]>([]);
+  const [mySections, setMySections] = useState<any[]>([]);
 
   const fetchMySections = async (userUid: string) => {
     setLoading(true);
@@ -56,11 +60,15 @@ export default function TeacherDashboard() {
       if (db && (db as any).app) {
         const q = query(collection(db, 'sections'), where('teacherId', '==', userUid));
         const querySnapshot = await getDocs(q);
-        const sectionsList = querySnapshot.docs.map(doc => doc.id);
+        const sectionsList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name || 'Unnamed Class'
+        }));
         setMySections(sectionsList);
       } else {
         const saved = localStorage.getItem('kone_teacher_sections');
-        setMySections(saved ? JSON.parse(saved) : []);
+        const parsed = saved ? JSON.parse(saved) : [];
+        setMySections(parsed.map((item: any) => typeof item === 'string' ? { id: item, name: item } : item));
       }
     } catch (e) {
       console.error(e);
@@ -79,7 +87,8 @@ export default function TeacherDashboard() {
       } as any);
       // Load mock items
       const saved = localStorage.getItem('kone_teacher_sections');
-      setMySections(saved ? JSON.parse(saved) : []);
+      const parsed = saved ? JSON.parse(saved) : [];
+      setMySections(parsed.map((item: any) => typeof item === 'string' ? { id: item, name: item } : item));
       return;
     }
 
@@ -144,6 +153,8 @@ export default function TeacherDashboard() {
     const code = generateSectionCode();
 
     try {
+      const newSecObj = { id: code, name: sectionName.trim() };
+
       if (db && (db as any).app && currentUser) {
         await setDoc(doc(db, 'sections', code), {
           name: sectionName.trim(),
@@ -151,12 +162,12 @@ export default function TeacherDashboard() {
           teacherId: currentUser.uid
         });
       } else {
-        const currentMock = [code, ...mySections];
+        const currentMock = [newSecObj, ...mySections];
         localStorage.setItem('kone_teacher_sections', JSON.stringify(currentMock));
       }
       
       setActiveCode(code);
-      setMySections(prev => [code, ...prev.filter(c => c !== code)]);
+      setMySections(prev => [newSecObj, ...prev.filter(c => c.id !== code)]);
       setSectionName('');
       setStudents([]);
       
@@ -167,6 +178,68 @@ export default function TeacherDashboard() {
       });
     } catch (err) {
       setError('Could not create section. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRenameClass = async () => {
+    if (!newClassName.trim() || !activeCode) return;
+    setLoading(true);
+    setError('');
+    try {
+      if (db && (db as any).app) {
+        await setDoc(doc(db, 'sections', activeCode), {
+          name: newClassName.trim()
+        }, { merge: true });
+      } else {
+        const updated = mySections.map(s => s.id === activeCode ? { ...s, name: newClassName.trim() } : s);
+        localStorage.setItem('kone_teacher_sections', JSON.stringify(updated));
+      }
+      setMySections(prev => prev.map(s => s.id === activeCode ? { ...s, name: newClassName.trim() } : s));
+      setIsEditingClassName(false);
+      setNewClassName('');
+      confetti({
+        particleCount: 50,
+        spread: 40,
+        origin: { y: 0.8 }
+      });
+    } catch (e) {
+      setError('Failed to rename classroom section.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteClass = async () => {
+    if (!activeCode) return;
+    const activeSecName = mySections.find(s => s.id === activeCode)?.name || 'this class';
+    if (!window.confirm(`⚠️ DANGER: Are you absolutely sure you want to delete "${activeSecName}" (${activeCode})?\n\nThis will permanently delete this classroom code and delete all students in the roster! This cannot be undone.`)) return;
+
+    setLoading(true);
+    setError('');
+    try {
+      if (db && (db as any).app) {
+        // Delete students in the subcollection first
+        const studentsSnapshot = await getDocs(collection(db, 'sections', activeCode, 'students'));
+        const deletePromises = studentsSnapshot.docs.map(studentDoc => 
+          deleteDoc(doc(db, 'sections', activeCode, 'students', studentDoc.id))
+        );
+        await Promise.all(deletePromises);
+
+        // Delete parent section doc
+        await deleteDoc(doc(db, 'sections', activeCode));
+      } else {
+        const currentMock = mySections.filter(s => s.id !== activeCode);
+        localStorage.setItem('kone_teacher_sections', JSON.stringify(currentMock));
+        localStorage.removeItem(`kone_kids_mock_roster_${activeCode}`);
+      }
+
+      setMySections(prev => prev.filter(s => s.id !== activeCode));
+      setActiveCode('');
+      setStudents([]);
+    } catch (err) {
+      setError('Failed to delete classroom section.');
     } finally {
       setLoading(false);
     }
@@ -619,30 +692,40 @@ export default function TeacherDashboard() {
                 border: '2px solid #e2e8f0',
                 boxShadow: '0 10px 25px rgba(0,0,0,0.02)'
               }}>
-                <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.3rem', margin: '0 0 1rem', color: '#475569' }}>
-                  My Active Class Codes
+                <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.3rem', margin: '0 0 1.25rem', color: '#475569' }}>
+                  My Active Classes
                 </h3>
                 
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-                  {mySections.map((code) => (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                  {mySections.map((sec) => (
                     <button
-                      key={code}
-                      onClick={() => setActiveCode(code)}
+                      key={sec.id}
+                      onClick={() => {
+                        setActiveCode(sec.id);
+                        setIsEditingClassName(false);
+                      }}
                       style={{
-                        padding: '0.6rem 1.2rem',
+                        padding: '0.75rem 1.25rem',
                         borderRadius: '16px',
-                        background: activeCode === code ? 'var(--kids-blue)' : '#f1f5f9',
-                        color: activeCode === code ? 'white' : '#475569',
+                        background: activeCode === sec.id ? 'var(--kids-blue)' : '#f8fafc',
+                        color: activeCode === sec.id ? 'white' : '#1e3a8a',
                         border: '2px solid',
-                        borderColor: activeCode === code ? 'var(--kids-blue)' : '#cbd5e1',
-                        fontSize: '1rem',
-                        fontWeight: 800,
-                        fontFamily: "'Baloo 2', cursive",
+                        borderColor: activeCode === sec.id ? 'var(--kids-blue)' : '#cbd5e1',
                         cursor: 'pointer',
-                        transition: 'all 0.2s'
+                        transition: 'all 0.2s',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        gap: '0.2rem',
+                        textAlign: 'left'
                       }}
                     >
-                      {code}
+                      <span style={{ fontSize: '0.75rem', fontWeight: 900, textTransform: 'uppercase', opacity: 0.8 }}>
+                        {sec.id}
+                      </span>
+                      <span style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.1rem', fontWeight: 800, margin: 0, lineHeight: 1.2 }}>
+                        {sec.name}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -664,34 +747,88 @@ export default function TeacherDashboard() {
               }}>
                 {/* Active Section Info bar */}
                 <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
                   borderBottom: '2px solid #f1f5f9',
-                  paddingBottom: '1.25rem',
-                  marginBottom: '2rem',
-                  flexWrap: 'wrap',
-                  gap: '1rem'
+                  paddingBottom: '1.5rem',
+                  marginBottom: '2rem'
                 }}>
-                  <div>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--kids-orange)', letterSpacing: '0.02em' }}>Active Class Code</span>
-                    <h2 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.2rem', color: '#1e3a8a', margin: 0 }}>{activeCode}</h2>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    flexWrap: 'wrap',
+                    gap: '1rem',
+                    marginBottom: '1rem'
+                  }}>
+                    <div>
+                      <span style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--kids-orange)', letterSpacing: '0.02em', display: 'block', marginBottom: '0.2rem' }}>
+                        Active Classroom
+                      </span>
+                      
+                      {!isEditingClassName ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                          <h2 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.2rem', color: '#1e3a8a', margin: 0, lineHeight: 1.1 }}>
+                            {mySections.find(s => s.id === activeCode)?.name || 'Classroom'}
+                          </h2>
+                          <button
+                            onClick={() => {
+                              setNewClassName(mySections.find(s => s.id === activeCode)?.name || '');
+                              setIsEditingClassName(true);
+                            }}
+                            style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: 0 }}
+                          >
+                            ✏️ Rename
+                          </button>
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
+                          <input
+                            type="text"
+                            value={newClassName}
+                            onChange={(e) => setNewClassName(e.target.value)}
+                            style={{ padding: '0.4rem 0.75rem', border: '2px solid #cbd5e1', borderRadius: '8px', fontSize: '1rem', fontFamily: 'inherit', fontWeight: 800 }}
+                          />
+                          <button onClick={handleRenameClass} className="kids-button" style={{ padding: '0.4rem 0.85rem', fontSize: '0.85rem', background: '#22c55e', boxShadow: '0 3px 0 #15803d' }}>Save</button>
+                          <button onClick={() => setIsEditingClassName(false)} className="kids-button" style={{ padding: '0.4rem 0.85rem', fontSize: '0.85rem', background: '#94a3b8', boxShadow: '0 3px 0 #64748b' }}>Cancel</button>
+                        </div>
+                      )}
+                      
+                      <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--kids-text-muted)', display: 'block', marginTop: '0.35rem' }}>
+                        Class Code: <code style={{ background: '#f1f5f9', padding: '0.15rem 0.4rem', borderRadius: '6px', color: '#0f172a', fontWeight: 900 }}>{activeCode}</code>
+                      </span>
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button 
+                        onClick={handlePrint}
+                        className="kids-button"
+                        style={{
+                          background: 'rgba(13, 148, 136, 0.1)',
+                          color: '#0d9488',
+                          boxShadow: 'none',
+                          padding: '0.6rem 1.1rem',
+                          fontSize: '0.9rem',
+                          border: '1px solid #0d948833'
+                        }}
+                      >
+                        <Printer size={16} /> Print Passkeys
+                      </button>
+                      
+                      <button 
+                        onClick={handleDeleteClass}
+                        className="kids-button"
+                        style={{
+                          background: 'rgba(239, 68, 68, 0.1)',
+                          color: '#ef4444',
+                          boxShadow: 'none',
+                          padding: '0.6rem 1.1rem',
+                          fontSize: '0.9rem',
+                          border: '1px solid rgba(239, 68, 68, 0.2)'
+                        }}
+                      >
+                        🗑️ Delete Class
+                      </button>
+                    </div>
                   </div>
-                  
-                  <button 
-                    onClick={handlePrint}
-                    className="kids-button"
-                    style={{
-                      background: 'rgba(13, 148, 136, 0.1)',
-                      color: '#0d9488',
-                      boxShadow: 'none',
-                      padding: '0.6rem 1.1rem',
-                      fontSize: '0.9rem',
-                      border: '1px solid #0d948833'
-                    }}
-                  >
-                    <Printer size={16} /> Print Passkeys
-                  </button>
                 </div>
 
                 {/* Add Student to Roster */}
