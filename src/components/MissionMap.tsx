@@ -52,16 +52,20 @@ const PATHWAY_WORLDS: Record<Pathway, { dark: WorldStyle; light: WorldStyle }> =
     dark: { color: '#a855f7', glow: 'rgba(168, 85, 247, 0.15)', pattern: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.05) 0%, transparent 70%)', icon: '✨', pathStyle: 'curve' },
     light: { color: '#7e22ce', glow: 'rgba(126, 34, 206, 0.08)', pattern: 'radial-gradient(circle at center, rgba(126, 34, 206, 0.05) 0%, transparent 70%)', icon: '✨', pathStyle: 'curve' }
   },
-  'Robotics (AI 4 Kids)': {
+  'Robotics (Robotics 4 Kids)': {
     dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px)', icon: '🦾', pathStyle: 'circuit' },
     light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'linear-gradient(rgba(2, 132, 199, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(2, 132, 199, 0.03) 1px, transparent 1px)', icon: '🦾', pathStyle: 'circuit' }
+  },
+  'Electronics (Robotics 4 Kids)': {
+    dark: { color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'dots' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(217, 119, 6, 0.03) 1px, transparent 0)', icon: '⚡', pathStyle: 'dots' }
   }
 };
 
 
 const HUB_PATHWAYS: Record<HubType, Pathway[]> = {
   coding: ['Fundamentals', 'Mobile App Dev', 'Desktop App Dev', 'Web App Dev', 'Game Dev'],
-  robotics: ['Robotics (AI 4 Kids)'],
+  robotics: ['Robotics (Robotics 4 Kids)', 'Electronics (Robotics 4 Kids)'],
   ai: ['Data Science (AI 4 Kids)', 'ML (AI 4 Kids)', 'AI (AI 4 Kids)']
 };
 

@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;600;700&display=swap');
-
 * {
   box-sizing: border-box;
 }
@@ -13,7 +11,7 @@
   --kids-bg: #f8fafc;
   --kids-surface: #ffffff;
   --kids-text: #0f172a;
-  --kids-text-muted: #64748b;
+  --kids-text-muted: #475569;
   --kids-border: #e2e8f0;
   --kids-dark: #0f172a;
 
@@ -28,7 +26,7 @@
   --kids-bg: #0f172a;
   --kids-surface: #1e293b;
   --kids-text: #f8fafc;
-  --kids-text-muted: #94a3b8;
+  --kids-text-muted: #cbd5e1;
   --kids-border: rgba(255, 255, 255, 0.1);
 
   /* Blockly Theme (Dark) */

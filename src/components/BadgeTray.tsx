@@ -9,7 +9,7 @@ const BadgeTray: React.FC = () => {
       <div className="container">
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 style={{ color: 'var(--kids-dark)', margin: 0 }}>My Achievement Gallery 🏆</h2>
-          <p style={{ color: '#64748b', marginTop: '0.5rem' }}>Collect them all as you explore the future!</p>
+          <p style={{ color: 'var(--kids-text-muted)', marginTop: '0.5rem' }}>Collect them all as you explore the future!</p>
         </div>
 
         <div style={{ 
@@ -52,6 +52,8 @@ const BadgeTray: React.FC = () => {
                   <img 
                     src={badge.icon} 
                     alt={badge.name} 
+                    width="80"
+                    height="80"
                     style={{ 
                       width: '80px', 
                       height: '80px', 
@@ -66,7 +68,7 @@ const BadgeTray: React.FC = () => {
                 )}
               </div>
               <h4 style={{ margin: '0 0 0.5rem', fontSize: '1.1rem', color: 'var(--kids-dark)', lineHeight: '1.2' }}>{badge.name}</h4>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', lineHeight: '1.3' }}>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--kids-text-muted)', lineHeight: '1.3' }}>
                 {badge.unlocked ? 'Mission Complete!' : badge.description}
               </p>
             </div>

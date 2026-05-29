@@ -13,6 +13,28 @@ export default function ArticleReader() {
   // Find article matching slug
   const article = blogArticles.find(art => art.slug === id);
 
+  React.useEffect(() => {
+    if (article) {
+      document.title = `${article.title} | Kone Kids Blog`;
+      
+      const updateMeta = (property: string, content: string, isName = false) => {
+        let meta = document.querySelector(`meta[${isName ? 'name' : 'property'}="${property}"]`);
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute(isName ? 'name' : 'property', property);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      updateMeta('og:title', `${article.title} | Kone Kids Blog`);
+      updateMeta('og:description', article.summary);
+      updateMeta('description', article.summary, true);
+      updateMeta('twitter:title', `${article.title} | Kone Kids Blog`);
+      updateMeta('twitter:description', article.summary);
+    }
+  }, [article]);
+
   if (!article) {
     return (
       <div style={{
@@ -26,7 +48,7 @@ export default function ArticleReader() {
         textAlign: 'center'
       }}>
         <h2 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.2rem', fontWeight: 800, margin: '0 0 1rem' }}>Article Not Found</h2>
-        <p style={{ color: '#64748b', margin: '0 0 2rem' }}>The article you are looking for does not exist or has been moved.</p>
+        <p style={{ color: 'var(--kids-text-muted)', margin: '0 0 2rem' }}>The article you are looking for does not exist or has been moved.</p>
         <Link to="/blog" style={{
           background: '#0d9488',
           color: 'white',

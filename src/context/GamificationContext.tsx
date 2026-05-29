@@ -39,6 +39,12 @@ interface GamificationContextType {
   // Game Series
   unlockedSeries: string[];
   unlockSeries: (seriesId: string, cost: number) => boolean;
+  // Section Code / Picture Login Roster Setup
+  sectionId: string;
+  studentId: string;
+  studentName: string;
+  loginAsStudent: (secId: string, studId: string, name: string) => Promise<void>;
+  logoutStudent: () => Promise<void>;
 }
 
 const INITIAL_BADGES: Badge[] = [
@@ -148,6 +154,33 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
   });
 
   const [latestBadge, setLatestBadge] = useState<Badge | null>(null);
+
+  const [sectionId, setSectionId] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_section_id');
+      return saved || '';
+    } catch (e) {
+      return '';
+    }
+  });
+
+  const [studentId, setStudentId] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_student_id');
+      return saved || '';
+    } catch (e) {
+      return '';
+    }
+  });
+
+  const [studentName, setStudentName] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_student_name');
+      return saved || '';
+    } catch (e) {
+      return '';
+    }
+  });
 
   const level = useMemo(() => {
     // Level 1: 0-250 XP
@@ -368,11 +401,105 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     return false;
   }, [coins]);
 
+  const loginAsStudent = useCallback(async (secId: string, studId: string, name: string) => {
+    try {
+      // 1. Sign in anonymously if not already signed in
+      if (auth && (auth as any).app && !auth.currentUser) {
+        const { signInAnonymously } = await import('firebase/auth');
+        await signInAnonymously(auth);
+      }
+      
+      // 2. Fetch student profile from Firestore
+      if (db && (db as any).app) {
+        const studentDoc = await getDoc(doc(db, 'sections', secId, 'students', studId));
+        if (studentDoc.exists()) {
+          const cloudData = studentDoc.data();
+          if (cloudData.xp !== undefined) setXp(cloudData.xp);
+          if (cloudData.coins !== undefined) setCoins(cloudData.coins);
+          if (cloudData.completedMissions) setCompletedMissions(cloudData.completedMissions);
+          if (cloudData.inventory) setInventory(cloudData.inventory);
+          if (cloudData.equippedItems) setEquippedItems(cloudData.equippedItems);
+          if (cloudData.unlockedSeries) setUnlockedSeries(cloudData.unlockedSeries);
+        }
+      }
+
+      setSectionId(secId);
+      setStudentId(studId);
+      setStudentName(name);
+      localStorage.setItem('kone_kids_section_id', secId);
+      localStorage.setItem('kone_kids_student_id', studId);
+      localStorage.setItem('kone_kids_student_name', name);
+    } catch (e) {
+      console.error('Gamification: Student Login Local Fallback', e);
+      setSectionId(secId);
+      setStudentId(studId);
+      setStudentName(name);
+      localStorage.setItem('kone_kids_section_id', secId);
+      localStorage.setItem('kone_kids_student_id', studId);
+      localStorage.setItem('kone_kids_student_name', name);
+    }
+  }, []);
+
+  const logoutStudent = useCallback(async () => {
+    try {
+      if (auth && (auth as any).app && auth.currentUser) {
+        const { signOut } = await import('firebase/auth');
+        await signOut(auth);
+      }
+    } catch (e) {
+      console.error('Gamification: Student Logout Error', e);
+    }
+    setSectionId('');
+    setStudentId('');
+    setStudentName('');
+    localStorage.removeItem('kone_kids_section_id');
+    localStorage.removeItem('kone_kids_student_id');
+    localStorage.removeItem('kone_kids_student_name');
+    
+    // Clear dynamic states to defaults for the next user
+    setXp(0);
+    setCoins(100);
+    setCompletedMissions([]);
+    setInventory([]);
+    setEquippedItems({});
+    setUnlockedSeries(['series_word_search']);
+    localStorage.removeItem('kone_kids_xp');
+    localStorage.removeItem('kone_kids_missions');
+    localStorage.removeItem('kone_kids_coins');
+    localStorage.removeItem('kone_kids_inventory');
+    localStorage.removeItem('kone_kids_equipped');
+    localStorage.removeItem('kone_kids_series');
+  }, []);
+
+  // Sync Student Progress to Section Roster in Firestore
+  useEffect(() => {
+    if (sectionId && studentId && db && (db as any).app) {
+      const syncStudentData = async () => {
+        try {
+          await setDoc(doc(db, 'sections', sectionId, 'students', studentId), {
+            xp,
+            completedMissions,
+            coins,
+            inventory,
+            equippedItems,
+            unlockedSeries,
+            lastSync: new Date().toISOString()
+          }, { merge: true });
+        } catch (e) {
+          console.warn('Firebase Student Sync: Failed to save student progress.', e);
+        }
+      };
+      syncStudentData();
+    }
+  }, [xp, completedMissions, coins, inventory, equippedItems, unlockedSeries, sectionId, studentId]);
+
   const contextValue = useMemo(() => ({
     badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
-    coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins
+    coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
+    sectionId, studentId, studentName, loginAsStudent, logoutStudent
   }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
-       coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins]);
+       coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
+       sectionId, studentId, studentName, loginAsStudent, logoutStudent]);
 
   return (
     <GamificationContext.Provider value={contextValue}>

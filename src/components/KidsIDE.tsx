@@ -229,6 +229,21 @@ const KidsIDE: React.FC = () => {
       javascriptGenerator.forBlock['robot_distance'] = () => [`robot.getDistance()`, (javascriptGenerator as any).ORDER_ATOMIC];
     }
 
+    if (!Blockly.Blocks['led_state']) {
+      Blockly.Blocks['led_state'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("⚡ Set LED")
+              .appendField(new Blockly.FieldDropdown([["Red 🔴", "red"], ["Yellow 🟡", "yellow"], ["Green 🟢", "green"]]), "COLOR")
+              .appendField("to")
+              .appendField(new Blockly.FieldDropdown([["ON", "on"], ["OFF", "off"]]), "STATE");
+          this.setPreviousStatement(true, null);
+          this.setNextStatement(true, null);
+          this.setColour(60);
+        }
+      };
+      javascriptGenerator.forBlock['led_state'] = (block: any) => `await electronics.setLED("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}");\n`;
+    }
     // --- Game Dev Blocks ---
     if (!Blockly.Blocks['game_physics']) {
       Blockly.Blocks['game_physics'] = {
@@ -341,6 +356,15 @@ const KidsIDE: React.FC = () => {
             { kind: 'block', type: 'robot_turn' },
             { kind: 'block', type: 'robot_stop' },
             { kind: 'block', type: 'robot_distance' },
+          ]
+        },
+        {
+          kind: 'category',
+          name: '⚡ Electronics',
+          colour: '#eab308',
+          contents: [
+            { kind: 'block', type: 'led_state' },
+            { kind: 'block', type: 'mascot_wait' },
           ]
         },
         {
@@ -491,11 +515,18 @@ const KidsIDE: React.FC = () => {
       onKeyPress: (key: string, callback: () => void) => gameRef.current?.onKeyPress(key, callback),
     };
 
+    const electronics = {
+      setLED: (color: string, state: string) => new Promise(res => {
+        mascotRef.current?.speak(`💡 ${color.toUpperCase()} LED turned ${state.toUpperCase()}!`);
+        setTimeout(res, 1500);
+      })
+    };
+
     let ranSuccessfully = false;
     try {
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      const fn = new AsyncFunction('mascot', 'robot', 'game', code);
-      await fn(mascot, robot, game);
+      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', code);
+      await fn(mascot, robot, game, electronics);
       ranSuccessfully = true;
     } catch (e) {
       console.error(e);
@@ -702,7 +733,7 @@ const KidsIDE: React.FC = () => {
             >
               🛒 Shop
             </button>
-            {mission?.pathway === 'Robotics (AI 4 Kids)' ? (
+            {mission?.pathway === 'Robotics (Robotics 4 Kids)' ? (
               <RoboticsSimulator ref={robotRef} />
             ) : mission?.pathway === 'Game Dev' ? (
               <GameSimulator ref={gameRef} />

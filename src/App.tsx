@@ -1,29 +1,33 @@
 import React, { useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import './index.css'
-import ProgramDetails from './components/ProgramDetails'
 import Mascot from './components/Mascot'
-import EnrollmentModal from './components/EnrollmentModal'
-import BadgeTray from './components/BadgeTray'
 import { GamificationProvider, useGamification } from './context/GamificationContext'
 import { ThemeProvider } from './context/ThemeContext'
 import Celebration from './components/Celebration'
 import InstallBanner from './components/InstallBanner'
-import MissionMap from './components/MissionMap'
 import BadgeNotification from './components/BadgeNotification'
 import { useLocation } from 'react-router-dom'
 import { Home as HomeIcon, Code, Cpu, Brain, Sparkles, BookOpen, Clock, ArrowRight } from 'lucide-react'
-import Blog from './components/Blog'
-import ArticleReader from './components/ArticleReader'
 import { blogArticles } from './data/blogArticles'
+
+const ProgramDetails = React.lazy(() => import('./components/ProgramDetails'))
+const EnrollmentModal = React.lazy(() => import('./components/EnrollmentModal'))
+const BadgeTray = React.lazy(() => import('./components/BadgeTray'))
+const MissionMap = React.lazy(() => import('./components/MissionMap'))
+const Blog = React.lazy(() => import('./components/Blog'))
+const ArticleReader = React.lazy(() => import('./components/ArticleReader'))
+const ClassLogin = React.lazy(() => import('./components/ClassLogin'))
+const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'))
 
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { studentName, logoutStudent } = useGamification()
 
   return (
     <div className="kids-app">
-      <EnrollmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      {isModalOpen && <EnrollmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
 
       {/* Navigation / Header */}
       <nav style={{ 
@@ -48,12 +52,53 @@ function Home() {
           alignItems: 'center',
           gap: '0.4rem'
         }}>
-          <img src="/mascot.svg" alt="Kone Kids Logo" style={{ height: '24px', width: 'auto' }} /> Kone Kids
+          <img src="/mascot.svg" alt="Kone Kids Logo" width="24" height="24" style={{ height: '24px', width: 'auto' }} /> Kone Kids
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          {studentName ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ 
+                fontFamily: "'Baloo 2', cursive", 
+                fontWeight: 800, 
+                color: 'var(--kids-blue)',
+                background: 'rgba(14, 165, 233, 0.1)',
+                padding: '0.35rem 0.85rem',
+                borderRadius: '12px',
+                fontSize: '0.9rem'
+              }}>
+                🎒 {studentName.split(' ')[0]}
+              </span>
+              <button 
+                onClick={logoutStudent}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#ef4444',
+                  fontFamily: "'Baloo 2', cursive",
+                  fontWeight: 800,
+                  fontSize: '0.9rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/class-login" style={{ 
+              fontFamily: "'Baloo 2', cursive",
+              color: 'var(--kids-orange)', 
+              textDecoration: 'none', 
+              fontWeight: 800, 
+              fontSize: '1rem',
+              transition: 'color 0.2s'
+            }} className="hover-orange">
+              Class Login 🎒
+            </Link>
+          )}
+          
           <Link to="/blog" style={{ 
             fontFamily: "'Baloo 2', cursive",
-            color: '#475569', 
+            color: '#334155', 
             textDecoration: 'none', 
             fontWeight: 800, 
             fontSize: '1rem',
@@ -71,70 +116,71 @@ function Home() {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <header className="section-padding">
-        <div className="container hero-grid">
-          {/* Mascot Section */}
-          <div className="mascot-wrapper">
-            <Mascot />
-          </div>
-
-          {/* Tagline & Program List */}
-          <div className="hero-content">
-            <h2 className="hero-tagline">Do it Right</h2>
-            
-            <div className="app-tiles-grid">
-              <Link to="/coding" className="app-tile" style={{ '--tile-color': 'var(--kids-orange)' } as any}>
-                <div className="app-tile-icon" style={{ background: 'rgba(249, 115, 22, 0.1)', color: 'var(--kids-orange)' }}>
-                  <Code size={32} />
-                </div>
-                <div style={{ textAlign: 'left', flex: 1 }}>
-                  <h3 className="app-tile-title">Coding 4 Kids</h3>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Build games and apps!</p>
-                </div>
-              </Link>
-
-              <Link to="/robotics" className="app-tile" style={{ '--tile-color': 'var(--kids-blue)' } as any}>
-                <div className="app-tile-icon" style={{ background: 'rgba(14, 165, 233, 0.1)', color: 'var(--kids-blue)' }}>
-                  <Cpu size={32} />
-                </div>
-                <div style={{ textAlign: 'left', flex: 1 }}>
-                  <h3 className="app-tile-title">Robotics 4 Kids</h3>
-                  <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Bring machines to life!</p>
-                </div>
-              </Link>
-
-              <Link to="/ai" className="app-tile" style={{ '--tile-color': 'var(--kids-purple)' } as any}>
-                <div className="app-tile-icon" style={{ background: 'rgba(168, 85, 247, 0.1)', color: 'var(--kids-purple)' }}>
-                  <Brain size={32} />
-                </div>
-                <div style={{ textAlign: 'left', flex: 1 }}>
-                  <h3 className="app-tile-title">AI 4 Kids</h3>
-                  <p style={{ margin: '0.15rem 0 0', fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Train your own AI!</p>
-                </div>
-              </Link>
+      <main id="main-content">
+        {/* Hero Section */}
+        <header className="section-padding">
+          <div className="container hero-grid">
+            {/* Mascot Section */}
+            <div className="mascot-wrapper">
+              <Mascot />
             </div>
 
-            <div className="academy-cta-wrapper" style={{ marginTop: '2.5rem' }}>
-              <div className="academy-cta-card">
-                <div className="cta-icon-float">🚀</div>
-                <h4 className="cta-title">Ready to start?</h4>
-                <p className="cta-text">Join 1,000+ kids learning to build the future!</p>
-                <button 
-                  className="kids-button pulse-neon"
-                  onClick={() => setIsModalOpen(true)}
-                  style={{ width: '100%', marginTop: '1rem' }}
-                >
-                  Join the Academy
-                </button>
+            {/* Tagline & Program List */}
+            <div className="hero-content">
+              <h1 className="hero-tagline">Do it Right</h1>
+              
+              <div className="app-tiles-grid">
+                <Link to="/coding" className="app-tile" style={{ '--tile-color': 'var(--kids-orange)' } as any}>
+                  <div className="app-tile-icon" style={{ background: 'rgba(249, 115, 22, 0.1)', color: 'var(--kids-orange)' }}>
+                    <Code size={32} />
+                  </div>
+                  <div style={{ textAlign: 'left', flex: 1 }}>
+                    <h2 className="app-tile-title">Coding 4 Kids</h2>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Build games and apps!</p>
+                  </div>
+                </Link>
+
+                <Link to="/robotics" className="app-tile" style={{ '--tile-color': 'var(--kids-blue)' } as any}>
+                  <div className="app-tile-icon" style={{ background: 'rgba(14, 165, 233, 0.1)', color: 'var(--kids-blue)' }}>
+                    <Cpu size={32} />
+                  </div>
+                  <div style={{ textAlign: 'left', flex: 1 }}>
+                    <h2 className="app-tile-title">Robotics 4 Kids</h2>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Bring machines to life!</p>
+                  </div>
+                </Link>
+
+                <Link to="/ai" className="app-tile" style={{ '--tile-color': 'var(--kids-purple)' } as any}>
+                  <div className="app-tile-icon" style={{ background: 'rgba(168, 85, 247, 0.1)', color: 'var(--kids-purple)' }}>
+                    <Brain size={32} />
+                  </div>
+                  <div style={{ textAlign: 'left', flex: 1 }}>
+                    <h2 className="app-tile-title">AI 4 Kids</h2>
+                    <p style={{ margin: '0.15rem 0 0', fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Train your own AI!</p>
+                  </div>
+                </Link>
+              </div>
+
+              <div className="academy-cta-wrapper" style={{ marginTop: '2.5rem' }}>
+                <div className="academy-cta-card">
+                  <div className="cta-icon-float">🚀</div>
+                  <h2 className="cta-title">Ready to start?</h2>
+                  <p className="cta-text">Join 1,000+ kids learning to build the future!</p>
+                  <button 
+                    className="kids-button pulse-neon"
+                    onClick={() => setIsModalOpen(true)}
+                    style={{ width: '100%', marginTop: '1rem' }}
+                  >
+                    Join the Academy
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </header>
-      
-      {/* Achievement Gallery */}
-      <BadgeTray />
+        </header>
+        
+        {/* Achievement Gallery */}
+        <BadgeTray />
 
       {/* Featured Blog/Insights Section for Parents & Teachers */}
       <section style={{
@@ -285,7 +331,7 @@ function Home() {
                   }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                       <Clock size={14} style={{ color: '#94a3b8' }} />
-                      <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>{art.readTime}</span>
+                      <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', fontWeight: 600 }}>{art.readTime}</span>
                     </div>
 
                     <Link to={`/blog/${art.slug}`} style={{
@@ -337,6 +383,7 @@ function Home() {
           </div>
         </div>
       </section>
+      </main>
       
       {/* Footer */}
       <footer style={{ 
@@ -353,7 +400,7 @@ function Home() {
           alignItems: 'center',
           gap: '0.75rem'
         }}>
-          <span style={{ color: '#64748b', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
+          <span style={{ color: 'var(--kids-text-muted)', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
             © 2026 Kone Kids. All rights reserved.
           </span>
           <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
@@ -389,6 +436,20 @@ function AppContent() {
     markVisited(window.location.pathname);
   }, [window.location.pathname, markVisited]);
 
+  // Dynamically update canonical URL
+  React.useEffect(() => {
+    let canonical = document.querySelector('link[rel="canonical"]');
+    if (!canonical) {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      document.head.appendChild(canonical);
+    }
+    const cleanPath = location.pathname.endsWith('/') && location.pathname !== '/'
+      ? location.pathname.slice(0, -1)
+      : location.pathname;
+    canonical.setAttribute('href', `https://kids.koneacademy.io${cleanPath}`);
+  }, [location.pathname]);
+
   return (
     <>
       <Celebration />
@@ -401,48 +462,64 @@ function AppContent() {
       />
       
       <div style={{ paddingBottom: (isMobile && !isMissionPage) ? '80px' : '0' }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<ArticleReader />} />
-          <Route path="/coding" element={<MissionMap hub="coding" />} />
-          <Route path="/robotics" element={<MissionMap hub="robotics" />} />
-          <Route path="/ai" element={<MissionMap hub="ai" />} />
-          {/* ... other routes ... */}
-          <Route 
-            path="/coding/mission/:missionId" 
-            element={
-              <ProgramDetails 
-                title="Coding Lab" 
-                image="/programs/coding.png" 
-                description="Master the mission!" 
-                accentColor="var(--kids-orange)"
-              />
-            } 
-          />
-          <Route 
-            path="/robotics/mission/:missionId" 
-            element={
-              <ProgramDetails 
-                title="Robotics Lab" 
-                image="/programs/robotics.png" 
-                description="Build and program your robot!" 
-                accentColor="var(--kids-blue)"
-              />
-            } 
-          />
-          <Route 
-            path="/ai/mission/:missionId" 
-            element={
-              <ProgramDetails 
-                title="AI Studio" 
-                image="/programs/ai.png" 
-                description="Train your first AI model!" 
-                accentColor="#a855f7"
-              />
-            } 
-          />
-        </Routes>
+        <React.Suspense fallback={
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '60vh',
+            gap: '8px'
+          }}>
+            <span style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#f97316', animation:'dotPulse 1.2s ease-in-out infinite 0s', display:'block' }}></span>
+            <span style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#0ea5e9', animation:'dotPulse 1.2s ease-in-out infinite 0.2s', display:'block' }}></span>
+            <span style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#a855f7', animation:'dotPulse 1.2s ease-in-out infinite 0.4s', display:'block' }}></span>
+          </div>
+        }>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/class-login" element={<ClassLogin />} />
+            <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:id" element={<ArticleReader />} />
+            <Route path="/coding" element={<MissionMap hub="coding" />} />
+            <Route path="/robotics" element={<MissionMap hub="robotics" />} />
+            <Route path="/ai" element={<MissionMap hub="ai" />} />
+            {/* ... other routes ... */}
+            <Route 
+              path="/coding/mission/:missionId" 
+              element={
+                <ProgramDetails 
+                  title="Coding Lab" 
+                  image="/programs/coding.png" 
+                  description="Master the mission!" 
+                  accentColor="var(--kids-orange)"
+                />
+              } 
+            />
+            <Route 
+              path="/robotics/mission/:missionId" 
+              element={
+                <ProgramDetails 
+                  title="Robotics Lab" 
+                  image="/programs/robotics.png" 
+                  description="Build and program your robot!" 
+                  accentColor="var(--kids-blue)"
+                />
+              } 
+            />
+            <Route 
+              path="/ai/mission/:missionId" 
+              element={
+                <ProgramDetails 
+                  title="AI Studio" 
+                  image="/programs/ai.png" 
+                  description="Train your first AI model!" 
+                  accentColor="#a855f7"
+                />
+              } 
+            />
+          </Routes>
+        </React.Suspense>
       </div>
 
       {isMobile && !isMissionPage && (

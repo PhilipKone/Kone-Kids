@@ -51,7 +51,7 @@ const InstallBanner: React.FC = () => {
     <div className={`install-banner ${isDismissing ? 'dismissing' : ''}`}>
       <div className="install-banner-inner">
         <div className="install-banner-icon">
-          <img src="/mascot.svg" alt="Kone Kids" />
+          <img src="/mascot.svg" alt="Kone Kids" width="48" height="48" />
         </div>
         <div className="install-banner-text">
           <div className="install-banner-title">Install Kone Kids</div>

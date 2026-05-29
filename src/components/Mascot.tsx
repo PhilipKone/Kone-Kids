@@ -181,6 +181,8 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
           <img 
             src={`/mascot/${equippedItems.pose.replace('pose_', '')}.svg`} 
             alt="Mascot Pose" 
+            width="300"
+            height="300"
             style={{ 
                 width: '100%', 
                 height: 'auto', 

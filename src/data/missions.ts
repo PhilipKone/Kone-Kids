@@ -7,7 +7,8 @@ export type Pathway =
   | 'Data Science (AI 4 Kids)'
   | 'ML (AI 4 Kids)'
   | 'AI (AI 4 Kids)'
-  | 'Robotics (AI 4 Kids)';
+  | 'Robotics (Robotics 4 Kids)'
+  | 'Electronics (Robotics 4 Kids)';
 
 export interface Mission {
   id: string;
@@ -586,7 +587,7 @@ export const CODING_MISSIONS: Mission[] = [
   {
     id: 'robotics_1',
     level: 1,
-    pathway: 'Robotics (AI 4 Kids)',
+    pathway: 'Robotics (Robotics 4 Kids)',
     name: 'Motor Master',
     description: 'Control real motors with code! Drive the virtual robot through an L-shaped path.',
     objective: 'Drive the robot forward 2 seconds, turn right 1 second, then drive forward again and stop.',
@@ -611,7 +612,7 @@ export const CODING_MISSIONS: Mission[] = [
   {
     id: 'robotics_2',
     level: 2,
-    pathway: 'Robotics (AI 4 Kids)',
+    pathway: 'Robotics (Robotics 4 Kids)',
     name: 'Sensor Sentry',
     description: 'Smart robots sense their environment. Program obstacle detection using the distance sensor.',
     objective: 'Drive the robot forward and automatically stop when the distance sensor detects an object closer than 30 units.',
@@ -634,4 +635,54 @@ export const CODING_MISSIONS: Mission[] = [
     minBlocks: 4,
     briefing: "You can drive the robot — now let's make it SMART! Real robots use sensors to avoid obstacles. You'll program the distance sensor to detect walls and brake automatically.",
   },
+  // ─── ELECTRONICS ─────────────────────────────────────────────────────────────
+  {
+    id: 'electronics_1',
+    level: 1,
+    pathway: 'Electronics (Robotics 4 Kids)',
+    name: 'LED Blinker',
+    description: 'Connect and control a virtual light-emitting diode (LED) to create a visual signal.',
+    objective: 'Make the green LED turn on, wait for 1 second, then turn off.',
+    steps: [
+      'Drag a ⚡ Set LED block into the workspace.',
+      'Set the color to Green and state to ON.',
+      'Below it, drag a 🕐 Wait block for 1 second.',
+      'Below the wait, drag another ⚡ Set LED block set to Green and OFF.',
+      'Press ▶ Run Code and watch the virtual LED blink!',
+    ],
+    hints: [
+      "Open the ⚡ Electronics category in the toolbox.",
+      "Make sure you set the first block to ON and the second to OFF.",
+      "The Wait block is in the 🔄 Loops category.",
+    ],
+    xpReward: 400,
+    difficulty: 'easy',
+    requiredBlocks: ['led_state', 'mascot_wait'],
+    minBlocks: 3,
+    briefing: "Welcome to the Electronics Lab! Today, you'll learn how to control hardware using code. Let's start by lighting up our first LED!",
+  },
+  {
+    id: 'electronics_2',
+    level: 2,
+    pathway: 'Electronics (Robotics 4 Kids)',
+    name: 'Traffic Signal',
+    description: 'Build a mini traffic signal using Red, Yellow, and Green lights in sequence.',
+    objective: 'Program the Red light for 2 seconds, Yellow for 1 second, then Green for 2 seconds.',
+    steps: [
+      'Turn Red LED ON, wait 2 seconds, then turn Red LED OFF.',
+      'Turn Yellow LED ON, wait 1 second, then turn Yellow LED OFF.',
+      'Turn Green LED ON, wait 2 seconds, then turn Green LED OFF.',
+      'Press ▶ Run Code to activate the automated traffic controller!',
+    ],
+    hints: [
+      "Sequence your blocks from top to bottom.",
+      "Remember to turn each light OFF before starting the next one.",
+      "Use 3 different Set LED blocks and 3 Wait blocks.",
+    ],
+    xpReward: 600,
+    difficulty: 'medium',
+    requiredBlocks: ['led_state', 'mascot_wait'],
+    minBlocks: 6,
+    briefing: "Brilliant! Now let's build something you see every day on the streets of Accra — a traffic light system! You'll control three separate LEDs in sequence.",
+  }
 ];

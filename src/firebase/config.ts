@@ -16,12 +16,12 @@ interface FirebaseConfig {
 // These values are pulled from your .env file
 // Ensure you have VITE_FIREBASE_API_KEY, etc. defined there!
 const firebaseConfig: FirebaseConfig = {
-    apiKey: (import.meta.env.VITE_FIREBASE_API_KEY || 'dummy_key') as string,
-    authDomain: (import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'dummy_domain') as string,
-    projectId: (import.meta.env.VITE_FIREBASE_PROJECT_ID || 'dummy_project') as string,
-    storageBucket: (import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'dummy_bucket') as string,
-    messagingSenderId: (import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || 'dummy_sender') as string,
-    appId: (import.meta.env.VITE_FIREBASE_APP_ID || 'dummy_id') as string,
+    apiKey: (import.meta.env.VITE_FIREBASE_API_KEY || '') as string,
+    authDomain: (import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || '') as string,
+    projectId: (import.meta.env.VITE_FIREBASE_PROJECT_ID || '') as string,
+    storageBucket: (import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || '') as string,
+    messagingSenderId: (import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '') as string,
+    appId: (import.meta.env.VITE_FIREBASE_APP_ID || '') as string,
     measurementId: (import.meta.env.VITE_FIREBASE_MEASUREMENT_ID) as string | undefined
 };
 
@@ -32,7 +32,7 @@ let analytics: Analytics | undefined;
 
 try {
     // Safety check for missing environment variables
-    if (firebaseConfig.apiKey === 'dummy_key') {
+    if (!firebaseConfig.apiKey) {
         console.warn('Kone Kids Firebase: Missing environment variables. Running in local simulation mode.');
     }
     

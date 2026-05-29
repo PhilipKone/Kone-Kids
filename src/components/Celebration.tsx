@@ -107,6 +107,8 @@ const Celebration: React.FC = () => {
             <img 
               src={activeBadge.icon} 
               alt={activeBadge.name} 
+              width="120"
+              height="120"
               style={{ 
                 width: '120px', 
                 height: '120px', 
@@ -122,7 +124,7 @@ const Celebration: React.FC = () => {
         </div>
         <h2 style={{ fontSize: '2.5rem', margin: '0 0 1rem', color: 'var(--kids-blue)' }}>Badge Unlocked!</h2>
         <h3 style={{ fontSize: '1.8rem', margin: '0 0 1rem', color: 'var(--kids-dark)' }}>{activeBadge.name}</h3>
-        <p style={{ fontSize: '1.2rem', color: '#64748b', lineHeight: '1.5' }}>{activeBadge.description}</p>
+        <p style={{ fontSize: '1.2rem', color: 'var(--kids-text-muted)', lineHeight: '1.5' }}>{activeBadge.description}</p>
         
         <button 
           className="kids-button" 
