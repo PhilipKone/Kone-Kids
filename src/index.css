@@ -15,6 +15,25 @@
   --kids-border: #e2e8f0;
   --kids-dark: #0f172a;
 
+  /* Theme-aware Navigation & Header */
+  --nav-bg: rgba(255, 255, 255, 0.9);
+  --nav-text: #1e3a8a;
+  --nav-link: #334155;
+  --nav-border: #f1f5f9;
+
+  /* Featured Blog Section & Cards */
+  --kids-section-bg: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  --kids-section-border: #e2e8f0;
+  --blog-card-bg: #ffffff;
+  --blog-card-border: #e2e8f0;
+  --blog-card-title: #0f172a;
+  --blog-card-text: #475569;
+  --blog-card-meta-border: #f1f5f9;
+
+  /* Footer */
+  --footer-bg: #ffffff;
+  --footer-border: #e2e8f0;
+
   /* Blockly Theme (Light) */
   --blockly-main-bg: #ffffff;
   --blockly-flyout-bg: #f1f5f9;
@@ -28,6 +47,25 @@
   --kids-text: #f8fafc;
   --kids-text-muted: #cbd5e1;
   --kids-border: rgba(255, 255, 255, 0.1);
+
+  /* Theme-aware Navigation & Header */
+  --nav-bg: rgba(15, 23, 42, 0.95);
+  --nav-text: #38bdf8;
+  --nav-link: #cbd5e1;
+  --nav-border: rgba(255, 255, 255, 0.1);
+
+  /* Featured Blog Section & Cards */
+  --kids-section-bg: linear-gradient(180deg, #0b0f19 0%, #0f172a 100%);
+  --kids-section-border: rgba(255, 255, 255, 0.1);
+  --blog-card-bg: #1e293b;
+  --blog-card-border: rgba(255, 255, 255, 0.1);
+  --blog-card-title: #f8fafc;
+  --blog-card-text: #cbd5e1;
+  --blog-card-meta-border: rgba(255, 255, 255, 0.05);
+
+  /* Footer */
+  --footer-bg: #0f172a;
+  --footer-border: rgba(255, 255, 255, 0.1);
 
   /* Blockly Theme (Dark) */
   --blockly-main-bg: #0b0e14;

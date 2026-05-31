@@ -35,18 +35,18 @@ function Home() {
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        background: 'rgba(255, 255, 255, 0.9)',
+        background: 'var(--nav-bg)',
         backdropFilter: 'blur(8px)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        borderBottom: '1px solid #f1f5f9'
+        borderBottom: '1px solid var(--nav-border)'
       }}>
         <Link to="/" style={{ 
           fontFamily: "'Baloo 2', cursive", 
           fontWeight: 800, 
           fontSize: '1.4rem', 
-          color: '#1e3a8a', 
+          color: 'var(--nav-text)', 
           textDecoration: 'none',
           display: 'flex',
           alignItems: 'center',
@@ -98,7 +98,7 @@ function Home() {
           
           <Link to="/blog" style={{ 
             fontFamily: "'Baloo 2', cursive",
-            color: '#334155', 
+            color: 'var(--nav-link)', 
             textDecoration: 'none', 
             fontWeight: 800, 
             fontSize: '1rem',
@@ -185,9 +185,9 @@ function Home() {
       {/* Featured Blog/Insights Section for Parents & Teachers */}
       <section style={{
         padding: '5rem 5% 6rem',
-        background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
-        borderTop: '1px solid #e2e8f0',
-        borderBottom: '1px solid #e2e8f0'
+        background: 'var(--kids-section-bg)',
+        borderTop: '1px solid var(--kids-section-border)',
+        borderBottom: '1px solid var(--kids-section-border)'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <div style={{
@@ -215,13 +215,13 @@ function Home() {
               fontSize: 'clamp(1.8rem, 4vw, 2.8rem)',
               fontWeight: 800,
               margin: '0 0 1rem 0',
-              color: '#1e3a8a'
+              color: 'var(--nav-text)'
             }}>
               Featured Insights &amp; STEM Wisdom
             </h2>
             <p style={{
               fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
-              color: '#475569',
+              color: 'var(--kids-text-muted)',
               maxWidth: '650px',
               margin: '0 auto',
               lineHeight: 1.5
@@ -241,9 +241,9 @@ function Home() {
               <article
                 key={art.id}
                 style={{
-                  background: 'white',
+                  background: 'var(--blog-card-bg)',
                   borderRadius: '24px',
-                  border: '1px solid #e2e8f0',
+                  border: '1px solid var(--blog-card-border)',
                   overflow: 'hidden',
                   display: 'flex',
                   flexDirection: 'column',
@@ -303,13 +303,13 @@ function Home() {
                       fontWeight: 800,
                       margin: '0 0 0.5rem 0',
                       lineHeight: 1.3,
-                      color: '#0f172a'
+                      color: 'var(--blog-card-title)'
                     }}>
                       {art.title}
                     </h3>
                     <p style={{
                       fontSize: '0.9rem',
-                      color: '#475569',
+                      color: 'var(--blog-card-text)',
                       margin: 0,
                       lineHeight: 1.5,
                       display: '-webkit-box',
@@ -323,7 +323,7 @@ function Home() {
 
                   {/* Metadata & Button Row */}
                   <div style={{
-                    borderTop: '1px solid #f1f5f9',
+                    borderTop: '1px solid var(--blog-card-meta-border)',
                     paddingTop: '1rem',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -388,8 +388,8 @@ function Home() {
       {/* Footer */}
       <footer style={{ 
         padding: 'clamp(1.5rem, 4vw, 2rem) 5%', 
-        background: 'white', 
-        borderTop: '1px solid #e2e8f0',
+        background: 'var(--footer-bg)', 
+        borderTop: '1px solid var(--footer-border)',
       }}>
         <div style={{
           maxWidth: '1200px',
