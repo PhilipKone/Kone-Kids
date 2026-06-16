@@ -7,6 +7,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import Celebration from './components/Celebration'
 import InstallBanner from './components/InstallBanner'
 import BadgeNotification from './components/BadgeNotification'
+import SEOManager from './components/SEOManager'
 import { useLocation } from 'react-router-dom'
 import { Home as HomeIcon, Code, Cpu, Brain, Sparkles, BookOpen, Clock, ArrowRight } from 'lucide-react'
 import { blogArticles } from './data/blogArticles'
@@ -19,6 +20,7 @@ const Blog = React.lazy(() => import('./components/Blog'))
 const ArticleReader = React.lazy(() => import('./components/ArticleReader'))
 const ClassLogin = React.lazy(() => import('./components/ClassLogin'))
 const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'))
+const ReferralCard = React.lazy(() => import('./components/ReferralCard'))
 
 
 function Home() {
@@ -181,6 +183,9 @@ function Home() {
         
         {/* Achievement Gallery */}
         <BadgeTray />
+
+        {/* Share & Earn Referral Card */}
+        <ReferralCard />
 
       {/* Featured Blog/Insights Section for Parents & Teachers */}
       <section style={{
@@ -452,6 +457,7 @@ function AppContent() {
 
   return (
     <>
+      <SEOManager />
       <Celebration />
       <BadgeNotification 
         badge={activeBadge} 

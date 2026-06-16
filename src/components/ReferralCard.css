@@ -1,0 +1,312 @@
+/* Kone Kids -- Referral & Virality Card Styling */
+
+.kca-referral-container {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 1.75rem;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  max-width: 580px;
+  margin: 2rem auto;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.kca-referral-container::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.04) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.kca-referral-container:hover {
+  transform: translateY(-4px);
+  border-color: rgba(249, 115, 22, 0.25);
+  box-shadow: 0 20px 48px rgba(249, 115, 22, 0.08);
+}
+
+/* 1. Header */
+.kca-referral-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.kca-referral-icon-badge {
+  background: linear-gradient(135deg, #f97316 0%, #d97706 100%);
+  color: white;
+  padding: 0.85rem;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gift-bounce {
+  animation: giftBounce 2s infinite ease-in-out;
+}
+
+@keyframes giftBounce {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-4px) rotate(8deg); }
+}
+
+.kca-referral-header-text h3 {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 1.45rem;
+  margin: 0 0 0.4rem 0;
+  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0.7));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.kca-referral-header-text p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* 2. Referral Copy Link Input */
+.kca-referral-link-section {
+  margin-top: 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.kca-label {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #f97316;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.kca-copy-wrapper {
+  display: flex;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 0.25rem;
+  align-items: center;
+  transition: border-color 0.2s;
+}
+
+.kca-copy-wrapper:focus-within {
+  border-color: rgba(249, 115, 22, 0.5);
+}
+
+.kca-referral-input {
+  background: transparent;
+  border: none;
+  color: #d1d5db;
+  font-size: 0.88rem;
+  padding: 0.6rem 0.8rem;
+  flex: 1;
+  outline: none;
+  font-family: monospace;
+}
+
+.kca-copy-btn {
+  background: #f97316;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.6rem 1.15rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.kca-copy-btn:hover {
+  background: #ea580c;
+  transform: scale(1.02);
+}
+
+.kca-copy-btn.copied {
+  background: #10b981;
+}
+
+/* 3. Progress Milestones */
+.kca-referral-progress-section {
+  margin-top: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.kca-progress-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #d1d5db;
+  margin-bottom: 0.75rem;
+}
+
+.kca-badge-milestone {
+  color: #facc15;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+}
+
+.kca-progress-bar-bg {
+  height: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+
+.kca-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f97316 0%, #ec4899 100%);
+  border-radius: 5px;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.35);
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.kca-milestone-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1f2937;
+  border: 3px solid #374151;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: border-color 0.3s, background-color 0.3s;
+}
+
+.kca-progress-bar-fill ~ .kca-milestone-marker {
+  /* Dynamic active check via position overrides in JS, fallback coloring rules */
+}
+
+.kca-progress-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  padding: 0 0.25rem;
+}
+
+/* 4. Friends Invited Tracker */
+.kca-referral-tracker-section {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.tracker-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e5e7eb;
+  margin: 0 0 1rem 0;
+}
+
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.friend-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 0.85rem 1.1rem;
+  border-radius: 12px;
+  transition: background 0.2s;
+}
+
+.friend-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.friend-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #f3f4f6;
+}
+
+.friend-date {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.friend-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.status-dot.pending {
+  background: #f59e0b;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+}
+
+.status-dot.signed-up {
+  background: #3b82f6;
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+}
+
+.status-dot.activated {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.status-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #d1d5db;
+}
+
+.reward-tag {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  margin-left: 0.5rem;
+}
