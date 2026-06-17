@@ -31,6 +31,11 @@ let db: Firestore;
 let analytics: Analytics | undefined;
 
 try {
+    // Detect react-snap pre-rendering crawler
+    if (typeof window !== 'undefined' && window.navigator.userAgent === 'ReactSnap') {
+        throw new Error('Pre-rendering environment: Firebase is disabled to prevent socket hang.');
+    }
+
     // Safety check for missing environment variables
     if (!firebaseConfig.apiKey) {
         console.warn('Kone Kids Firebase: Missing environment variables. Running in local simulation mode.');
@@ -40,8 +45,8 @@ try {
     auth = getAuth(app);
     db = getFirestore(app);
     
-    // Only initialize analytics if running in a browser environment
-    if (typeof window !== 'undefined') {
+    // Only initialize analytics if running in a browser environment and not pre-rendering
+    if (typeof window !== 'undefined' && window.navigator.userAgent !== 'ReactSnap') {
         analytics = getAnalytics(app);
     }
 } catch (error) {
