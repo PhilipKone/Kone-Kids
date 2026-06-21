@@ -20,7 +20,6 @@ const Blog = React.lazy(() => import('./components/Blog'))
 const ArticleReader = React.lazy(() => import('./components/ArticleReader'))
 const ClassLogin = React.lazy(() => import('./components/ClassLogin'))
 const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'))
-const ReferralCard = React.lazy(() => import('./components/ReferralCard'))
 
 
 function Home() {
@@ -183,9 +182,6 @@ function Home() {
         
         {/* Achievement Gallery */}
         <BadgeTray />
-
-        {/* Share & Earn Referral Card */}
-        <ReferralCard />
 
       {/* Featured Blog/Insights Section for Parents & Teachers */}
       <section style={{
