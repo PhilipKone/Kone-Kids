@@ -1032,5 +1032,25 @@ html {
   }
 }
 
+/* Top Nav Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .kids-nav-bar {
+    padding: 0.75rem 1rem !important;
+  }
+  .nav-links-container {
+    gap: 0.75rem !important;
+  }
+  .nav-link-desktop {
+    display: none !important;
+  }
+  .kids-nav-logo-text {
+    font-size: 1.15rem !important;
+  }
+  .kids-nav-logo-img {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
 
 

@@ -31,7 +31,7 @@ function Home() {
       {isModalOpen && <EnrollmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
 
       {/* Navigation / Header */}
-      <nav style={{ 
+      <nav className="kids-nav-bar" style={{ 
         padding: '1rem 5%', 
         display: 'flex', 
         justifyContent: 'space-between', 
@@ -43,7 +43,7 @@ function Home() {
         zIndex: 100,
         borderBottom: '1px solid var(--nav-border)'
       }}>
-        <Link to="/" style={{ 
+        <Link to="/" className="kids-nav-logo-text" style={{ 
           fontFamily: "'Baloo 2', cursive", 
           fontWeight: 800, 
           fontSize: '1.4rem', 
@@ -53,9 +53,9 @@ function Home() {
           alignItems: 'center',
           gap: '0.4rem'
         }}>
-          <img src="/mascot.svg" alt="Kone Kids Logo" width="24" height="24" style={{ height: '24px', width: 'auto' }} /> Kone Kids
+          <img className="kids-nav-logo-img" src="/mascot.svg" alt="Kone Kids Logo" width="24" height="24" style={{ height: '24px', width: 'auto' }} /> Kone Kids
         </Link>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+        <div className="nav-links-container" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           {studentName ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <span style={{ 
@@ -104,16 +104,18 @@ function Home() {
             fontWeight: 800, 
             fontSize: '1rem',
             transition: 'color 0.2s'
-          }} className="hover-teal">
+          }} className="hover-teal nav-link-desktop">
             Parent Hub
           </Link>
-          <button 
-            className="kids-button" 
-            onClick={() => setIsModalOpen(true)}
-            style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
-          >
-            Join Hub
-          </button>
+          {!studentName && (
+            <button 
+              className="kids-button" 
+              onClick={() => setIsModalOpen(true)}
+              style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
+            >
+              Join Hub
+            </button>
+          )}
         </div>
       </nav>
 
