@@ -130,6 +130,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['mascot_speak'] = (block: any) => `await mascot.speak("${block.getFieldValue('TEXT')}");\n`;
+      pythonGenerator.forBlock['mascot_speak'] = (block: any) => `mascot.speak("${block.getFieldValue('TEXT')}")\n`;
     }
 
     if (!Blockly.Blocks['mascot_wait']) {
@@ -145,6 +146,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['mascot_wait'] = (block: any) => `await new Promise(res => setTimeout(res, ${block.getFieldValue('SECS')} * 1000));\n`;
+      pythonGenerator.forBlock['mascot_wait'] = (block: any) => `time.sleep(${block.getFieldValue('SECS')})\n`;
     }
 
     if (!Blockly.Blocks['mascot_wave']) {
@@ -157,6 +159,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['mascot_wave'] = () => `await mascot.wave();\n`;
+      pythonGenerator.forBlock['mascot_wave'] = () => `mascot.wave()\n`;
     }
 
     if (!Blockly.Blocks['mascot_blink']) {
@@ -169,6 +172,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['mascot_blink'] = () => `await mascot.blink();\n`;
+      pythonGenerator.forBlock['mascot_blink'] = () => `mascot.blink()\n`;
     }
 
     // --- Robotics Blocks ---
@@ -187,6 +191,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['robot_move'] = (block: any) => `await robot.move("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')} * 1000);\n`;
+      pythonGenerator.forBlock['robot_move'] = (block: any) => `robot.move("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
     }
 
     if (!Blockly.Blocks['robot_turn']) {
@@ -204,6 +209,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['robot_turn'] = (block: any) => `await robot.turn("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')} * 1000);\n`;
+      pythonGenerator.forBlock['robot_turn'] = (block: any) => `robot.turn("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
     }
 
     if (!Blockly.Blocks['robot_stop']) {
@@ -216,6 +222,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['robot_stop'] = () => `robot.stop();\n`;
+      pythonGenerator.forBlock['robot_stop'] = () => `robot.stop()\n`;
     }
 
     if (!Blockly.Blocks['robot_distance']) {
@@ -227,6 +234,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['robot_distance'] = () => [`robot.getDistance()`, (javascriptGenerator as any).ORDER_ATOMIC];
+      pythonGenerator.forBlock['robot_distance'] = () => [`robot.get_distance()`, (pythonGenerator as any).ORDER_ATOMIC];
     }
 
     if (!Blockly.Blocks['led_state']) {
@@ -243,6 +251,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['led_state'] = (block: any) => `await electronics.setLED("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}");\n`;
+      pythonGenerator.forBlock['led_state'] = (block: any) => `electronics.set_led("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}")\n`;
     }
     // --- Game Dev Blocks ---
     if (!Blockly.Blocks['game_physics']) {
@@ -255,6 +264,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['game_physics'] = () => `game.reset();\n`;
+      pythonGenerator.forBlock['game_physics'] = () => `game.reset()\n`;
     }
 
     if (!Blockly.Blocks['game_gravity']) {
@@ -269,6 +279,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['game_gravity'] = (block: any) => `game.setGravity(${block.getFieldValue('G')});\n`;
+      pythonGenerator.forBlock['game_gravity'] = (block: any) => `game.set_gravity(${block.getFieldValue('G')})\n`;
     }
 
     if (!Blockly.Blocks['character_jump']) {
@@ -283,6 +294,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')});\n`;
+      pythonGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')})\n`;
     }
 
     if (!Blockly.Blocks['spawn_stars']) {
@@ -298,6 +310,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawnStars(${block.getFieldValue('COUNT')});\n`;
+      pythonGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawn_stars(${block.getFieldValue('COUNT')})\n`;
     }
 
     if (!Blockly.Blocks['on_key_press']) {
@@ -316,6 +329,10 @@ const KidsIDE: React.FC = () => {
         const branch = javascriptGenerator.statementToCode(block, 'DO');
         return `game.onKeyPress("${block.getFieldValue('KEY')}", async () => {\n${branch}});\n`;
       };
+      pythonGenerator.forBlock['on_key_press'] = (block: any) => {
+        const branch = pythonGenerator.statementToCode(block, 'DO');
+        return `def on_press():\n${branch || '    pass'}\n\ngame.on_key_press("${block.getFieldValue('KEY')}", on_press)\n`;
+      };
     }
 
     if (!Blockly.Blocks['update_score']) {
@@ -331,6 +348,7 @@ const KidsIDE: React.FC = () => {
         }
       };
       javascriptGenerator.forBlock['update_score'] = (block: any) => `game.updateScore(${block.getFieldValue('POINTS')});\n`;
+      pythonGenerator.forBlock['update_score'] = (block: any) => `game.update_score(${block.getFieldValue('POINTS')})\n`;
     }
 
     // Inject Workspace
