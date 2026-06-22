@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
 import { db } from '../firebase/config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
@@ -324,6 +324,22 @@ export default function ClassLogin() {
               >
                 {loading ? 'Entering Lab...' : 'Go to Class! 🚀'}
               </button>
+
+              <div style={{ marginTop: '1.5rem', fontSize: '0.95rem', fontFamily: "'Baloo 2', cursive" }}>
+                <span style={{ color: 'rgba(255, 255, 255, 0.5)' }}>Are you a teacher? </span>
+                <Link 
+                  to="/teacher-dashboard" 
+                  style={{ 
+                    color: 'var(--kids-blue)', 
+                    fontWeight: 800, 
+                    textDecoration: 'none',
+                    transition: 'color 0.2s'
+                  }}
+                  className="hover-teal"
+                >
+                  Teacher Portal 🔑
+                </Link>
+              </div>
             </div>
           )}
 
