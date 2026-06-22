@@ -4,6 +4,7 @@ import { doc, setDoc, collection, getDocs, deleteDoc, query, where } from 'fireb
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from 'firebase/auth';
 import { Sparkles, Trash2, Printer, Plus, Users, Award, BookOpen } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { CODING_MISSIONS } from '../data/missions';
 
 const MASCOTS = [
   // Animals (75)
@@ -35,6 +36,7 @@ export default function TeacherDashboard() {
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [editingMascot, setEditingMascot] = useState('');
+  const [printJobType, setPrintJobType] = useState<'passkeys' | 'report'>('passkeys');
 
   // Class Editing States
   const [isEditingClassName, setIsEditingClassName] = useState(false);
@@ -389,8 +391,18 @@ export default function TeacherDashboard() {
     }
   };
 
-  const handlePrint = () => {
-    window.print();
+  const handlePrintPasskeys = () => {
+    setPrintJobType('passkeys');
+    setTimeout(() => {
+      window.print();
+    }, 150);
+  };
+
+  const handlePrintReport = () => {
+    setPrintJobType('report');
+    setTimeout(() => {
+      window.print();
+    }, 150);
   };
 
   if (!currentUser) {
@@ -593,9 +605,26 @@ export default function TeacherDashboard() {
             left: 0;
             top: 0;
             width: 100%;
+            display: block !important;
+            color: #0f172a !important;
+            background: #ffffff !important;
           }
           .no-print {
             display: none !important;
+          }
+          .page-break {
+            page-break-before: always;
+          }
+          h1, h2, h3, th, td {
+            color: #0f172a !important;
+          }
+          .progress-bar-container {
+            border: 2px solid #0f172a !important;
+          }
+          .progress-bar-fill {
+            background-color: #0d9488 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
           }
         }
       `}</style>
@@ -797,9 +826,9 @@ export default function TeacherDashboard() {
                       </span>
                     </div>
 
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <button 
-                        onClick={handlePrint}
+                        onClick={handlePrintPasskeys}
                         className="kids-button"
                         style={{
                           background: 'rgba(13, 148, 136, 0.1)',
@@ -807,10 +836,25 @@ export default function TeacherDashboard() {
                           boxShadow: 'none',
                           padding: '0.6rem 1.1rem',
                           fontSize: '0.9rem',
-                          border: '1px solid #0d948833'
+                          border: '1px solid rgba(13, 148, 136, 0.25)'
                         }}
                       >
                         <Printer size={16} /> Print Passkeys
+                      </button>
+
+                      <button 
+                        onClick={handlePrintReport}
+                        className="kids-button"
+                        style={{
+                          background: 'rgba(59, 130, 246, 0.1)',
+                          color: '#3b82f6',
+                          boxShadow: 'none',
+                          padding: '0.6rem 1.1rem',
+                          fontSize: '0.9rem',
+                          border: '1px solid rgba(59, 130, 246, 0.25)'
+                        }}
+                      >
+                        <Award size={16} /> Print Report (PDF)
                       </button>
                       
                       <button 
@@ -1041,63 +1085,237 @@ export default function TeacherDashboard() {
 
         </div>
 
-        {/* PRINT-ONLY SECTION (Visual Login Cards) */}
+        {/* PRINT-ONLY SECTION (Visual Login Cards or Class Report) */}
         {activeCode && students.length > 0 && (
           <div className="print-section" style={{ display: 'none' }}>
-            <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
-              <div style={{ borderBottom: '3px solid #1e3a8a', paddingBottom: '1rem', marginBottom: '2rem', textAlign: 'center' }}>
-                <h1 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.5rem', color: '#1e3a8a', margin: '0 0 0.25rem' }}>Kone Kids Passkey Sheet</h1>
-                <p style={{ margin: 0, fontSize: '1.1rem', color: '#475569' }}>Classroom Code: <strong>{activeCode}</strong></p>
-              </div>
+            {printJobType === 'passkeys' ? (
+              <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+                <div style={{ borderBottom: '3px solid #1e3a8a', paddingBottom: '1rem', marginBottom: '2rem', textAlign: 'center' }}>
+                  <h1 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.5rem', color: '#1e3a8a', margin: '0 0 0.25rem' }}>Kone Kids Passkey Sheet</h1>
+                  <p style={{ margin: 0, fontSize: '1.1rem', color: '#475569' }}>Classroom Code: <strong>{activeCode}</strong></p>
+                </div>
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '1.5rem'
-              }}>
-                {students.map((student) => (
-                  <div 
-                    key={student.id}
-                    style={{
-                      border: '2px solid #cbd5e1',
-                      borderRadius: '16px',
-                      padding: '1.25rem',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between',
-                      background: '#fff',
-                      pageBreakInside: 'avoid'
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--kids-orange)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Kone Kids Login Card</div>
-                      <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0.25rem 0 0.75rem', color: '#1e3a8a' }}>{student.name}</h3>
-                      
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.85rem', color: '#475569' }}>
-                        <div>1. Visit: <strong>kids.koneacademy.io</strong></div>
-                        <div>2. Click <strong>Student Login</strong> button</div>
-                        <div>3. Enter classroom code: <strong>{activeCode}</strong></div>
-                        <div>4. Select your name: <strong>{student.name}</strong></div>
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: '1.5rem'
+                }}>
+                  {students.map((student) => (
+                    <div 
+                      key={student.id}
+                      style={{
+                        border: '2px solid #cbd5e1',
+                        borderRadius: '16px',
+                        padding: '1.25rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        background: '#fff',
+                        pageBreakInside: 'avoid'
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--kids-orange)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Kone Kids Login Card</div>
+                        <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0.25rem 0 0.75rem', color: '#1e3a8a' }}>{student.name}</h3>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.85rem', color: '#475569' }}>
+                          <div>1. Visit: <strong>kids.koneacademy.io</strong></div>
+                          <div>2. Click <strong>Student Login</strong> button</div>
+                          <div>3. Enter classroom code: <strong>{activeCode}</strong></div>
+                          <div>4. Select your name: <strong>{student.name}</strong></div>
+                        </div>
+                      </div>
+
+                      <div style={{
+                        marginTop: '1rem',
+                        background: '#f1f5f9',
+                        borderRadius: '12px',
+                        padding: '8px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        border: '1px solid #cbd5e1'
+                      }}>
+                        <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#475569' }}>My Secret Mascot:</span>
+                        <span style={{ fontSize: '2rem' }}>{student.secretPicture}</span>
                       </div>
                     </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              // ─── CLASSROOM PROGRESS REPORT ───────────────────────────────────────
+              <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto', fontFamily: 'system-ui, sans-serif' }}>
+                
+                {/* PAGE 1: CLASS SUMMARY OVERVIEW */}
+                <div>
+                  <div style={{ borderBottom: '4px solid #3b82f6', paddingBottom: '1rem', marginBottom: '2rem', textAlign: 'center' }}>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Kone Code Academy</div>
+                    <h1 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.8rem', color: '#1e3a8a', margin: '0.25rem 0' }}>Classroom Progress Report</h1>
+                    <p style={{ margin: 0, fontSize: '1.1rem', color: '#475569' }}>
+                      Classroom Section: <strong>{mySections.find(s => s.id === activeCode)?.name || 'Classroom'}</strong> &nbsp;|&nbsp; Code: <strong>{activeCode}</strong>
+                    </p>
+                    <p style={{ margin: '0.5rem 0 0', fontSize: '0.9rem', color: '#94a3b8' }}>
+                      Generated on: {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+                  </div>
 
-                    <div style={{
-                      marginTop: '1rem',
-                      background: '#f1f5f9',
-                      borderRadius: '12px',
-                      padding: '8px 12px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      border: '1px solid #cbd5e1'
-                    }}>
-                      <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#475569' }}>My Secret Mascot:</span>
-                      <span style={{ fontSize: '2rem' }}>{student.secretPicture}</span>
+                  {/* Summary Metrics Cards Grid */}
+                  <div style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '1rem',
+                    marginBottom: '2.5rem'
+                  }}>
+                    <div style={{ border: '2px solid #e2e8f0', borderRadius: '16px', padding: '1rem', textAlign: 'center', background: '#f8fafc' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Students</div>
+                      <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#1e3a8a' }}>{students.length}</div>
+                    </div>
+                    <div style={{ border: '2px solid #e2e8f0', borderRadius: '16px', padding: '1rem', textAlign: 'center', background: '#f8fafc' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Class Avg XP</div>
+                      <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#1e3a8a' }}>
+                        {students.length > 0 ? Math.round(students.reduce((acc, s) => acc + (s.xp || 0), 0) / students.length) : 0}
+                      </div>
+                    </div>
+                    <div style={{ border: '2px solid #e2e8f0', borderRadius: '16px', padding: '1rem', textAlign: 'center', background: '#f8fafc' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Missions Run</div>
+                      <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#1e3a8a' }}>
+                        {students.reduce((acc, s) => acc + (s.completedMissions?.length || 0), 0)}
+                      </div>
+                    </div>
+                    <div style={{ border: '2px solid #e2e8f0', borderRadius: '16px', padding: '1rem', textAlign: 'center', background: '#f8fafc' }}>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.25rem' }}>Top Level</div>
+                      <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#1e3a8a' }}>
+                        Level {students.length > 0 ? Math.max(...students.map(s => Math.floor((s.xp || 0) / 500) + 1)) : 1}
+                      </div>
                     </div>
                   </div>
-                ))}
+
+                  {/* Class Roster Summary Table */}
+                  <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', color: '#1e3a8a', marginBottom: '0.75rem', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.25rem' }}>Class Roster Overview</h3>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.9rem', marginBottom: '2rem' }}>
+                    <thead>
+                      <tr style={{ background: '#f1f5f9', borderBottom: '2px solid #cbd5e1' }}>
+                        <th style={{ padding: '8px 12px', fontWeight: 800 }}>Student Name</th>
+                        <th style={{ padding: '8px 12px', fontWeight: 800, textAlign: 'center' }}>Mascot</th>
+                        <th style={{ padding: '8px 12px', fontWeight: 800, textAlign: 'center' }}>Level</th>
+                        <th style={{ padding: '8px 12px', fontWeight: 800, textAlign: 'right' }}>Total XP</th>
+                        <th style={{ padding: '8px 12px', fontWeight: 800, textAlign: 'right' }}>Coins</th>
+                        <th style={{ padding: '8px 12px', fontWeight: 800, textAlign: 'center' }}>Missions Done</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {students.map((student, idx) => (
+                        <tr key={student.id} style={{ borderBottom: '1px solid #e2e8f0', background: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
+                          <td style={{ padding: '10px 12px', fontWeight: 700 }}>{student.name}</td>
+                          <td style={{ padding: '10px 12px', fontSize: '1.25rem', textAlign: 'center' }}>{student.secretPicture}</td>
+                          <td style={{ padding: '10px 12px', textAlign: 'center', fontWeight: 800 }}>{Math.floor((student.xp || 0) / 500) + 1}</td>
+                          <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 700 }}>{student.xp || 0}</td>
+                          <td style={{ padding: '10px 12px', textAlign: 'right', color: '#b45309', fontWeight: 700 }}>{student.coins || 0}</td>
+                          <td style={{ padding: '10px 12px', textAlign: 'center', fontWeight: 700 }}>{student.completedMissions?.length || 0}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* PAGE 2+: INDIVIDUAL STUDENT DETAILS */}
+                {students.map((student) => {
+                  const level = Math.floor((student.xp || 0) / 500) + 1;
+                  const currentLevelXp = (student.xp || 0) % 500;
+                  const percent = Math.min(Math.round((currentLevelXp / 500) * 100), 100);
+
+                  return (
+                    <div key={student.id} className="page-break" style={{ padding: '2rem 0' }}>
+                      {/* Individual Header */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '3px solid #0d9488', paddingBottom: '0.75rem', marginBottom: '1.5rem' }}>
+                        <div>
+                          <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0d9488', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Kone Kids - Student Progress Card</div>
+                          <h2 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.2rem', color: '#1e3a8a', margin: '0.1rem 0 0' }}>{student.name}</h2>
+                        </div>
+                        <div style={{ fontSize: '3rem', background: '#f0fdfa', padding: '8px', borderRadius: '16px', border: '2px solid #99f6e4' }}>
+                          {student.secretPicture}
+                        </div>
+                      </div>
+
+                      {/* Stats Overview */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
+                        <div style={{ border: '2px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem', background: '#f8fafc' }}>
+                          <h4 style={{ margin: '0 0 0.5rem', color: '#475569', fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase' }}>Academic Standing</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.95rem' }}>
+                            <div>Current Level: <strong style={{ color: '#0d9488', fontSize: '1.1rem' }}>Level {level}</strong></div>
+                            <div>Total Accumulated Experience: <strong>{student.xp || 0} XP</strong></div>
+                            <div>Coins Wallet: <strong style={{ color: '#b45309' }}>🪙 {student.coins || 0}</strong></div>
+                          </div>
+
+                          {/* Level Progress bar */}
+                          <div style={{ marginTop: '1rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', fontWeight: 700, color: '#64748b', marginBottom: '0.25rem' }}>
+                              <span>Level Progress</span>
+                              <span>{percent}% ({currentLevelXp}/500 XP)</span>
+                            </div>
+                            <div className="progress-bar-container" style={{ height: '14px', background: '#e2e8f0', borderRadius: '7px', overflow: 'hidden', border: '1px solid #cbd5e1' }}>
+                              <div className="progress-bar-fill" style={{ width: `${percent}%`, height: '100%', background: '#0d9488', borderRadius: '7px', transition: 'width 0.3s' }} />
+                            </div>
+                          </div>
+                        </div>
+
+                        <div style={{ border: '2px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem', background: '#f8fafc' }}>
+                          <h4 style={{ margin: '0 0 0.5rem', color: '#475569', fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase' }}>Classroom Access</h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.95rem', color: '#475569' }}>
+                            <div>Portal Link: <strong>kids.koneacademy.io</strong></div>
+                            <div>Classroom Code: <strong>{activeCode}</strong></div>
+                            <div>Login ID: <strong>{student.name}</strong></div>
+                            <div>Secret Mascot Passkey: <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>{student.secretPicture}</span></div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Completed Missions detail */}
+                      <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.3rem', color: '#1e3a8a', borderBottom: '2px solid #e2e8f0', paddingBottom: '0.25rem', marginBottom: '0.75rem' }}>
+                        Completed Coding Missions ({student.completedMissions?.length || 0})
+                      </h3>
+                      {(!student.completedMissions || student.completedMissions.length === 0) ? (
+                        <p style={{ margin: 0, fontSize: '0.95rem', color: '#64748b', fontStyle: 'italic' }}>No missions completed yet. Keep coding!</p>
+                      ) : (
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '0.5rem',
+                        }}>
+                          {student.completedMissions.map((missionId: string) => {
+                            const m = CODING_MISSIONS.find((mission) => mission.id === missionId);
+                            return (
+                              <div 
+                                key={missionId}
+                                style={{
+                                  border: '1px solid #cbd5e1',
+                                  borderRadius: '8px',
+                                  padding: '8px 12px',
+                                  background: '#fff',
+                                  fontSize: '0.85rem',
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <span style={{ fontWeight: 700, color: '#1e3a8a' }}>
+                                  {m ? m.name : missionId}
+                                </span>
+                                <span style={{ fontSize: '0.75rem', color: '#64748b', background: '#f1f5f9', padding: '2px 6px', borderRadius: '4px' }}>
+                                  {m ? m.pathway : 'Unknown'}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
               </div>
-            </div>
+            )}
           </div>
         )}
 
