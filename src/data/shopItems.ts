@@ -13,17 +13,25 @@ export const SHOP_ITEMS: ShopItem[] = [
   { id: 'engineer_cap', name: 'Engineer Cap', type: 'hat', price: 100, icon: '🧢', description: 'Show everyone you mean business!' },
   { id: 'space_helmet', name: 'Space Helmet', type: 'hat', price: 800, icon: '👨‍🚀', description: 'For coding in zero gravity.' },
   { id: 'crown', name: 'Golden Crown', type: 'hat', price: 2500, icon: '👑', description: 'Only for the coding royalty.', unlockedAtLevel: 5 },
+  { id: 'wizard_hat', name: 'Wizard Hat', type: 'hat', price: 1500, icon: '🧙‍♂️', description: 'Code with ancient logic.' },
+  { id: 'detective_hat', name: 'Detective Fedora', type: 'hat', price: 1000, icon: '🕵️‍♂️', description: 'Investigate bugs in the system.' },
   
   // Glasses
   { id: 'cool_shades', name: 'Cool Shades', type: 'glasses', price: 200, icon: '🕶️', description: 'Stay cool under pressure.' },
   { id: 'vr_goggles', name: 'VR Goggles', type: 'glasses', price: 600, icon: '🥽', description: 'Enter the Kone Metaverse.' },
+  { id: 'cyber_visor', name: 'Cyber Visor', type: 'glasses', price: 1800, icon: '🔴', description: 'Visualize real-time data flows.' },
+  { id: 'monocle', name: 'Monocle', type: 'glasses', price: 800, icon: '🧐', description: 'Examine details up close.' },
   
   // Skins
   { id: 'neon_glow', name: 'Neon Glow', type: 'skin', price: 1200, icon: '✨', description: 'Light up the dark with your logic.' },
   { id: 'gold_chrome', name: 'Gold Chrome', type: 'skin', price: 5000, icon: '🟡', description: 'The ultimate prestige skin.', unlockedAtLevel: 10 },
+  { id: 'matrix_rain', name: 'Matrix Code', type: 'skin', price: 3000, icon: '💻', description: 'Become one with the simulation.' },
+  { id: 'quantum_glitch', name: 'Glitch Dimension', type: 'skin', price: 4000, icon: '👾', description: 'Shift between coding dimensions.', unlockedAtLevel: 8 },
   
   // Accessories
   { id: 'robot_pet', name: 'Mini Bot', type: 'accessory', price: 1500, icon: '🤖', description: 'A small friend for your lab assistant.' },
+  { id: 'pet_dragon', name: 'Pixel Dragon', type: 'accessory', price: 3500, icon: '🐉', description: 'A fiery coding companion.', unlockedAtLevel: 6 },
+  { id: 'light_saber', name: 'Glowing Saber', type: 'accessory', price: 2000, icon: '⚔️', description: 'Slash through bugs with light.' },
 
   // Mascot Poses
   { id: 'pose_standing', name: 'Standing Byte', type: 'pose', price: 0, icon: '/mascot/standing.svg', description: 'The classic Byte pose.' },

@@ -22,6 +22,25 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
   const blinkIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const activeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // Get dynamic skin colors
+  const getSkinColors = () => {
+    const skin = equippedItems.skin
+    switch (skin) {
+      case 'neon_glow':
+        return { stop0: '#22d3ee', stop60: '#0891b2', stop100: '#0e7490', armStroke: '#0e7490' }
+      case 'gold_chrome':
+        return { stop0: '#fbbf24', stop60: '#d97706', stop100: '#92400e', armStroke: '#92400e' }
+      case 'matrix_rain':
+        return { stop0: '#4ade80', stop60: '#16a34a', stop100: '#14532d', armStroke: '#14532d' }
+      case 'quantum_glitch':
+        return { stop0: '#f472b6', stop60: '#c084fc', stop100: '#22d3ee', armStroke: '#c084fc' }
+      default:
+        return { stop0: '#38bdf8', stop60: '#0ea5e9', stop100: '#1d4ed8', armStroke: '#1d4ed8' }
+    }
+  }
+
+  const skinColors = getSkinColors()
+
   // Particle Engine Refs
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const particlesRef = useRef<any[]>([])
@@ -50,6 +69,10 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       return ['#22d3ee', '#f472b6', '#a855f7', '#06b6d4', '#e879f9'] // Cyberpunk neon colors
     } else if (skin === 'gold_chrome') {
       return ['#fbbf24', '#f59e0b', '#d97706', '#bef264', '#fef08a'] // Gold/yellow chrome colors
+    } else if (skin === 'matrix_rain') {
+      return ['#22c55e', '#4ade80', '#86efac', '#15803d', '#10b981'] // Matrix code-green colors
+    } else if (skin === 'quantum_glitch') {
+      return ['#ec4899', '#a855f7', '#06b6d4', '#f43f5e', '#3b82f6'] // Cyberpunk glitch colors
     }
     // Default rainbow
     return ['#38bdf8', '#f472b6', '#fbbf24', '#a3e635', '#a855f7', '#fb7185']
@@ -401,15 +424,22 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
         >
           <defs>
             <radialGradient id="body-radial" cx="200" cy="180" r="160" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor={equippedItems.skin === 'neon_glow' ? '#22d3ee' : (equippedItems.skin === 'gold_chrome' ? '#fbbf24' : '#38bdf8')} />
-              <stop offset="60%" stopColor={equippedItems.skin === 'neon_glow' ? '#0891b2' : (equippedItems.skin === 'gold_chrome' ? '#d97706' : '#0ea5e9')} />
-              <stop offset="100%" stopColor={equippedItems.skin === 'neon_glow' ? '#0e7490' : (equippedItems.skin === 'gold_chrome' ? '#92400e' : '#1d4ed8')} />
+              <stop offset="0%" stopColor={skinColors.stop0} />
+              <stop offset="60%" stopColor={skinColors.stop60} />
+              <stop offset="100%" stopColor={skinColors.stop100} />
             </radialGradient>
             <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
               <feOffset dx="0" dy="10" result="offsetblur" />
               <feComponentTransfer><feFuncA type="linear" slope="0.3" /></feComponentTransfer>
               <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="saber-glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
             </filter>
           </defs>
 
@@ -466,6 +496,28 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
               </g>
             )}
 
+            {equippedItems.glasses === 'cyber_visor' && (
+              <g transform="translate(120, 180)">
+                <path d="M 0 10 L 15 0 L 145 0 L 160 10 L 150 45 L 135 50 L 25 50 L 10 45 Z" fill="#f43f5e" fillOpacity="0.85" stroke="#fb7185" strokeWidth="2" />
+                <path d="M 12 12 L 148 12" stroke="#22d3ee" strokeWidth="2" strokeDasharray="5 3" />
+                <path d="M 15 38 L 145 38" stroke="#22d3ee" strokeWidth="1" />
+                <circle cx="40" cy="25" r="10" stroke="#22d3ee" strokeWidth="1.5" fill="none" strokeDasharray="3 2" />
+                <circle cx="40" cy="25" r="3" fill="#22d3ee" />
+                <path d="M 110 20 L 130 20 L 135 25" fill="none" stroke="#22d3ee" strokeWidth="1.5" />
+                <rect x="110" y="27" width="15" height="4" fill="#fb7185" />
+                <rect x="128" y="27" width="8" height="4" fill="#22d3ee" />
+              </g>
+            )}
+
+            {equippedItems.glasses === 'monocle' && (
+              <g>
+                <circle cx="240" cy="210" r="34" stroke="#fbbf24" strokeWidth="3" fill="rgba(251, 191, 36, 0.15)" />
+                <path d="M 220 195 Q 235 185 255 190" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+                <path d="M 268 228 Q 295 245 285 295" fill="none" stroke="#fbbf24" strokeWidth="2" strokeDasharray="4 4" />
+                <circle cx="285" cy="297" r="4" fill="#d97706" />
+              </g>
+            )}
+
             {/* Mouth */}
             {isHovering ? (
               <g>
@@ -499,6 +551,27 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
             </g>
           )}
 
+          {equippedItems.hat === 'wizard_hat' && (
+            <g transform="translate(130, 10)">
+              <ellipse cx="70" cy="58" rx="60" ry="10" fill="#4f46e5" stroke="#312e81" strokeWidth="2" />
+              <path d="M 20 54 Q 70 -5 95 -45 Q 85 15 120 54 Z" fill="#4f46e5" stroke="#312e81" strokeWidth="2" />
+              <path d="M 23 51 Q 70 59 117 51 Q 112 43 70 51 Q 28 43 23 51 Z" fill="#fbbf24" />
+              <polygon points="70,12 73,20 81,20 75,25 77,33 70,28 63,33 65,25 59,20 67,20" fill="#fef08a" />
+              <polygon points="45,35 46.5,39 50.5,39 47.5,41.5 48.5,45.5 45,43 41.5,45.5 42.5,41.5 39.5,39 43.5,39" fill="#fef08a" />
+              <polygon points="95,30 96.5,34 100.5,34 97.5,36.5 98.5,40.5 95,38 91.5,40.5 92.5,36.5 89.5,34 93.5,34" fill="#fef08a" />
+            </g>
+          )}
+
+          {equippedItems.hat === 'detective_hat' && (
+            <g transform="translate(130, 15)">
+              <path d="M -15 55 Q 70 70 155 55 Q 70 45 -15 55 Z" fill="#5c3d2e" stroke="#3e2723" strokeWidth="2" />
+              <path d="M 15 50 C 20 20 40 15 70 25 C 100 15 120 20 125 50 Z" fill="#5c3d2e" stroke="#3e2723" strokeWidth="2" />
+              <path d="M 45 23 Q 70 32 95 23" stroke="#3e2723" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+              <path d="M 17 48 Q 70 56 123 48 L 124 40 Q 70 48 16 40 Z" fill="#111827" />
+              <rect x="95" y="36" width="6" height="10" fill="#d97706" rx="1" />
+            </g>
+          )}
+
           {/* ACCESSORY: Pet */}
           {equippedItems.accessory === 'robot_pet' && (
             <g transform="translate(320, 320) scale(0.6)">
@@ -510,19 +583,55 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
             </g>
           )}
 
+          {equippedItems.accessory === 'pet_dragon' && (
+            <g transform="translate(305, 230)" filter="url(#soft-shadow)">
+              <path d="M 10 15 Q -15 0 -5 25 Q -2 22 10 25 Z" fill="#b91c1c" stroke="#7f1d1d" strokeWidth="1.5" />
+              <path d="M 15 45 Q -2 55 -5 40 Q -5 30 5 35 L 10 45 Z" fill="#22c55e" stroke="#15803d" strokeWidth="1.5" />
+              <polygon points="-5,40 -10,35 -2,32" fill="#ef4444" />
+              <polygon points="25,12 25,18 31,15" fill="#ef4444" />
+              <polygon points="25,23 25,29 31,26" fill="#ef4444" />
+              <ellipse cx="25" cy="30" rx="16" ry="20" fill="#22c55e" stroke="#15803d" strokeWidth="2" />
+              <ellipse cx="25" cy="32" rx="10" ry="14" fill="#fde047" />
+              <circle cx="16" cy="48" r="5" fill="#16a34a" />
+              <circle cx="34" cy="48" r="5" fill="#16a34a" />
+              <path d="M 38 15 Q 63 0 53 25 Q 50 22 38 25 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1.5" />
+              <circle cx="25" cy="5" r="14" fill="#22c55e" stroke="#15803d" strokeWidth="2" />
+              <rect x="18" y="2" width="14" height="8" rx="2.5" fill="#4ade80" />
+              <circle cx="20" cy="2" r="3.5" fill="white" />
+              <circle cx="20" cy="2" r="1.5" fill="black" />
+              <circle cx="30" cy="2" r="3.5" fill="white" />
+              <circle cx="30" cy="2" r="1.5" fill="black" />
+              <polygon points="16,-7 12,-14 20,-9" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
+              <polygon points="34,-7 38,-14 30,-9" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
+              <path d="M 12 6 Q -2 12 6 15 Q 12 11 12 6" fill="#f97316" opacity="0.85" />
+              <circle cx="-1" cy="13" r="2" fill="#ef4444" opacity="0.85" />
+            </g>
+          )}
+
+          {equippedItems.accessory === 'light_saber' && (
+            <g filter="url(#soft-shadow)">
+              <line x1="275" y1="295" x2="345" y2="195" stroke="#22d3ee" strokeWidth="14" strokeLinecap="round" opacity="0.4" filter="url(#saber-glow)" />
+              <line x1="275" y1="295" x2="345" y2="195" stroke="#06b6d4" strokeWidth="8" strokeLinecap="round" />
+              <line x1="275" y1="295" x2="345" y2="195" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" />
+              <line x1="265" y1="310" x2="278" y2="292" stroke="#475569" strokeWidth="10" strokeLinecap="round" />
+              <line x1="265" y1="310" x2="278" y2="292" stroke="#0f172a" strokeWidth="10" strokeDasharray="2 3" strokeLinecap="round" />
+              <circle cx="272" cy="301" r="1.5" fill="#ef4444" />
+            </g>
+          )}
+
           {/* Waving Arm */}
           <g style={{
             transform: isWaving ? 'rotate(-25deg)' : 'rotate(0deg)',
             transformOrigin: '100px 240px',
             transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
           }}>
-            <path d="M 100 240 Q 60 210 40 240" stroke="#1d4ed8" strokeWidth="26" strokeLinecap="round" fill="none" />
+            <path d="M 100 240 Q 60 210 40 240" stroke={skinColors.armStroke} strokeWidth="26" strokeLinecap="round" fill="none" />
             <path d="M 40 240 C 20 220 10 240 25 260 C 20 270 35 285 50 270 C 60 275 75 255 65 235 C 60 215 45 220 40 235" fill="white" stroke="#e2e8f0" strokeWidth="1" />
           </g>
 
           {/* Resting Arm */}
           <g filter="url(#soft-shadow)">
-            <path d="M 300 240 Q 320 280 270 310" stroke="#1d4ed8" strokeWidth="26" strokeLinecap="round" fill="none" />
+            <path d="M 300 240 Q 320 280 270 310" stroke={skinColors.armStroke} strokeWidth="26" strokeLinecap="round" fill="none" />
             <path d="M 270 310 C 250 330 220 310 230 290 C 225 275 245 260 265 275 C 285 270 300 290 285 310 C 280 320 275 315 270 310 Z" fill="white" stroke="#e2e8f0" strokeWidth="1" />
           </g>
         </svg>
