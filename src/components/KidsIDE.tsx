@@ -6,6 +6,7 @@ import Mascot, { MascotHandle } from './Mascot';
 import RoboticsSimulator, { RoboticsHandle } from './RoboticsSimulator';
 import GameSimulator, { GameHandle } from './GameSimulator';
 import ElectronicsSimulator, { ElectronicsHandle } from './ElectronicsSimulator';
+import AISimulator, { AIHandle } from './AISimulator';
 import MissionBriefing from './MissionBriefing';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
 import { useGamification } from '../context/GamificationContext';
@@ -53,6 +54,7 @@ const KidsIDE: React.FC = () => {
   const robotRef = useRef<RoboticsHandle>(null);
   const gameRef = useRef<GameHandle>(null);
   const electronicsRef = useRef<ElectronicsHandle>(null);
+  const aiRef = useRef<AIHandle>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -353,8 +355,44 @@ const KidsIDE: React.FC = () => {
       pythonGenerator.forBlock['update_score'] = (block: any) => `game.update_score(${block.getFieldValue('POINTS')})\n`;
     }
 
+    // --- AI Blocks ---
+    if (!Blockly.Blocks['ai_class']) {
+      Blockly.Blocks['ai_class'] = {
+        init: function() {
+          this.appendDummyInput().appendField("🧠 AI Detected Class");
+          this.setOutput(true, "String");
+          this.setColour(260);
+        }
+      };
+      javascriptGenerator.forBlock['ai_class'] = () => [`ai.getClass()`, (javascriptGenerator as any).ORDER_ATOMIC];
+      pythonGenerator.forBlock['ai_class'] = () => [`ai.get_class()`, (pythonGenerator as any).ORDER_ATOMIC];
+    }
+
+    if (!Blockly.Blocks['on_class_detect']) {
+      Blockly.Blocks['on_class_detect'] = {
+        init: function() {
+          this.appendDummyInput()
+              .appendField("🧠 When AI sees")
+              .appendField(new Blockly.FieldTextInput("Cocoa Pod"), "CLASS");
+          this.appendStatementInput("DO").appendField("do");
+          this.setColour(260);
+          this.setTooltip("Run code when AI detects the specified class");
+        }
+      };
+      javascriptGenerator.forBlock['on_class_detect'] = (block: any) => {
+        const branch = javascriptGenerator.statementToCode(block, 'DO');
+        return `ai.onClassDetect("${block.getFieldValue('CLASS')}", async () => {\n${branch}});\n`;
+      };
+      pythonGenerator.forBlock['on_class_detect'] = (block: any) => {
+        const branch = pythonGenerator.statementToCode(block, 'DO');
+        const safeClassName = block.getFieldValue('CLASS').replace(/[^a-zA-Z0-9]/g, '_');
+        return `def on_detect_${safeClassName}():\n${branch || '    pass'}\n\nai.on_class_detect("${block.getFieldValue('CLASS')}", on_detect_${safeClassName})\n`;
+      };
+    }
+
     // Inject Workspace
     if (blocklyDiv.current && !workspace.current) {
+      const isAIPathway = mission?.pathway === 'Data Science (AI 4 Kids)' || mission?.pathway === 'ML (AI 4 Kids)' || mission?.pathway === 'AI (AI 4 Kids)';
       const toolboxContents: any[] = [
         {
           kind: 'category',
@@ -400,6 +438,17 @@ const KidsIDE: React.FC = () => {
             { kind: 'block', type: 'update_score' },
           ]
         },
+        ...(isAIPathway ? [
+          {
+            kind: 'category',
+            name: '🧠 AI Hub',
+            colour: '#a855f7',
+            contents: [
+              { kind: 'block', type: 'ai_class' },
+              { kind: 'block', type: 'on_class_detect' }
+            ]
+          }
+        ] : []),
         { kind: 'category', name: '🧠 Logic', categorystyle: 'logic_category', contents: [{ kind: 'block', type: 'controls_if' }] },
         { kind: 'category', name: '🔄 Loops', categorystyle: 'loop_category', contents: [{ kind: 'block', type: 'controls_repeat_ext' }] },
         { kind: 'category', name: '📦 Variables', categorystyle: 'variable_category', custom: 'VARIABLE' }
@@ -454,7 +503,7 @@ const KidsIDE: React.FC = () => {
         workspace.current = null;
       };
     }
-  }, [onboardingStep, language, isMobile]);
+  }, [onboardingStep, language, isMobile, mission]);
 
   const runCode = async () => {
     if (!workspace.current || isRunning) return;
@@ -547,11 +596,18 @@ const KidsIDE: React.FC = () => {
       }
     };
 
+    const ai = {
+      getClass: () => aiRef.current?.getClass() || 'Unknown',
+      onClassDetect: (className: string, callback: () => void) => {
+        aiRef.current?.onClassDetect(className, callback);
+      }
+    };
+
     let ranSuccessfully = false;
     try {
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', code);
-      await fn(mascot, robot, game, electronics);
+      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', code);
+      await fn(mascot, robot, game, electronics, ai);
       ranSuccessfully = true;
     } catch (e) {
       console.error(e);
@@ -570,6 +626,7 @@ const KidsIDE: React.FC = () => {
     setIsRunning(false);
     window.speechSynthesis.cancel();
     electronicsRef.current?.reset();
+    aiRef.current?.reset();
   };
 
   const handleNextMission = () => {
@@ -765,6 +822,8 @@ const KidsIDE: React.FC = () => {
               <GameSimulator ref={gameRef} />
             ) : mission?.pathway === 'Electronics (Robotics 4 Kids)' ? (
               <ElectronicsSimulator ref={electronicsRef} />
+            ) : (mission?.pathway === 'Data Science (AI 4 Kids)' || mission?.pathway === 'ML (AI 4 Kids)' || mission?.pathway === 'AI (AI 4 Kids)') ? (
+              <AISimulator ref={aiRef} />
             ) : (
               <Mascot ref={mascotRef} />
             )}
