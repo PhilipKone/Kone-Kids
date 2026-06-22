@@ -5,6 +5,7 @@ import { pythonGenerator } from 'blockly/python';
 import Mascot, { MascotHandle } from './Mascot';
 import RoboticsSimulator, { RoboticsHandle } from './RoboticsSimulator';
 import GameSimulator, { GameHandle } from './GameSimulator';
+import ElectronicsSimulator, { ElectronicsHandle } from './ElectronicsSimulator';
 import MissionBriefing from './MissionBriefing';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
 import { useGamification } from '../context/GamificationContext';
@@ -51,6 +52,7 @@ const KidsIDE: React.FC = () => {
   const mascotRef = useRef<MascotHandle>(null);
   const robotRef = useRef<RoboticsHandle>(null);
   const gameRef = useRef<GameHandle>(null);
+  const electronicsRef = useRef<ElectronicsHandle>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -534,10 +536,15 @@ const KidsIDE: React.FC = () => {
     };
 
     const electronics = {
-      setLED: (color: string, state: string) => new Promise(res => {
-        mascotRef.current?.speak(`💡 ${color.toUpperCase()} LED turned ${state.toUpperCase()}!`);
-        setTimeout(res, 1500);
-      })
+      setLED: (color: string, state: string) => {
+        if (electronicsRef.current) {
+          return electronicsRef.current.setLED(color, state);
+        }
+        return new Promise(res => {
+          mascotRef.current?.speak(`💡 ${color.toUpperCase()} LED turned ${state.toUpperCase()}!`);
+          setTimeout(res, 1500);
+        });
+      }
     };
 
     let ranSuccessfully = false;
@@ -562,6 +569,7 @@ const KidsIDE: React.FC = () => {
     setIsStopping(true);
     setIsRunning(false);
     window.speechSynthesis.cancel();
+    electronicsRef.current?.reset();
   };
 
   const handleNextMission = () => {
@@ -755,6 +763,8 @@ const KidsIDE: React.FC = () => {
               <RoboticsSimulator ref={robotRef} />
             ) : mission?.pathway === 'Game Dev' ? (
               <GameSimulator ref={gameRef} />
+            ) : mission?.pathway === 'Electronics (Robotics 4 Kids)' ? (
+              <ElectronicsSimulator ref={electronicsRef} />
             ) : (
               <Mascot ref={mascotRef} />
             )}
