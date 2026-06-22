@@ -57,6 +57,7 @@ const KidsIDE: React.FC = () => {
   const gameRef = useRef<GameHandle>(null);
   const electronicsRef = useRef<ElectronicsHandle>(null);
   const aiRef = useRef<AIHandle>(null);
+  const isRunningRef = useRef(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
@@ -571,6 +572,7 @@ const KidsIDE: React.FC = () => {
     }
 
     setIsRunning(true);
+    isRunningRef.current = true;
     setIsStopping(false);
     setBlockError(null);
 
@@ -579,7 +581,30 @@ const KidsIDE: React.FC = () => {
       setOnboardingStep(-1);
     }
 
+    // Set STATEMENT_PREFIX dynamically to inject highlights into the executed code
+    (javascriptGenerator as any).STATEMENT_PREFIX = 'await highlightBlock(%1);\n';
     const code = javascriptGenerator.workspaceToCode(workspace.current);
+    // Reset it immediately so it doesn't affect standard workspace code output
+    (javascriptGenerator as any).STATEMENT_PREFIX = null;
+
+    const highlightBlock = async (id: string) => {
+      if (!isRunningRef.current) {
+        throw new Error('stopped');
+      }
+      workspace.current?.highlightBlock(id);
+      
+      // Delay to show highlighting (600ms)
+      await new Promise((resolve, reject) => {
+        const timeout = setTimeout(resolve, 600);
+        const checkInterval = setInterval(() => {
+          if (!isRunningRef.current) {
+            clearTimeout(timeout);
+            clearInterval(checkInterval);
+            reject(new Error('stopped'));
+          }
+        }, 50);
+      });
+    };
     const mascot = {
       speak: (text: string) => new Promise(res => { mascotRef.current?.speak(text); setTimeout(res, 2500); }),
       wave: () => new Promise(res => { mascotRef.current?.wave(2000); setTimeout(res, 2200); }),
@@ -624,13 +649,15 @@ const KidsIDE: React.FC = () => {
     let ranSuccessfully = false;
     try {
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', code);
-      await fn(mascot, robot, game, electronics, ai);
+      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', 'highlightBlock', code);
+      await fn(mascot, robot, game, electronics, ai, highlightBlock);
       ranSuccessfully = true;
     } catch (e) {
       console.error(e);
     } finally {
       setIsRunning(false);
+      isRunningRef.current = false;
+      workspace.current?.highlightBlock(null);
       // Only complete mission if code ran without errors and validation passed
       if (ranSuccessfully && mission && !isMissionCompleted) {
         sounds.playWin();
@@ -645,9 +672,11 @@ const KidsIDE: React.FC = () => {
   const stopCode = () => {
     setIsStopping(true);
     setIsRunning(false);
+    isRunningRef.current = false;
     window.speechSynthesis.cancel();
     electronicsRef.current?.reset();
     aiRef.current?.reset();
+    workspace.current?.highlightBlock(null);
     sounds.playClick();
   };
 
