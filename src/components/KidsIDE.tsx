@@ -661,10 +661,12 @@ const KidsIDE: React.FC = () => {
       // Only complete mission if code ran without errors and validation passed
       if (ranSuccessfully && mission && !isMissionCompleted) {
         sounds.playWin();
+        mascotRef.current?.celebrate('high');
         completeMission(mission.id, mission.xpReward);
         setShowSuccessModal(true);
       } else if (ranSuccessfully) {
         sounds.playSuccess();
+        mascotRef.current?.celebrate('low');
       }
     }
   };

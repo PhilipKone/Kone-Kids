@@ -6,6 +6,7 @@ export interface MascotHandle {
   speak: (text: string) => void;
   wave: (duration?: number) => void;
   blink: () => void;
+  celebrate: (intensity?: 'low' | 'high') => void;
 }
 
 const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
@@ -21,6 +22,12 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
   const blinkIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const activeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  // Particle Engine Refs
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const particlesRef = useRef<any[]>([])
+  const animationFrameRef = useRef<number | null>(null)
+  const speakIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
   // Coordinating active state to pause idle behavior
   const setMascotActive = (duration: number = 3000) => {
     setIsActive(true)
@@ -34,6 +41,152 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       setIsActive(false)
       startBlinking(false)
     }, duration)
+  }
+
+  // Particle color palette based on equipped skin
+  const getParticleColors = () => {
+    const skin = equippedItems.skin
+    if (skin === 'neon_glow') {
+      return ['#22d3ee', '#f472b6', '#a855f7', '#06b6d4', '#e879f9'] // Cyberpunk neon colors
+    } else if (skin === 'gold_chrome') {
+      return ['#fbbf24', '#f59e0b', '#d97706', '#bef264', '#fef08a'] // Gold/yellow chrome colors
+    }
+    // Default rainbow
+    return ['#38bdf8', '#f472b6', '#fbbf24', '#a3e635', '#a855f7', '#fb7185']
+  }
+
+  const drawStar = (ctx: CanvasRenderingContext2D, cx: number, cy: number, spikes: number, outerRadius: number, innerRadius: number) => {
+    let rot = Math.PI / 2 * 3
+    let x = cx
+    let y = cy
+    let step = Math.PI / spikes
+
+    ctx.beginPath()
+    ctx.moveTo(cx, cy - outerRadius)
+    for (let i = 0; i < spikes; i++) {
+      x = cx + Math.cos(rot) * outerRadius
+      y = cy + Math.sin(rot) * outerRadius
+      ctx.lineTo(x, y)
+      rot += step
+
+      x = cx + Math.cos(rot) * innerRadius
+      y = cy + Math.sin(rot) * innerRadius
+      ctx.lineTo(x, y)
+      rot += step
+    }
+    ctx.lineTo(cx, cy - outerRadius)
+    ctx.closePath()
+    ctx.fill()
+  }
+
+  const drawSparkle = (ctx: CanvasRenderingContext2D, cx: number, cy: number, size: number) => {
+    ctx.beginPath()
+    ctx.moveTo(cx, cy - size)
+    ctx.quadraticCurveTo(cx, cy, cx + size, cy)
+    ctx.quadraticCurveTo(cx, cy, cx, cy + size)
+    ctx.quadraticCurveTo(cx, cy, cx - size, cy)
+    ctx.quadraticCurveTo(cx, cy, cx, cy - size)
+    ctx.closePath()
+    ctx.fill()
+  }
+
+  const updateParticles = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+    const particles = particlesRef.current
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i]
+
+      p.x += p.vx
+      p.y += p.vy
+      p.vy += p.gravity
+      p.vx *= 0.98
+      p.vy *= 0.98
+      p.rotation += p.rotationSpeed
+      p.alpha -= p.decay
+
+      if (p.alpha <= 0) {
+        particles.splice(i, 1)
+        continue
+      }
+
+      ctx.save()
+      ctx.globalAlpha = p.alpha
+      ctx.fillStyle = p.color
+      ctx.strokeStyle = p.color
+      ctx.translate(p.x, p.y)
+      ctx.rotate(p.rotation)
+
+      if (p.type === 'star') {
+        drawStar(ctx, 0, 0, 5, p.size, p.size / 2)
+      } else if (p.type === 'sparkle') {
+        drawSparkle(ctx, 0, 0, p.size)
+      } else {
+        ctx.beginPath()
+        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2)
+        ctx.fillStyle = p.color
+        ctx.fill()
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)'
+        ctx.lineWidth = 1
+        ctx.stroke()
+      }
+      ctx.restore()
+    }
+
+    if (particles.length > 0) {
+      animationFrameRef.current = requestAnimationFrame(updateParticles)
+    } else {
+      animationFrameRef.current = null
+    }
+  }
+
+  const spawnParticles = (count: number, intensity: 'low' | 'high' = 'low') => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    // Responsive Canvas Resize Check
+    const rect = canvas.getBoundingClientRect()
+    if (canvas.width !== rect.width || canvas.height !== rect.height) {
+      canvas.width = rect.width
+      canvas.height = rect.height
+    }
+
+    const width = canvas.width
+    const height = canvas.height
+    const startX = width / 2
+    const startY = height * 0.55 // Mascot mouth/body center area
+    const colors = getParticleColors()
+
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * Math.random()) - Math.PI
+      const speed = intensity === 'high' 
+        ? (3 + Math.random() * 8) 
+        : (1.5 + Math.random() * 3.5)
+
+      particlesRef.current.push({
+        x: startX,
+        y: startY,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - (intensity === 'high' ? 4 : 1.5), // Upward propulsion
+        size: intensity === 'high' ? (4 + Math.random() * 10) : (3 + Math.random() * 6),
+        color: colors[Math.floor(Math.random() * colors.length)],
+        type: Math.random() > 0.65 ? 'star' : (Math.random() > 0.3 ? 'sparkle' : 'bubble'),
+        rotation: Math.random() * Math.PI * 2,
+        rotationSpeed: (Math.random() - 0.5) * 0.25,
+        alpha: 1,
+        decay: intensity === 'high' ? (0.01 + Math.random() * 0.015) : (0.015 + Math.random() * 0.025),
+        gravity: 0.08 + Math.random() * 0.12
+      })
+    }
+
+    if (!animationFrameRef.current) {
+      animationFrameRef.current = requestAnimationFrame(updateParticles)
+    }
   }
 
   // Exposed API via ref
@@ -55,8 +208,14 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       setMascotActive(1500)
       setIsBlinking(true)
       setTimeout(() => setIsBlinking(false), 400)
+    },
+    celebrate: (intensity: 'low' | 'high' = 'low') => {
+      setMascotActive(intensity === 'high' ? 4000 : 2000)
+      setIsWaving(true)
+      spawnParticles(intensity === 'high' ? 45 : 20, intensity)
+      setTimeout(() => setIsWaving(false), intensity === 'high' ? 2500 : 1500)
     }
-  }), [dialect, isActive])
+  }), [dialect, isActive, equippedItems])
 
   const startBlinking = (fast: boolean = false) => {
     // Don't start idle blinking if we're active
@@ -77,6 +236,8 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
     return () => { 
       if (blinkIntervalRef.current) clearInterval(blinkIntervalRef.current)
       if (activeTimeoutRef.current) clearTimeout(activeTimeoutRef.current)
+      if (speakIntervalRef.current) clearInterval(speakIntervalRef.current)
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
     }
   }, [isActive]) // Re-run when active state changes to resume correctly
 
@@ -95,6 +256,11 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
   const speakAction = (text: string) => {
     if (!('speechSynthesis' in window)) return
     window.speechSynthesis.cancel()
+    if (speakIntervalRef.current) {
+      clearInterval(speakIntervalRef.current)
+      speakIntervalRef.current = null
+    }
+
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.pitch = 1.3
     utterance.rate = 0.95
@@ -102,6 +268,20 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
     const voices = window.speechSynthesis.getVoices()
     const preferred = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha') || v.name.includes('Karen'))
     if (preferred) utterance.voice = preferred
+
+    utterance.onstart = () => {
+      speakIntervalRef.current = setInterval(() => {
+        spawnParticles(2, 'low')
+      }, 250)
+    }
+
+    utterance.onend = utterance.onerror = () => {
+      if (speakIntervalRef.current) {
+        clearInterval(speakIntervalRef.current)
+        speakIntervalRef.current = null
+      }
+    }
+
     window.speechSynthesis.speak(utterance)
   }
 
@@ -120,6 +300,7 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
     setBubbleText(translated.text)
     setShowBubble(true)
     speakAction(translated.phonetic)
+    spawnParticles(15, 'low') // Burst on click
     setTimeout(() => setIsWaving(false), 2000)
     setTimeout(() => setShowBubble(false), 4000)
   }
@@ -132,6 +313,18 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       onMouseLeave={handleMouseLeave}
       style={{ position: 'relative', cursor: 'pointer', display: 'inline-block' }}
     >
+      {/* Canvas Overlay for Particle Effects */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 5,
+          width: '100%',
+          height: '100%'
+        }}
+      />
       {/* Thinking Glow Indicator */}
       {isActive && (
         <div style={{
