@@ -1,8 +1,10 @@
-import React from 'react';
-import { useGamification } from '../context/GamificationContext';
+import React, { useState } from 'react';
+import { useGamification, Badge } from '../context/GamificationContext';
+import BadgeModal from './BadgeModal';
 
 const BadgeTray: React.FC = () => {
   const { badges } = useGamification();
+  const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
 
   return (
     <section className="badge-tray-section" style={{ padding: 'clamp(2rem, 8vw, 4rem) 5%', background: '#f8fafc' }}>
@@ -22,7 +24,8 @@ const BadgeTray: React.FC = () => {
           {badges.map(badge => (
             <div 
               key={badge.id}
-              className="glass-card"
+              onClick={() => setSelectedBadge(badge)}
+              className="badge-card-interactive"
               style={{
                 width: '100%',
                 padding: 'clamp(1.5rem, 4vw, 2rem) 1rem',
@@ -31,13 +34,13 @@ const BadgeTray: React.FC = () => {
                 background: badge.unlocked ? 'white' : 'rgba(255,255,255,0.4)',
                 filter: badge.unlocked ? 'none' : 'grayscale(1)',
                 opacity: badge.unlocked ? 1 : 0.6,
-                transform: badge.unlocked ? 'scale(1)' : 'scale(0.95)',
-                transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                 border: badge.unlocked ? '3px solid var(--kids-blue)' : '2px dashed #cbd5e1',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                cursor: 'pointer'
               }}
             >
               <div style={{ 
@@ -75,6 +78,24 @@ const BadgeTray: React.FC = () => {
           ))}
         </div>
       </div>
+
+      <style>{`
+        .badge-card-interactive {
+          transform: scale(1);
+        }
+        .badge-card-interactive:hover {
+          transform: scale(1.05) !important;
+          box-shadow: 0 12px 30px rgba(14, 165, 233, 0.18) !important;
+          border-color: var(--kids-orange) !important;
+        }
+      `}</style>
+
+      {selectedBadge && (
+        <BadgeModal 
+          badge={selectedBadge} 
+          onClose={() => setSelectedBadge(null)} 
+        />
+      )}
     </section>
   );
 };

@@ -12,6 +12,7 @@ export interface Badge {
   unlocked: boolean;
   viewed?: boolean;
   xpReward?: number;
+  unlockedAt?: string;
 }
 
 interface GamificationContextType {
@@ -317,7 +318,11 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
           setXp(curr => curr + badge.xpReward!);
           setCoins(curr => curr + Math.floor(badge.xpReward! / 2)); // Earn coins on badges
         }
-        const unlockedBadge = { ...badge, unlocked: true };
+        const unlockedBadge = { 
+          ...badge, 
+          unlocked: true,
+          unlockedAt: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        };
         setLatestBadge(unlockedBadge);
         return unlockedBadge;
       }
