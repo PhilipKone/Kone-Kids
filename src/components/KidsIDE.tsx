@@ -8,6 +8,7 @@ import GameSimulator, { GameHandle } from './GameSimulator';
 import ElectronicsSimulator, { ElectronicsHandle } from './ElectronicsSimulator';
 import AISimulator, { AIHandle } from './AISimulator';
 import MissionBriefing from './MissionBriefing';
+import { getTranslation } from '../utils/translations';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
 import { useGamification } from '../context/GamificationContext';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
@@ -70,7 +71,7 @@ const KidsIDE: React.FC = () => {
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { unlockBadge, completeMission, completedMissions, hasCompletedOnboarding, completeOnboarding } = useGamification();
+  const { unlockBadge, completeMission, completedMissions, hasCompletedOnboarding, completeOnboarding, dialect, setDialect } = useGamification();
   const mission = CODING_MISSIONS.find(m => m.id === missionId);
   const isMissionCompleted = completedMissions.includes(missionId || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -663,6 +664,29 @@ const KidsIDE: React.FC = () => {
         </div>
         
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          {/* Dialect selector */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px 8px' }}>
+            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', display: isMobile ? 'none' : 'inline' }}>🗣️ Voice:</span>
+            <select
+              value={dialect}
+              onChange={(e) => setDialect(e.target.value as any)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'white',
+                fontSize: isMobile ? '0.75rem' : '0.85rem',
+                fontWeight: 800,
+                outline: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="en" style={{ background: '#1e293b', color: 'white' }}>English</option>
+              <option value="twi" style={{ background: '#1e293b', color: 'white' }}>Twi (Asante)</option>
+              <option value="ga" style={{ background: '#1e293b', color: 'white' }}>Ga</option>
+              <option value="ewe" style={{ background: '#1e293b', color: 'white' }}>Ewe</option>
+            </select>
+          </div>
+
           <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px', gap: '4px' }}>
             <button 
               onClick={() => setLanguage('javascript')} 
@@ -731,8 +755,8 @@ const KidsIDE: React.FC = () => {
               <div style={{ display: 'flex', gap: isMobile ? '0.75rem' : '1rem', alignItems: 'flex-start', marginBottom: (mission.steps && !isMobile) ? '0.75rem' : '0' }}>
                 <div style={{ fontSize: isMobile ? '1.4rem' : '2rem', flexShrink: 0 }}>🎯</div>
                 <div>
-                  <h4 style={{ margin: 0, color: 'var(--kids-blue)', fontSize: isMobile ? '0.65rem' : '0.75rem', letterSpacing: '1px' }}>MISSION: {mission.name}</h4>
-                  <p style={{ margin: '0.15rem 0 0', color: 'white', fontWeight: 600, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>{mission.objective}</p>
+                  <h4 style={{ margin: 0, color: 'var(--kids-blue)', fontSize: isMobile ? '0.65rem' : '0.75rem', letterSpacing: '1px' }}>MISSION: {getTranslation(mission.name, dialect).text}</h4>
+                  <p style={{ margin: '0.15rem 0 0', color: 'white', fontWeight: 600, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>{getTranslation(mission.objective, dialect).text}</p>
                 </div>
               </div>
               {mission.steps && !isMobile && (
@@ -740,7 +764,7 @@ const KidsIDE: React.FC = () => {
                   {mission.steps.map((step, i) => (
                     <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)' }}>
                       <span style={{ background: 'rgba(14,165,233,0.3)', color: 'var(--kids-blue)', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 800, flexShrink: 0 }}>{i+1}</span>
-                      <span>{step}</span>
+                      <span>{getTranslation(step, dialect).text}</span>
                     </div>
                   ))}
                 </div>
@@ -882,8 +906,8 @@ const KidsIDE: React.FC = () => {
 
       {mission?.briefing && !hasStartedMission && (
         <MissionBriefing 
-          missionName={mission.name} 
-          briefing={mission.briefing} 
+          missionName={getTranslation(mission.name, dialect).text} 
+          briefing={getTranslation(mission.briefing, dialect).text} 
           onStart={() => setHasStartedMission(true)} 
         />
       )}

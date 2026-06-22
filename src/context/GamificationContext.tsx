@@ -45,6 +45,8 @@ interface GamificationContextType {
   studentName: string;
   loginAsStudent: (secId: string, studId: string, name: string) => Promise<void>;
   logoutStudent: () => Promise<void>;
+  dialect: 'en' | 'twi' | 'ga' | 'ewe';
+  setDialect: (dialect: 'en' | 'twi' | 'ga' | 'ewe') => void;
 }
 
 const INITIAL_BADGES: Badge[] = [
@@ -181,6 +183,20 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       return '';
     }
   });
+
+  const [dialect, setDialectState] = useState<'en' | 'twi' | 'ga' | 'ewe'>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_dialect');
+      return (saved as any) || 'en';
+    } catch (e) {
+      return 'en';
+    }
+  });
+
+  const setDialect = useCallback((d: 'en' | 'twi' | 'ga' | 'ewe') => {
+    setDialectState(d);
+    localStorage.setItem('kone_kids_dialect', d);
+  }, []);
 
   const level = useMemo(() => {
     // Level 1: 0-250 XP
@@ -496,10 +512,12 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
   const contextValue = useMemo(() => ({
     badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
     coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
-    sectionId, studentId, studentName, loginAsStudent, logoutStudent
+    sectionId, studentId, studentName, loginAsStudent, logoutStudent,
+    dialect, setDialect
   }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
        coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
-       sectionId, studentId, studentName, loginAsStudent, logoutStudent]);
+       sectionId, studentId, studentName, loginAsStudent, logoutStudent,
+       dialect, setDialect]);
 
   return (
     <GamificationContext.Provider value={contextValue}>

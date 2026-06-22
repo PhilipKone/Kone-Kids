@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react'
 import { useGamification } from '../context/GamificationContext'
+import { getTranslation } from '../utils/translations'
 
 export interface MascotHandle {
   speak: (text: string) => void;
@@ -8,7 +9,7 @@ export interface MascotHandle {
 }
 
 const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
-  const { unlockBadge, equippedItems } = useGamification()
+  const { unlockBadge, equippedItems, dialect } = useGamification()
   const [clickCount, setClickCount] = useState(0)
   const [isWaving, setIsWaving] = useState(false)
   const [showBubble, setShowBubble] = useState(false)
@@ -39,9 +40,10 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
   useImperativeHandle(ref, () => ({
     speak: (text: string) => {
       setMascotActive(4500)
-      setBubbleText(text)
+      const translated = getTranslation(text, dialect)
+      setBubbleText(translated.text)
       setShowBubble(true)
-      speakAction(text)
+      speakAction(translated.phonetic)
       setTimeout(() => setShowBubble(false), 4000)
     },
     wave: (duration = 2000) => {
@@ -54,7 +56,7 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       setIsBlinking(true)
       setTimeout(() => setIsBlinking(false), 400)
     }
-  }))
+  }), [dialect, isActive])
 
   const startBlinking = (fast: boolean = false) => {
     // Don't start idle blinking if we're active
@@ -113,9 +115,11 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
 
     setMascotActive(3000)
     setIsWaving(true)
-    setBubbleText('Hi! Ready to build the future?')
+    const textToSpeak = 'Hi! Ready to build the future?'
+    const translated = getTranslation(textToSpeak, dialect)
+    setBubbleText(translated.text)
     setShowBubble(true)
-    speakAction('Hi! Ready to build the future?')
+    speakAction(translated.phonetic)
     setTimeout(() => setIsWaving(false), 2000)
     setTimeout(() => setShowBubble(false), 4000)
   }
