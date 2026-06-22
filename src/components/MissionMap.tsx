@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
-import { ShoppingBag, Coins } from 'lucide-react';
+import { ShoppingBag, Coins, Volume2, VolumeX, Music } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { CODING_MISSIONS, Pathway } from '../data/missions';
 import Mascot from './Mascot';
 import MascotShop from './MascotShop';
 import SeriesLibrary from './SeriesLibrary';
 import CoinStoreModal from './CoinStoreModal';
+import { sounds } from '../utils/sounds';
 
 type HubType = 'coding' | 'robotics' | 'ai';
 
@@ -77,6 +78,22 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const { xp, level, completedMissions, coins } = useGamification();
   const { theme, toggleTheme } = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Audio control state
+  const [muted, setMuted] = useState(sounds.getMuted());
+  const [musicOn, setMusicOn] = useState(sounds.getMusicOn());
+
+  const handleToggleMute = () => {
+    const isMuted = sounds.toggleMute();
+    setMuted(isMuted);
+    sounds.playClick();
+  };
+
+  const handleToggleMusic = () => {
+    const isMusicOn = sounds.toggleMusic();
+    setMusicOn(isMusicOn);
+    sounds.playClick();
+  };
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -209,6 +226,42 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer' }}
             >
               {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+
+            {/* Audio controls */}
+            <button
+              onClick={handleToggleMusic}
+              title={musicOn ? 'Mute Music' : 'Play Background Music'}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: musicOn ? '#c084fc' : '#94a3b8',
+                padding: '0.2rem',
+                outline: 'none'
+              }}
+            >
+              <Music size={18} />
+            </button>
+            <button
+              onClick={handleToggleMute}
+              title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: !muted ? '#38bdf8' : '#94a3b8',
+                padding: '0.2rem',
+                outline: 'none'
+              }}
+            >
+              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
 
             <button 

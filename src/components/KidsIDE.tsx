@@ -13,8 +13,9 @@ import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
 import { useGamification } from '../context/GamificationContext';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { CODING_MISSIONS } from '../data/missions';
-import { Play, Square, FileCode, Blocks, Eye, EyeOff } from 'lucide-react';
+import { Play, Square, FileCode, Blocks, Eye, EyeOff, Volume2, VolumeX, Music } from 'lucide-react';
 import MascotShop from './MascotShop';
+import { sounds } from '../utils/sounds';
 
 // Define a premium dark theme for Blockly
 const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
@@ -76,6 +77,22 @@ const KidsIDE: React.FC = () => {
   const isMissionCompleted = completedMissions.includes(missionId || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showShop, setShowShop] = useState(false);
+
+  // Audio control state
+  const [muted, setMuted] = useState(sounds.getMuted());
+  const [musicOn, setMusicOn] = useState(sounds.getMusicOn());
+
+  const handleToggleMute = () => {
+    const isMuted = sounds.toggleMute();
+    setMuted(isMuted);
+    sounds.playClick();
+  };
+
+  const handleToggleMusic = () => {
+    const isMusicOn = sounds.toggleMusic();
+    setMusicOn(isMusicOn);
+    sounds.playClick();
+  };
 
   // Derive the hub from the URL — values are hardcoded literals, never from location, preventing open redirect (CWE-601)
   const _rawSegment = location.pathname.split('/')[1];
@@ -616,8 +633,11 @@ const KidsIDE: React.FC = () => {
       setIsRunning(false);
       // Only complete mission if code ran without errors and validation passed
       if (ranSuccessfully && mission && !isMissionCompleted) {
+        sounds.playWin();
         completeMission(mission.id, mission.xpReward);
         setShowSuccessModal(true);
+      } else if (ranSuccessfully) {
+        sounds.playSuccess();
       }
     }
   };
@@ -628,6 +648,7 @@ const KidsIDE: React.FC = () => {
     window.speechSynthesis.cancel();
     electronicsRef.current?.reset();
     aiRef.current?.reset();
+    sounds.playClick();
   };
 
   const handleNextMission = () => {
@@ -685,6 +706,44 @@ const KidsIDE: React.FC = () => {
               <option value="ga" style={{ background: '#1e293b', color: 'white' }}>Ga</option>
               <option value="ewe" style={{ background: '#1e293b', color: 'white' }}>Ewe</option>
             </select>
+          </div>
+
+          {/* Audio controls */}
+          <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px 6px' }}>
+            <button
+              onClick={handleToggleMusic}
+              title={musicOn ? 'Mute Music' : 'Play Background Music'}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: musicOn ? '#c084fc' : '#94a3b8',
+                padding: '0.25rem',
+                outline: 'none'
+              }}
+            >
+              <Music size={16} />
+            </button>
+            <button
+              onClick={handleToggleMute}
+              title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: !muted ? '#38bdf8' : '#94a3b8',
+                padding: '0.25rem',
+                outline: 'none'
+              }}
+            >
+              {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+            </button>
           </div>
 
           <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px', gap: '4px' }}>

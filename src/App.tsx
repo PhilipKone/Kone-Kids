@@ -9,8 +9,9 @@ import InstallBanner from './components/InstallBanner'
 import BadgeNotification from './components/BadgeNotification'
 import SEOManager from './components/SEOManager'
 import { useLocation } from 'react-router-dom'
-import { Home as HomeIcon, Code, Cpu, Brain, Sparkles, BookOpen, Clock, ArrowRight } from 'lucide-react'
+import { Home as HomeIcon, Code, Cpu, Brain, Sparkles, BookOpen, Clock, ArrowRight, Volume2, VolumeX, Music } from 'lucide-react'
 import { blogArticles } from './data/blogArticles'
+import { sounds } from './utils/sounds'
 
 const ProgramDetails = React.lazy(() => import('./components/ProgramDetails'))
 const EnrollmentModal = React.lazy(() => import('./components/EnrollmentModal'))
@@ -25,6 +26,22 @@ const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { studentName, logoutStudent } = useGamification()
+
+  // Audio control state
+  const [muted, setMuted] = useState(sounds.getMuted())
+  const [musicOn, setMusicOn] = useState(sounds.getMusicOn())
+
+  const handleToggleMute = () => {
+    const isMuted = sounds.toggleMute()
+    setMuted(isMuted)
+    sounds.playClick()
+  }
+
+  const handleToggleMusic = () => {
+    const isMusicOn = sounds.toggleMusic()
+    setMusicOn(isMusicOn)
+    sounds.playClick()
+  }
 
   return (
     <div className="kids-app">
@@ -56,6 +73,49 @@ function Home() {
           <img className="kids-nav-logo-img" src="/mascot.svg" alt="Kone Kids Logo" width="24" height="24" style={{ height: '24px', width: 'auto' }} /> Kone Kids
         </Link>
         <div className="nav-links-container" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          {/* Audio controls */}
+          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+            <button
+              onClick={handleToggleMusic}
+              title={musicOn ? 'Mute Music' : 'Play Background Music'}
+              style={{
+                background: musicOn ? 'rgba(168, 85, 247, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: musicOn ? '#c084fc' : '#94a3b8',
+                transition: 'all 0.2s',
+                outline: 'none'
+              }}
+            >
+              <Music size={18} />
+            </button>
+            <button
+              onClick={handleToggleMute}
+              title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
+              style={{
+                background: !muted ? 'rgba(14, 165, 233, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: !muted ? '#38bdf8' : '#94a3b8',
+                transition: 'all 0.2s',
+                outline: 'none'
+              }}
+            >
+              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
+          </div>
           {studentName ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <span style={{ 
@@ -426,6 +486,15 @@ function AppContent() {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Resume Web Audio context on user interaction
+  React.useEffect(() => {
+    const resumeAudio = () => {
+      sounds.resumeAudio();
+    };
+    window.addEventListener('click', resumeAudio);
+    return () => window.removeEventListener('click', resumeAudio);
   }, []);
 
   React.useEffect(() => {
