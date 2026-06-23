@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
+import { blogArticles } from '../data/blogArticles';
 
 interface SEOConfig {
   title: string;
@@ -70,11 +71,44 @@ export const SEOManager: React.FC = () => {
     // Handle dynamic blog routes: /blog/:id
     else if (path.startsWith('/blog/')) {
       const articleId = params.id;
-      activeSEO = {
-        title: `STEM Article ${articleId ? `#${articleId}` : ''} | Kone Kids Parent Hub`,
-        description: "Read our latest article on nurturing coding and robotics skills in youth.",
-        keywords: "STEM learning, tech kids education, learning tutorials"
-      };
+      const article = blogArticles.find(art => art.slug === articleId);
+      if (article) {
+        activeSEO = {
+          title: `${article.title} | Kone Kids Parent Hub`,
+          description: article.summary,
+          keywords: `STEM learning, tech kids education, learning tutorials, ${article.category.toLowerCase()}`,
+          schema: {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": article.title,
+            "description": article.summary,
+            "datePublished": article.publishDate,
+            "author": {
+              "@type": "Person",
+              "name": article.author.name,
+              "jobTitle": article.author.role,
+              "sameAs": [
+                "https://www.linkedin.com/in/philip-kone-hotor/"
+              ]
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "Kone Academy",
+              "url": "https://www.koneacademy.io/"
+            },
+            "mainEntityOfPage": {
+              "@type": "WebPage",
+              "@id": `https://kids.koneacademy.io/blog/${article.slug}`
+            }
+          }
+        };
+      } else {
+        activeSEO = {
+          title: `STEM Article | Kone Kids Parent Hub`,
+          description: "Read our latest article on nurturing coding and robotics skills in youth.",
+          keywords: "STEM learning, tech kids education, learning tutorials"
+        };
+      }
     }
 
     // 2. Update Document Meta Details

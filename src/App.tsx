@@ -463,9 +463,13 @@ function Home() {
           alignItems: 'center',
           gap: '0.75rem'
         }}>
-          <span style={{ color: 'var(--kids-text-muted)', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
-            © 2026 Kone Kids. All rights reserved.
-          </span>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem 1rem' }}>
+            <span style={{ color: 'var(--kids-text-muted)', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
+              © 2026 Kone Kids. All rights reserved.
+            </span>
+            <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
+            <a href="https://www.koneacademy.io" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)' }}>Kone Academy Home</a>
+          </div>
           <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
             +233 55 199 3820
           </p>

@@ -7,12 +7,15 @@
       // GitHub Pages SPA redirect hack
       // Stores the current URL path in sessionStorage then redirects to root
       var pathSegmentsToKeep = 0;
-      var l = window.location;
-      var target = l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-        l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash;
-      l.replace(target);
+      var path = window.location.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~');
+      var search = window.location.search ? '&' + window.location.search.slice(1).replace(/&/g, '~and~') : '';
+      var hash = window.location.hash;
+      var target = '/?/' + path + search + hash;
+      
+      // Ensure target is local
+      if (target.charAt(0) === '/' && target.charAt(1) !== '/') {
+        window.location.replace(target);
+      }
     </script>
   </head>
 </html>
