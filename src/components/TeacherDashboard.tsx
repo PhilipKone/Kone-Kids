@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../firebase/config';
-import { doc, setDoc, collection, getDocs, deleteDoc, query, where } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, getDocs, deleteDoc, query, where } from 'firebase/firestore';
 import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { Sparkles, Trash2, Printer, Plus, Users, Award, BookOpen } from 'lucide-react';
+import { Sparkles, Trash2, Printer, Plus, Users, Award, BookOpen, Check, X, ShieldAlert } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { CODING_MISSIONS } from '../data/missions';
+
+const ADMIN_EMAILS = ['philipkone45@gmail.com', 'phconsultgh@gmail.com'];
+
 
 const MASCOTS = [
   // Animals (75)
@@ -44,6 +47,10 @@ export default function TeacherDashboard() {
 
   // Teacher Authentication States
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isApproved, setIsApproved] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [teachersList, setTeachersList] = useState<any[]>([]);
+  const [loadingTeachers, setLoadingTeachers] = useState(false);
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
@@ -80,6 +87,47 @@ export default function TeacherDashboard() {
     }
   };
 
+  const fetchTeachers = async () => {
+    if (!db || !(db as any).app) return;
+    setLoadingTeachers(true);
+    try {
+      const qSnapshot = await getDocs(collection(db, 'teachers'));
+      const list = qSnapshot.docs.map(doc => ({
+        uid: doc.id,
+        ...doc.data()
+      }));
+      setTeachersList(list);
+    } catch (err) {
+      console.error("Error fetching teachers:", err);
+    } finally {
+      setLoadingTeachers(false);
+    }
+  };
+
+  const handleToggleApproval = async (uid: string, currentApproved: boolean) => {
+    if (!db || !(db as any).app) return;
+    try {
+      await setDoc(doc(db, 'teachers', uid), { approved: !currentApproved }, { merge: true });
+      fetchTeachers();
+      confetti({ particleCount: 50, spread: 60, origin: { y: 0.8 } });
+    } catch (err) {
+      console.error("Error updating teacher status:", err);
+      setError("Failed to update teacher approval status.");
+    }
+  };
+
+  const handleDeleteTeacher = async (uid: string) => {
+    if (!db || !(db as any).app) return;
+    if (!window.confirm("Are you sure you want to delete this teacher?")) return;
+    try {
+      await deleteDoc(doc(db, 'teachers', uid));
+      fetchTeachers();
+    } catch (err) {
+      console.error("Error deleting teacher:", err);
+      setError("Failed to delete teacher account.");
+    }
+  };
+
   useEffect(() => {
     if (!auth || !(auth as any).app) {
       setCurrentUser({
@@ -87,20 +135,73 @@ export default function TeacherDashboard() {
         email: 'tutor@koneacademy.io',
         displayName: 'Kone Instructor',
       } as any);
+      setIsApproved(true);
+      setIsAdmin(true);
       // Load mock items
       const saved = localStorage.getItem('kone_teacher_sections');
       const parsed = saved ? JSON.parse(saved) : [];
       setMySections(parsed.map((item: any) => typeof item === 'string' ? { id: item, name: item } : item));
+      setTeachersList([
+        { uid: 'mock_1', email: 'teacher1@school.edu', name: 'Amma Sarfo', approved: false, createdAt: '2026-06-23T12:00:00Z' },
+        { uid: 'mock_2', email: 'teacher2@school.edu', name: 'Kofi Mensah', approved: true, createdAt: '2026-06-22T09:30:00Z' }
+      ]);
       return;
     }
+
+    const checkUserStatus = async (user: User) => {
+      const email = user.email || '';
+      if (ADMIN_EMAILS.includes(email.toLowerCase())) {
+        setIsAdmin(true);
+        setIsApproved(true);
+        fetchMySections(user.uid);
+        fetchTeachers();
+        return;
+      }
+
+      // Check regular teacher in Firestore
+      try {
+        const teacherDocRef = doc(db, 'teachers', user.uid);
+        const docSnap = await getDoc(teacherDocRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data && data.approved === true) {
+            setIsApproved(true);
+            setIsAdmin(false);
+            fetchMySections(user.uid);
+          } else {
+            setIsApproved(false);
+            setIsAdmin(false);
+          }
+        } else {
+          // Create new pending teacher doc
+          const name = user.displayName || user.email?.split('@')[0] || 'Teacher';
+          await setDoc(teacherDocRef, {
+            email: user.email,
+            name: name,
+            approved: false,
+            createdAt: new Date().toISOString()
+          });
+          setIsApproved(false);
+          setIsAdmin(false);
+        }
+      } catch (err) {
+        console.error("Error checking teacher status:", err);
+        setIsApproved(false);
+        setIsAdmin(false);
+        setError("Error validating account permission. Contact administrator.");
+      }
+    };
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setCurrentUser(user);
-        fetchMySections(user.uid);
+        checkUserStatus(user);
       } else {
         setCurrentUser(null);
+        setIsApproved(false);
+        setIsAdmin(false);
         setMySections([]);
+        setTeachersList([]);
         setActiveCode('');
         setStudents([]);
       }
@@ -584,6 +685,91 @@ export default function TeacherDashboard() {
     );
   }
 
+  if (currentUser && !isApproved) {
+    return (
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '2rem'
+      }}>
+        <div style={{
+          background: 'white',
+          borderRadius: '32px',
+          padding: '3.5rem 2.5rem',
+          maxWidth: '500px',
+          width: '100%',
+          boxShadow: '0 20px 40px rgba(0,0,0,0.06)',
+          border: '2px solid #e2e8f0',
+          textAlign: 'center'
+        }}>
+          <div style={{ marginBottom: '2.5rem' }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'rgba(249, 115, 22, 0.1)',
+              color: 'var(--kids-orange)',
+              width: '72px',
+              height: '72px',
+              borderRadius: '24px',
+              fontSize: '2.5rem',
+              marginBottom: '1.25rem'
+            }}>
+              ⏳
+            </div>
+            <h1 style={{
+              fontFamily: "'Baloo 2', cursive",
+              fontSize: '2.2rem',
+              fontWeight: 800,
+              color: '#1e3a8a',
+              margin: '0 0 0.75rem'
+            }}>
+              Approval Pending
+            </h1>
+            <p style={{ color: '#475569', fontSize: '1rem', margin: 0, lineHeight: 1.5 }}>
+              Thank you for registering! To ensure a safe environment for students, all teacher accounts must be manually verified and approved by the system administrator.
+            </p>
+          </div>
+
+          <div style={{
+            background: '#f8fafc',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            border: '1px dashed #cbd5e1',
+            marginBottom: '2rem',
+            textAlign: 'left'
+          }}>
+            <h4 style={{ margin: '0 0 0.5rem 0', color: '#1e3a8a', fontFamily: "'Baloo 2', cursive", fontSize: '1.1rem' }}>How to activate your account:</h4>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b', lineHeight: 1.4 }}>
+              Please message the Kone Academy Administrator (Philip Kone) with your registered email (<strong>{currentUser.email}</strong>) to request activation.
+            </p>
+            <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem', fontWeight: 700 }}>
+              <span style={{ color: 'var(--kids-orange)' }}>📞 Phone / WhatsApp: +233 55 199 3820</span>
+              <span style={{ color: 'var(--kids-blue)' }}>✉️ Email: philipkone45@gmail.com</span>
+            </div>
+          </div>
+
+          <button
+            onClick={() => auth && signOut(auth)}
+            className="kids-button"
+            style={{
+              background: '#ef4444',
+              boxShadow: '0 6px 0 #991b1b',
+              padding: '0.75rem 2rem',
+              fontSize: '1rem',
+              width: '100%'
+            }}
+          >
+            Sign Out
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -711,6 +897,89 @@ export default function TeacherDashboard() {
                 </button>
               </form>
             </div>
+
+            {/* Teacher Directory (Admin-Only View) */}
+            {isAdmin && (
+              <div className="glass-card" style={{
+                background: 'white',
+                padding: '2rem',
+                borderRadius: '24px',
+                border: '2px solid var(--kids-blue)',
+                boxShadow: '0 10px 30px rgba(14, 165, 233, 0.05)'
+              }}>
+                <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0 0 1.25rem', color: 'var(--kids-blue)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  👥 Teacher Directory <span style={{ fontSize: '0.8rem', background: 'rgba(14, 165, 233, 0.1)', color: 'var(--kids-blue)', padding: '0.2rem 0.6rem', borderRadius: '8px' }}>ADMIN</span>
+                </h3>
+                
+                {loadingTeachers ? (
+                  <p style={{ color: 'var(--kids-text-muted)', fontSize: '0.9rem' }}>Loading teachers directory...</p>
+                ) : teachersList.length === 0 ? (
+                  <p style={{ color: 'var(--kids-text-muted)', fontSize: '0.9rem' }}>No registered teachers found.</p>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxHeight: '350px', overflowY: 'auto', paddingRight: '4px' }}>
+                    {teachersList.map((t) => (
+                      <div key={t.uid} style={{
+                        padding: '1rem',
+                        borderRadius: '16px',
+                        background: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.5rem'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontWeight: 800, color: '#1e3a8a', fontSize: '0.95rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.name}</div>
+                            <div style={{ fontSize: '0.8rem', color: '#64748b', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.email}</div>
+                          </div>
+                          <span style={{
+                            fontSize: '0.75rem',
+                            fontWeight: 800,
+                            padding: '0.2rem 0.5rem',
+                            borderRadius: '8px',
+                            background: t.approved ? 'rgba(16, 185, 129, 0.1)' : 'rgba(249, 115, 22, 0.1)',
+                            color: t.approved ? '#10b981' : '#f97316',
+                            whiteSpace: 'nowrap'
+                          }}>
+                            {t.approved ? '🟢 Approved' : '⏳ Pending'}
+                          </span>
+                        </div>
+                        
+                        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+                          <button
+                            onClick={() => handleToggleApproval(t.uid, !!t.approved)}
+                            className="kids-button"
+                            style={{
+                              flex: 1,
+                              padding: '0.35rem 0.75rem',
+                              fontSize: '0.8rem',
+                              background: t.approved ? '#f97316' : '#10b981',
+                              boxShadow: t.approved ? '0 3px 0 #c2410c' : '0 3px 0 #047857',
+                              minHeight: '28px'
+                            }}
+                          >
+                            {t.approved ? 'Revoke 🔒' : 'Approve ✅'}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteTeacher(t.uid)}
+                            className="kids-button"
+                            style={{
+                              padding: '0.35rem 0.75rem',
+                              fontSize: '0.8rem',
+                              background: '#ef4444',
+                              boxShadow: '0 3px 0 #b91c1c',
+                              minHeight: '28px'
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* My Active Sections */}
             {mySections.length > 0 && (
