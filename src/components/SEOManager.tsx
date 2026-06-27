@@ -94,7 +94,15 @@ export const SEOManager: React.FC = () => {
             "publisher": {
               "@type": "Organization",
               "name": "Kone Academy",
-              "url": "https://www.koneacademy.io/"
+              "url": "https://www.koneacademy.io/",
+              "sameAs": [
+                "https://www.linkedin.com/company/konecodeacdemy/",
+                "https://www.facebook.com/profile.php?id=61584327765846",
+                "https://www.instagram.com/koneacademy",
+                "https://x.com/koneacademy",
+                "https://www.tiktok.com/@koneacademy",
+                "https://youtube.com/@koneacademy"
+              ]
             },
             "mainEntityOfPage": {
               "@type": "WebPage",
