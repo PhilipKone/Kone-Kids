@@ -657,14 +657,22 @@ const KidsIDE: React.FC = () => {
     } finally {
       setIsRunning(false);
       isRunningRef.current = false;
-      workspace.current?.highlightBlock(null);
+      let validationPassed = true;
+      if (mission) {
+        if (mission.id === 'robotics_1' && robotRef.current) {
+          validationPassed = robotRef.current.hasReachedTarget();
+        } else if (mission.id === 'robotics_2' && robotRef.current) {
+          validationPassed = robotRef.current.hasReachedTarget();
+        }
+      }
+
       // Only complete mission if code ran without errors and validation passed
-      if (ranSuccessfully && mission && !isMissionCompleted) {
+      if (ranSuccessfully && validationPassed && mission && !isMissionCompleted) {
         sounds.playWin();
         mascotRef.current?.celebrate('high');
         completeMission(mission.id, mission.xpReward);
         setShowSuccessModal(true);
-      } else if (ranSuccessfully) {
+      } else if (ranSuccessfully && validationPassed) {
         sounds.playSuccess();
         mascotRef.current?.celebrate('low');
       }
@@ -931,7 +939,7 @@ const KidsIDE: React.FC = () => {
               🛒 Shop
             </button>
             {mission?.pathway === 'Robotics (Robotics 4 Kids)' ? (
-              <RoboticsSimulator ref={robotRef} />
+              <RoboticsSimulator ref={robotRef} missionId={missionId} />
             ) : mission?.pathway === 'Game Dev' ? (
               <GameSimulator ref={gameRef} />
             ) : mission?.pathway === 'Electronics (Robotics 4 Kids)' ? (
