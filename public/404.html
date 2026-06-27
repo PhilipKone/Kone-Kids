@@ -12,8 +12,8 @@
       var hash = window.location.hash;
       var target = '/?/' + path + search + hash;
       
-      // Ensure target is local
-      if (target.charAt(0) === '/' && target.charAt(1) !== '/') {
+      // Ensure target is local and we are not in a pre-rendering environment
+      if (window.navigator.userAgent !== 'ReactSnap' && target.charAt(0) === '/' && target.charAt(1) !== '/') {
         window.location.replace(target);
       }
     </script>
