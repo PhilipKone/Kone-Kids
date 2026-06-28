@@ -264,6 +264,18 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
     }
   }, [isActive]) // Re-run when active state changes to resume correctly
 
+  // Idle skin-themed particle spawning
+  useEffect(() => {
+    if (!equippedItems.skin || equippedItems.skin === 'default') return;
+
+    const interval = setInterval(() => {
+      if (document.hidden) return;
+      spawnParticles(1, 'low');
+    }, 800);
+
+    return () => clearInterval(interval);
+  }, [equippedItems.skin]);
+
   const handleMouseEnter = () => {
     setIsHovering(true)
     setIsWaving(true)
@@ -422,12 +434,75 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
           style={{ transition: 'all 0.3s', maxWidth: '500px', filter: isActive ? 'drop-shadow(0 0 10px rgba(14, 165, 233, 0.3))' : 'none' }}
           className={isWaving ? '' : 'animate-float'}
         >
+          <style>{`
+            @keyframes glitch-anim {
+              0% { transform: translate(0) skew(0); }
+              5% { transform: translate(-2px, 1px) skew(-1deg); filter: hue-rotate(45deg); }
+              10% { transform: translate(2px, -1px) skew(1deg); filter: hue-rotate(-45deg); }
+              15% { transform: translate(0) skew(0); }
+              100% { transform: translate(0) skew(0); }
+            }
+            .glitch-active {
+              animation: glitch-anim 2s infinite;
+              transform-origin: center;
+            }
+            @keyframes neon-hue {
+              0% { filter: hue-rotate(0deg) drop-shadow(0 0 5px rgba(34,211,238,0.5)); }
+              50% { filter: hue-rotate(180deg) drop-shadow(0 0 15px rgba(244,114,182,0.8)); }
+              100% { filter: hue-rotate(360deg) drop-shadow(0 0 5px rgba(34,211,238,0.5)); }
+            }
+            .neon-active {
+              animation: neon-hue 6s linear infinite;
+            }
+            @keyframes float-bot {
+              0% { transform: translate(320px, 320px) scale(0.6) translateY(0); }
+              50% { transform: translate(320px, 320px) scale(0.6) translateY(-8px); }
+              100% { transform: translate(320px, 320px) scale(0.6) translateY(0); }
+            }
+            .floating-bot {
+              animation: float-bot 3s ease-in-out infinite;
+            }
+            @keyframes float-dragon {
+              0% { transform: translate(305px, 230px) translateY(0); }
+              50% { transform: translate(305px, 230px) translateY(-6px); }
+              100% { transform: translate(305px, 230px) translateY(0); }
+            }
+            .floating-dragon {
+              animation: float-dragon 3.5s ease-in-out infinite;
+            }
+          `}</style>
+
           <defs>
             <radialGradient id="body-radial" cx="200" cy="180" r="160" gradientUnits="userSpaceOnUse">
               <stop offset="0%" stopColor={skinColors.stop0} />
               <stop offset="60%" stopColor={skinColors.stop60} />
               <stop offset="100%" stopColor={skinColors.stop100} />
             </radialGradient>
+
+            {/* Gold Chrome Shine Gradient */}
+            <linearGradient id="shine-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="30%" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="50%" stopColor="#ffffff" stopOpacity="0.6" />
+              <stop offset="70%" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
+              <animate attributeName="x1" from="-100%" to="100%" dur="2.5s" repeatCount="indefinite" />
+              <animate attributeName="y1" from="-100%" to="100%" dur="2.5s" repeatCount="indefinite" />
+              <animate attributeName="x2" from="0%" to="200%" dur="2.5s" repeatCount="indefinite" />
+              <animate attributeName="y2" from="0%" to="200%" dur="2.5s" repeatCount="indefinite" />
+            </linearGradient>
+
+            {/* Matrix Code Pattern */}
+            <pattern id="matrix-pattern" width="50" height="50" patternUnits="userSpaceOnUse">
+              <rect width="50" height="50" fill="transparent" />
+              <text x="5" y="15" fill="#22c55e" fontSize="8" fontFamily="monospace" fontWeight="bold" opacity="0.7">0</text>
+              <text x="15" y="30" fill="#4ade80" fontSize="9" fontFamily="monospace" fontWeight="bold" opacity="0.9">1</text>
+              <text x="25" y="10" fill="#22c55e" fontSize="7" fontFamily="monospace" fontWeight="bold" opacity="0.5">1</text>
+              <text x="35" y="45" fill="#4ade80" fontSize="10" fontFamily="monospace" fontWeight="bold" opacity="0.8">0</text>
+              <text x="45" y="25" fill="#22c55e" fontSize="8" fontFamily="monospace" fontWeight="bold" opacity="0.6">1</text>
+              <animate attributeName="y" from="0" to="50" dur="2s" repeatCount="indefinite" />
+            </pattern>
+
             <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur in="SourceAlpha" stdDeviation="6" />
               <feOffset dx="0" dy="10" result="offsetblur" />
@@ -464,7 +539,28 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
 
           {/* Body */}
           <g filter="url(#soft-shadow)">
-            <path d="M 200 65 C 200 65 90 170 90 245 C 90 320 140 350 200 350 C 260 350 310 320 310 245 C 310 170 200 65 200 65 Z" fill="url(#body-radial)" />
+            <path 
+              d="M 200 65 C 200 65 90 170 90 245 C 90 320 140 350 200 350 C 260 350 310 320 310 245 C 310 170 200 65 200 65 Z" 
+              fill="url(#body-radial)" 
+              className={equippedItems.skin === 'quantum_glitch' ? 'glitch-active' : equippedItems.skin === 'neon_glow' ? 'neon-active' : ''}
+            />
+
+            {/* Matrix rain overlay */}
+            {equippedItems.skin === 'matrix_rain' && (
+              <path 
+                d="M 200 65 C 200 65 90 170 90 245 C 90 320 140 350 200 350 C 260 350 310 320 310 245 C 310 170 200 65 200 65 Z" 
+                fill="url(#matrix-pattern)" 
+              />
+            )}
+
+            {/* Gold chrome sheen overlay */}
+            {equippedItems.skin === 'gold_chrome' && (
+              <path 
+                d="M 200 65 C 200 65 90 170 90 245 C 90 320 140 350 200 350 C 260 350 310 320 310 245 C 310 170 200 65 200 65 Z" 
+                fill="url(#shine-grad)" 
+                style={{ mixBlendMode: 'overlay' }}
+              />
+            )}
 
             {/* Eyes */}
             <ellipse cx="160" cy="205" rx="32" ry={isBlinking ? 2 : 48} fill="white" style={{ transition: 'ry 0.08s ease-in-out' }} />
@@ -574,18 +670,33 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
 
           {/* ACCESSORY: Pet */}
           {equippedItems.accessory === 'robot_pet' && (
-            <g transform="translate(320, 320) scale(0.6)">
+            <g className="floating-bot">
               <rect x="0" y="0" width="80" height="80" rx="10" fill="#94a3b8" />
               <rect x="10" y="10" width="60" height="40" rx="5" fill="#1e293b" />
-              <circle cx="25" cy="25" r="5" fill="#22d3ee" />
-              <circle cx="55" cy="25" r="5" fill="#22d3ee" />
+              {/* Blinking blue eyes */}
+              <circle cx="25" cy="25" r="5" fill="#22d3ee">
+                <animate attributeName="ry" values="5;0.5;5" dur="3s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="55" cy="25" r="5" fill="#22d3ee">
+                <animate attributeName="ry" values="5;0.5;5" dur="3s" repeatCount="indefinite" />
+              </circle>
+              {/* Blinking antenna */}
+              <line x1="40" y1="0" x2="40" y2="-12" stroke="#475569" strokeWidth="4" />
+              <circle cx="40" cy="-12" r="5" fill="#0ea5e9">
+                <animate attributeName="opacity" values="0.3;1;0.3" dur="1.5s" repeatCount="indefinite" />
+              </circle>
               <path d="M 10 90 L 30 110 M 70 90 L 50 110" stroke="white" strokeWidth="8" strokeLinecap="round" />
             </g>
           )}
 
           {equippedItems.accessory === 'pet_dragon' && (
-            <g transform="translate(305, 230)" filter="url(#soft-shadow)">
-              <path d="M 10 15 Q -15 0 -5 25 Q -2 22 10 25 Z" fill="#b91c1c" stroke="#7f1d1d" strokeWidth="1.5" />
+            <g className="floating-dragon" filter="url(#soft-shadow)">
+              {/* Flapping Red Wing Left */}
+              <g transform="translate(10, 15)">
+                <path d="M 0 0 Q -25 -15 -15 10 Q -12 7 0 10 Z" fill="#b91c1c" stroke="#7f1d1d" strokeWidth="1.5">
+                  <animateTransform attributeName="transform" type="rotate" values="0; -25; 0" dur="0.6s" repeatCount="indefinite" />
+                </path>
+              </g>
               <path d="M 15 45 Q -2 55 -5 40 Q -5 30 5 35 L 10 45 Z" fill="#22c55e" stroke="#15803d" strokeWidth="1.5" />
               <polygon points="-5,40 -10,35 -2,32" fill="#ef4444" />
               <polygon points="25,12 25,18 31,15" fill="#ef4444" />
@@ -594,7 +705,12 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
               <ellipse cx="25" cy="32" rx="10" ry="14" fill="#fde047" />
               <circle cx="16" cy="48" r="5" fill="#16a34a" />
               <circle cx="34" cy="48" r="5" fill="#16a34a" />
-              <path d="M 38 15 Q 63 0 53 25 Q 50 22 38 25 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1.5" />
+              {/* Flapping Red Wing Right */}
+              <g transform="translate(38, 15)">
+                <path d="M 0 0 Q 25 -15 15 10 Q 12 7 0 10 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1.5">
+                  <animateTransform attributeName="transform" type="rotate" values="0; 25; 0" dur="0.6s" repeatCount="indefinite" />
+                </path>
+              </g>
               <circle cx="25" cy="5" r="14" fill="#22c55e" stroke="#15803d" strokeWidth="2" />
               <rect x="18" y="2" width="14" height="8" rx="2.5" fill="#4ade80" />
               <circle cx="20" cy="2" r="3.5" fill="white" />
@@ -604,14 +720,24 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
               <polygon points="16,-7 12,-14 20,-9" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
               <polygon points="34,-7 38,-14 30,-9" fill="#fbbf24" stroke="#d97706" strokeWidth="1" />
               <path d="M 12 6 Q -2 12 6 15 Q 12 11 12 6" fill="#f97316" opacity="0.85" />
-              <circle cx="-1" cy="13" r="2" fill="#ef4444" opacity="0.85" />
+              {/* Pulsing Fire Breath */}
+              <circle cx="-1" cy="13" r="2" fill="#ef4444">
+                <animate attributeName="r" values="2;5;2" dur="1s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.8;0.3;0.8" dur="1s" repeatCount="indefinite" />
+              </circle>
             </g>
           )}
 
           {equippedItems.accessory === 'light_saber' && (
             <g filter="url(#soft-shadow)">
-              <line x1="275" y1="295" x2="345" y2="195" stroke="#22d3ee" strokeWidth="14" strokeLinecap="round" opacity="0.4" filter="url(#saber-glow)" />
-              <line x1="275" y1="295" x2="345" y2="195" stroke="#06b6d4" strokeWidth="8" strokeLinecap="round" />
+              {/* Pulsing blade */}
+              <line x1="275" y1="295" x2="345" y2="195" stroke="#22d3ee" strokeWidth="14" strokeLinecap="round" opacity="0.4" filter="url(#saber-glow)">
+                <animate attributeName="strokeWidth" values="12;16;12" dur="1.2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="0.3;0.5;0.3" dur="1.2s" repeatCount="indefinite" />
+              </line>
+              <line x1="275" y1="295" x2="345" y2="195" stroke="#06b6d4" strokeWidth="8" strokeLinecap="round">
+                <animate attributeName="strokeWidth" values="7;9;7" dur="1.2s" repeatCount="indefinite" />
+              </line>
               <line x1="275" y1="295" x2="345" y2="195" stroke="#ffffff" strokeWidth="4" strokeLinecap="round" />
               <line x1="265" y1="310" x2="278" y2="292" stroke="#475569" strokeWidth="10" strokeLinecap="round" />
               <line x1="265" y1="310" x2="278" y2="292" stroke="#0f172a" strokeWidth="10" strokeDasharray="2 3" strokeLinecap="round" />
