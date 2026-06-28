@@ -34,6 +34,10 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
         return { stop0: '#4ade80', stop60: '#16a34a', stop100: '#14532d', armStroke: '#14532d' }
       case 'quantum_glitch':
         return { stop0: '#f472b6', stop60: '#c084fc', stop100: '#22d3ee', armStroke: '#c084fc' }
+      case 'magma_flow':
+        return { stop0: '#f97316', stop60: '#ea580c', stop100: '#7c2d12', armStroke: '#ea580c' }
+      case 'rainbow_wave':
+        return { stop0: '#3b82f6', stop60: '#10b981', stop100: '#ef4444', armStroke: '#10b981' }
       default:
         return { stop0: '#38bdf8', stop60: '#0ea5e9', stop100: '#1d4ed8', armStroke: '#1d4ed8' }
     }
@@ -73,6 +77,10 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       return ['#22c55e', '#4ade80', '#86efac', '#15803d', '#10b981'] // Matrix code-green colors
     } else if (skin === 'quantum_glitch') {
       return ['#ec4899', '#a855f7', '#06b6d4', '#f43f5e', '#3b82f6'] // Cyberpunk glitch colors
+    } else if (skin === 'magma_flow') {
+      return ['#ef4444', '#f97316', '#f59e0b', '#7c2d12', '#ea580c'] // Magma fire colors
+    } else if (skin === 'rainbow_wave') {
+      return ['#ef4444', '#f97316', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6', '#ec4899'] // Rainbow colors
     }
     // Default rainbow
     return ['#38bdf8', '#f472b6', '#fbbf24', '#a3e635', '#a855f7', '#fb7185']
@@ -454,6 +462,14 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
             .neon-active {
               animation: neon-hue 6s linear infinite;
             }
+            @keyframes rainbow-hue {
+              0% { filter: hue-rotate(0deg) drop-shadow(0 0 5px rgba(59,130,246,0.5)); }
+              50% { filter: hue-rotate(180deg) drop-shadow(0 0 15px rgba(239,68,68,0.8)); }
+              100% { filter: hue-rotate(360deg) drop-shadow(0 0 5px rgba(59,130,246,0.5)); }
+            }
+            .rainbow-active {
+              animation: rainbow-hue 8s linear infinite;
+            }
             @keyframes float-bot {
               0% { transform: translate(320px, 320px) scale(0.6) translateY(0); }
               50% { transform: translate(320px, 320px) scale(0.6) translateY(-8px); }
@@ -477,6 +493,19 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
               <stop offset="0%" stopColor={skinColors.stop0} />
               <stop offset="60%" stopColor={skinColors.stop60} />
               <stop offset="100%" stopColor={skinColors.stop100} />
+            </radialGradient>
+
+            {/* Magma Flow Animated Gradient */}
+            <radialGradient id="magma-grad" cx="200" cy="180" r="160" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stopColor="#fb7185">
+                <animate attributeName="stop-color" values="#fb7185;#f59e0b;#ef4444;#fb7185" dur="4s" repeatCount="indefinite" />
+              </stop>
+              <stop offset="60%" stopColor="#ea580c">
+                <animate attributeName="stop-color" values="#ea580c;#dc2626;#d97706;#ea580c" dur="4s" repeatCount="indefinite" />
+              </stop>
+              <stop offset="100%" stopColor="#7c2d12">
+                <animate attributeName="stop-color" values="#7c2d12;#451a03;#7f1d1d;#7c2d12" dur="4s" repeatCount="indefinite" />
+              </stop>
             </radialGradient>
 
             {/* Gold Chrome Shine Gradient */}
@@ -541,8 +570,8 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
           <g filter="url(#soft-shadow)">
             <path 
               d="M 200 65 C 200 65 90 170 90 245 C 90 320 140 350 200 350 C 260 350 310 320 310 245 C 310 170 200 65 200 65 Z" 
-              fill="url(#body-radial)" 
-              className={equippedItems.skin === 'quantum_glitch' ? 'glitch-active' : equippedItems.skin === 'neon_glow' ? 'neon-active' : ''}
+              fill={equippedItems.skin === 'magma_flow' ? 'url(#magma-grad)' : 'url(#body-radial)'} 
+              className={equippedItems.skin === 'quantum_glitch' ? 'glitch-active' : equippedItems.skin === 'neon_glow' ? 'neon-active' : equippedItems.skin === 'rainbow_wave' ? 'rainbow-active' : ''}
             />
 
             {/* Matrix rain overlay */}
@@ -614,6 +643,32 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
               </g>
             )}
 
+            {equippedItems.glasses === 'pixel_shades' && (
+              <g transform="translate(125, 185)">
+                {/* Blocky frames */}
+                <path d="M 0 0 L 150 0 L 150 25 L 125 25 L 125 35 L 90 35 L 90 25 L 60 25 L 60 35 L 25 35 L 25 25 L 0 25 Z" fill="#000000" />
+                {/* Lenses */}
+                <rect x="10" y="5" width="45" height="15" fill="#111827" />
+                <rect x="95" y="5" width="45" height="15" fill="#111827" />
+                {/* Reflection pixels */}
+                <rect x="15" y="5" width="5" height="5" fill="#ffffff" />
+                <rect x="100" y="5" width="5" height="5" fill="#ffffff" />
+              </g>
+            )}
+
+            {equippedItems.glasses === 'heart_glasses' && (
+              <g transform="translate(120, 180)">
+                {/* Left Heart Frame */}
+                <path d="M 12 15 Q 12 0 32 0 Q 52 0 52 20 Q 52 35 32 50 Q 12 35 12 20 Z" fill="#ef4444" />
+                <path d="M 17 17 Q 17 5 32 5 Q 47 5 47 20 Q 47 31 32 42 Q 17 31 17 20 Z" fill="#1e293b" />
+                {/* Right Heart Frame */}
+                <path d="M 68 15 Q 68 0 88 0 Q 108 0 108 20 Q 108 35 88 50 Q 68 35 68 20 Z" fill="#ef4444" transform="translate(45, 0)" />
+                <path d="M 17 17 Q 17 5 32 5 Q 47 5 47 20 Q 47 31 32 42 Q 17 31 17 20 Z" fill="#1e293b" transform="translate(45, 0)" />
+                {/* Bridge */}
+                <rect x="50" y="15" width="20" height="6" fill="#ef4444" />
+              </g>
+            )}
+
             {/* Mouth */}
             {isHovering ? (
               <g>
@@ -665,6 +720,34 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
               <path d="M 45 23 Q 70 32 95 23" stroke="#3e2723" strokeWidth="2.5" fill="none" strokeLinecap="round" />
               <path d="M 17 48 Q 70 56 123 48 L 124 40 Q 70 48 16 40 Z" fill="#111827" />
               <rect x="95" y="36" width="6" height="10" fill="#d97706" rx="1" />
+            </g>
+          )}
+
+          {equippedItems.hat === 'pirate_hat' && (
+            <g transform="translate(130, 15)">
+              {/* Tricorn hat */}
+              <path d="M -15 50 Q 70 20 155 50 Q 130 15 70 15 Q 10 15 -15 50 Z" fill="#1e293b" stroke="#0f172a" strokeWidth="2" />
+              <path d="M 15 45 C 20 15 120 15 125 45 Z" fill="#0f172a" />
+              {/* Skull & Crossbones symbol */}
+              <line x1="58" y1="26" x2="82" y2="42" stroke="white" strokeWidth="2.5" />
+              <line x1="82" y1="26" x2="58" y2="42" stroke="white" strokeWidth="2.5" />
+              <circle cx="70" cy="32" r="6" fill="white" />
+              <rect x="67" y="36" width="6" height="5" rx="1" fill="white" />
+              <circle cx="68" cy="31" r="1.5" fill="black" />
+              <circle cx="72" cy="31" r="1.5" fill="black" />
+            </g>
+          )}
+
+          {equippedItems.hat === 'hero_mask' && (
+            <g transform="translate(110, 150)">
+              {/* Superhero cowl mask over eyes */}
+              <path d="M 10 30 Q 90 0 170 30 L 160 85 L 130 65 L 90 85 L 50 65 L 20 85 Z" fill="#1e40af" stroke="#1d4ed8" strokeWidth="2" />
+              {/* Eye cutouts */}
+              <ellipse cx="50" cy="45" rx="22" ry="12" fill="none" stroke="#22d3ee" strokeWidth="2" />
+              <ellipse cx="130" cy="45" rx="22" ry="12" fill="none" stroke="#22d3ee" strokeWidth="2" />
+              {/* Wing details */}
+              <path d="M 10 30 L -10 15 L 5 40 Z" fill="#fbbf24" />
+              <path d="M 170 30 L 190 15 L 175 40 Z" fill="#fbbf24" />
             </g>
           )}
 
@@ -742,6 +825,45 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
               <line x1="265" y1="310" x2="278" y2="292" stroke="#475569" strokeWidth="10" strokeLinecap="round" />
               <line x1="265" y1="310" x2="278" y2="292" stroke="#0f172a" strokeWidth="10" strokeDasharray="2 3" strokeLinecap="round" />
               <circle cx="272" cy="301" r="1.5" fill="#ef4444" />
+            </g>
+          )}
+
+          {equippedItems.accessory === 'pet_ufo' && (
+            <g className="floating-bot">
+              {/* UFO dome */}
+              <path d="M 15 35 Q 40 10 65 35 Z" fill="#22d3ee" opacity="0.75" />
+              {/* Little green alien */}
+              <circle cx="40" cy="30" r="8" fill="#4ade80" />
+              <circle cx="37" cy="28" r="1.5" fill="black" />
+              <circle cx="43" cy="28" r="1.5" fill="black" />
+              <path d="M 37 34 Q 40 36 43 34" stroke="black" strokeWidth="1" fill="none" />
+              {/* UFO body */}
+              <ellipse cx="40" cy="45" rx="35" ry="10" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="2" />
+              {/* Blinking lights */}
+              <circle cx="15" cy="45" r="2" fill="#fbbf24">
+                <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="40" cy="47" r="2" fill="#fbbf24">
+                <animate attributeName="opacity" values="1;0.2;1" dur="1s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="65" cy="45" r="2" fill="#fbbf24">
+                <animate attributeName="opacity" values="0.2;1;0.2" dur="1s" repeatCount="indefinite" />
+              </circle>
+            </g>
+          )}
+
+          {equippedItems.accessory === 'bubble_blower' && (
+            <g filter="url(#soft-shadow)">
+              {/* Bubble Wand */}
+              <circle cx="335" cy="245" r="12" stroke="#ec4899" strokeWidth="4" fill="none" />
+              <line x1="335" y1="257" x2="335" y2="300" stroke="#ec4899" strokeWidth="6" strokeLinecap="round" />
+              {/* Blowing Bubbles */}
+              <circle cx="335" cy="245" r="4" fill="rgba(34,211,238,0.2)" stroke="#22d3ee" strokeWidth="1">
+                <animate attributeName="r" values="2;10;2" dur="2.5s" repeatCount="indefinite" />
+                <animate attributeName="cx" values="335;355;375" dur="2.5s" repeatCount="indefinite" />
+                <animate attributeName="cy" values="245;215;185" dur="2.5s" repeatCount="indefinite" />
+                <animate attributeName="opacity" values="1;0.8;0" dur="2.5s" repeatCount="indefinite" />
+              </circle>
             </g>
           )}
 

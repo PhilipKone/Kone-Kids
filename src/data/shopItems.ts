@@ -15,23 +15,31 @@ export const SHOP_ITEMS: ShopItem[] = [
   { id: 'crown', name: 'Golden Crown', type: 'hat', price: 2500, icon: '👑', description: 'Only for the coding royalty.', unlockedAtLevel: 5 },
   { id: 'wizard_hat', name: 'Wizard Hat', type: 'hat', price: 1500, icon: '🧙‍♂️', description: 'Code with ancient logic.' },
   { id: 'detective_hat', name: 'Detective Fedora', type: 'hat', price: 1000, icon: '🕵️‍♂️', description: 'Investigate bugs in the system.' },
+  { id: 'pirate_hat', name: 'Pirate Tricorn', type: 'hat', price: 1200, icon: '🏴‍☠️', description: 'Sail the coding seas in style!' },
+  { id: 'hero_mask', name: 'Hero Cowl', type: 'hat', price: 2000, icon: '🎭', description: 'Save the city from bugs and errors.' },
   
   // Glasses
   { id: 'cool_shades', name: 'Cool Shades', type: 'glasses', price: 200, icon: '🕶️', description: 'Stay cool under pressure.' },
   { id: 'vr_goggles', name: 'VR Goggles', type: 'glasses', price: 600, icon: '🥽', description: 'Enter the Kone Metaverse.' },
   { id: 'cyber_visor', name: 'Cyber Visor', type: 'glasses', price: 1800, icon: '🔴', description: 'Visualize real-time data flows.' },
   { id: 'monocle', name: 'Monocle', type: 'glasses', price: 800, icon: '🧐', description: 'Examine details up close.' },
+  { id: 'pixel_shades', name: 'Pixel Shades', type: 'glasses', price: 500, icon: '🕶️', description: 'Deal with it. Retro 8-bit style.' },
+  { id: 'heart_glasses', name: 'Heart Shades', type: 'glasses', price: 400, icon: '😍', description: 'Show some love to the compiler!' },
   
   // Skins
   { id: 'neon_glow', name: 'Neon Glow', type: 'skin', price: 1200, icon: '✨', description: 'Light up the dark with your logic.' },
   { id: 'gold_chrome', name: 'Gold Chrome', type: 'skin', price: 5000, icon: '🟡', description: 'The ultimate prestige skin.', unlockedAtLevel: 10 },
   { id: 'matrix_rain', name: 'Matrix Code', type: 'skin', price: 3000, icon: '💻', description: 'Become one with the simulation.' },
   { id: 'quantum_glitch', name: 'Glitch Dimension', type: 'skin', price: 4000, icon: '👾', description: 'Shift between coding dimensions.', unlockedAtLevel: 8 },
+  { id: 'magma_flow', name: 'Magma Flow', type: 'skin', price: 3500, icon: '🌋', description: 'Liquid fire running through your code!', unlockedAtLevel: 6 },
+  { id: 'rainbow_wave', name: 'Rainbow Wave', type: 'skin', price: 4500, icon: '🌈', description: 'A shifting spectrum of logic and light.', unlockedAtLevel: 9 },
   
   // Accessories
   { id: 'robot_pet', name: 'Mini Bot', type: 'accessory', price: 1500, icon: '🤖', description: 'A small friend for your lab assistant.' },
   { id: 'pet_dragon', name: 'Pixel Dragon', type: 'accessory', price: 3500, icon: '🐉', description: 'A fiery coding companion.', unlockedAtLevel: 6 },
   { id: 'light_saber', name: 'Glowing Saber', type: 'accessory', price: 2000, icon: '⚔️', description: 'Slash through bugs with light.' },
+  { id: 'pet_ufo', name: 'Mini UFO', type: 'accessory', price: 2500, icon: '🛸', description: 'An out-of-this-world companion.', unlockedAtLevel: 5 },
+  { id: 'bubble_blower', name: 'Bubble Wand', type: 'accessory', price: 1000, icon: '🫧', description: 'Blow digital bubbles into the workspace.' },
 
   // Mascot Poses
   { id: 'pose_standing', name: 'Standing Byte', type: 'pose', price: 0, icon: '/mascot/standing.svg', description: 'The classic Byte pose.' },
