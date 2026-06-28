@@ -1,4 +1,10 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Kone Kids</title><script type="text/javascript">// GitHub Pages SPA redirect hack
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Kone Kids</title>
+    <script type="text/javascript">
+      // GitHub Pages SPA redirect hack
       // Stores the current URL path in sessionStorage then redirects to root
       var pathSegmentsToKeep = 0;
       var path = window.location.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~');
@@ -9,4 +15,7 @@
       // Ensure target is local and we are not in a pre-rendering environment
       if (window.navigator.userAgent !== 'ReactSnap' && target.charAt(0) === '/' && target.charAt(1) !== '/') {
         window.location.replace(target);
-      }</script></head><body></body></html>
+      }
+    </script>
+  </head>
+</html>
