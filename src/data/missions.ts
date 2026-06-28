@@ -529,6 +529,33 @@ export const CODING_MISSIONS: Mission[] = [
     requiredBlocks: ['ml_predict', 'ml_model'],
     minBlocks: 4,
   },
+  {
+    id: 'ml_3',
+    level: 3,
+    pathway: 'ML (AI 4 Kids)',
+    name: 'Traffic Officer',
+    description: 'Autonomous vehicles need to see! Train your AI to recognize traffic signs and direct the car.',
+    objective: 'Train the model to recognize "Stop" and "Go" signs, and program it to speak when they are detected.',
+    steps: [
+      'Open the AI Studio and select the Landmarks or Gestures tab.',
+      'Capture 3 training images for Class A and label it "Stop".',
+      'Capture 3 training images for Class B and label it "Go".',
+      'Click "Train Neural Network" to train your model.',
+      'Add a "When AI sees" block for "Stop" and make the mascot say "Brake! 🛑".',
+      'Add a "When AI sees" block for "Go" and make the mascot say "Drive! 🟢".',
+      'Run the code and simulate the signs to test it!',
+    ],
+    hints: [
+      "Labels are case-sensitive. Use 'Stop' and 'Go'.",
+      "Ensure you train the model before running the detection blocks.",
+      "The 'When AI sees' block is in the AI Hub category.",
+    ],
+    xpReward: 900,
+    difficulty: 'medium',
+    requiredBlocks: ['on_class_detect', 'mascot_speak'],
+    minBlocks: 4,
+    briefing: "Welcome to the Self-Driving Lab! Self-driving cars use computer vision to read traffic signs. Today you'll train a model to recognize 'Stop' and 'Go' signs, and program your mascot to act as the car's voice!",
+  },
 
   // ─── AI ──────────────────────────────────────────────────────────────────────
   {
@@ -581,6 +608,33 @@ export const CODING_MISSIONS: Mission[] = [
     difficulty: 'hard',
     requiredBlocks: ['camera_input', 'detect_face'],
     minBlocks: 4,
+  },
+  {
+    id: 'ai_3',
+    level: 3,
+    pathway: 'AI (AI 4 Kids)',
+    name: 'Smart Assistant',
+    description: 'Build a voice-activated smart home assistant that controls a virtual light!',
+    objective: 'Create a voice assistant that listens for "light on" to turn the green LED ON, and "light off" to turn it OFF.',
+    steps: [
+      'Open the AI Studio and select the Emotions or Gestures tab.',
+      'Capture 3 training images for Class A and label it "light on".',
+      'Capture 3 training images for Class B and label it "light off".',
+      'Train the neural network.',
+      'Add a "When AI sees" block for "light on" and plug in a "Set LED" block set to Green and ON.',
+      'Add a "When AI sees" block for "light off" and plug in a "Set LED" block set to Green and OFF.',
+      'Run your code and trigger the commands to control the light!',
+    ],
+    hints: [
+      "Type the labels exactly as 'light on' and 'light off' (lowercase).",
+      "The 'Set LED' block is in the Electronics category.",
+      "This simulates how smart speakers (like Alexa) control real appliances!",
+    ],
+    xpReward: 1000,
+    difficulty: 'hard',
+    requiredBlocks: ['on_class_detect', 'led_state'],
+    minBlocks: 4,
+    briefing: "Smart homes use voice recognition to control devices. Today you'll build your own assistant! You'll train the AI to recognize your commands and wire it to control a virtual LED light!",
   },
 
   // ─── ROBOTICS ────────────────────────────────────────────────────────────────
