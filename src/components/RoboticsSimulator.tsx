@@ -66,6 +66,29 @@ const RoboticsSimulator = forwardRef<RoboticsHandle, RoboticsSimulatorProps>(({ 
           { x1: 190, y1: 60, x2: 205, y2: 160, type: 'obstacle' }
         ] as Wall[]
       };
+    } else if (missionId === 'robotics_3') {
+      return {
+        startPos: { x: 50, y: 45 },
+        startRotation: 0, // Facing Right
+        target: { x: 250, y: 175, radius: 22 },
+        walls: [
+          // Z-shaped maze horizontal barriers
+          { x1: 0, y1: 85, x2: 210, y2: 95, type: 'wall' },
+          { x1: 90, y1: 145, x2: 300, y2: 155, type: 'wall' }
+        ] as Wall[]
+      };
+    } else if (missionId === 'robotics_4') {
+      return {
+        startPos: { x: 50, y: 185 },
+        startRotation: 270, // Facing Up
+        target: { x: 250, y: 45, radius: 22 },
+        walls: [
+          // Obstacle blocking the direct upward path
+          { x1: 0, y1: 95, x2: 160, y2: 105, type: 'obstacle' },
+          // Guide wall forcing the detour channel
+          { x1: 100, y1: 145, x2: 300, y2: 155, type: 'wall' }
+        ] as Wall[]
+      };
     }
     // Default open world
     return {
@@ -250,7 +273,7 @@ const RoboticsSimulator = forwardRef<RoboticsHandle, RoboticsSimulatorProps>(({ 
     },
     hasReachedTarget: () => {
       if (hasCrashed) return false;
-      if (missionId === 'robotics_1') {
+      if (missionId === 'robotics_1' || missionId === 'robotics_3' || missionId === 'robotics_4') {
         return reachedTarget;
       } else if (missionId === 'robotics_2') {
         // Mission 2 passes if robot stopped safely close to obstacle

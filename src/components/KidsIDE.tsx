@@ -659,7 +659,7 @@ const KidsIDE: React.FC = () => {
       isRunningRef.current = false;
       let validationPassed = true;
       if (mission) {
-        if (mission.id === 'robotics_1' && robotRef.current) {
+        if ((mission.id === 'robotics_1' || mission.id === 'robotics_3' || mission.id === 'robotics_4') && robotRef.current) {
           validationPassed = robotRef.current.hasReachedTarget();
         } else if (mission.id === 'robotics_2' && robotRef.current) {
           validationPassed = robotRef.current.hasReachedTarget();
