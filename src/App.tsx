@@ -458,21 +458,64 @@ function Home() {
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '0.75rem'
+          flexDirection: 'column',
+          gap: '1.5rem'
         }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem 1rem' }}>
-            <span style={{ color: 'var(--kids-text-muted)', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
-              © 2026 Kone Kids. All rights reserved.
-            </span>
-            <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
-            <a href="https://www.koneacademy.io" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)' }}>Kone Academy Home</a>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '0.75rem'
+          }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem 1rem' }}>
+              <span style={{ color: 'var(--kids-text-muted)', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
+                © 2026 Kone Kids. All rights reserved.
+              </span>
+              <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
+              <a href="https://www.koneacademy.io" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)' }}>Kone Academy Home</a>
+            </div>
+            <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
+              +233 55 199 3820
+            </p>
           </div>
-          <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
-            +233 55 199 3820
-          </p>
+
+          <div style={{
+            borderTop: '1px solid var(--kids-section-border)',
+            paddingTop: '1.25rem',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '0.75rem'
+          }}>
+            <span style={{ 
+              fontSize: '0.75rem', 
+              fontWeight: 800, 
+              color: 'var(--kids-text-muted)', 
+              textTransform: 'uppercase', 
+              letterSpacing: '0.1em',
+              fontFamily: "'Baloo 2', cursive"
+            }}>
+              Our Academic Network
+            </span>
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gap: '0.5rem 1.25rem',
+              fontSize: '0.8rem'
+            }}>
+              <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Academy Hub</a>
+              <a href="https://code.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Code</a>
+              <a href="https://lab.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Lab</a>
+              <a href="https://ai.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone AI</a>
+              <a href="https://consult.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Consult</a>
+              <a href="https://farms.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Farms</a>
+              <a href="https://shop.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Shop</a>
+              <a href="https://warp.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Warp</a>
+              <a href="https://digital.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Digital</a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
