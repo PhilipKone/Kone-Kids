@@ -7,6 +7,7 @@ interface SEOConfig {
   description: string;
   keywords: string;
   schema?: Record<string, any>;
+  image?: string;
 }
 
 const DEFAULT_SEO: SEOConfig = {
@@ -142,10 +143,12 @@ export const SEOManager: React.FC = () => {
     updateMetaTag('og:title', activeSEO.title, true);
     updateMetaTag('og:description', activeSEO.description, true);
     updateMetaTag('og:url', `https://kids.koneacademy.io${location.pathname}`, true);
+    updateMetaTag('og:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png', true);
 
     // Update Twitter Card Tags
     updateMetaTag('twitter:title', activeSEO.title);
     updateMetaTag('twitter:description', activeSEO.description);
+    updateMetaTag('twitter:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png');
 
     // Update Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
