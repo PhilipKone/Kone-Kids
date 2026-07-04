@@ -610,7 +610,7 @@ function AppContent() {
               element={
                 <ProgramDetails 
                   title="Coding Lab" 
-                  image="/programs/coding.png" 
+                  image="/programs/coding.webp" 
                   description="Master the mission!" 
                   accentColor="var(--kids-orange)"
                 />
@@ -621,7 +621,7 @@ function AppContent() {
               element={
                 <ProgramDetails 
                   title="Robotics Lab" 
-                  image="/programs/robotics.png" 
+                  image="/programs/robotics.webp" 
                   description="Build and program your robot!" 
                   accentColor="var(--kids-blue)"
                 />
@@ -632,7 +632,7 @@ function AppContent() {
               element={
                 <ProgramDetails 
                   title="AI Studio" 
-                  image="/programs/ai.png" 
+                  image="/programs/ai.webp" 
                   description="Train your first AI model!" 
                   accentColor="#a855f7"
                 />
