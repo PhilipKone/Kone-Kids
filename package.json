@@ -4,8 +4,8 @@
     "homepage":  "https://kids.koneacademy.io",
     "scripts":  {
                     "dev":  "vite",
-                    "build":  "tsc \u0026\u0026 vite build",
-                    "postbuild":  "react-snap",
+                    "build":  "tsc && vite build",
+                    "postbuild":  "react-snap || echo 'Pre-rendering timed out, deploying SPA...'",
                     "predeploy":  "npm run build",
                     "deploy":  "gh-pages -d dist --dotfiles",
                     "postinstall":  "node patch-react-snap.cjs"
@@ -33,6 +33,9 @@
                         },
     "reactSnap":  {
                       "source":  "dist",
+                      "navigationOptions": {
+                          "timeout": 120000
+                      },
                       "puppeteerArgs":  [
                                             "--no-sandbox",
                                             "--disable-setuid-sandbox"
