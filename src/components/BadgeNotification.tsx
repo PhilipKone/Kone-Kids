@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Badge as BadgeType } from '../context/GamificationContext';
-import { Trophy, Star, Sparkles } from 'lucide-react';
+import Trophy from 'lucide-react/dist/esm/icons/trophy.mjs'
+import Star from 'lucide-react/dist/esm/icons/star.mjs'
+import Sparkles from 'lucide-react/dist/esm/icons/sparkles.mjs'
 import './BadgeNotification.css';
 
 interface BadgeNotificationProps {

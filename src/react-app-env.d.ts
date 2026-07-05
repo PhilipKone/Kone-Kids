@@ -72,3 +72,9 @@ declare module '*.module.sass' {
   const classes: { readonly [key: string]: string }
   export default classes
 }
+
+declare module 'lucide-react/dist/esm/icons/*' {
+  import * as React from 'react';
+  const Icon: React.ForwardRefExoticComponent<any>;
+  export default Icon;
+}

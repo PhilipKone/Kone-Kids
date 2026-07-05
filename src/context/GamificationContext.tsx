@@ -1,8 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { updateAppBadge } from '../utils/pwa';
-import { db, auth } from '../firebase/config';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
 
 export interface Badge {
   id: string;
@@ -216,56 +213,72 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
 
   // Authentication & Cloud Sync
   useEffect(() => {
-    // Only proceed if auth is a valid Firebase Auth instance (has app property)
-    if (auth && (auth as any).app) {
-      const unsubscribe = onAuthStateChanged(auth, async (u) => {
-        setUser(u);
-        if (u && db && (db as any).app) {
-          try {
-            // Load cloud data
-            const userDoc = await getDoc(doc(db, 'users', u.uid));
-            if (userDoc.exists()) {
-              const cloudData = userDoc.data();
-              if (cloudData.xp > xp) setXp(cloudData.xp);
-              if (cloudData.completedMissions?.length > completedMissions.length) {
-                setCompletedMissions(cloudData.completedMissions);
-              }
-              if (cloudData.unlockedSeries?.length > unlockedSeries.length) {
-                setUnlockedSeries(cloudData.unlockedSeries);
+    let unsubscribe: () => void = () => {};
+    const initAuthSync = async () => {
+      try {
+        const { auth, db } = await import('../firebase/config');
+        if (auth && (auth as any).app) {
+          const { onAuthStateChanged } = await import('firebase/auth');
+          const { doc, getDoc } = await import('firebase/firestore');
+          
+          unsubscribe = onAuthStateChanged(auth, async (u) => {
+            setUser(u);
+            if (u && db && (db as any).app) {
+              try {
+                // Load cloud data
+                const userDoc = await getDoc(doc(db, 'users', u.uid));
+                if (userDoc.exists()) {
+                  const cloudData = userDoc.data();
+                  if (cloudData.xp > xp) setXp(cloudData.xp);
+                  if (cloudData.completedMissions?.length > completedMissions.length) {
+                    setCompletedMissions(cloudData.completedMissions);
+                  }
+                  if (cloudData.unlockedSeries?.length > unlockedSeries.length) {
+                    setUnlockedSeries(cloudData.unlockedSeries);
+                  }
+                }
+              } catch (e) {
+                console.warn('Firebase Sync: Failed to load user data.', e);
               }
             }
-          } catch (e) {
-            console.warn('Firebase Sync: Failed to load user data.', e);
-          }
+          });
         }
-      });
-      return unsubscribe;
-    }
+      } catch (e) {
+        console.error('Firebase Auth Init Error', e);
+      }
+    };
+    
+    initAuthSync();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   // Sync to Cloud
   useEffect(() => {
-    if (user && db && (db as any).app) {
-      const syncData = async () => {
-        try {
-            await setDoc(doc(db, 'users', user.uid), {
-              xp,
-              completedMissions,
-              badges: badges.filter(b => b.unlocked).map(b => b.id),
-              hasCompletedOnboarding,
-              coins,
-              inventory,
-              equippedItems,
-              unlockedSeries,
-              lastSync: new Date().toISOString()
-            }, { merge: true });
-        } catch (e) {
-          console.warn('Firebase Sync: Failed to save user data.', e);
-        }
-      };
-      syncData();
-    }
-  }, [xp, completedMissions, badges, user, hasCompletedOnboarding, coins, inventory, equippedItems]);
+    const syncData = async () => {
+      try {
+          const { db } = await import('../firebase/config');
+          if (user && db && (db as any).app) {
+              const { doc, setDoc } = await import('firebase/firestore');
+              await setDoc(doc(db, 'users', user.uid), {
+                xp,
+                completedMissions,
+                badges: badges.filter(b => b.unlocked).map(b => b.id),
+                hasCompletedOnboarding,
+                coins,
+                inventory,
+                equippedItems,
+                unlockedSeries,
+                lastSync: new Date().toISOString()
+              }, { merge: true });
+          }
+      } catch (e) {
+        console.warn('Firebase Sync: Failed to save user data.', e);
+      }
+    };
+    syncData();
+  }, [xp, completedMissions, badges, user, hasCompletedOnboarding, coins, inventory, equippedItems, unlockedSeries]);
 
   useEffect(() => {
     localStorage.setItem('kone_kids_badges', JSON.stringify(badges));
@@ -424,6 +437,8 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
 
   const loginAsStudent = useCallback(async (secId: string, studId: string, name: string) => {
     try {
+      const { auth, db } = await import('../firebase/config');
+      
       // 1. Sign in anonymously if not already signed in
       if (auth && (auth as any).app && !auth.currentUser) {
         const { signInAnonymously } = await import('firebase/auth');
@@ -432,6 +447,7 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       
       // 2. Fetch student profile from Firestore
       if (db && (db as any).app) {
+        const { doc, getDoc } = await import('firebase/firestore');
         const studentDoc = await getDoc(doc(db, 'sections', secId, 'students', studId));
         if (studentDoc.exists()) {
           const cloudData = studentDoc.data();
@@ -463,6 +479,7 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
 
   const logoutStudent = useCallback(async () => {
     try {
+      const { auth } = await import('../firebase/config');
       if (auth && (auth as any).app && auth.currentUser) {
         const { signOut } = await import('firebase/auth');
         await signOut(auth);
@@ -494,9 +511,11 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
 
   // Sync Student Progress to Section Roster in Firestore
   useEffect(() => {
-    if (sectionId && studentId && db && (db as any).app) {
-      const syncStudentData = async () => {
-        try {
+    const syncStudentData = async () => {
+      try {
+        const { db } = await import('../firebase/config');
+        if (sectionId && studentId && db && (db as any).app) {
+          const { doc, setDoc } = await import('firebase/firestore');
           await setDoc(doc(db, 'sections', sectionId, 'students', studentId), {
             xp,
             completedMissions,
@@ -506,12 +525,12 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
             unlockedSeries,
             lastSync: new Date().toISOString()
           }, { merge: true });
-        } catch (e) {
-          console.warn('Firebase Student Sync: Failed to save student progress.', e);
         }
-      };
-      syncStudentData();
-    }
+      } catch (e) {
+        console.warn('Firebase Student Sync: Failed to save student progress.', e);
+      }
+    };
+    syncStudentData();
   }, [xp, completedMissions, coins, inventory, equippedItems, unlockedSeries, sectionId, studentId]);
 
   const contextValue = useMemo(() => ({

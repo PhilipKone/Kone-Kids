@@ -1,6 +1,4 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { db } from '../firebase/config';
 
 interface Props {
   children?: ReactNode;
@@ -52,16 +50,24 @@ class ErrorBoundary extends Component<Props, State> {
   private async logError(error: Error, errorInfo: { componentStack?: string }) {
     // Log the error to Firestore
     try {
-      await addDoc(collection(db, 'client_errors'), {
-        appName: this.props.appName || 'Kone-Kids',
-        errorMessage: error.message,
-        errorStack: error.stack,
-        componentStack: errorInfo.componentStack,
-        url: window.location.href,
-        userAgent: navigator.userAgent,
-        timestamp: serverTimestamp()
-      });
-      console.log('Error successfully logged to Firestore.');
+      if (typeof window !== 'undefined' && window.navigator.userAgent === 'ReactSnap') {
+        return;
+      }
+      
+      const { db } = await import('../firebase/config');
+      if (db && (db as any).app) {
+        const { collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+        await addDoc(collection(db, 'client_errors'), {
+          appName: this.props.appName || 'Kone-Kids',
+          errorMessage: error.message,
+          errorStack: error.stack,
+          componentStack: errorInfo.componentStack,
+          url: window.location.href,
+          userAgent: navigator.userAgent,
+          timestamp: serverTimestamp()
+        });
+        console.log('Error successfully logged to Firestore.');
+      }
     } catch (e) {
       console.error('Failed to log error to Firestore:', e);
     }
