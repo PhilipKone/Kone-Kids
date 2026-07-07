@@ -84,7 +84,7 @@ function Home() {
         </Link>
         <div className="nav-links-container" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           {/* Audio controls */}
-          <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+          <div className="nav-audio-controls" style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
             <button
               onClick={handleToggleMusic}
               title={musicOn ? 'Mute Music' : 'Play Background Music'}

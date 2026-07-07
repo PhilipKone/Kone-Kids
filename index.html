@@ -149,17 +149,33 @@
     </style>
 
     <script>
-      // Dismiss splash once the page is fully interactive
-      window.addEventListener('load', function() {
-        setTimeout(function() {
+      // Dismiss splash once the page is interactive or load event triggers (with safety timeout)
+      (function() {
+        var dismissed = false;
+        function dismissSplash() {
+          if (dismissed) return;
+          dismissed = true;
           var splash = document.getElementById('splash-screen');
           if (splash) {
             splash.style.opacity = '0';
             splash.style.visibility = 'hidden';
             setTimeout(function() { splash.remove(); }, 500);
           }
-        }, 1200);
-      });
+        }
+
+        if (document.readyState === 'complete') {
+          dismissSplash();
+        } else {
+          // Try to dismiss as soon as DOM is interactive
+          window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(dismissSplash, 800);
+          });
+          // Fallback to window load event
+          window.addEventListener('load', dismissSplash);
+          // Safety fallback: maximum 3.5 seconds to prevent hanging on blocked/slow resources
+          setTimeout(dismissSplash, 3500);
+        }
+      })();
     </script>
 
     <div id="root"></div>

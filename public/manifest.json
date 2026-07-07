@@ -33,6 +33,34 @@
   "orientation": "portrait",
   "theme_color": "#f97316",
   "background_color": "#ffffff",
+  "id": "/?v=kids",
+  "categories": [
+    "education",
+    "games",
+    "utilities"
+  ],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "screenshots": [
+    {
+      "src": "screenshots/robotics_maze_mobile.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Robotics Maze Challenge"
+    },
+    {
+      "src": "screenshots/ai_studio_mobile.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "AI Speech Studio"
+    }
+  ],
   "shortcuts": [
     {
       "name": "Coding 4 Kids",
