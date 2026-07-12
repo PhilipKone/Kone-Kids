@@ -75,7 +75,7 @@ export const GAME_SERIES: GameSeries[] = [
     id: 'series_retro_racer',
     title: 'Retro Racer Academy',
     description: 'Dodge traffic, collect stars, and learn collision avoidance logic!',
-    coverImage: '/series/retro-racer-cover.webp',
+    coverImage: '/series/retro-racer-cover.png',
     price: 300,
     difficulty: 'Intermediate',
     gameCount: 15,
