@@ -4,6 +4,7 @@ import { ChevronLeft, Play, Lock, Trophy } from 'lucide-react';
 import { useGamification } from '../context/GamificationContext';
 import WordSearchGame from './WordSearchGame';
 import RetroRacerGame from './RetroRacerGame';
+import MazeRunnerGame from './MazeRunnerGame';
 
 interface SeriesPlayViewProps {
   series: GameSeries;
@@ -37,6 +38,12 @@ const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
       <div style={{ display: 'flex', justifyContent: 'center', padding: isMobile ? '1rem' : '2rem', width: '100%' }}>
         {series.id === 'series_retro_racer' ? (
           <RetroRacerGame 
+            level={playingLevel}
+            onComplete={handleComplete}
+            onExit={() => setPlayingLevel(null)}
+          />
+        ) : series.id === 'series_maze_runner' ? (
+          <MazeRunnerGame 
             level={playingLevel}
             onComplete={handleComplete}
             onExit={() => setPlayingLevel(null)}

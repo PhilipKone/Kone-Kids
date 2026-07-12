@@ -80,6 +80,16 @@ export const GAME_SERIES: GameSeries[] = [
     difficulty: 'Intermediate',
     gameCount: 15,
     accentColor: '#10b981'
+  },
+  {
+    id: 'series_maze_runner',
+    title: 'Code Maze Runner',
+    description: 'Help the robot navigate the maze! Drag and drop logic blocks to learn sequencing and loops.',
+    coverImage: '/series/maze-runner-cover.png',
+    price: 150,
+    difficulty: 'Beginner',
+    gameCount: 10,
+    accentColor: '#8b5cf6'
   }
 ];
 
