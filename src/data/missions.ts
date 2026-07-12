@@ -70,6 +70,16 @@ export const GAME_SERIES: GameSeries[] = [
     difficulty: 'Pro',
     gameCount: 12,
     accentColor: '#fbbf24'
+  },
+  {
+    id: 'series_retro_racer',
+    title: 'Retro Racer Academy',
+    description: 'Dodge traffic, collect stars, and learn collision avoidance logic!',
+    coverImage: '/series/retro-racer-cover.webp',
+    price: 300,
+    difficulty: 'Intermediate',
+    gameCount: 15,
+    accentColor: '#10b981'
   }
 ];
 

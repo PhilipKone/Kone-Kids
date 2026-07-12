@@ -3,6 +3,7 @@ import { GameSeries } from '../data/missions';
 import { ChevronLeft, Play, Lock, Trophy } from 'lucide-react';
 import { useGamification } from '../context/GamificationContext';
 import WordSearchGame from './WordSearchGame';
+import RetroRacerGame from './RetroRacerGame';
 
 interface SeriesPlayViewProps {
   series: GameSeries;
@@ -33,12 +34,20 @@ const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
 
   if (playingLevel !== null) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', padding: isMobile ? '1rem' : '2rem' }}>
-        <WordSearchGame 
-          level={playingLevel} 
-          onComplete={handleComplete}
-          onExit={() => setPlayingLevel(null)}
-        />
+      <div style={{ display: 'flex', justifyContent: 'center', padding: isMobile ? '1rem' : '2rem', width: '100%' }}>
+        {series.id === 'series_retro_racer' ? (
+          <RetroRacerGame 
+            level={playingLevel}
+            onComplete={handleComplete}
+            onExit={() => setPlayingLevel(null)}
+          />
+        ) : (
+          <WordSearchGame 
+            level={playingLevel} 
+            onComplete={handleComplete}
+            onExit={() => setPlayingLevel(null)}
+          />
+        )}
       </div>
     );
   }

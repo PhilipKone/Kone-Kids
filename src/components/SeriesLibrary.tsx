@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { GAME_SERIES, GameSeries } from '../data/missions';
 import { useGamification } from '../context/GamificationContext';
 import SeriesCard from './SeriesCard';
@@ -8,21 +9,42 @@ import { X, Sparkles, Coins, Plus } from 'lucide-react';
 
 interface SeriesLibraryProps {
   onClose: () => void;
+  initialSeriesId?: string | null;
 }
 
-const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose }) => {
+const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose, initialSeriesId }) => {
   const { unlockedSeries, unlockSeries, coins, completedMissions } = useGamification();
+  const [, setSearchParams] = useSearchParams();
   const [selectedSeries, setSelectedSeries] = useState<GameSeries | null>(null);
   const [activePlaySeries, setActivePlaySeries] = useState<GameSeries | null>(null);
   const [showCoinStore, setShowCoinStore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    if (initialSeriesId) {
+      const target = GAME_SERIES.find(s => s.id === initialSeriesId);
+      if (target) {
+        const isUnlocked = target.unlockedByDefault || unlockedSeries.includes(target.id);
+        if (isUnlocked) {
+          setActivePlaySeries(target);
+          setSelectedSeries(null);
+        } else {
+          setSelectedSeries(target);
+          setActivePlaySeries(null);
+        }
+      }
+    } else {
+      setActivePlaySeries(null);
+      setSelectedSeries(null);
+    }
+  }, [initialSeriesId, unlockedSeries]);
 
   const handleUnlock = (series: GameSeries) => {
     if (coins < series.price) {
@@ -166,7 +188,7 @@ const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose }) => {
         {activePlaySeries ? (
           <SeriesPlayView 
             series={activePlaySeries} 
-            onBack={() => setActivePlaySeries(null)} 
+            onBack={() => setSearchParams({ library: 'true' })} 
           />
         ) : (
           <div style={{
@@ -181,8 +203,8 @@ const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose }) => {
                 series={series}
                 isUnlocked={unlockedSeries.includes(series.id)}
                 progress={getProgress(series.id)}
-                onPlay={() => setActivePlaySeries(series)}
-                onUnlock={() => setSelectedSeries(series)}
+                onPlay={() => setSearchParams({ series: series.id })}
+                onUnlock={() => setSearchParams({ series: series.id })}
               />
             ))}
           </div>
@@ -221,7 +243,7 @@ const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose }) => {
               
               <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
                 <button 
-                  onClick={() => setSelectedSeries(null)}
+                onClick={() => setSearchParams({ library: 'true' })}
                   style={{
                     flex: 1,
                     background: 'transparent',

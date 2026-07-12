@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
 import { ShoppingBag, Coins, Volume2, VolumeX, Music } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
@@ -72,8 +72,10 @@ const HUB_PATHWAYS: Record<HubType, Pathway[]> = {
 
 const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showShop, setShowShop] = useState(false);
-  const [showLibrary, setShowLibrary] = useState(false);
+  const showLibrary = searchParams.get('library') === 'true' || !!searchParams.get('series');
+  const activeSeriesId = searchParams.get('series');
   const [showCoinStore, setShowCoinStore] = useState(false);
   const { xp, level, completedMissions, coins } = useGamification();
   const { theme, toggleTheme } = useTheme();
@@ -311,7 +313,12 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
       }} />
 
       {showShop && <MascotShop onClose={() => setShowShop(false)} />}
-      {showLibrary && <SeriesLibrary onClose={() => setShowLibrary(false)} />}
+      {showLibrary && (
+        <SeriesLibrary 
+          initialSeriesId={activeSeriesId} 
+          onClose={() => setSearchParams({})} 
+        />
+      )}
       <CoinStoreModal isOpen={showCoinStore} onClose={() => setShowCoinStore(false)} />
 
 
@@ -421,7 +428,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             </p>
           </div>
           <button 
-            onClick={() => setShowLibrary(true)}
+            onClick={() => setSearchParams({ library: 'true' })}
             style={{
               background: 'white',
               color: '#ec4899',
