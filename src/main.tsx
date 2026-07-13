@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App'
 import ErrorBoundary from './components/ErrorBoundary'
+import './i18n'
 
 const rootElement = document.getElementById('root');
 

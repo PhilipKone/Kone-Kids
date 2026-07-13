@@ -9,6 +9,7 @@ import InstallBanner from './components/InstallBanner'
 import BadgeNotification from './components/BadgeNotification'
 import SEOManager from './components/SEOManager'
 import { useLocation } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import HomeIcon from 'lucide-react/dist/esm/icons/home.mjs'
 import Code from 'lucide-react/dist/esm/icons/code.mjs'
 import Cpu from 'lucide-react/dist/esm/icons/cpu.mjs'
@@ -34,6 +35,7 @@ const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'
 
 
 function Home() {
+  const { t, i18n } = useTranslation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { studentName, logoutStudent } = useGamification()
 
@@ -177,6 +179,43 @@ function Home() {
           }} className="hover-teal nav-link-desktop">
             Parent Hub
           </Link>
+          
+          {/* Language selector toggle */}
+          <div style={{ display: 'flex', gap: '0.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '3px' }}>
+            <button 
+              onClick={() => i18n.changeLanguage('en')}
+              style={{
+                background: i18n.language === 'en' ? 'var(--kids-orange)' : 'transparent',
+                border: 'none',
+                color: 'white',
+                padding: '0.25rem 0.55rem',
+                borderRadius: '8px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                fontFamily: "'Baloo 2', cursive"
+              }}
+            >
+              EN
+            </button>
+            <button 
+              onClick={() => i18n.changeLanguage('fr')}
+              style={{
+                background: i18n.language === 'fr' ? 'var(--kids-orange)' : 'transparent',
+                border: 'none',
+                color: 'white',
+                padding: '0.25rem 0.55rem',
+                borderRadius: '8px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                fontFamily: "'Baloo 2', cursive"
+              }}
+            >
+              FR
+            </button>
+          </div>
+
           {!studentName && (
             <button 
               className="kids-button" 
@@ -200,7 +239,7 @@ function Home() {
 
             {/* Tagline & Program List */}
             <div className="hero-content">
-              <h1 className="hero-tagline">Do it Right</h1>
+              <h1 className="hero-tagline">{t('home.tagline', 'Do it Right')}</h1>
               
               <div className="app-tiles-grid">
                 <Link to="/coding" className="app-tile" style={{ '--tile-color': 'var(--kids-orange)' } as any}>
@@ -208,8 +247,8 @@ function Home() {
                     <Code size={32} />
                   </div>
                   <div style={{ textAlign: 'left', flex: 1 }}>
-                    <h2 className="app-tile-title">Coding 4 Kids</h2>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Build games and apps!</p>
+                    <h2 className="app-tile-title">{t('home.codingTitle', 'Coding 4 Kids')}</h2>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>{t('home.codingDesc', 'Build games and apps!')}</p>
                   </div>
                 </Link>
 
@@ -218,8 +257,8 @@ function Home() {
                     <Cpu size={32} />
                   </div>
                   <div style={{ textAlign: 'left', flex: 1 }}>
-                    <h2 className="app-tile-title">Robotics 4 Kids</h2>
-                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Bring machines to life!</p>
+                    <h2 className="app-tile-title">{t('home.roboticsTitle', 'Robotics 4 Kids')}</h2>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>{t('home.roboticsDesc', 'Bring machines to life!')}</p>
                   </div>
                 </Link>
 
@@ -228,8 +267,8 @@ function Home() {
                     <Brain size={32} />
                   </div>
                   <div style={{ textAlign: 'left', flex: 1 }}>
-                    <h2 className="app-tile-title">AI 4 Kids</h2>
-                    <p style={{ margin: '0.15rem 0 0', fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>Train your own AI!</p>
+                    <h2 className="app-tile-title">{t('home.aiTitle', 'AI 4 Kids')}</h2>
+                    <p style={{ margin: '0.15rem 0 0', fontSize: '0.8rem', color: 'var(--kids-text-muted)' }}>{t('home.aiDesc', 'Train your own AI!')}</p>
                   </div>
                 </Link>
               </div>
@@ -237,14 +276,14 @@ function Home() {
               <div className="academy-cta-wrapper" style={{ marginTop: '2.5rem' }}>
                 <div className="academy-cta-card">
                   <div className="cta-icon-float">🚀</div>
-                  <h2 className="cta-title">Ready to start?</h2>
-                  <p className="cta-text">Join 1,000+ kids learning to build the future!</p>
+                  <h2 className="cta-title">{t('home.ctaTitle', 'Ready to start?')}</h2>
+                  <p className="cta-text">{t('home.ctaDesc', 'Join 1,000+ kids learning to build the future!')}</p>
                   <button 
                     className="kids-button pulse-neon"
                     onClick={() => setIsModalOpen(true)}
                     style={{ width: '100%', marginTop: '1rem' }}
                   >
-                    Join the Academy
+                    {t('home.ctaButton', 'Join the Academy')}
                   </button>
                 </div>
               </div>

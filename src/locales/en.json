@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "missions": "Missions",
+    "simulators": "Simulators",
+    "shop": "Mascot Shop",
+    "referral": "Referrals",
+    "coins": "Coins",
+    "back": "Back"
+  },
+  "home": {
+    "title": "Welcome to Kone Kids!",
+    "subtitle": "Embark on gamified coding adventures, earn coins, and build real smart hardware nodes.",
+    "tagline": "Do it Right",
+    "codingTitle": "Coding 4 Kids",
+    "codingDesc": "Build games and apps!",
+    "roboticsTitle": "Robotics 4 Kids",
+    "roboticsDesc": "Bring machines to life!",
+    "aiTitle": "AI 4 Kids",
+    "aiDesc": "Train your own AI!",
+    "ctaTitle": "Ready to start?",
+    "ctaDesc": "Join 1,000+ kids learning to build the future!",
+    "ctaButton": "Join the Academy"
+  },
+  "coinStore": {
+    "title": "Kone Kids Coin Store",
+    "subtitle": "Get coins to unlock exclusive mascot items, badges, and advanced coding levels!",
+    "formEmail": "Parent's Email Address",
+    "formPhone": "Mobile Money Number (Paystack)",
+    "processing": "Processing Secure Payment...",
+    "successTitle": "Payment Successful!",
+    "successDesc": "Your coins have been added to your vault. Let's build!",
+    "buyButton": "Purchase Packages"
+  },
+  "simulators": {
+    "aiTitle": "AI Pathfinder Simulator",
+    "aiDesc": "Code agentic pathfinding loops and teach AI how to navigate custom mazes.",
+    "roboticsTitle": "Robotics Controller",
+    "roboticsDesc": "Simulate microcontroller motor controllers and write basic autonomous loops.",
+    "electronicsTitle": "Smart Circuit Board",
+    "electronicsDesc": "Simulate breadboards, hook up LED lights, and trigger buzzer telemetry."
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "missions": "Missions",
+    "simulators": "Simulateurs",
+    "shop": "Boutique Mascotte",
+    "referral": "Parrainages",
+    "coins": "Pièces",
+    "back": "Retour"
+  },
+  "home": {
+    "title": "Bienvenue sur Kone Kids !",
+    "subtitle": "Lancez-vous dans des aventures de code ludiques, gagnez des pièces et créez de vrais circuits intelligents.",
+    "tagline": "Faites-le Bien",
+    "codingTitle": "Code pour Enfants",
+    "codingDesc": "Créez des jeux et applications !",
+    "roboticsTitle": "Robotique pour Enfants",
+    "roboticsDesc": "Donnez vie aux machines !",
+    "aiTitle": "IA pour Enfants",
+    "aiDesc": "Entraînez votre propre IA !",
+    "ctaTitle": "Prêt à commencer ?",
+    "ctaDesc": "Rejoignez plus de 1 000 enfants qui construisent l'avenir !",
+    "ctaButton": "Rejoindre l'Académie"
+  },
+  "coinStore": {
+    "title": "Boutique de Pièces Kone Kids",
+    "subtitle": "Achetez des pièces pour débloquer des accessoires exclusifs, des badges et des niveaux de code avancés !",
+    "formEmail": "Adresse e-mail des parents",
+    "formPhone": "Numéro Mobile Money (Paystack)",
+    "processing": "Traitement du paiement sécurisé...",
+    "successTitle": "Paiement Réussi !",
+    "successDesc": "Vos pièces ont été ajoutées à votre coffre. C'est parti pour coder !",
+    "buyButton": "Acheter ce pack"
+  },
+  "simulators": {
+    "aiTitle": "Simulateur AI Pathfinder",
+    "aiDesc": "Codez des boucles de trajectoire d'agents et apprenez à l'IA à naviguer dans des labyrinthes personnalisés.",
+    "roboticsTitle": "Contrôleur de Robotique",
+    "roboticsDesc": "Simulez des contrôleurs de moteurs de microcontrôleurs et écrivez des boucles autonomes basiques.",
+    "electronicsTitle": "Circuit Intelligent",
+    "electronicsDesc": "Simulez des planches à pain, connectez des lumières LED et déclenchez la télémétrie du buzzer."
+  }
+}
