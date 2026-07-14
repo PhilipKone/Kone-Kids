@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "missions": "Missões",
+    "simulators": "Simuladores",
+    "shop": "Loja de Mascotes",
+    "referral": "Indicações",
+    "coins": "Moedas",
+    "back": "Voltar"
+  },
+  "home": {
+    "title": "Bem-vindo ao Kone Kids!",
+    "subtitle": "Embarque em aventuras de programação gamificadas, ganhe moedas e construa placas de circuitos inteligentes.",
+    "tagline": "Faça Certo",
+    "codingTitle": "Programação para Crianças",
+    "codingDesc": "Crie jogos e aplicativos!",
+    "roboticsTitle": "Robótica para Crianças",
+    "roboticsDesc": "Dê vida às máquinas!",
+    "aiTitle": "IA para Crianças",
+    "aiDesc": "Treine sua própria IA!",
+    "ctaTitle": "Pronto para começar?",
+    "ctaDesc": "Junte-se a mais de 1.000 crianças que estão construindo o futuro!",
+    "ctaButton": "Junte-se à Academia"
+  },
+  "coinStore": {
+    "title": "Loja de Moedas Kone Kids",
+    "subtitle": "Adquira moedas para desbloquear acessórios exclusivos de mascotes, distintivos e níveis de programação avançados!",
+    "formEmail": "E-mail dos pais",
+    "formPhone": "Número do Mobile Money (Paystack)",
+    "processing": "Processando pagamento seguro...",
+    "successTitle": "Pagamento Concluído!",
+    "successDesc": "Suas moedas foram adicionadas ao seu cofre. Vamos programar!",
+    "buyButton": "Comprar este pacote"
+  },
+  "simulators": {
+    "aiTitle": "Simulador AI Pathfinder",
+    "aiDesc": "Programe rotas de navegação de agentes e ensine a IA a resolver labirintos.",
+    "roboticsTitle": "Controlador de Robótica",
+    "roboticsDesc": "Simule controladores de motores de microcontroladores e escreva rotinas de automação básicas.",
+    "electronicsTitle": "Circuito Inteligente",
+    "electronicsDesc": "Simule protoboards, conecte luzes LED e acione buzinas de telemetria."
+  }
+}

@@ -182,38 +182,26 @@ function Home() {
           
           {/* Language selector toggle */}
           <div style={{ display: 'flex', gap: '0.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '3px' }}>
-            <button 
-              onClick={() => i18n.changeLanguage('en')}
-              style={{
-                background: i18n.language === 'en' ? 'var(--kids-orange)' : 'transparent',
-                border: 'none',
-                color: 'white',
-                padding: '0.25rem 0.55rem',
-                borderRadius: '8px',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                fontFamily: "'Baloo 2', cursive"
-              }}
-            >
-              EN
-            </button>
-            <button 
-              onClick={() => i18n.changeLanguage('fr')}
-              style={{
-                background: i18n.language === 'fr' ? 'var(--kids-orange)' : 'transparent',
-                border: 'none',
-                color: 'white',
-                padding: '0.25rem 0.55rem',
-                borderRadius: '8px',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                fontFamily: "'Baloo 2', cursive"
-              }}
-            >
-              FR
-            </button>
+            {['en', 'fr', 'es', 'pt'].map((lang) => (
+              <button 
+                key={lang}
+                onClick={() => i18n.changeLanguage(lang)}
+                style={{
+                  background: i18n.language === lang ? 'var(--kids-orange)' : 'transparent',
+                  border: 'none',
+                  color: 'white',
+                  padding: '0.25rem 0.55rem',
+                  borderRadius: '8px',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  fontFamily: "'Baloo 2', cursive",
+                  textTransform: 'uppercase'
+                }}
+              >
+                {lang}
+              </button>
+            ))}
           </div>
 
           {!studentName && (
