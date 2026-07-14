@@ -227,7 +227,30 @@ function Home() {
 
             {/* Tagline & Program List */}
             <div className="hero-content">
-              <h1 className="hero-tagline">{t('home.tagline', 'Do it Right')}</h1>
+              <h1 style={{
+                fontFamily: "'Baloo 2', cursive",
+                fontSize: 'clamp(2rem, 6vw, 3rem)',
+                fontWeight: 800,
+                color: 'var(--nav-text)',
+                margin: '0 0 0.75rem 0',
+                lineHeight: 1.25
+              }}>
+                {t('home.title', 'Welcome to Kone Kids!')}
+              </h1>
+              <p style={{
+                fontSize: 'clamp(0.95rem, 3vw, 1.15rem)',
+                color: 'var(--kids-text-muted)',
+                margin: '0 0 2rem 0',
+                lineHeight: 1.6
+              }}>
+                {t('home.subtitle', 'Embark on gamified coding adventures, earn coins, and build real smart hardware nodes.')}
+              </p>
+              
+              <div style={{ marginBottom: '2.5rem' }}>
+                <span className="hero-tagline">
+                  {t('home.tagline', 'Do it Right')}
+                </span>
+              </div>
               
               <div className="app-tiles-grid">
                 <Link to="/coding" className="app-tile" style={{ '--tile-color': 'var(--kids-orange)' } as any}>

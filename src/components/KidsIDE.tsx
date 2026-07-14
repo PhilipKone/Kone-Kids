@@ -12,6 +12,7 @@ import { getTranslation } from '../utils/translations';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
 import { useGamification } from '../context/GamificationContext';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { CODING_MISSIONS } from '../data/missions';
 import { Play, Square, FileCode, Blocks, Eye, EyeOff, Volume2, VolumeX, Music } from 'lucide-react';
 import MascotShop from './MascotShop';
@@ -50,6 +51,7 @@ const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
 });
 
 const KidsIDE: React.FC = () => {
+  const { t, i18n } = useTranslation();
   const blocklyDiv = useRef<HTMLDivElement>(null);
   const workspace = useRef<Blockly.WorkspaceSvg | null>(null);
   const mascotRef = useRef<MascotHandle>(null);
@@ -142,280 +144,270 @@ const KidsIDE: React.FC = () => {
   }, [isMobile, showCode]);
 
   useEffect(() => {
+    // Save current blocks if workspace exists to prevent code loss
+    let savedBlocksXml: string | null = null;
+    if (workspace.current) {
+      try {
+        const xmlDom = Blockly.Xml.workspaceToDom(workspace.current);
+        savedBlocksXml = Blockly.Xml.domToText(xmlDom);
+      } catch (err) {
+        console.error('Error serializing workspace:', err);
+      }
+    }
+
+    // Discard old workspace
+    if (workspace.current) {
+      workspace.current.dispose();
+      workspace.current = null;
+    }
+    if (blocklyDiv.current) {
+      blocklyDiv.current.innerHTML = '';
+    }
+
     // --- Block Definitions ---
-    if (!Blockly.Blocks['mascot_speak']) {
-      Blockly.Blocks['mascot_speak'] = {
-        init: function() {
-          this.appendDummyInput().appendField("🗣️ Say").appendField(new Blockly.FieldTextInput("Hello!"), "TEXT");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(160);
-        }
-      };
-      javascriptGenerator.forBlock['mascot_speak'] = (block: any) => `await mascot.speak("${block.getFieldValue('TEXT')}");\n`;
-      pythonGenerator.forBlock['mascot_speak'] = (block: any) => `mascot.speak("${block.getFieldValue('TEXT')}")\n`;
-    }
+    // We register/redefine the blocks dynamically so that their display text updates to the active language
+    Blockly.Blocks['mascot_speak'] = {
+      init: function() {
+        this.appendDummyInput().appendField(t('blocks.speak', '🗣️ Say')).appendField(new Blockly.FieldTextInput("Hello!"), "TEXT");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(160);
+      }
+    };
+    javascriptGenerator.forBlock['mascot_speak'] = (block: any) => `await mascot.speak("${block.getFieldValue('TEXT')}");\n`;
+    pythonGenerator.forBlock['mascot_speak'] = (block: any) => `mascot.speak("${block.getFieldValue('TEXT')}")\n`;
 
-    if (!Blockly.Blocks['mascot_wait']) {
-      Blockly.Blocks['mascot_wait'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("🕐 Wait")
-              .appendField(new Blockly.FieldNumber(1, 0.1, 30), "SECS")
-              .appendField("seconds");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(20);
-        }
-      };
-      javascriptGenerator.forBlock['mascot_wait'] = (block: any) => `await new Promise(res => setTimeout(res, ${block.getFieldValue('SECS')} * 1000));\n`;
-      pythonGenerator.forBlock['mascot_wait'] = (block: any) => `time.sleep(${block.getFieldValue('SECS')})\n`;
-    }
+    Blockly.Blocks['mascot_wait'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.wait_1', '🕐 Wait'))
+            .appendField(new Blockly.FieldNumber(1, 0.1, 30), "SECS")
+            .appendField(t('blocks.wait_2', 'seconds'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(20);
+      }
+    };
+    javascriptGenerator.forBlock['mascot_wait'] = (block: any) => `await new Promise(res => setTimeout(res, ${block.getFieldValue('SECS')} * 1000));\n`;
+    pythonGenerator.forBlock['mascot_wait'] = (block: any) => `time.sleep(${block.getFieldValue('SECS')})\n`;
 
-    if (!Blockly.Blocks['mascot_wave']) {
-      Blockly.Blocks['mascot_wave'] = {
-        init: function() {
-          this.appendDummyInput().appendField("👋 Wave Hand");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(230);
-        }
-      };
-      javascriptGenerator.forBlock['mascot_wave'] = () => `await mascot.wave();\n`;
-      pythonGenerator.forBlock['mascot_wave'] = () => `mascot.wave()\n`;
-    }
+    Blockly.Blocks['mascot_wave'] = {
+      init: function() {
+        this.appendDummyInput().appendField(t('blocks.wave', '👋 Wave Hand'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+      }
+    };
+    javascriptGenerator.forBlock['mascot_wave'] = () => `await mascot.wave();\n`;
+    pythonGenerator.forBlock['mascot_wave'] = () => `mascot.wave()\n`;
 
-    if (!Blockly.Blocks['mascot_blink']) {
-      Blockly.Blocks['mascot_blink'] = {
-        init: function() {
-          this.appendDummyInput().appendField("👁️ Blink Eyes");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(290);
-        }
-      };
-      javascriptGenerator.forBlock['mascot_blink'] = () => `await mascot.blink();\n`;
-      pythonGenerator.forBlock['mascot_blink'] = () => `mascot.blink()\n`;
-    }
+    Blockly.Blocks['mascot_blink'] = {
+      init: function() {
+        this.appendDummyInput().appendField(t('blocks.blink', '👁️ Blink Eyes'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(290);
+      }
+    };
+    javascriptGenerator.forBlock['mascot_blink'] = () => `await mascot.blink();\n`;
+    pythonGenerator.forBlock['mascot_blink'] = () => `mascot.blink()\n`;
 
     // --- Robotics Blocks ---
-    if (!Blockly.Blocks['robot_move']) {
-      Blockly.Blocks['robot_move'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("🚜 Move")
-              .appendField(new Blockly.FieldDropdown([["Forward", "forward"], ["Backward", "backward"]]), "DIR")
-              .appendField("for")
-              .appendField(new Blockly.FieldNumber(2, 0.1, 10), "DURATION")
-              .appendField("sec");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(20);
-        }
-      };
-      javascriptGenerator.forBlock['robot_move'] = (block: any) => `await robot.move("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')} * 1000);\n`;
-      pythonGenerator.forBlock['robot_move'] = (block: any) => `robot.move("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
-    }
+    Blockly.Blocks['robot_move'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.move', '🚜 Move'))
+            .appendField(new Blockly.FieldDropdown([[t('blocks.forward', 'Forward'), "forward"], [t('blocks.backward', 'Backward'), "backward"]]), "DIR")
+            .appendField(t('blocks.for', 'for'))
+            .appendField(new Blockly.FieldNumber(2, 0.1, 10), "DURATION")
+            .appendField(t('blocks.sec', 'sec'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(20);
+      }
+    };
+    javascriptGenerator.forBlock['robot_move'] = (block: any) => `await robot.move("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')} * 1000);\n`;
+    pythonGenerator.forBlock['robot_move'] = (block: any) => `robot.move("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
 
-    if (!Blockly.Blocks['robot_turn']) {
-      Blockly.Blocks['robot_turn'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("🔄 Turn")
-              .appendField(new Blockly.FieldDropdown([["Left ⟲", "left"], ["Right ⟳", "right"]]), "DIR")
-              .appendField("for")
-              .appendField(new Blockly.FieldNumber(1, 0.1, 10), "DURATION")
-              .appendField("sec");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(45);
-        }
-      };
-      javascriptGenerator.forBlock['robot_turn'] = (block: any) => `await robot.turn("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')} * 1000);\n`;
-      pythonGenerator.forBlock['robot_turn'] = (block: any) => `robot.turn("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
-    }
+    Blockly.Blocks['robot_turn'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.turn', '🔄 Turn'))
+            .appendField(new Blockly.FieldDropdown([[t('blocks.left', 'Left ⟲'), "left"], [t('blocks.right', 'Right ⟳'), "right"]]), "DIR")
+            .appendField(t('blocks.for', 'for'))
+            .appendField(new Blockly.FieldNumber(1, 0.1, 10), "DURATION")
+            .appendField(t('blocks.sec', 'sec'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(45);
+      }
+    };
+    javascriptGenerator.forBlock['robot_turn'] = (block: any) => `await robot.turn("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')} * 1000);\n`;
+    pythonGenerator.forBlock['robot_turn'] = (block: any) => `robot.turn("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
 
-    if (!Blockly.Blocks['robot_stop']) {
-      Blockly.Blocks['robot_stop'] = {
-        init: function() {
-          this.appendDummyInput().appendField("🛑 Stop Robot");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(0);
-        }
-      };
-      javascriptGenerator.forBlock['robot_stop'] = () => `robot.stop();\n`;
-      pythonGenerator.forBlock['robot_stop'] = () => `robot.stop()\n`;
-    }
+    Blockly.Blocks['robot_stop'] = {
+      init: function() {
+        this.appendDummyInput().appendField(t('blocks.stop', '🛑 Stop Robot'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(0);
+      }
+    };
+    javascriptGenerator.forBlock['robot_stop'] = () => `robot.stop();\n`;
+    pythonGenerator.forBlock['robot_stop'] = () => `robot.stop()\n`;
 
-    if (!Blockly.Blocks['robot_distance']) {
-      Blockly.Blocks['robot_distance'] = {
-        init: function() {
-          this.appendDummyInput().appendField("📏 Distance Sensor");
-          this.setOutput(true, "Number");
-          this.setColour(60);
-        }
-      };
-      javascriptGenerator.forBlock['robot_distance'] = () => [`robot.getDistance()`, (javascriptGenerator as any).ORDER_ATOMIC];
-      pythonGenerator.forBlock['robot_distance'] = () => [`robot.get_distance()`, (pythonGenerator as any).ORDER_ATOMIC];
-    }
+    Blockly.Blocks['robot_distance'] = {
+      init: function() {
+        this.appendDummyInput().appendField(t('blocks.distance', '📐 Distance Sensor'));
+        this.setOutput(true, "Number");
+        this.setColour(60);
+      }
+    };
+    javascriptGenerator.forBlock['robot_distance'] = () => [`robot.getDistance()`, (javascriptGenerator as any).ORDER_ATOMIC];
+    pythonGenerator.forBlock['robot_distance'] = () => [`robot.get_distance()`, (pythonGenerator as any).ORDER_ATOMIC];
 
-    if (!Blockly.Blocks['led_state']) {
-      Blockly.Blocks['led_state'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("⚡ Set LED")
-              .appendField(new Blockly.FieldDropdown([["Red 🔴", "red"], ["Yellow 🟡", "yellow"], ["Green 🟢", "green"]]), "COLOR")
-              .appendField("to")
-              .appendField(new Blockly.FieldDropdown([["ON", "on"], ["OFF", "off"]]), "STATE");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(60);
-        }
-      };
-      javascriptGenerator.forBlock['led_state'] = (block: any) => `await electronics.setLED("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}");\n`;
-      pythonGenerator.forBlock['led_state'] = (block: any) => `electronics.set_led("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}")\n`;
-    }
+    // --- Electronics Blocks ---
+    Blockly.Blocks['led_state'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.led_state', '💡 Turn LED'))
+            .appendField(new Blockly.FieldDropdown([["Red 🔴", "red"], ["Yellow 🟡", "yellow"], ["Green 🟢", "green"]]), "COLOR")
+            .appendField("to")
+            .appendField(new Blockly.FieldDropdown([[t('blocks.led_on', 'ON'), "on"], [t('blocks.led_off', 'OFF'), "off"]]), "STATE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(60);
+      }
+    };
+    javascriptGenerator.forBlock['led_state'] = (block: any) => `await electronics.setLED("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}");\n`;
+    pythonGenerator.forBlock['led_state'] = (block: any) => `electronics.set_led("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}")\n`;
+
     // --- Game Dev Blocks ---
-    if (!Blockly.Blocks['game_physics']) {
-      Blockly.Blocks['game_physics'] = {
-        init: function() {
-          this.appendDummyInput().appendField("🕹️ Enable Physics Scene");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(200);
-        }
-      };
-      javascriptGenerator.forBlock['game_physics'] = () => `game.reset();\n`;
-      pythonGenerator.forBlock['game_physics'] = () => `game.reset()\n`;
-    }
+    Blockly.Blocks['game_physics'] = {
+      init: function() {
+        this.appendDummyInput().appendField(t('blocks.physics', '🚀 Enable Physics Scene'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(200);
+      }
+    };
+    javascriptGenerator.forBlock['game_physics'] = () => `game.reset();\n`;
+    pythonGenerator.forBlock['game_physics'] = () => `game.reset()\n`;
 
-    if (!Blockly.Blocks['game_gravity']) {
-      Blockly.Blocks['game_gravity'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("🌍 Set Gravity to")
-              .appendField(new Blockly.FieldNumber(9.8, 0, 50), "G");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(200);
-        }
-      };
-      javascriptGenerator.forBlock['game_gravity'] = (block: any) => `game.setGravity(${block.getFieldValue('G')});\n`;
-      pythonGenerator.forBlock['game_gravity'] = (block: any) => `game.set_gravity(${block.getFieldValue('G')})\n`;
-    }
+    Blockly.Blocks['game_gravity'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.gravity', '🌍 Set Gravity to'))
+            .appendField(new Blockly.FieldNumber(9.8, 0, 50), "G")
+            .appendField(t('blocks.gravity_unit', 'm/s²'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(200);
+      }
+    };
+    javascriptGenerator.forBlock['game_gravity'] = (block: any) => `game.setGravity(${block.getFieldValue('G')});\n`;
+    pythonGenerator.forBlock['game_gravity'] = (block: any) => `game.set_gravity(${block.getFieldValue('G')})\n`;
 
-    if (!Blockly.Blocks['character_jump']) {
-      Blockly.Blocks['character_jump'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("🚀 Jump with force")
-              .appendField(new Blockly.FieldNumber(500, 100, 2000), "FORCE");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(200);
-        }
-      };
-      javascriptGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')});\n`;
-      pythonGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')})\n`;
-    }
+    Blockly.Blocks['character_jump'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.jump', '🚀 Jump with force'))
+            .appendField(new Blockly.FieldNumber(500, 100, 2000), "FORCE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(200);
+      }
+    };
+    javascriptGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')});\n`;
+    pythonGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')})\n`;
 
-    if (!Blockly.Blocks['spawn_stars']) {
-      Blockly.Blocks['spawn_stars'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("✨ Spawn")
-              .appendField(new Blockly.FieldNumber(5, 1, 50), "COUNT")
-              .appendField("Stars");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(200);
-        }
-      };
-      javascriptGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawnStars(${block.getFieldValue('COUNT')});\n`;
-      pythonGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawn_stars(${block.getFieldValue('COUNT')})\n`;
-    }
+    Blockly.Blocks['spawn_stars'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.spawn_stars', '✨ Spawn'))
+            .appendField(new Blockly.FieldNumber(5, 1, 50), "COUNT")
+            .appendField("Stars");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(200);
+      }
+    };
+    javascriptGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawnStars(${block.getFieldValue('COUNT')});\n`;
+    pythonGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawn_stars(${block.getFieldValue('COUNT')})\n`;
 
-    if (!Blockly.Blocks['on_key_press']) {
-      Blockly.Blocks['on_key_press'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("⌨️ When")
-              .appendField(new Blockly.FieldDropdown([["Space", " "], ["Up Arrow", "ArrowUp"], ["Any Key", "any"]]), "KEY")
-              .appendField("is pressed");
-          this.appendStatementInput("DO").appendField("do");
-          this.setColour(200);
-          this.setTooltip("Run code when a key is pressed");
-        }
-      };
-      javascriptGenerator.forBlock['on_key_press'] = (block: any) => {
-        const branch = javascriptGenerator.statementToCode(block, 'DO');
-        return `game.onKeyPress("${block.getFieldValue('KEY')}", async () => {\n${branch}});\n`;
-      };
-      pythonGenerator.forBlock['on_key_press'] = (block: any) => {
-        const branch = pythonGenerator.statementToCode(block, 'DO');
-        return `def on_press():\n${branch || '    pass'}\n\ngame.on_key_press("${block.getFieldValue('KEY')}", on_press)\n`;
-      };
-    }
+    Blockly.Blocks['on_key_press'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.when_key', '⌨️ When'))
+            .appendField(new Blockly.FieldDropdown([[t('blocks.key_space', 'Space'), " "], [t('blocks.key_left', 'Arrow Left'), "ArrowUp"], ["Any Key", "any"]]), "KEY")
+            .appendField(t('blocks.is_pressed', 'is pressed'));
+        this.appendStatementInput("DO").appendField("do");
+        this.setColour(200);
+        this.setTooltip("Run code when a key is pressed");
+      }
+    };
+    javascriptGenerator.forBlock['on_key_press'] = (block: any) => {
+      const branch = javascriptGenerator.statementToCode(block, 'DO');
+      return `game.onKeyPress("${block.getFieldValue('KEY')}", async () => {\n${branch}});\n`;
+    };
+    pythonGenerator.forBlock['on_key_press'] = (block: any) => {
+      const branch = pythonGenerator.statementToCode(block, 'DO');
+      return `def on_press():\n${branch || '    pass'}\n\ngame.on_key_press("${block.getFieldValue('KEY')}", on_press)\n`;
+    };
 
-    if (!Blockly.Blocks['update_score']) {
-      Blockly.Blocks['update_score'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("🏆 Add")
-              .appendField(new Blockly.FieldNumber(10, 1, 1000), "POINTS")
-              .appendField("to Score");
-          this.setPreviousStatement(true, null);
-          this.setNextStatement(true, null);
-          this.setColour(200);
-        }
-      };
-      javascriptGenerator.forBlock['update_score'] = (block: any) => `game.updateScore(${block.getFieldValue('POINTS')});\n`;
-      pythonGenerator.forBlock['update_score'] = (block: any) => `game.update_score(${block.getFieldValue('POINTS')})\n`;
-    }
+    Blockly.Blocks['update_score'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.update_score_1', '🏆 Add'))
+            .appendField(new Blockly.FieldNumber(10, 1, 1000), "POINTS")
+            .appendField(t('blocks.update_score_2', 'to Score'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(200);
+      }
+    };
+    javascriptGenerator.forBlock['update_score'] = (block: any) => `game.updateScore(${block.getFieldValue('POINTS')});\n`;
+    pythonGenerator.forBlock['update_score'] = (block: any) => `game.update_score(${block.getFieldValue('POINTS')})\n`;
 
     // --- AI Blocks ---
-    if (!Blockly.Blocks['ai_class']) {
-      Blockly.Blocks['ai_class'] = {
-        init: function() {
-          this.appendDummyInput().appendField("🧠 AI Detected Class");
-          this.setOutput(true, "String");
-          this.setColour(260);
-        }
-      };
-      javascriptGenerator.forBlock['ai_class'] = () => [`ai.getClass()`, (javascriptGenerator as any).ORDER_ATOMIC];
-      pythonGenerator.forBlock['ai_class'] = () => [`ai.get_class()`, (pythonGenerator as any).ORDER_ATOMIC];
-    }
+    Blockly.Blocks['ai_class'] = {
+      init: function() {
+        this.appendDummyInput().appendField(t('blocks.ai_class', '🧠 AI Detected Class'));
+        this.setOutput(true, "String");
+        this.setColour(260);
+      }
+    };
+    javascriptGenerator.forBlock['ai_class'] = () => [`ai.getClass()`, (javascriptGenerator as any).ORDER_ATOMIC];
+    pythonGenerator.forBlock['ai_class'] = () => [`ai.get_class()`, (pythonGenerator as any).ORDER_ATOMIC];
 
-    if (!Blockly.Blocks['on_class_detect']) {
-      Blockly.Blocks['on_class_detect'] = {
-        init: function() {
-          this.appendDummyInput()
-              .appendField("🧠 When AI sees")
-              .appendField(new Blockly.FieldTextInput("Cocoa Pod"), "CLASS");
-          this.appendStatementInput("DO").appendField("do");
-          this.setColour(260);
-          this.setTooltip("Run code when AI detects the specified class");
-        }
-      };
-      javascriptGenerator.forBlock['on_class_detect'] = (block: any) => {
-        const branch = javascriptGenerator.statementToCode(block, 'DO');
-        return `ai.onClassDetect("${block.getFieldValue('CLASS')}", async () => {\n${branch}});\n`;
-      };
-      pythonGenerator.forBlock['on_class_detect'] = (block: any) => {
-        const branch = pythonGenerator.statementToCode(block, 'DO');
-        const safeClassName = block.getFieldValue('CLASS').replace(/[^a-zA-Z0-9]/g, '_');
-        return `def on_detect_${safeClassName}():\n${branch || '    pass'}\n\nai.on_class_detect("${block.getFieldValue('CLASS')}", on_detect_${safeClassName})\n`;
-      };
-    }
+    Blockly.Blocks['on_class_detect'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.on_detect', '🧠 When AI sees'))
+            .appendField(new Blockly.FieldTextInput("Cocoa Pod"), "CLASS");
+        this.appendStatementInput("DO").appendField("do");
+        this.setColour(260);
+        this.setTooltip("Run code when AI detects the specified class");
+      }
+    };
+    javascriptGenerator.forBlock['on_class_detect'] = (block: any) => {
+      const branch = javascriptGenerator.statementToCode(block, 'DO');
+      return `ai.onClassDetect("${block.getFieldValue('CLASS')}", async () => {\n${branch}});\n`;
+    };
+    pythonGenerator.forBlock['on_class_detect'] = (block: any) => {
+      const branch = pythonGenerator.statementToCode(block, 'DO');
+      const safeClassName = block.getFieldValue('CLASS').replace(/[^a-zA-Z0-9]/g, '_');
+      return `def on_detect_${safeClassName}():\n${branch || '    pass'}\n\nai.on_class_detect("${block.getFieldValue('CLASS')}", on_detect_${safeClassName})\n`;
+    };
 
     // Inject Workspace
-    if (blocklyDiv.current && !workspace.current) {
+    if (blocklyDiv.current) {
       const isAIPathway = mission?.pathway === 'Data Science (AI 4 Kids)' || mission?.pathway === 'ML (AI 4 Kids)' || mission?.pathway === 'AI (AI 4 Kids)';
       const toolboxContents: any[] = [
         {
           kind: 'category',
-          name: '🤖 Mascot',
+          name: t('category.mascot', '🤖 Mascot'),
           colour: '#0ea5e9',
           contents: [
             { kind: 'block', type: 'mascot_speak' },
@@ -426,7 +418,7 @@ const KidsIDE: React.FC = () => {
         },
         {
           kind: 'category',
-          name: '🚜 Robotics',
+          name: t('category.robotics', '🚜 Robotics'),
           colour: '#fbbf24',
           contents: [
             { kind: 'block', type: 'robot_move' },
@@ -437,7 +429,7 @@ const KidsIDE: React.FC = () => {
         },
         {
           kind: 'category',
-          name: '⚡ Electronics',
+          name: t('category.electronics', '⚡ Electronics'),
           colour: '#eab308',
           contents: [
             { kind: 'block', type: 'led_state' },
@@ -446,7 +438,7 @@ const KidsIDE: React.FC = () => {
         },
         {
           kind: 'category',
-          name: '🎮 Game Dev',
+          name: t('category.gamedev', '🎮 Game Dev'),
           colour: '#f472b6',
           contents: [
             { kind: 'block', type: 'game_physics' },
@@ -460,7 +452,7 @@ const KidsIDE: React.FC = () => {
         ...(isAIPathway ? [
           {
             kind: 'category',
-            name: '🧠 AI Hub',
+            name: t('category.ai', '🧠 AI Hub'),
             colour: '#a855f7',
             contents: [
               { kind: 'block', type: 'ai_class' },
@@ -468,9 +460,9 @@ const KidsIDE: React.FC = () => {
             ]
           }
         ] : []),
-        { kind: 'category', name: '🧠 Logic', categorystyle: 'logic_category', contents: [{ kind: 'block', type: 'controls_if' }] },
-        { kind: 'category', name: '🔄 Loops', categorystyle: 'loop_category', contents: [{ kind: 'block', type: 'controls_repeat_ext' }] },
-        { kind: 'category', name: '📦 Variables', categorystyle: 'variable_category', custom: 'VARIABLE' }
+        { kind: 'category', name: t('category.logic', '🧠 Logic'), categorystyle: 'logic_category', contents: [{ kind: 'block', type: 'controls_if' }] },
+        { kind: 'category', name: t('category.loops', '🔄 Loops'), categorystyle: 'loop_category', contents: [{ kind: 'block', type: 'controls_repeat_ext' }] },
+        { kind: 'category', name: t('category.variables', '📦 Variables'), categorystyle: 'variable_category', custom: 'VARIABLE' }
       ];
 
       const ws = Blockly.inject(blocklyDiv.current, {
@@ -497,6 +489,17 @@ const KidsIDE: React.FC = () => {
       });
       workspace.current = ws;
 
+      // Restore previously saved blocks if any existed
+      if (savedBlocksXml) {
+        try {
+          const parser = new DOMParser();
+          const xmlDom = parser.parseFromString(savedBlocksXml, 'text/xml').documentElement;
+          Blockly.Xml.domToWorkspace(xmlDom, ws);
+        } catch (err) {
+          console.error('Error deserializing blocks:', err);
+        }
+      }
+
       const handleResize = () => {
         if (ws) Blockly.svgResize(ws);
       };
@@ -522,7 +525,7 @@ const KidsIDE: React.FC = () => {
         workspace.current = null;
       };
     }
-  }, [onboardingStep, language, isMobile, mission]);
+  }, [onboardingStep, language, isMobile, mission, i18n.language]);
 
   const runCode = async () => {
     if (!workspace.current || isRunning) return;
