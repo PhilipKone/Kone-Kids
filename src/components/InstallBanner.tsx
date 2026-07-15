@@ -7,6 +7,20 @@ const InstallBanner: React.FC = () => {
   const [isDismissing, setIsDismissing] = useState(false)
 
   useEffect(() => {
+    // Detect if running in a native app wrapper/webview (Google Play or Apple App Store app)
+    const isWebView = () => {
+      const ua = window.navigator.userAgent.toLowerCase();
+      const isAndroidWV = ua.includes('wv') || (ua.includes('android') && ua.includes('version/'));
+      const isIOSWV = (ua.includes('ipad') || ua.includes('iphone') || ua.includes('ipod')) && 
+                      (!ua.includes('safari') && !ua.includes('chrome') && !ua.includes('crios') && !ua.includes('fxios'));
+      const isTWA = document.referrer?.startsWith('android-app://');
+      const hasNativeApi = (window as any).Capacitor || (window as any).cordova || (window as any).ReactNativeWebView;
+      const hasNativeParam = window.location.search.includes('platform=') || window.location.search.includes('mode=native') || window.location.search.includes('utm_source=app');
+      return isAndroidWV || isIOSWV || isTWA || !!hasNativeApi || hasNativeParam;
+    };
+
+    if (isWebView()) return;
+
     const dismissed = localStorage.getItem('kkids-install-dismissed')
     if (dismissed) {
       const dismissedAt = parseInt(dismissed, 10)

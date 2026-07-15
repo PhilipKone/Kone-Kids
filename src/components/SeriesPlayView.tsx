@@ -5,6 +5,7 @@ import { useGamification } from '../context/GamificationContext';
 import WordSearchGame from './WordSearchGame';
 import RetroRacerGame from './RetroRacerGame';
 import MazeRunnerGame from './MazeRunnerGame';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface SeriesPlayViewProps {
   series: GameSeries;
@@ -14,7 +15,7 @@ interface SeriesPlayViewProps {
 const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
   const { completedMissions, completeMission } = useGamification();
   const [playingLevel, setPlayingLevel] = React.useState<number | null>(null);
-  const isMobile = window.innerWidth < 768;
+  const isMobile = useIsMobile();
 
   
   // Generate 20 levels for the series

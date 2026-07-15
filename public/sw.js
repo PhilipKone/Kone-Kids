@@ -1,9 +1,11 @@
-const CACHE_NAME = 'kone-kids-cache-v3';
+const CACHE_NAME = 'kone-kids-cache-v4';
 const STATIC_ASSETS = [
-  './mascot.svg',
-  './programs/coding.png',
-  './programs/robotics.png',
-  './programs/ai.png'
+  '/',
+  '/index.html',
+  '/mascot.svg',
+  '/programs/coding.png',
+  '/programs/robotics.png',
+  '/programs/ai.png'
 ];
 
 // Install: cache static assets immediately
@@ -31,15 +33,32 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
 
+  const isSelfOrigin = event.request.url.startsWith(self.location.origin);
+
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        if (STATIC_ASSETS.some(a => event.request.url.includes(a.replace('./', '')))) {
+        // Dynamically cache same-origin resources to ensure offline gameplay
+        if (response.status === 200 && isSelfOrigin) {
           const clone = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          caches.open(CACHE_NAME).then(cache => {
+            try {
+              cache.put(event.request, clone);
+            } catch (e) {
+              console.warn('[Kone SW] Cache put failed:', e);
+            }
+          });
         }
         return response;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => {
+        return caches.match(event.request).then(cachedResponse => {
+          if (cachedResponse) return cachedResponse;
+          // Fallback to SPA shell when navigating HTML pages offline
+          if (event.request.headers.get('accept')?.includes('text/html')) {
+            return caches.match('/') || caches.match('/index.html');
+          }
+        });
+      })
   );
 });

@@ -1,5 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import Mascot from './Mascot';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface Step {
   id: number;
@@ -47,7 +48,7 @@ interface OnboardingTourProps {
 
 const OnboardingTour: React.FC<OnboardingTourProps> = ({ currentStep, onNext, onSkip }) => {
   const [spotlightRect, setSpotlightRect] = useState<DOMRect | null>(null);
-  const [isMobile] = useState(window.innerWidth < 768);
+  const isMobile = useIsMobile();
   const isLastStep = currentStep === ONBOARDING_STEPS.length - 1;
 
   const updateSpotlight = useCallback(() => {

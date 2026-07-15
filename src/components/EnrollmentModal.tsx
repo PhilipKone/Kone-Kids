@@ -3,6 +3,7 @@ import emailjs from '@emailjs/browser'
 import { useGamification } from '../context/GamificationContext'
 import Mascot from './Mascot'
 import CertificatePreview from './CertificatePreview'
+import { useIsMobile } from '../hooks/useMediaQuery'
 
 interface EnrollmentModalProps {
   isOpen: boolean
@@ -12,7 +13,7 @@ interface EnrollmentModalProps {
 
 const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, programTitle = '' }) => {
   const { unlockBadge } = useGamification()
-  const [isMobile] = useState(window.innerWidth < 768)
+  const isMobile = useIsMobile()
   const [inquiryType, setInquiryType] = useState<'parent' | 'school' | 'online'>('parent')
   const [formData, setFormData] = useState({
     parentName: '',

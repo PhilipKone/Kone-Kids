@@ -1,6 +1,7 @@
 import React from 'react';
 import { GameSeries } from '../data/missions';
 import { Lock, Play, Star } from 'lucide-react';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface SeriesCardProps {
   series: GameSeries;
@@ -11,7 +12,7 @@ interface SeriesCardProps {
 }
 
 const SeriesCard: React.FC<SeriesCardProps> = ({ series, isUnlocked, onPlay, onUnlock, progress }) => {
-  const isMobile = window.innerWidth < 768;
+  const isMobile = useIsMobile();
 
   return (
     <div className={`series-card ${!isUnlocked ? 'series-card-locked' : ''}`} style={{

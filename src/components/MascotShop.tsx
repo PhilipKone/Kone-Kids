@@ -4,6 +4,7 @@ import { SHOP_ITEMS, ShopItem } from '../data/shopItems';
 import { ShoppingBag, Coins, CheckCircle2, Lock, Plus } from 'lucide-react';
 import Mascot from './Mascot';
 import CoinStoreModal from './CoinStoreModal';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface MascotShopProps {
   onClose: () => void;
@@ -14,7 +15,7 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
   const [activeCategory, setActiveCategory] = useState<ShopItem['type'] | 'all'>('all');
   const [purchaseSuccess, setPurchaseSuccess] = useState<string | null>(null);
   const [showCoinStore, setShowCoinStore] = useState(false);
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = useIsMobile();
 
   const filteredItems = activeCategory === 'all' 
     ? SHOP_ITEMS 
