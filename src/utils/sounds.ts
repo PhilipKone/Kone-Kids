@@ -6,6 +6,14 @@ class SoundManager {
   private isMusicOn: boolean = false;
   private currentStep = 0;
 
+  private triggerHaptic(duration: number = 10) {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      try {
+        navigator.vibrate(duration);
+      } catch (e) {}
+    }
+  }
+
   constructor() {
     try {
       const savedMute = localStorage.getItem('kone_kids_muted');
@@ -86,6 +94,7 @@ class SoundManager {
   }
 
   playClick() {
+    this.triggerHaptic(10);
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
@@ -103,6 +112,7 @@ class SoundManager {
   }
 
   playSuccess() {
+    this.triggerHaptic([30, 40, 30] as any);
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
@@ -120,6 +130,7 @@ class SoundManager {
   }
 
   playWin() {
+    this.triggerHaptic([40, 50, 40, 50] as any);
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
@@ -139,6 +150,7 @@ class SoundManager {
   }
 
   playCoin() {
+    this.triggerHaptic(15);
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
@@ -157,6 +169,7 @@ class SoundManager {
   }
 
   playExplosion() {
+    this.triggerHaptic(50);
     if (this.isMuted) return;
     this.init();
     if (!this.ctx) return;
