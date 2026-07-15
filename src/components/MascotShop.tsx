@@ -256,25 +256,16 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
                   <button
                     disabled={isLocked || (isOwned && isEquipped)}
                     onClick={() => handleAction(item)}
+                    className="kids-button"
                     style={{
                       width: '100%',
                       padding: '0.6rem 0.75rem',
-                      borderRadius: '12px',
-                      border: 'none',
                       background: isEquipped ? '#10b981' : (isOwned ? 'rgba(255,255,255,0.1)' : (canAfford ? 'var(--kids-orange)' : '#475569')),
-                      boxShadow: isEquipped ? '0 5px 0 #047857' : (isOwned ? '0 5px 0 rgba(0,0,0,0.2)' : (canAfford ? '0 5px 0 #9a3412' : '0 3px 0 #1e293b')),
-                      color: 'white',
-                      fontWeight: 800,
+                      '--shadow-height': '5px',
+                      '--shadow-color': isEquipped ? '#047857' : (isOwned ? 'rgba(0,0,0,0.2)' : (canAfford ? '#9a3412' : '#1e293b')),
                       cursor: (isLocked || (isOwned && isEquipped)) ? 'default' : 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '0.5rem',
-                      fontSize: '0.85rem',
-                      transition: 'all 0.15s',
-                      position: 'relative',
-                      top: 0
-                    }}
+                      fontSize: '0.85rem'
+                    } as any}
                   >
                     {isLocked ? (
                       <>

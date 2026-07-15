@@ -971,12 +971,12 @@ const KidsIDE: React.FC = () => {
       {/* Footer Actions */}
       <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', zIndex: 50, display: 'flex', gap: '0.6rem' }}>
         {!isRunning ? (
-          <button id="run-code-btn" className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px', boxShadow: '0 8px 0 #9a3412' }} onClick={runCode}>
+          <button id="run-code-btn" className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px' }} onClick={runCode}>
             <Play size={18} fill="currentColor" />
             <span>Run Code</span>
           </button>
         ) : (
-          <button className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', background: '#ef4444', boxShadow: '0 8px 0 #991b1b', minHeight: '44px' }} onClick={stopCode}>
+          <button className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', background: '#ef4444', '--shadow-color': '#991b1b', minHeight: '44px' } as any} onClick={stopCode}>
             <Square size={16} fill="currentColor" />
             <span>Stop</span>
           </button>
@@ -998,8 +998,8 @@ const KidsIDE: React.FC = () => {
             <h2 className="lab-title" style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>MISSION COMPLETE!</h2>
             <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '2rem' }}> Awesome work, Engineer! You earned <strong style={{ color: 'var(--kids-blue)' }}>{mission.xpReward} XP</strong>.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-              <button className="kids-button pulse-neon" onClick={handleNextMission} style={{ width: '100%', fontSize: '1.05rem', padding: '0.85rem', boxShadow: '0 8px 0 #9a3412' }}> NEXT MISSION 🚀 </button>
-              <button className="kids-button" onClick={() => navigate(hubPath)} style={{ width: '100%', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', fontSize: '0.95rem', color: 'var(--kids-text)', boxShadow: '0 6px 0 var(--kids-border)' }}> BACK TO MAP </button>
+              <button className="kids-button pulse-neon" onClick={handleNextMission} style={{ width: '100%', fontSize: '1.05rem', padding: '0.85rem' }}> NEXT MISSION 🚀 </button>
+              <button className="kids-button" onClick={() => navigate(hubPath)} style={{ width: '100%', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', fontSize: '0.95rem', color: 'var(--kids-text)', '--shadow-color': 'var(--kids-border)', '--shadow-height': '6px' } as any}> BACK TO MAP </button>
             </div>
           </div>
         </div>

@@ -344,16 +344,17 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                     : inquiryType === 'online' 
                     ? 'var(--kids-purple)' 
                     : 'var(--kids-blue)',
-                  boxShadow: inquiryType === 'school' 
-                    ? '0 4px 0 #9a3412' 
+                  '--shadow-height': '4px',
+                  '--shadow-color': inquiryType === 'school' 
+                    ? '#9a3412' 
                     : inquiryType === 'online' 
-                    ? '0 4px 0 #7e22ce' 
-                    : '0 4px 0 #0369a1',
+                    ? '#7e22ce' 
+                    : '#0369a1',
                   minHeight: '42px',
                   fontSize: '1rem',
                   padding: '0.75rem 1rem',
                   fontFamily: "'Baloo 2', cursive"
-                }}
+                } as any}
                 disabled={status === 'sending'}
               >
                 {status === 'sending' 

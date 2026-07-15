@@ -292,9 +292,10 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
                   gap: '0.4rem',
                   fontSize: '0.9rem',
                   padding: '0.65rem',
-                  boxShadow: '0 5px 0 #9a3412',
+                  '--shadow-height': '5px',
+                  '--shadow-color': '#9a3412',
                   minHeight: '44px'
-                }}
+                } as any}
               >
                 <Download size={18} />
                 <span>Download PNG</span>
@@ -311,9 +312,10 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
                   padding: '0.65rem',
                   background: '#25D366',
                   borderColor: '#22c55e',
-                  boxShadow: '0 5px 0 #15803d',
+                  '--shadow-height': '5px',
+                  '--shadow-color': '#15803d',
                   minHeight: '44px'
-                }}
+                } as any}
               >
                 <Share2 size={18} />
                 <span>Share WhatsApp</span>

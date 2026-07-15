@@ -101,5 +101,15 @@
     "update_score_2": "points to score",
     "ai_class": "🏷️ Class",
     "on_detect": "📸 When AI detects"
+  },
+  "blog": {
+    "categories": {
+      "all": "All Articles",
+      "coding": "Coding & Logic",
+      "robotics": "Robotics & Science",
+      "parenting": "Parenting & Tech"
+    },
+    "filterBy": "Filter by Category",
+    "backToHub": "Back to Hub"
   }
 }

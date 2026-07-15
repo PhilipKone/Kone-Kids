@@ -101,5 +101,15 @@
     "update_score_2": "points au score",
     "ai_class": "🏷️ Classe",
     "on_detect": "📸 Quand l'IA détecte"
+  },
+  "blog": {
+    "categories": {
+      "all": "Tous les articles",
+      "coding": "Code & Logique",
+      "robotics": "Robotique & Sciences",
+      "parenting": "Conseils aux Parents"
+    },
+    "filterBy": "Filtrer par catégorie",
+    "backToHub": "Retour à l'accueil"
   }
 }

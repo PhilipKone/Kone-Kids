@@ -155,7 +155,7 @@ p {
   font-weight: 800;
   border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 8px 0 #9a3412;
+  box-shadow: 0 var(--shadow-height, 8px) 0 var(--shadow-color, #9a3412);
   transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: inline-flex;
   align-items: center;
@@ -168,13 +168,13 @@ p {
 }
 
 .kids-button:hover:not(:disabled) {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 0 #9a3412;
+  transform: translateY(-2px);
+  box-shadow: 0 calc(var(--shadow-height, 8px) + 2px) 0 var(--shadow-color, #9a3412);
 }
 
 .kids-button:active:not(:disabled) {
-  transform: translateY(6px);
-  box-shadow: 0 2px 0 #9a3412;
+  transform: translateY(calc(var(--shadow-height, 8px) - 2px));
+  box-shadow: 0 2px 0 var(--shadow-color, #9a3412);
 }
 
 /* Layout Utilities */
@@ -226,6 +226,7 @@ p {
   }
 
   .kids-button {
+    --shadow-height: 4px;
     width: auto;
     padding: 0.4rem 1rem;
     font-size: 0.85rem;
@@ -1057,6 +1058,18 @@ html {
     height: 20px !important;
   }
 }
+
+/* Blog Category Dropdown Hover Effects */
+.category-dropdown-trigger:hover {
+  border-color: #cbd5e1 !important;
+  background-color: #f8fafc !important;
+}
+
+.category-dropdown-option-hover:hover {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
 
 
 

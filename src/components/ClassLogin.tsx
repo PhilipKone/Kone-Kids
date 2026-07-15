@@ -318,7 +318,6 @@ export default function ClassLogin() {
                   width: '100%',
                   fontSize: '1.25rem',
                   background: 'var(--kids-orange)',
-                  boxShadow: '0 8px 0 #9a3412',
                   padding: '0.85rem'
                 }}
               >

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, ArrowRight, Clock, User, ArrowLeft, Sparkles, HelpCircle } from 'lucide-react';
+import { BookOpen, ArrowRight, Clock, User, ArrowLeft, Sparkles, HelpCircle, ChevronDown } from 'lucide-react';
 import { blogArticles, BlogArticle, getLocalized } from '../data/blogArticles';
 import EnrollmentModal from './EnrollmentModal';
 import { useTranslation } from 'react-i18next';
@@ -8,9 +8,15 @@ import { useTranslation } from 'react-i18next';
 export default function Blog() {
   const { t, i18n } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [isOpen, setIsOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const categories = ['All', 'Coding & Logic', 'Robotics & Science', 'Parenting & Tech'];
+  const categories = [
+    { value: 'All', key: 'blog.categories.all' },
+    { value: 'Coding & Logic', key: 'blog.categories.coding' },
+    { value: 'Robotics & Science', key: 'blog.categories.robotics' },
+    { value: 'Parenting & Tech', key: 'blog.categories.parenting' }
+  ];
 
   const filteredArticles = selectedCategory === 'All'
     ? blogArticles
@@ -88,38 +94,118 @@ export default function Blog() {
         </div>
       </div>
 
-      {/* Category Pills Filter */}
+      {/* Category Dropdown Filter */}
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto 2.5rem',
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '0.75rem'
+        position: 'relative',
+        minWidth: '260px',
+        display: 'inline-block'
       }}>
-        {categories.map(cat => {
-          const isActive = selectedCategory === cat;
-          return (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
+        <label style={{
+          display: 'block',
+          fontSize: '0.85rem',
+          fontWeight: 700,
+          color: '#64748b',
+          marginBottom: '0.5rem',
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em'
+        }}>
+          {t('blog.filterBy', 'Filter by Category')}
+        </label>
+        
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            width: '100%',
+            background: 'white',
+            border: '1px solid #e2e8f0',
+            color: '#1e293b',
+            padding: '0.75rem 1.25rem',
+            borderRadius: '16px',
+            fontSize: '0.95rem',
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+          }}
+          className="category-dropdown-trigger"
+        >
+          <span>
+            {t(categories.find(c => c.value === selectedCategory)?.key || 'blog.categories.all')}
+          </span>
+          <ChevronDown size={18} style={{
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0)',
+            transition: 'transform 0.2s ease',
+            color: '#64748b'
+          }} />
+        </button>
+
+        {isOpen && (
+          <>
+            {/* Overlay to close on click outside */}
+            <div 
+              onClick={() => setIsOpen(false)}
               style={{
-                background: isActive ? '#0d9488' : 'white',
-                color: isActive ? 'white' : '#475569',
-                border: isActive ? '1px solid #0d9488' : '1px solid #e2e8f0',
-                padding: '0.6rem 1.25rem',
-                borderRadius: '30px',
-                fontSize: '0.9rem',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                boxShadow: isActive ? '0 4px 12px rgba(13, 148, 136, 0.2)' : '0 2px 4px rgba(0,0,0,0.02)'
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 99
               }}
-              className={isActive ? '' : 'category-pill-hover'}
-            >
-              {cat}
-            </button>
-          );
-        })}
+            />
+            
+            <div style={{
+              position: 'absolute',
+              top: 'calc(100% + 0.5rem)',
+              left: 0,
+              right: 0,
+              background: 'white',
+              border: '1px solid #e2e8f0',
+              borderRadius: '16px',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+              padding: '0.5rem',
+              zIndex: 100,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.25rem'
+            }}>
+              {categories.map(cat => {
+                const isActive = selectedCategory === cat.value;
+                return (
+                  <button
+                    key={cat.value}
+                    onClick={() => {
+                      setSelectedCategory(cat.value);
+                      setIsOpen(false);
+                    }}
+                    style={{
+                      background: isActive ? 'rgba(13, 148, 136, 0.08)' : 'transparent',
+                      color: isActive ? '#0d9488' : '#475569',
+                      border: 'none',
+                      padding: '0.7rem 1rem',
+                      borderRadius: '12px',
+                      fontSize: '0.9rem',
+                      fontWeight: 700,
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      width: '100%',
+                      display: 'block'
+                    }}
+                    className={isActive ? '' : 'category-dropdown-option-hover'}
+                  >
+                    {t(cat.key)}
+                  </button>
+                );
+              })}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Articles Grid */}
