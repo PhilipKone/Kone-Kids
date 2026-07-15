@@ -5,7 +5,15 @@
     "shop": "Boutique Mascotte",
     "referral": "Parrainages",
     "coins": "Pièces",
-    "back": "Retour"
+    "back": "Retour",
+    "logout": "Se Déconnecter",
+    "classLogin": "Connexion Classe",
+    "parentHub": "Espace Parents",
+    "joinHub": "Rejoindre l'Espace",
+    "home": "Accueil",
+    "coding": "Code",
+    "robotics": "Robotique",
+    "aiLab": "Labo IA"
   },
   "home": {
     "title": "Bienvenue sur Kone Kids !",
@@ -19,7 +27,10 @@
     "aiDesc": "Entraînez votre propre IA !",
     "ctaTitle": "Prêt à commencer ?",
     "ctaDesc": "Rejoignez plus de 1 000 enfants qui construisent l'avenir !",
-    "ctaButton": "Rejoindre l'Académie"
+    "ctaButton": "Rejoindre l'Académie",
+    "insightsTag": "Espace Parents & Enseignants",
+    "insightsTitle": "Actualités & Conseils STEM",
+    "insightsDesc": "Découvrez des conseils pratiques basés sur la recherche pour gérer le temps d'écran, l'alphabétisation informatique et l'éducation de la prochaine génération de créateurs."
   },
   "coinStore": {
     "title": "Boutique de Pièces Kone Kids",
@@ -48,6 +59,14 @@
     "logic": "🧠 Logique",
     "loops": "🔄 Boucles",
     "variables": "📦 Variables"
+  },
+  "program": {
+    "codingTitle": "Labo de Code",
+    "codingDesc": "Accomplissez la mission !",
+    "roboticsTitle": "Labo de Robotique",
+    "roboticsDesc": "Construisez et programmez votre robot !",
+    "aiTitle": "Studio IA",
+    "aiDesc": "Entraînez votre premier modèle d'IA !"
   },
   "blocks": {
     "speak": "🗣️ Dire",

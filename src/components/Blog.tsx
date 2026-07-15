@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, ArrowRight, Clock, User, ArrowLeft, Sparkles, HelpCircle } from 'lucide-react';
-import { blogArticles, BlogArticle } from '../data/blogArticles';
+import { blogArticles, BlogArticle, getLocalized } from '../data/blogArticles';
 import EnrollmentModal from './EnrollmentModal';
+import { useTranslation } from 'react-i18next';
 
 export default function Blog() {
+  const { t, i18n } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -169,7 +171,7 @@ export default function Blog() {
                     alignSelf: 'flex-start',
                     boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
                   }}>
-                    {art.category}
+                    {getLocalized(art, 'category', i18n.language)}
                   </span>
 
                   {/* Article Card Icon */}
@@ -201,7 +203,7 @@ export default function Blog() {
                       lineHeight: 1.3,
                       color: '#0f172a'
                     }}>
-                      {art.title}
+                      {getLocalized(art, 'title', i18n.language)}
                     </h3>
                     <p style={{
                       fontSize: '0.95rem',
@@ -213,7 +215,7 @@ export default function Blog() {
                       WebkitBoxOrient: 'vertical',
                       overflow: 'hidden'
                     }}>
-                      {art.summary}
+                      {getLocalized(art, 'summary', i18n.language)}
                     </p>
                   </div>
 

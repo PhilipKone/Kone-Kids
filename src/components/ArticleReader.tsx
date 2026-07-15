@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Calendar, Sparkles, Send, Check } from 'lucide-react';
-import { blogArticles } from '../data/blogArticles';
+import { blogArticles, getLocalized, getLocalizedContent } from '../data/blogArticles';
 import EnrollmentModal from './EnrollmentModal';
+import { useTranslation } from 'react-i18next';
 
 export default function ArticleReader() {
+  const { t, i18n } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -146,7 +148,7 @@ export default function ArticleReader() {
             display: 'inline-block',
             marginBottom: '1.25rem'
           }}>
-            {article.category}
+            {getLocalized(article, 'category', i18n.language)}
           </span>
 
           {/* Article Title */}
@@ -158,7 +160,7 @@ export default function ArticleReader() {
             margin: '0 0 1.5rem 0',
             lineHeight: 1.2
           }}>
-            {article.title}
+            {getLocalized(article, 'title', i18n.language)}
           </h1>
 
           {/* Metadata Row */}
@@ -200,7 +202,7 @@ export default function ArticleReader() {
           marginBottom: '5rem',
           fontFamily: 'Plus Jakarta Sans, sans-serif'
         }}>
-          {article.content.map((block, idx) => {
+          {getLocalizedContent(article.content, i18n.language).map((block, idx) => {
             switch (block.type) {
               case 'heading':
                 return (

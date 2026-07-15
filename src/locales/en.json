@@ -5,7 +5,15 @@
     "shop": "Mascot Shop",
     "referral": "Referrals",
     "coins": "Coins",
-    "back": "Back"
+    "back": "Back",
+    "logout": "Logout",
+    "classLogin": "Class Login",
+    "parentHub": "Parent Hub",
+    "joinHub": "Join Hub",
+    "home": "Home",
+    "coding": "Coding",
+    "robotics": "Robotics",
+    "aiLab": "AI Lab"
   },
   "home": {
     "title": "Welcome to Kone Kids!",
@@ -19,7 +27,10 @@
     "aiDesc": "Train your own AI!",
     "ctaTitle": "Ready to start?",
     "ctaDesc": "Join 1,000+ kids learning to build the future!",
-    "ctaButton": "Join the Academy"
+    "ctaButton": "Join the Academy",
+    "insightsTag": "Parents & Teachers Hub",
+    "insightsTitle": "Featured Insights & STEM Wisdom",
+    "insightsDesc": "Explore practical, research-backed advice on screen time, computational literacy, robotics engineering, and raising the next generation of builders."
   },
   "coinStore": {
     "title": "Kone Kids Coin Store",
@@ -48,6 +59,14 @@
     "logic": "🧠 Logic",
     "loops": "🔄 Loops",
     "variables": "📦 Variables"
+  },
+  "program": {
+    "codingTitle": "Coding Lab",
+    "codingDesc": "Master the mission!",
+    "roboticsTitle": "Robotics Lab",
+    "roboticsDesc": "Build and program your robot!",
+    "aiTitle": "AI Studio",
+    "aiDesc": "Train your first AI model!"
   },
   "blocks": {
     "speak": "🗣️ Say",

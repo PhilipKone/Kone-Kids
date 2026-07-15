@@ -21,7 +21,8 @@ import Sparkles from 'lucide-react/dist/esm/icons/sparkles.mjs'
 import BookOpen from 'lucide-react/dist/esm/icons/book-open.mjs'
 import Clock from 'lucide-react/dist/esm/icons/clock.mjs'
 import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right.mjs'
-import { blogArticles } from './data/blogArticles'
+import User from 'lucide-react/dist/esm/icons/user.mjs'
+import { blogArticles, getLocalized } from './data/blogArticles'
 import { sounds } from './utils/sounds'
 
 const ProgramDetails = React.lazy(() => import('./components/ProgramDetails'))
@@ -32,6 +33,7 @@ const Blog = React.lazy(() => import('./components/Blog'))
 const ArticleReader = React.lazy(() => import('./components/ArticleReader'))
 const ClassLogin = React.lazy(() => import('./components/ClassLogin'))
 const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'))
+const ProfileView = React.lazy(() => import('./components/ProfileView'))
 
 
 function Home() {
@@ -397,7 +399,7 @@ function Home() {
                     alignSelf: 'flex-start',
                     boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
                   }}>
-                    {art.category}
+                    {getLocalized(art, 'category', i18n.language)}
                   </span>
                   
                   <div style={{
@@ -428,7 +430,7 @@ function Home() {
                       lineHeight: 1.3,
                       color: 'var(--blog-card-title)'
                     }}>
-                      {art.title}
+                      {getLocalized(art, 'title', i18n.language)}
                     </h3>
                     <p style={{
                       fontSize: '0.9rem',
@@ -440,7 +442,7 @@ function Home() {
                       WebkitBoxOrient: 'vertical',
                       overflow: 'hidden'
                     }}>
-                      {art.summary}
+                      {getLocalized(art, 'summary', i18n.language)}
                     </p>
                   </div>
 
@@ -664,6 +666,7 @@ function AppContent() {
             <Route path="/coding" element={<MissionMap hub="coding" />} />
             <Route path="/robotics" element={<MissionMap hub="robotics" />} />
             <Route path="/ai" element={<MissionMap hub="ai" />} />
+            <Route path="/profile" element={<ProfileView />} />
             {/* ... other routes ... */}
             <Route 
               path="/coding/mission/:missionId" 
@@ -719,6 +722,10 @@ function AppContent() {
           <Link to="/ai" className={`nav-item ${location.pathname === '/ai' ? 'nav-item-active' : ''}`}>
             <Brain size={24} className="nav-icon" />
             <span>AI Lab</span>
+          </Link>
+          <Link to="/profile" className={`nav-item ${location.pathname === '/profile' ? 'nav-item-active' : ''}`}>
+            <User size={24} className="nav-icon" />
+            <span>Profile</span>
           </Link>
         </div>
       )}

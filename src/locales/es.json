@@ -5,11 +5,19 @@
     "shop": "Tienda de Mascotas",
     "referral": "Referencias",
     "coins": "Monedas",
-    "back": "Atrás"
+    "back": "Atrás",
+    "logout": "Cerrar Sesión",
+    "classLogin": "Acceso de Clase",
+    "parentHub": "Centro de Padres",
+    "joinHub": "Unirse al Centro",
+    "home": "Inicio",
+    "coding": "Código",
+    "robotics": "Robótica",
+    "aiLab": "Laboratorio IA"
   },
   "home": {
     "title": "¡Bienvenido a Kone Kids!",
-    "subtitle": "Embárcate en aventuras de programación gamificadas, gana monedas y construye placas de circuitos inteligentes.",
+    "subtitle": "Embárcte en aventuras de programación gamificadas, gana monedas y construye placas de circuitos inteligentes.",
     "tagline": "Hazlo Bien",
     "codingTitle": "Programación para Niños",
     "codingDesc": "¡Crea juegos y aplicaciones!",
@@ -19,7 +27,10 @@
     "aiDesc": "¡Entrena tu propia IA!",
     "ctaTitle": "¿Listo para empezar?",
     "ctaDesc": "¡Únete a más de 1,000 niños que están construyendo el futuro!",
-    "ctaButton": "Únete a la Academia"
+    "ctaButton": "Únete a la Academia",
+    "insightsTag": "Centro de Padres y Profesores",
+    "insightsTitle": "Actualidades y Consejos STEM",
+    "insightsDesc": "Descubra consejos prácticos respaldados por la investigación sobre el tiempo frente a la pantalla, la alfabetización computacional y la educación de la próxima generación de ingenieros."
   },
   "coinStore": {
     "title": "Tienda de Monedas Kone Kids",
@@ -48,6 +59,14 @@
     "logic": "🧠 Lógica",
     "loops": "🔄 Bucles",
     "variables": "📦 Variables"
+  },
+  "program": {
+    "codingTitle": "Laboratorio de Código",
+    "codingDesc": "¡Supera la misión!",
+    "roboticsTitle": "Laboratorio de Robótica",
+    "roboticsDesc": "¡Construye y programa tu robot!",
+    "aiTitle": "Estudio de IA",
+    "aiDesc": "¡Entrena tu primer modelo de IA!"
   },
   "blocks": {
     "speak": "🗣️ Decir",

@@ -5,7 +5,15 @@
     "shop": "Loja de Mascotes",
     "referral": "Indicações",
     "coins": "Moedas",
-    "back": "Voltar"
+    "back": "Voltar",
+    "logout": "Sair",
+    "classLogin": "Área de Login",
+    "parentHub": "Espaço dos Pais",
+    "joinHub": "Acessar o Hub",
+    "home": "Início",
+    "coding": "Código",
+    "robotics": "Robótica",
+    "aiLab": "Laboratório IA"
   },
   "home": {
     "title": "Bem-vindo ao Kone Kids!",
@@ -19,7 +27,10 @@
     "aiDesc": "Treine sua própria IA!",
     "ctaTitle": "Pronto para começar?",
     "ctaDesc": "Junte-se a mais de 1.000 crianças que estão construindo o futuro!",
-    "ctaButton": "Junte-se à Academia"
+    "ctaButton": "Junte-se à Academia",
+    "insightsTag": "Espaço dos Pais e Professores",
+    "insightsTitle": "Notícias e Conselhos STEM",
+    "insightsDesc": "Descubra conselhos práticos baseados em pesquisas sobre tempo de tela, alfabetização computacional e educação da próxima geração de construtores."
   },
   "coinStore": {
     "title": "Loja de Moedas Kone Kids",
@@ -36,7 +47,7 @@
     "aiDesc": "Programe rotas de navegação de agentes e ensine a IA a resolver laberintos.",
     "roboticsTitle": "Controlador de Robótica",
     "roboticsDesc": "Simule controladores de motores de microcontroladores e escreva rotinas de automação básicas.",
-    "electronicsTitle": "Circuito Inteligente",
+    "electronicsTitle": "Circuito Intelligent",
     "electronicsDesc": "Simule protoboards, conecte luzes LED e acione buzinas de telemetria."
   },
   "category": {
@@ -48,6 +59,14 @@
     "logic": "🧠 Lógica",
     "loops": "🔄 Loops",
     "variables": "📦 Variáveis"
+  },
+  "program": {
+    "codingTitle": "Laboratório de Código",
+    "codingDesc": "Domine a missão!",
+    "roboticsTitle": "Laboratório de Robótica",
+    "roboticsDesc": "Construa e programe seu robô!",
+    "aiTitle": "Estúdio de IA",
+    "aiDesc": "Treine seu primeiro modelo de IA!"
   },
   "blocks": {
     "speak": "🗣️ Dizer",
