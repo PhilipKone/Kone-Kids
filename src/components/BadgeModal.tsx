@@ -205,7 +205,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
         background: '#151921',
         border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: '28px',
-        padding: '1.5rem',
+        padding: '1.5rem 1.5rem 1.85rem 1.5rem',
         maxWidth: '650px',
         width: '100%',
         margin: 'auto',
@@ -289,7 +289,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
             }} />
 
             {/* Actions Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', paddingBottom: '8px' }}>
               <button 
                 onClick={downloadCertificate}
                 className="kids-button pulse-neon"
