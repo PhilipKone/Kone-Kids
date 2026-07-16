@@ -131,7 +131,7 @@ function Home() {
             </button>
           </div>
           {studentName ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="nav-link-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <span style={{ 
                 fontFamily: "'Baloo 2', cursive", 
                 fontWeight: 800, 
@@ -166,7 +166,7 @@ function Home() {
               fontWeight: 800, 
               fontSize: '1rem',
               transition: 'color 0.2s'
-            }} className="hover-orange">
+            }} className="hover-orange nav-link-desktop">
               Class Login 🎒
             </Link>
           )}
@@ -182,8 +182,8 @@ function Home() {
             Parent Hub
           </Link>
           
-          {/* Language selector toggle */}
-          <div style={{ display: 'flex', gap: '0.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '3px' }}>
+          {/* Language selector toggle (Desktop) */}
+          <div className="nav-link-desktop" style={{ display: 'flex', gap: '0.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '3px' }}>
             {['en', 'fr', 'es', 'pt'].map((lang) => (
               <button 
                 key={lang}
@@ -206,9 +206,50 @@ function Home() {
             ))}
           </div>
 
+          {/* Language selector toggle (Mobile Dropdown) */}
+          <div className="nav-link-mobile" style={{ alignItems: 'center' }}>
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              background: 'rgba(255,255,255,0.05)',
+              border: '1.5px solid var(--nav-border)',
+              borderRadius: '12px',
+              padding: '0.35rem 0.55rem',
+              gap: '4px'
+            }}>
+              <span style={{ fontSize: '0.9rem', display: 'flex', alignItems: 'center' }}>🌐</span>
+              <select
+                value={i18n.language.slice(0, 2)}
+                onChange={(e) => {
+                  i18n.changeLanguage(e.target.value);
+                  sounds.playClick();
+                }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--nav-text)',
+                  fontSize: '0.8rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  fontFamily: "'Baloo 2', cursive",
+                  outline: 'none',
+                  paddingRight: '2px',
+                  appearance: 'none',
+                  WebkitAppearance: 'none'
+                }}
+              >
+                <option value="en" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>EN</option>
+                <option value="fr" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>FR</option>
+                <option value="es" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>ES</option>
+                <option value="pt" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>PT</option>
+              </select>
+            </div>
+          </div>
+
           {!studentName && (
             <button 
-              className="kids-button" 
+              className="kids-button nav-link-desktop" 
               onClick={() => setIsModalOpen(true)}
               style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
             >

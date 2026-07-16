@@ -1040,6 +1040,10 @@ html {
 }
 
 /* Top Nav Mobile Responsive Adjustments */
+.nav-link-mobile {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   .kids-nav-bar {
     padding: 0.75rem 1rem !important;
@@ -1049,6 +1053,9 @@ html {
   }
   .nav-link-desktop, .nav-audio-controls {
     display: none !important;
+  }
+  .nav-link-mobile {
+    display: flex !important;
   }
   .kids-nav-logo-text {
     font-size: 1.15rem !important;
