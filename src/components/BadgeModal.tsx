@@ -182,18 +182,25 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
   };
 
   return (
-    <div style={{
-      position: 'fixed',
-      inset: 0,
-      background: 'rgba(15, 23, 42, 0.85)',
-      backdropFilter: 'blur(8px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000,
-      padding: '1rem',
-      overflowY: 'auto'
-    }}>
+    <div 
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'rgba(15, 23, 42, 0.85)',
+        backdropFilter: 'blur(8px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+        padding: '1rem',
+        overflowY: 'auto'
+      }}
+    >
       <div className="glass-panel" style={{
         background: '#151921',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -201,6 +208,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
         padding: '1.5rem',
         maxWidth: '650px',
         width: '100%',
+        margin: 'auto',
         position: 'relative',
         boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
         animation: 'modalPop 0.3s ease-out',
