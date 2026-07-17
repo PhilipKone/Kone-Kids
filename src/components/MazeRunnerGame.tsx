@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, Play, RotateCcw, Trash2, ArrowUp, CornerUpLeft, CornerUpRight, HelpCircle, Star, Repeat, Plus, Trash, ArrowDown, ArrowUpIcon } from 'lucide-react';
 import { sounds } from '../utils/sounds';
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 interface MazeRunnerGameProps {
   level: number;
@@ -346,6 +347,7 @@ const MazeRunnerGame: React.FC<MazeRunnerGameProps> = ({ level, onComplete, onEx
         currentPos.y >= currentLevelData.gridSize
       ) {
         sounds.playExplosion();
+        try { Haptics.notification({ type: NotificationType.Error }).catch(() => {}); } catch (e) {}
         setMessage('Oops! The robot walked off the grid.');
         setMessageType('error');
         setIsRunning(false);
@@ -358,6 +360,7 @@ const MazeRunnerGame: React.FC<MazeRunnerGameProps> = ({ level, onComplete, onEx
       const hitWall = currentLevelData.walls.some(w => w.x === currentPos.x && w.y === currentPos.y);
       if (hitWall) {
         sounds.playExplosion();
+        try { Haptics.notification({ type: NotificationType.Error }).catch(() => {}); } catch (e) {}
         setMessage('Crash! The robot hit an obstacle wall.');
         setMessageType('error');
         setIsRunning(false);
@@ -370,6 +373,7 @@ const MazeRunnerGame: React.FC<MazeRunnerGameProps> = ({ level, onComplete, onEx
       const starIdx = starsRemaining.findIndex(s => s.x === currentPos.x && s.y === currentPos.y);
       if (starIdx !== -1) {
         sounds.playSuccess();
+        try { Haptics.impact({ style: ImpactStyle.Light }).catch(() => {}); } catch (e) {}
         starsRemaining.splice(starIdx, 1);
         setStars([...starsRemaining]);
         collectedCount += 10;
@@ -379,6 +383,7 @@ const MazeRunnerGame: React.FC<MazeRunnerGameProps> = ({ level, onComplete, onEx
       // 4. Check target reached
       if (currentPos.x === currentLevelData.target.x && currentPos.y === currentLevelData.target.y) {
         sounds.playWin();
+        try { Haptics.notification({ type: NotificationType.Success }).catch(() => {}); } catch (e) {}
         const baseXP = 50 + (level * 10);
         const starBonus = collectedCount;
         const totalXP = baseXP + starBonus;
@@ -397,6 +402,7 @@ const MazeRunnerGame: React.FC<MazeRunnerGameProps> = ({ level, onComplete, onEx
 
     // Finished steps but not reached portal
     sounds.playExplosion();
+    try { Haptics.impact({ style: ImpactStyle.Medium }).catch(() => {}); } catch (e) {}
     setMessage("Program finished, but the robot didn't reach the portal target.");
     setMessageType('error');
     setIsRunning(false);

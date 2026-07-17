@@ -17,6 +17,7 @@ import { CODING_MISSIONS } from '../data/missions';
 import { Play, Square, FileCode, Blocks, Eye, EyeOff, Volume2, VolumeX, Music } from 'lucide-react';
 import MascotShop from './MascotShop';
 import { sounds } from '../utils/sounds';
+import { Haptics, ImpactStyle } from '@capacitor/haptics';
 
 // Define a premium dark theme for Blockly
 const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
@@ -283,6 +284,46 @@ const KidsIDE: React.FC = () => {
     javascriptGenerator.forBlock['led_state'] = (block: any) => `await electronics.setLED("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}");\n`;
     pythonGenerator.forBlock['led_state'] = (block: any) => `electronics.set_led("${block.getFieldValue('COLOR')}", "${block.getFieldValue('STATE')}")\n`;
 
+    // --- Ghana Kit Custom Blocks ---
+    Blockly.Blocks['ghana_kit_buzzer'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.buzzer', '🔊 Buzzer Note'))
+            .appendField(new Blockly.FieldDropdown([
+              ["C4 (262Hz) 🎵", "262"],
+              ["D4 (294Hz) 🎵", "294"],
+              ["E4 (330Hz) 🎵", "330"],
+              ["F4 (349Hz) 🎵", "349"],
+              ["G4 (392Hz) 🎵", "392"],
+              ["A4 (440Hz) 🎵", "440"],
+              ["B4 (494Hz) 🎵", "494"],
+              ["C5 (523Hz) 🎵", "523"]
+            ]), "FREQ")
+            .appendField(t('blocks.for', 'for'))
+            .appendField(new Blockly.FieldNumber(0.5, 0.1, 5.0), "DURATION")
+            .appendField(t('blocks.sec', 'sec'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(260);
+      }
+    };
+    javascriptGenerator.forBlock['ghana_kit_buzzer'] = (block: any) => `await electronics.playBuzzer(${block.getFieldValue('FREQ')}, ${block.getFieldValue('DURATION')} * 1000);\n`;
+    pythonGenerator.forBlock['ghana_kit_buzzer'] = (block: any) => `ghana_kit.play_buzzer(${block.getFieldValue('FREQ')}, ${block.getFieldValue('DURATION')})\n`;
+
+    Blockly.Blocks['ghana_kit_servo'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.servo', '🔌 Rotate Servo Pin 4 to'))
+            .appendField(new Blockly.FieldNumber(90, 0, 180), "ANGLE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(120);
+      }
+    };
+    javascriptGenerator.forBlock['ghana_kit_servo'] = (block: any) => `await electronics.setServo(4, ${block.getFieldValue('ANGLE')});\n`;
+    pythonGenerator.forBlock['ghana_kit_servo'] = (block: any) => `ghana_kit.set_servo(4, ${block.getFieldValue('ANGLE')})\n`;
+
+
     // --- Game Dev Blocks ---
     Blockly.Blocks['game_physics'] = {
       init: function() {
@@ -433,6 +474,8 @@ const KidsIDE: React.FC = () => {
           colour: '#eab308',
           contents: [
             { kind: 'block', type: 'led_state' },
+            { kind: 'block', type: 'ghana_kit_buzzer' },
+            { kind: 'block', type: 'ghana_kit_servo' },
             { kind: 'block', type: 'mascot_wait' },
           ]
         },
@@ -511,6 +554,15 @@ const KidsIDE: React.FC = () => {
         }
         if (onboardingStep === 2 && event.type === Blockly.Events.BLOCK_CREATE) {
           setOnboardingStep(3);
+        }
+
+        // Trigger light snap haptic if block was connected to a parent
+        if (event.type === Blockly.Events.BLOCK_MOVE && event.newParentId) {
+          try {
+            Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+          } catch (e) {
+            // Browser fallback
+          }
         }
 
         if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE || event.type === Blockly.Events.BLOCK_DELETE || event.type === Blockly.Events.BLOCK_CREATE) {
@@ -638,6 +690,24 @@ const KidsIDE: React.FC = () => {
         return new Promise(res => {
           mascotRef.current?.speak(`💡 ${color.toUpperCase()} LED turned ${state.toUpperCase()}!`);
           setTimeout(res, 1500);
+        });
+      },
+      playBuzzer: (frequency: number, duration: number) => {
+        if (electronicsRef.current) {
+          return electronicsRef.current.playBuzzer(frequency, duration);
+        }
+        return new Promise(res => {
+          mascotRef.current?.speak(`🔊 Buzzer beeped at ${frequency}Hz for ${duration / 1000}s!`);
+          setTimeout(res, duration);
+        });
+      },
+      setServo: (pin: number, angle: number) => {
+        if (electronicsRef.current) {
+          return electronicsRef.current.setServo(pin, angle);
+        }
+        return new Promise(res => {
+          mascotRef.current?.speak(`🔌 Servo rotated to ${angle}°!`);
+          setTimeout(res, 1000);
         });
       }
     };

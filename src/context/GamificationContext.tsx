@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { updateAppBadge } from '../utils/pwa';
+import { Haptics, NotificationType } from '@capacitor/haptics';
 
 export interface Badge {
   id: string;
@@ -360,6 +361,14 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
           unlocked: true,
           unlockedAt: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
         };
+        
+        // Trigger native haptic feedback for app container
+        try {
+          Haptics.notification({ type: NotificationType.Success }).catch(() => {});
+        } catch (e) {
+          // Browser environment fallback
+        }
+
         setLatestBadge(unlockedBadge);
         return unlockedBadge;
       }
