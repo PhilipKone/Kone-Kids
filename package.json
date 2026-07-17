@@ -8,9 +8,14 @@
         "postbuild": "react-snap || echo 'Pre-rendering timed out, deploying SPA...'",
         "predeploy": "npm run build",
         "deploy": "gh-pages -d dist --dotfiles -f",
-        "postinstall": "node patch-react-snap.cjs"
+        "postinstall": "node patch-react-snap.cjs",
+        "cap:copy": "cap copy",
+        "cap:sync": "cap sync",
+        "cap:open:android": "cap open android"
     },
     "dependencies": {
+        "@capacitor/android": "^8.4.2",
+        "@capacitor/core": "^8.4.2",
         "@emailjs/browser": "^4.4.1",
         "blockly": "^12.5.1",
         "canvas-confetti": "^1.9.4",
@@ -25,6 +30,7 @@
         "react-router-dom": "^6.30.3"
     },
     "devDependencies": {
+        "@capacitor/cli": "^8.4.2",
         "@types/canvas-confetti": "^1.9.0",
         "@types/react": "^17.0.0",
         "@types/react-dom": "^17.0.0",

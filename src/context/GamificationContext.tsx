@@ -45,6 +45,8 @@ interface GamificationContextType {
   logoutStudent: () => Promise<void>;
   dialect: 'en' | 'twi' | 'ga' | 'ewe';
   setDialect: (dialect: 'en' | 'twi' | 'ga' | 'ewe') => void;
+  streak: number;
+  lastActiveDate: string;
 }
 
 const INITIAL_BADGES: Badge[] = [
@@ -59,6 +61,7 @@ const INITIAL_BADGES: Badge[] = [
   { id: 'mission_complete', name: 'Mission Agent', icon: '🕵️', description: 'Complete your first mission!', unlocked: false, xpReward: 200 },
   { id: 'future_hero', name: 'Future Hero', icon: '👑', description: 'Joined the Kone Academy mission!', unlocked: false, xpReward: 100 },
   { id: 'welcome_hero', name: 'Welcome!', icon: '🎈', description: 'Welcome to the Kone Kids Lab!', unlocked: false, xpReward: 50 },
+  { id: 'streak_hero', name: 'Streak Hero', icon: '🔥', description: 'Log in 3 days in a row to learn!', unlocked: false, xpReward: 150 },
 ];
 
 const GamificationContext = createContext<GamificationContextType | undefined>(undefined);
@@ -176,6 +179,24 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
   const [studentName, setStudentName] = useState<string>(() => {
     try {
       const saved = localStorage.getItem('kone_kids_student_name');
+      return saved || '';
+    } catch (e) {
+      return '';
+    }
+  });
+
+  const [streak, setStreak] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_streak');
+      return saved ? parseInt(saved, 10) : 0;
+    } catch (e) {
+      return 0;
+    }
+  });
+
+  const [lastActiveDate, setLastActiveDate] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_last_active');
       return saved || '';
     } catch (e) {
       return '';
@@ -320,9 +341,12 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
   }, [unlockedSeries]);
 
   useEffect(() => {
-    const unviewedCount = badges.filter(b => b.unlocked && !b.viewed).length;
-    updateAppBadge(unviewedCount);
-  }, [badges]);
+    localStorage.setItem('kone_kids_streak', streak.toString());
+  }, [streak]);
+
+  useEffect(() => {
+    localStorage.setItem('kone_kids_last_active', lastActiveDate);
+  }, [lastActiveDate]);
 
   const unlockBadge = useCallback((id: string) => {
     setBadges(prev => prev.map(badge => {
@@ -342,6 +366,58 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       return badge;
     }));
   }, []);
+
+  // Daily Streak calculation on page load or student change
+  useEffect(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    
+    // Skip if no student is active to avoid registering streaks for non-logged-in visitors
+    if (!studentId) return;
+
+    if (!lastActiveDate) {
+      // First active day
+      setLastActiveDate(todayStr);
+      setStreak(1);
+      localStorage.setItem('kone_kids_last_active', todayStr);
+      localStorage.setItem('kone_kids_streak', '1');
+    } else if (lastActiveDate === todayStr) {
+      // Already active today - do nothing
+    } else {
+      const lastDate = new Date(lastActiveDate);
+      const todayDate = new Date(todayStr);
+      const diffTime = Math.abs(todayDate.getTime() - lastDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 1) {
+        // Consecutive day!
+        const newStreak = streak + 1;
+        setStreak(newStreak);
+        setLastActiveDate(todayStr);
+        localStorage.setItem('kone_kids_last_active', todayStr);
+        localStorage.setItem('kone_kids_streak', newStreak.toString());
+        
+        // Bonus rewards
+        setCoins(curr => curr + 20);
+        setXp(curr => curr + 10);
+
+        if (newStreak >= 3) {
+          unlockBadge('streak_hero');
+        }
+      } else if (diffDays > 1) {
+        // Broken streak - reset to 1
+        setStreak(1);
+        setLastActiveDate(todayStr);
+        localStorage.setItem('kone_kids_last_active', todayStr);
+        localStorage.setItem('kone_kids_streak', '1');
+      }
+    }
+  }, [studentId, lastActiveDate, streak, unlockBadge]);
+
+  useEffect(() => {
+    const unviewedCount = badges.filter(b => b.unlocked && !b.viewed).length;
+    updateAppBadge(unviewedCount);
+  }, [badges]);
+
 
   const markVisited = useCallback((page: string) => {
     setHasVisited(prev => {
@@ -457,6 +533,8 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
           if (cloudData.inventory) setInventory(cloudData.inventory);
           if (cloudData.equippedItems) setEquippedItems(cloudData.equippedItems);
           if (cloudData.unlockedSeries) setUnlockedSeries(cloudData.unlockedSeries);
+          if (cloudData.streak !== undefined) setStreak(cloudData.streak);
+          if (cloudData.lastActiveDate !== undefined) setLastActiveDate(cloudData.lastActiveDate);
         }
       }
 
@@ -501,12 +579,16 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     setInventory([]);
     setEquippedItems({});
     setUnlockedSeries(['series_word_search']);
+    setStreak(0);
+    setLastActiveDate('');
     localStorage.removeItem('kone_kids_xp');
     localStorage.removeItem('kone_kids_missions');
     localStorage.removeItem('kone_kids_coins');
     localStorage.removeItem('kone_kids_inventory');
     localStorage.removeItem('kone_kids_equipped');
     localStorage.removeItem('kone_kids_series');
+    localStorage.removeItem('kone_kids_streak');
+    localStorage.removeItem('kone_kids_last_active');
   }, []);
 
   // Sync Student Progress to Section Roster in Firestore
@@ -523,6 +605,8 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
             inventory,
             equippedItems,
             unlockedSeries,
+            streak,
+            lastActiveDate,
             lastSync: new Date().toISOString()
           }, { merge: true });
         }
@@ -531,17 +615,17 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       }
     };
     syncStudentData();
-  }, [xp, completedMissions, coins, inventory, equippedItems, unlockedSeries, sectionId, studentId]);
+  }, [xp, completedMissions, coins, inventory, equippedItems, unlockedSeries, streak, lastActiveDate, sectionId, studentId]);
 
   const contextValue = useMemo(() => ({
     badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
     coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
     sectionId, studentId, studentName, loginAsStudent, logoutStudent,
-    dialect, setDialect
+    dialect, setDialect, streak, lastActiveDate
   }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
        coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
        sectionId, studentId, studentName, loginAsStudent, logoutStudent,
-       dialect, setDialect]);
+       dialect, setDialect, streak, lastActiveDate]);
 
   return (
     <GamificationContext.Provider value={contextValue}>
