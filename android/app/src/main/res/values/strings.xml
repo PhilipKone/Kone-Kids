@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Kone Kids</string>
+    <string name="title_activity_main">Kone Kids</string>
+    <string name="package_name">io.koneacademy.kids</string>
+    <string name="custom_url_scheme">io.koneacademy.kids</string>
+</resources>
