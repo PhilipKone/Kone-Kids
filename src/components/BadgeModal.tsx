@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Download, Share2 } from 'lucide-react';
 import { Badge, useGamification } from '../context/GamificationContext';
+import { Share } from '@capacitor/share';
 
 interface BadgeModalProps {
   badge: Badge;
@@ -175,10 +176,18 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
     document.body.removeChild(a);
   };
 
-  const shareToWhatsApp = () => {
+  const shareAchievement = async () => {
     const text = `I unlocked the "${badge.name}" badge in Kone Kids! 🚀 Check out my coding achievements!`;
-    const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    try {
+      await Share.share({
+        title: 'Kone Kids Achievement!',
+        text: text,
+        url: 'https://kids.koneacademy.io',
+        dialogTitle: 'Share Achievement'
+      });
+    } catch (err) {
+      console.log('Share error or canceled', err);
+    }
   };
 
   return (
@@ -309,7 +318,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
                 <span>Download PNG</span>
               </button>
               <button 
-                onClick={shareToWhatsApp}
+                onClick={shareAchievement}
                 className="kids-button"
                 style={{
                   display: 'flex',
@@ -318,15 +327,15 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
                   gap: '0.4rem',
                   fontSize: '0.9rem',
                   padding: '0.65rem',
-                  background: '#25D366',
-                  borderColor: '#22c55e',
+                  background: 'var(--kids-purple)',
+                  borderColor: '#a855f7',
                   '--shadow-height': '5px',
-                  '--shadow-color': '#15803d',
+                  '--shadow-color': '#7e22ce',
                   minHeight: '44px'
                 } as any}
               >
                 <Share2 size={18} />
-                <span>Share WhatsApp</span>
+                <span>Share Badge</span>
               </button>
             </div>
           </div>
