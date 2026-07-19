@@ -82,6 +82,11 @@ const KidsIDE: React.FC = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showShop, setShowShop] = useState(false);
 
+  // Web Serial API states
+  const [serialPort, setSerialPort] = useState<any | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
   // Audio control state
   const [muted, setMuted] = useState(sounds.getMuted());
   const [musicOn, setMusicOn] = useState(sounds.getMusicOn());
@@ -213,6 +218,71 @@ const KidsIDE: React.FC = () => {
     };
     javascriptGenerator.forBlock['mascot_blink'] = () => `await mascot.blink();\n`;
     pythonGenerator.forBlock['mascot_blink'] = () => `mascot.blink()\n`;
+
+    // --- Text-to-Speech Blocks ---
+    Blockly.Blocks['tts_speak'] = {
+      init: function() {
+        this.appendValueInput("TEXT")
+            .setCheck("String")
+            .appendField(t('blocks.tts_speak', '🗣️ Speak'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#8b5cf6');
+      }
+    };
+    javascriptGenerator.forBlock['tts_speak'] = (block: any) => {
+      const textVal = javascriptGenerator.valueToCode(block, 'TEXT', (javascriptGenerator as any).ORDER_ATOMIC) || "''";
+      return `await tts.speak(${textVal});\n`;
+    };
+    pythonGenerator.forBlock['tts_speak'] = (block: any) => {
+      const textVal = pythonGenerator.valueToCode(block, 'TEXT', (pythonGenerator as any).ORDER_ATOMIC) || "''";
+      return `tts.speak(${textVal})\n`;
+    };
+
+    Blockly.Blocks['tts_set_voice'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.tts_set_voice', '🗣️ Set Voice to'))
+            .appendField(new Blockly.FieldDropdown([
+              ["Alto 👩", "alto"],
+              ["Baritone 👨", "baritone"],
+              ["Squeak 🐿️", "squeak"],
+              ["Giant 👹", "giant"],
+              ["Kitten 🐱", "kitten"]
+            ]), "VOICE");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#8b5cf6');
+      }
+    };
+    javascriptGenerator.forBlock['tts_set_voice'] = (block: any) => {
+      return `tts.setVoice("${block.getFieldValue('VOICE')}");\n`;
+    };
+    pythonGenerator.forBlock['tts_set_voice'] = (block: any) => {
+      return `tts.set_voice("${block.getFieldValue('VOICE')}")\n`;
+    };
+
+    Blockly.Blocks['tts_set_language'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.tts_set_lang', '🗣️ Set Language to'))
+            .appendField(new Blockly.FieldDropdown([
+              ["English 🇺🇸", "en"],
+              ["French 🇫🇷", "fr"],
+              ["Spanish 🇪🇸", "es"],
+              ["Portuguese 🇵🇹", "pt"]
+            ]), "LANG");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#8b5cf6');
+      }
+    };
+    javascriptGenerator.forBlock['tts_set_language'] = (block: any) => {
+      return `tts.setLanguage("${block.getFieldValue('LANG')}");\n`;
+    };
+    pythonGenerator.forBlock['tts_set_language'] = (block: any) => {
+      return `tts.set_language("${block.getFieldValue('LANG')}")\n`;
+    };
 
     // --- Robotics Blocks ---
     Blockly.Blocks['robot_move'] = {
@@ -503,6 +573,29 @@ const KidsIDE: React.FC = () => {
             ]
           }
         ] : []),
+        {
+          kind: 'category',
+          name: t('category.tts', '🗣️ Text to Speech'),
+          colour: '#8b5cf6',
+          contents: [
+            {
+              kind: 'block',
+              type: 'tts_speak',
+              inputs: {
+                TEXT: {
+                  shadow: {
+                    type: 'text',
+                    fields: {
+                      TEXT: 'Hello!'
+                    }
+                  }
+                }
+              }
+            },
+            { kind: 'block', type: 'tts_set_voice' },
+            { kind: 'block', type: 'tts_set_language' }
+          ]
+        },
         { kind: 'category', name: t('category.logic', '🧠 Logic'), categorystyle: 'logic_category', contents: [{ kind: 'block', type: 'controls_if' }] },
         { kind: 'category', name: t('category.loops', '🔄 Loops'), categorystyle: 'loop_category', contents: [{ kind: 'block', type: 'controls_repeat_ext' }] },
         { kind: 'category', name: t('category.variables', '📦 Variables'), categorystyle: 'variable_category', custom: 'VARIABLE' }
@@ -579,6 +672,151 @@ const KidsIDE: React.FC = () => {
     }
   }, [onboardingStep, language, isMobile, mission, i18n.language]);
 
+  const exportProject = () => {
+    if (!workspace.current) return;
+    try {
+      const xmlDom = Blockly.Xml.workspaceToDom(workspace.current);
+      const xmlText = Blockly.Xml.domToText(xmlDom);
+      
+      const blob = new Blob([xmlText], { type: 'text/xml' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `kone-kids-project-${missionId || 'custom'}.kone`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      sounds.playSuccess();
+      mascotRef.current?.speak("Project saved to your computer! 💾");
+    } catch (err) {
+      console.error('Failed to export project:', err);
+    }
+  };
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    if (!workspace.current) return;
+    
+    const file = e.dataTransfer.files[0];
+    if (file && (file.name.endsWith('.kone') || file.name.endsWith('.xml'))) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target?.result as string;
+        try {
+          const parser = new DOMParser();
+          const xmlDom = parser.parseFromString(text, 'text/xml').documentElement;
+          workspace.current?.clear();
+          Blockly.Xml.domToWorkspace(xmlDom, workspace.current!);
+          sounds.playSuccess();
+          mascotRef.current?.speak("Project loaded successfully! 📂");
+        } catch (err) {
+          console.error('Failed to import project:', err);
+          alert('Failed to load project: invalid project file format.');
+        }
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      // Ctrl/Cmd + Enter -> Run Code
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        runCode();
+      }
+
+      // Escape -> Stop Code
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        stopCode();
+      }
+
+      // Ctrl/Cmd + S -> Export Project
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        exportProject();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isRunning, missionId]);
+
+  const connectHardware = async () => {
+    if (!('serial' in navigator)) {
+      alert("Web Serial API is not supported in this browser. Please use Chrome or Edge! 🔌");
+      return;
+    }
+    try {
+      const port = await (navigator as any).serial.requestPort();
+      await port.open({ baudRate: 115200 });
+      setSerialPort(port);
+      setIsConnected(true);
+      sounds.playSuccess();
+      mascotRef.current?.speak("Microcontroller connected! Ready to upload. 🔌");
+    } catch (err) {
+      console.error('Failed to open serial port:', err);
+      alert("Could not connect to device. Make sure it is plugged in and not used by another program.");
+    }
+  };
+
+  const disconnectHardware = async () => {
+    if (serialPort) {
+      try {
+        await serialPort.close();
+      } catch (err) {
+        console.error(err);
+      }
+      setSerialPort(null);
+      setIsConnected(false);
+      sounds.playClick();
+      mascotRef.current?.speak("Hardware disconnected.");
+    }
+  };
+
+  const uploadToHardware = async () => {
+    if (!serialPort) return;
+    setUploading(true);
+    try {
+      const writer = serialPort.writable.getWriter();
+      const encoder = new TextEncoder();
+
+      // MicroPython Raw REPL upload helper
+      if (language === 'python') {
+        // 1. Interrupt any running script (Ctrl+C)
+        await writer.write(encoder.encode('\x03'));
+        await new Promise(res => setTimeout(res, 200));
+        // 2. Enter raw REPL mode (Ctrl+A)
+        await writer.write(encoder.encode('\x01'));
+        await new Promise(res => setTimeout(res, 200));
+        // 3. Write code string
+        await writer.write(encoder.encode(generatedCode));
+        await new Promise(res => setTimeout(res, 200));
+        // 4. Soft reboot and execute (Ctrl+D)
+        await writer.write(encoder.encode('\x04'));
+      } else {
+        // Direct raw text transfer for generic serial monitors
+        await writer.write(encoder.encode(generatedCode + '\n'));
+      }
+
+      writer.releaseLock();
+      sounds.playSuccess();
+      mascotRef.current?.speak("Upload complete! Watch your board! 🚀");
+    } catch (err) {
+      console.error('Upload failed:', err);
+      alert("Upload failed. Please check your connections.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const runCode = async () => {
     if (!workspace.current || isRunning) return;
 
@@ -609,6 +847,9 @@ const KidsIDE: React.FC = () => {
           robot_turn: '🔄 Turn block',
           robot_stop: '🛑 Stop Robot block',
           robot_distance: '📏 Distance Sensor block',
+          tts_speak: '🗣️ Speak block',
+          tts_set_voice: '🗣️ Set Voice block',
+          tts_set_language: '🗣️ Set Language block',
         };
         const missingLabels = missing.map(m => friendlyNames[m] || m);
         setBlockError(missingLabels);
@@ -719,11 +960,68 @@ const KidsIDE: React.FC = () => {
       }
     };
 
+    // Text-to-Speech execution setup
+    let currentTtsVoice = 'alto';
+    let currentTtsLang = 'en-US';
+
+    const tts = {
+      setVoice: (voice: string) => {
+        currentTtsVoice = voice;
+      },
+      setLanguage: (lang: string) => {
+        const langMap: Record<string, string> = {
+          en: 'en-US',
+          fr: 'fr-FR',
+          es: 'es-ES',
+          pt: 'pt-BR'
+        };
+        currentTtsLang = langMap[lang] || lang;
+      },
+      speak: (text: string) => new Promise(res => {
+        try {
+          if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // cancel any active speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = currentTtsLang;
+
+            if (currentTtsVoice === 'alto') {
+              utterance.pitch = 1.0;
+              utterance.rate = 1.0;
+            } else if (currentTtsVoice === 'baritone') {
+              utterance.pitch = 0.6;
+              utterance.rate = 0.9;
+            } else if (currentTtsVoice === 'squeak') {
+              utterance.pitch = 1.6;
+              utterance.rate = 1.25;
+            } else if (currentTtsVoice === 'giant') {
+              utterance.pitch = 0.45;
+              utterance.rate = 0.75;
+            } else if (currentTtsVoice === 'kitten') {
+              utterance.pitch = 2.0;
+              utterance.rate = 1.5;
+              // Scratch kitten voice: converts all words to meows!
+              const words = text.split(/\s+/);
+              const meows = words.map(() => 'meow').join(' ');
+              utterance.text = meows;
+            }
+
+            utterance.onend = () => res(true);
+            utterance.onerror = () => res(true);
+            window.speechSynthesis.speak(utterance);
+          } else {
+            res(true);
+          }
+        } catch (e) {
+          res(true);
+        }
+      })
+    };
+
     let ranSuccessfully = false;
     try {
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', 'highlightBlock', code);
-      await fn(mascot, robot, game, electronics, ai, highlightBlock);
+      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', 'highlightBlock', 'tts', code);
+      await fn(mascot, robot, game, electronics, ai, highlightBlock, tts);
       ranSuccessfully = true;
     } catch (e) {
       console.error(e);
@@ -818,6 +1116,76 @@ const KidsIDE: React.FC = () => {
               <option value="ga" style={{ background: '#1e293b', color: 'white' }}>Ga</option>
               <option value="ewe" style={{ background: '#1e293b', color: 'white' }}>Ewe</option>
             </select>
+          </div>
+
+          {/* Import/Export buttons */}
+          <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px 6px' }}>
+            <button
+              onClick={() => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.kone,.xml';
+                input.onchange = (e: any) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                      const text = ev.target?.result as string;
+                      try {
+                        const parser = new DOMParser();
+                        const xmlDom = parser.parseFromString(text, 'text/xml').documentElement;
+                        workspace.current?.clear();
+                        Blockly.Xml.domToWorkspace(xmlDom, workspace.current!);
+                        sounds.playSuccess();
+                        mascotRef.current?.speak("Project loaded successfully! 📂");
+                      } catch (err) {
+                        console.error('Failed to import project:', err);
+                        alert('Failed to load project: invalid project file format.');
+                      }
+                    };
+                    reader.readAsText(file);
+                  }
+                };
+                input.click();
+              }}
+              title="Open Project (.kone)"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#cbd5e1',
+                padding: '0.25rem',
+                outline: 'none',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                gap: '0.2rem'
+              }}
+            >
+              <span>📂 Open</span>
+            </button>
+            <button
+              onClick={exportProject}
+              title="Save Project (.kone)"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#cbd5e1',
+                padding: '0.25rem',
+                outline: 'none',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                gap: '0.2rem'
+              }}
+            >
+              <span>💾 Save</span>
+            </button>
           </div>
 
           {/* Audio controls */}
@@ -965,14 +1333,19 @@ const KidsIDE: React.FC = () => {
               💡 Hint ({hintIndex % (mission.hints.length) === 0 && hintIndex > 0 ? 'all used!' : `${mission.hints.length - (hintIndex % mission.hints.length)} left`})
             </button>
           )}
-          <div ref={blocklyDiv} style={{ 
-            height: isMobile ? '450px' : '100%', 
-            minHeight: isMobile ? '400px' : '500px',
-            borderRadius: '20px', 
-            overflow: 'hidden', 
-            border: '1px solid rgba(255,255,255,0.1)', 
-            background: '#0b0e14' 
-          }} />
+          <div 
+            ref={blocklyDiv} 
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={handleFileDrop}
+            style={{ 
+              height: isMobile ? '450px' : '100%', 
+              minHeight: isMobile ? '400px' : '500px',
+              borderRadius: '20px', 
+              overflow: 'hidden', 
+              border: '1px solid rgba(255,255,255,0.1)', 
+              background: '#0b0e14' 
+            }} 
+          />
         </div>
 
         {/* Side Panel */}
@@ -1040,6 +1413,40 @@ const KidsIDE: React.FC = () => {
 
       {/* Footer Actions */}
       <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', zIndex: 50, display: 'flex', gap: '0.6rem' }}>
+        {/* Hardware Connect/Upload buttons */}
+        {('serial' in navigator) && (
+          <>
+            {!isConnected ? (
+              <button 
+                onClick={connectHardware} 
+                className="kids-button" 
+                style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', color: 'white', '--shadow-color': 'var(--kids-border)' } as any}
+              >
+                <span>🔌 Connect Board</span>
+              </button>
+            ) : (
+              <div style={{ display: 'flex', gap: '0.4rem' }}>
+                <button 
+                  onClick={uploadToHardware} 
+                  disabled={uploading} 
+                  className="kids-button pulse-neon" 
+                  style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', '--shadow-color': '#047857' } as any}
+                >
+                  <span>🚀 {uploading ? 'Uploading...' : 'Upload Board'}</span>
+                </button>
+                <button 
+                  onClick={disconnectHardware} 
+                  className="kids-button" 
+                  style={{ padding: '0.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '44px', width: '44px', background: '#ef4444', '--shadow-color': '#991b1b' } as any} 
+                  title="Disconnect Board"
+                >
+                  🔌
+                </button>
+              </div>
+            )}
+          </>
+        )}
+
         {!isRunning ? (
           <button id="run-code-btn" className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px' }} onClick={runCode}>
             <Play size={18} fill="currentColor" />
