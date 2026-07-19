@@ -39,7 +39,7 @@ const ProfileView = React.lazy(() => import('./components/ProfileView'))
 function Home() {
   const { t, i18n } = useTranslation()
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const { studentName, logoutStudent } = useGamification()
+  const { studentName, logoutStudent, streak } = useGamification()
 
   // Audio control state
   const [muted, setMuted] = useState(sounds.getMuted())
@@ -131,7 +131,7 @@ function Home() {
             </button>
           </div>
           {studentName ? (
-            <div className="nav-link-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div className="nav-link-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ 
                 fontFamily: "'Baloo 2', cursive", 
                 fontWeight: 800, 
@@ -143,6 +143,22 @@ function Home() {
               }}>
                 🎒 {studentName.split(' ')[0]}
               </span>
+              {streak > 0 && (
+                <span style={{
+                  fontFamily: "'Baloo 2', cursive",
+                  fontWeight: 800,
+                  color: '#f97316',
+                  background: 'rgba(249, 115, 22, 0.1)',
+                  padding: '0.35rem 0.85rem',
+                  borderRadius: '12px',
+                  fontSize: '0.9rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.2rem'
+                }} title={`${streak} Day Coding Streak!`}>
+                  🔥 {streak}
+                </span>
+              )}
               <button 
                 onClick={logoutStudent}
                 style={{
@@ -152,7 +168,8 @@ function Home() {
                   fontFamily: "'Baloo 2', cursive",
                   fontWeight: 800,
                   fontSize: '0.9rem',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  marginLeft: '0.5rem'
                 }}
               >
                 Logout

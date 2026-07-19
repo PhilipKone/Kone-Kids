@@ -36,6 +36,7 @@ export default function TeacherDashboard() {
   const [newStudentName, setNewStudentName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [copySuccess, setCopySuccess] = useState(false);
   const [editingStudentId, setEditingStudentId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [editingMascot, setEditingMascot] = useState('');
@@ -1092,6 +1093,29 @@ export default function TeacherDashboard() {
                       
                       <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--kids-text-muted)', display: 'block', marginTop: '0.35rem' }}>
                         Class Code: <code style={{ background: '#f1f5f9', padding: '0.15rem 0.4rem', borderRadius: '6px', color: '#0f172a', fontWeight: 900 }}>{activeCode}</code>
+                        <button
+                          onClick={() => {
+                            const loginUrl = `${window.location.origin}/class-login?code=${activeCode}`;
+                            navigator.clipboard.writeText(loginUrl);
+                            setCopySuccess(true);
+                            setTimeout(() => setCopySuccess(false), 2000);
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#3b82f6',
+                            fontSize: '0.85rem',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            marginLeft: '0.75rem',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.25rem',
+                            padding: 0
+                          }}
+                        >
+                          {copySuccess ? '✅ Copied Direct Link!' : '📋 Copy Direct Login Link'}
+                        </button>
                       </span>
                     </div>
 

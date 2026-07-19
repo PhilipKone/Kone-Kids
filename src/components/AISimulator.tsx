@@ -26,6 +26,11 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
   const [imagesB, setImagesB] = useState<string[]>([]);
   const [imagesC, setImagesC] = useState<string[]>([]);
   
+  // Samples list for K-NN color classification
+  const [samplesA, setSamplesA] = useState<{r: number, g: number, b: number}[]>([]);
+  const [samplesB, setSamplesB] = useState<{r: number, g: number, b: number}[]>([]);
+  const [samplesC, setSamplesC] = useState<{r: number, g: number, b: number}[]>([]);
+
   // Average RGB values for color classification (Custom mode)
   const [avgColorA, setAvgColorA] = useState<{r: number, g: number, b: number} | null>(null);
   const [avgColorB, setAvgColorB] = useState<{r: number, g: number, b: number} | null>(null);
@@ -56,6 +61,9 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
     setImagesA([]);
     setImagesB([]);
     setImagesC([]);
+    setSamplesA([]);
+    setSamplesB([]);
+    setSamplesC([]);
     setAvgColorA(null);
     setAvgColorB(null);
     setAvgColorC(null);
@@ -112,6 +120,9 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
       setImagesA([]);
       setImagesB([]);
       setImagesC([]);
+      setSamplesA([]);
+      setSamplesB([]);
+      setSamplesC([]);
       setAvgColorA(null);
       setAvgColorB(null);
       setAvgColorC(null);
@@ -156,54 +167,98 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
     const classifyLoop = async () => {
       while (active && isTrained) {
         if (videoRef.current && videoRef.current.readyState === 4) {
-          const video = videoRef.current;
-          
-          const canvas = document.createElement('canvas');
-          canvas.width = 16;
-          canvas.height = 12;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(video, 0, 0, 16, 12);
-            const imgData = ctx.getImageData(0, 0, 16, 12).data;
+            const video = videoRef.current;
             
-            let rSum = 0, gSum = 0, bSum = 0;
-            for (let i = 0; i < imgData.length; i += 4) {
-              rSum += imgData[i];
-              gSum += imgData[i+1];
-              bSum += imgData[i+2];
-            }
-            const count = imgData.length / 4;
-            const avg = { r: Math.round(rSum / count), g: Math.round(gSum / count), b: Math.round(bSum / count) };
-            setLiveColor(avg);
-            
-            if (activeMode === 'custom') {
-              // Real RGB Euclidean Distance Classification
-              if (avgColorA && avgColorB) {
-                const distA = Math.sqrt(Math.pow(avg.r - avgColorA.r, 2) + Math.pow(avg.g - avgColorA.g, 2) + Math.pow(avg.b - avgColorA.b, 2));
-                const distB = Math.sqrt(Math.pow(avg.r - avgColorB.r, 2) + Math.pow(avg.g - avgColorB.g, 2) + Math.pow(avg.b - avgColorB.b, 2));
-                const distC = avgColorC ? Math.sqrt(Math.pow(avg.r - avgColorC.r, 2) + Math.pow(avg.g - avgColorC.g, 2) + Math.pow(avg.b - avgColorC.b, 2)) : Infinity;
+            const canvas = document.createElement('canvas');
+            canvas.width = 16;
+            canvas.height = 12;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              // Crop center 50% of the video stream (Region of Interest)
+              const vW = video.videoWidth || 320;
+              const vH = video.videoHeight || 240;
+              const cropW = vW * 0.5;
+              const cropH = vH * 0.5;
+              const cropX = (vW - cropW) / 2;
+              const cropY = (vH - cropH) / 2;
 
-                let detected = 'Unknown';
-                let conf = 0;
-
-                const minDist = Math.min(distA, distB, distC);
-                const sumDist = distA + distB + (avgColorC ? distC : 0);
-
-                if (minDist === distA) {
-                  detected = classA;
-                  conf = Math.round((1 - distA / sumDist) * 100);
-                } else if (minDist === distB) {
-                  detected = classB;
-                  conf = Math.round((1 - distB / sumDist) * 100);
-                } else if (avgColorC && minDist === distC) {
-                  detected = classC;
-                  conf = Math.round((1 - distC / sumDist) * 100);
-                }
-
-                setCurrentClass(detected);
-                setConfidence(Math.max(10, Math.min(conf, 99)));
+              ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, 16, 12);
+              const imgData = ctx.getImageData(0, 0, 16, 12).data;
+              
+              let rSum = 0, gSum = 0, bSum = 0;
+              for (let i = 0; i < imgData.length; i += 4) {
+                rSum += imgData[i];
+                gSum += imgData[i+1];
+                bSum += imgData[i+2];
               }
-            } else {
+              const count = imgData.length / 4;
+              const avg = { r: Math.round(rSum / count), g: Math.round(gSum / count), b: Math.round(bSum / count) };
+              setLiveColor(avg);
+              
+              if (activeMode === 'custom') {
+                // Multi-sample 1-Nearest Neighbor Euclidean Distance Classification
+                let minDist = Infinity;
+                let detected = 'Unknown';
+                const totalSamples = samplesA.length + samplesB.length + samplesC.length;
+
+                if (totalSamples > 0) {
+                  // Classify against samples A
+                  samplesA.forEach(s => {
+                    const dist = Math.sqrt(Math.pow(avg.r - s.r, 2) + Math.pow(avg.g - s.g, 2) + Math.pow(avg.b - s.b, 2));
+                    if (dist < minDist) {
+                      minDist = dist;
+                      detected = classA;
+                    }
+                  });
+                  // Classify against samples B
+                  samplesB.forEach(s => {
+                    const dist = Math.sqrt(Math.pow(avg.r - s.r, 2) + Math.pow(avg.g - s.g, 2) + Math.pow(avg.b - s.b, 2));
+                    if (dist < minDist) {
+                      minDist = dist;
+                      detected = classB;
+                    }
+                  });
+                  // Classify against samples C
+                  samplesC.forEach(s => {
+                    const dist = Math.sqrt(Math.pow(avg.r - s.r, 2) + Math.pow(avg.g - s.g, 2) + Math.pow(avg.b - s.b, 2));
+                    if (dist < minDist) {
+                      minDist = dist;
+                      detected = classC;
+                    }
+                  });
+
+                  // Clamped confidence calculation based on Euclidean distance
+                  const conf = Math.max(10, Math.min(Math.round(100 - (minDist / 2)), 99));
+
+                  setCurrentClass(detected);
+                  setConfidence(conf);
+                } else if (avgColorA && avgColorB) {
+                  // Fallback to average color comparison if samples list is empty
+                  const distA = Math.sqrt(Math.pow(avg.r - avgColorA.r, 2) + Math.pow(avg.g - avgColorA.g, 2) + Math.pow(avg.b - avgColorA.b, 2));
+                  const distB = Math.sqrt(Math.pow(avg.r - avgColorB.r, 2) + Math.pow(avg.g - avgColorB.g, 2) + Math.pow(avg.b - avgColorB.b, 2));
+                  const distC = avgColorC ? Math.sqrt(Math.pow(avg.r - avgColorC.r, 2) + Math.pow(avg.g - avgColorC.g, 2) + Math.pow(avg.b - avgColorC.b, 2)) : Infinity;
+
+                  const minDistFallback = Math.min(distA, distB, distC);
+                  const sumDist = distA + distB + (avgColorC ? distC : 0);
+
+                  let detectedFallback = 'Unknown';
+                  let conf = 0;
+
+                  if (minDistFallback === distA) {
+                    detectedFallback = classA;
+                    conf = Math.round((1 - distA / sumDist) * 100);
+                  } else if (minDistFallback === distB) {
+                    detectedFallback = classB;
+                    conf = Math.round((1 - distB / sumDist) * 100);
+                  } else if (avgColorC && minDistFallback === distC) {
+                    detectedFallback = classC;
+                    conf = Math.round((1 - distC / sumDist) * 100);
+                  }
+
+                  setCurrentClass(detectedFallback);
+                  setConfidence(Math.max(10, Math.min(conf, 99)));
+                }
+              } else {
               // Heuristic Classification based on color features & subtle movement
               const score = (avg.r * 0.299 + avg.g * 0.587 + avg.b * 0.114);
               let detected = classA;
@@ -279,12 +334,21 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
     let avgColor = { r: 120, g: 120, b: 120 };
     
     if (videoRef.current && videoRef.current.readyState === 4) {
+      const video = videoRef.current;
       const canvas = document.createElement('canvas');
       canvas.width = 120;
       canvas.height = 90;
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.drawImage(videoRef.current, 0, 0, 120, 90);
+        // Crop center 50% (Region of Interest)
+        const vW = video.videoWidth || 320;
+        const vH = video.videoHeight || 240;
+        const cropW = vW * 0.5;
+        const cropH = vH * 0.5;
+        const cropX = (vW - cropW) / 2;
+        const cropY = (vH - cropH) / 2;
+
+        ctx.drawImage(video, cropX, cropY, cropW, cropH, 0, 0, 120, 90);
         dataUrl = canvas.toDataURL('image/jpeg');
         
         const imgData = ctx.getImageData(0, 0, 120, 90).data;
@@ -298,25 +362,42 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
         avgColor = { r: Math.round(rSum / count), g: Math.round(gSum / count), b: Math.round(bSum / count) };
       }
     } else {
-      // Offline fallback colors
+      // Offline fallback cards: Draw a beautiful SVG showing the object name
       const colors = {
         a: { r: 59, g: 130, b: 246, hex: '%233b82f6' },
         b: { r: 236, g: 72, b: 153, hex: '%23ec4899' },
         c: { r: 16, g: 185, b: 129, hex: '%2310b981' }
       };
-      dataUrl = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="90" viewBox="0 0 120 90"><rect width="100%" height="100%" fill="${colors[target].hex}"/></svg>`;
+      
+      let emoji = '🟫';
+      let title = 'Object';
+      if (target === 'a') {
+        emoji = classA.includes('🟫') || classA.toLowerCase().includes('cocoa') ? '🟫' : '🍎';
+        title = classA;
+      } else if (target === 'b') {
+        emoji = classB.includes('🟨') || classB.toLowerCase().includes('banana') ? '🍌' : '🍌';
+        title = classB;
+      } else {
+        emoji = classC.includes('🟩') || classC.toLowerCase().includes('leaf') ? '🍃' : '🍃';
+        title = classC;
+      }
+
+      dataUrl = `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="90" viewBox="0 0 120 90"><rect width="100%" height="100%" fill="${colors[target].hex}"/><text x="60" y="42" font-size="28" text-anchor="middle">${emoji}</text><text x="60" y="70" font-size="9" fill="white" font-weight="bold" text-anchor="middle" font-family="sans-serif">${title}</text></svg>`;
       avgColor = { r: colors[target].r, g: colors[target].g, b: colors[target].b };
     }
     
     if (target === 'a') {
       setImagesA(prev => [...prev.slice(-3), dataUrl]);
-      setAvgColorA(prev => prev ? { r: Math.round((prev.r + avgColor.r) / 2), g: Math.round((prev.g + avgColor.g) / 2), b: Math.round((prev.b + avgColor.b) / 2) } : avgColor);
+      setSamplesA(prev => [...prev.slice(-5), avgColor]);
+      setAvgColorA(avgColor);
     } else if (target === 'b') {
       setImagesB(prev => [...prev.slice(-3), dataUrl]);
-      setAvgColorB(prev => prev ? { r: Math.round((prev.r + avgColor.r) / 2), g: Math.round((prev.g + avgColor.g) / 2), b: Math.round((prev.b + avgColor.b) / 2) } : avgColor);
+      setSamplesB(prev => [...prev.slice(-5), avgColor]);
+      setAvgColorB(avgColor);
     } else {
       setImagesC(prev => [...prev.slice(-3), dataUrl]);
-      setAvgColorC(prev => prev ? { r: Math.round((prev.r + avgColor.r) / 2), g: Math.round((prev.g + avgColor.g) / 2), b: Math.round((prev.b + avgColor.b) / 2) } : avgColor);
+      setSamplesC(prev => [...prev.slice(-5), avgColor]);
+      setAvgColorC(avgColor);
     }
   };
 
@@ -379,7 +460,7 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
       }
 
       return (
-        <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <svg viewBox="0 0 320 240" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
           <g stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.85">
             {/* Palm Base */}
             <path d={`M ${palm.x - 20} ${palm.y} Q ${palm.x} ${palm.y + 8} ${palm.x + 20} ${palm.y} L ${wrist.x} ${wrist.y + 10} Z`} fill="rgba(16, 185, 129, 0.05)" />
@@ -429,7 +510,7 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
       }
 
       return (
-        <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <svg viewBox="0 0 320 240" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
           <g stroke="#0ea5e9" strokeWidth="2" fill="none" opacity="0.8">
             {/* Face Contour Oval */}
             <ellipse cx={cx} cy={cy + 6} rx="40" ry="52" strokeDasharray="3 3" />
@@ -461,7 +542,7 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
       // GHANA LANDMARKS (Targeting crosshair bounding box)
       const targetName = isA ? 'INDEPENDENCE_ARCH_GH' : isB ? 'KAKUM_CANOPY_WALK' : isC ? 'LARABANGA_MOSQUE' : 'SCANNING_LANDSCAPE';
       return (
-        <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+        <svg viewBox="0 0 320 240" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
           {/* Bounding Box */}
           <g stroke="#fbbf24" strokeWidth="2" fill="none" opacity="0.9">
             {/* Top-Left Corner */}
@@ -491,21 +572,83 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
       );
     }
 
-    // Default 'custom' mode overlay (Color Target Ring)
+    // Default 'custom' mode overlay (Color Target Box - Center 50% ROI)
     return (
-      <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
-        <g stroke="#a855f7" strokeWidth="1.5" fill="none" opacity="0.85">
-          <circle cx="160" cy="102" r="16" />
-          <line x1="160" y1="75" x2="160" y2="129" />
-          <line x1="135" y1="102" x2="185" y2="102" />
+      <svg viewBox="0 0 320 240" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
+        {/* ROI Bounding Box */}
+        <g stroke="#a855f7" strokeWidth="1.5" fill="none" opacity="0.8">
+          <rect x="80" y="60" width="160" height="120" rx="12" strokeDasharray="4 4" fill="rgba(168, 85, 247, 0.03)" />
         </g>
         
-        {/* Color RGB Text box */}
-        <g fill="white" fontFamily="monospace" fontSize="8" opacity="0.9">
-          <rect x="110" y="130" width="100" height="20" rx="4" fill="rgba(15, 23, 42, 0.85)" stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
-          <text x="118" y="142" fill="#c084fc">RGB({liveColor.r},{liveColor.g},{liveColor.b})</text>
+        {/* Bounding Box Corner Brackets */}
+        <g stroke="#c084fc" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none">
+          {/* Top-Left Bracket */}
+          <path d="M 95 60 L 80 60 L 80 75" />
+          {/* Top-Right Bracket */}
+          <path d="M 225 60 L 240 60 L 240 75" />
+          {/* Bottom-Left Bracket */}
+          <path d="M 80 165 L 80 180 L 95 180" />
+          {/* Bottom-Right Bracket */}
+          <path d="M 240 165 L 240 180 L 225 180" />
+        </g>
+
+        {/* Center Target Dot */}
+        <circle cx="160" cy="120" r="3.5" fill="#c084fc" opacity="0.9" />
+        <circle cx="160" cy="120" r="16" stroke="#c084fc" strokeWidth="1" strokeDasharray="2 2" opacity="0.5" />
+
+        {/* Info Label inside box */}
+        <g fill="white" fontFamily="sans-serif" fontSize="6.5" opacity="0.6">
+          <text x="160" y="80" textAnchor="middle" fontWeight="bold">PLACE COLOR TARGET HERE</text>
+        </g>
+
+        {/* Color RGB Indicator Pill */}
+        <g fill="white" fontFamily="monospace" fontSize="8" opacity="0.95">
+          <rect x="100" y="192" width="120" height="20" rx="10" fill="rgba(15, 23, 42, 0.9)" stroke="rgba(168, 85, 247, 0.3)" strokeWidth="1" />
+          <text x="160" y="205" fill="#c084fc" textAnchor="middle" fontWeight="bold">RGB({liveColor.r},{liveColor.g},{liveColor.b})</text>
         </g>
       </svg>
+    );
+  };
+
+  const renderSimulatedCard = (itemName: string) => {
+    let emoji = '🤖';
+    if (itemName.includes('🟫') || itemName.toLowerCase().includes('cocoa')) emoji = '🟫';
+    else if (itemName.includes('🟨') || itemName.toLowerCase().includes('banana')) emoji = '🍌';
+    else if (itemName.includes('🟩') || itemName.toLowerCase().includes('leaf') || itemName.toLowerCase().includes('green')) emoji = '🍃';
+    else if (itemName.includes('✊') || itemName.toLowerCase().includes('rock')) emoji = '✊';
+    else if (itemName.includes('✋') || itemName.toLowerCase().includes('paper')) emoji = '✋';
+    else if (itemName.includes('✌️') || itemName.toLowerCase().includes('scissors')) emoji = '✌️';
+    else if (itemName.includes('😊') || itemName.toLowerCase().includes('happy')) emoji = '😊';
+    else if (itemName.includes('😢') || itemName.toLowerCase().includes('sad')) emoji = '😢';
+    else if (itemName.includes('😲') || itemName.toLowerCase().includes('surprised')) emoji = '😲';
+    else if (itemName.includes('🏛️') || itemName.toLowerCase().includes('arch') || itemName.toLowerCase().includes('independence')) emoji = '🏛️';
+    else if (itemName.includes('🌲') || itemName.toLowerCase().includes('canopy') || itemName.toLowerCase().includes('kakum')) emoji = '🌲';
+    else if (itemName.includes('🕌') || itemName.toLowerCase().includes('mosque') || itemName.toLowerCase().includes('larabanga')) emoji = '🕌';
+
+    return (
+      <div style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)',
+        flexDirection: 'column',
+        gap: '0.4rem'
+      }}>
+        <span style={{ fontSize: '3rem', filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.35))', animation: 'floatCard 3s ease-in-out infinite' }}>
+          {emoji}
+        </span>
+        <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
+          {itemName}
+        </span>
+        <style>{`
+          @keyframes floatCard {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+          }
+        `}</style>
+      </div>
     );
   };
 
@@ -587,7 +730,9 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
         /* Live Classification Screen */
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           <div style={{ position: 'relative', width: '100%', height: '200px', background: '#000', borderRadius: '16px', overflow: 'hidden', border: '1px solid rgba(255,255,255,0.05)' }}>
-            {hasCamera ? (
+            {manualOverride ? (
+              renderSimulatedCard(manualOverride)
+            ) : hasCamera ? (
               <video ref={videoRef} autoPlay playsInline muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
               <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#1e293b', flexDirection: 'column', gap: '0.5rem' }}>
@@ -671,9 +816,9 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
               </div>
             )}
             
-            {/* Center target ring on capture */}
+            {/* Center target ring on capture (matches ROI Center 50%) */}
             <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-              <div style={{ width: '24px', height: '24px', border: '2px dashed rgba(255,255,255,0.25)', borderRadius: '50%' }} />
+              <div style={{ width: '60px', height: '60px', border: '2px dashed rgba(168, 85, 247, 0.45)', borderRadius: '8px' }} />
             </div>
           </div>
 

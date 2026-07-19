@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
 import { db } from '../firebase/config';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
@@ -116,6 +116,20 @@ export default function ClassLogin() {
       setLoading(false);
     }
   };
+  
+  const location = useLocation();
+  const hasLoadedUrlParam = useRef(false);
+
+  useEffect(() => {
+    if (hasLoadedUrlParam.current) return;
+    const params = new URLSearchParams(location.search);
+    const codeParam = params.get('code');
+    if (codeParam) {
+      hasLoadedUrlParam.current = true;
+      setSectionCode(codeParam);
+      handleCodeSubmit(codeParam);
+    }
+  }, [location.search]);
 
   const handleStudentSelect = (student: any) => {
     setSelectedStudent(student);
