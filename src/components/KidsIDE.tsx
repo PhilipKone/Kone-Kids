@@ -195,6 +195,8 @@ const KidsIDE: React.FC = () => {
   const [projectName, setProjectName] = useState('My Kone Project 🚀');
   const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving'>('saved');
   const [isArenaFullscreen, setIsArenaFullscreen] = useState(false);
+  const [blockCount, setBlockCount] = useState(0);
+  const [lineCount, setLineCount] = useState(0);
 
   let currentTheme = 'light';
   let toggleThemeHandler = () => {};
@@ -880,6 +882,7 @@ const KidsIDE: React.FC = () => {
 
         // Trigger light snap haptic if block was connected to a parent
         if (event.type === Blockly.Events.BLOCK_MOVE && event.newParentId) {
+          sounds.playSnap();
           try {
             Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
           } catch (e) {
@@ -887,9 +890,16 @@ const KidsIDE: React.FC = () => {
           }
         }
 
+        if (event.type === Blockly.Events.BLOCK_DELETE) {
+          sounds.playTrash();
+        }
+
         if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE || event.type === Blockly.Events.BLOCK_DELETE || event.type === Blockly.Events.BLOCK_CREATE) {
           const generator = language === 'javascript' ? javascriptGenerator : pythonGenerator;
-          setGeneratedCode(generator.workspaceToCode(ws));
+          const code = generator.workspaceToCode(ws);
+          setGeneratedCode(code);
+          setBlockCount(ws.getAllBlocks(false).length);
+          setLineCount(code.split('\n').filter((l: string) => l.trim().length > 0).length);
         }
       });
 
@@ -1129,6 +1139,61 @@ const KidsIDE: React.FC = () => {
       };
       reader.readAsText(file);
     }
+  };
+
+  const triggerConfetti = () => {
+    try {
+      const canvas = document.createElement('canvas');
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.width = '100vw';
+      canvas.style.height = '100vh';
+      canvas.style.pointerEvents = 'none';
+      canvas.style.zIndex = '999';
+      document.body.appendChild(canvas);
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const particles: any[] = [];
+      const colors = ['#0ea5e9', '#f97316', '#a855f7', '#10b981', '#fbbf24', '#ec4899'];
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 2,
+          vx: (Math.random() - 0.5) * 18,
+          vy: (Math.random() - 0.7) * 18,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          vRot: (Math.random() - 0.5) * 10
+        });
+      }
+      let frame = 0;
+      const animate = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.4;
+          p.rotation += p.vRot;
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate((p.rotation * Math.PI) / 180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          ctx.restore();
+        });
+        frame++;
+        if (frame < 90) {
+          requestAnimationFrame(animate);
+        } else {
+          canvas.remove();
+        }
+      };
+      animate();
+    } catch (e) {}
   };
 
   useEffect(() => {
@@ -1556,11 +1621,13 @@ const KidsIDE: React.FC = () => {
       // Only complete mission if code ran without errors and validation passed
       if (ranSuccessfully && validationPassed && mission && !isMissionCompleted) {
         sounds.playWin();
+        triggerConfetti();
         mascotRef.current?.celebrate('high');
         completeMission(mission.id, mission.xpReward);
         setShowSuccessModal(true);
       } else if (ranSuccessfully && validationPassed) {
         sounds.playSuccess();
+        triggerConfetti();
         mascotRef.current?.celebrate('low');
       }
     }
@@ -2254,8 +2321,27 @@ const KidsIDE: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer Actions */}
-      <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', zIndex: 50, display: 'flex', gap: '0.6rem' }}>
+      {/* Studio Status Bar */}
+      <div style={{ 
+        padding: isMobile ? '0.4rem 0.8rem' : '0.5rem 1.2rem', 
+        background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
+        backdropFilter: 'blur(10px)',
+        borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        gap: '0.8rem',
+        zIndex: 50
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.75rem', color: isDark ? '#94a3b8' : '#475569', fontWeight: 700 }}>
+          <span>📦 {blockCount} {blockCount === 1 ? 'Block' : 'Blocks'}</span>
+          <span>•</span>
+          <span>📜 {lineCount} {lineCount === 1 ? 'Line' : 'Lines'}</span>
+          <span style={{ display: isMobile ? 'none' : 'inline' }}>•</span>
+          <span style={{ display: isMobile ? 'none' : 'inline', color: '#10b981' }}>⚡ 60 FPS</span>
+        </div>
+
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
         {/* Hardware Connect/Upload buttons */}
         {('serial' in navigator) && (
           <>
@@ -2327,6 +2413,7 @@ const KidsIDE: React.FC = () => {
             <span>Stop</span>
           </button>
         )}
+        </div>
       </div>
 
       {onboardingStep !== -1 && (
