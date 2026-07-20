@@ -51,6 +51,55 @@ const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
   }
 });
 
+interface StarterProject {
+  id: string;
+  name: string;
+  category: string;
+  icon: string;
+  description: string;
+  badge: string;
+  xml: string;
+}
+
+const STARTER_PROJECTS: StarterProject[] = [
+  {
+    id: 'mascot-greeting',
+    name: 'Talking Mascot Greeting',
+    category: 'Mascot & TTS',
+    icon: '🤖',
+    description: 'Make the Mascot greet you with speech, a wave, and eye blinks!',
+    badge: 'Easy',
+    xml: `<xml xmlns="https://developers.google.com/blockly/xml"><block type="mascot_wave" x="30" y="30"><next><block type="tts_speak"><field name="TEXT">Hello! Welcome to Kone Kids Academy!</field><next><block type="mascot_blink"></block></next></block></next></block></xml>`
+  },
+  {
+    id: 'musical-melody',
+    name: 'Blockly Piano Melody',
+    category: 'Sound & Music',
+    icon: '🎵',
+    description: 'Play a musical chord progression (Do, Re, Mi, High Do) with victory cheers!',
+    badge: 'Fun',
+    xml: `<xml xmlns="https://developers.google.com/blockly/xml"><block type="sound_play_note" x="30" y="30"><field name="NOTE">261.63</field><field name="DURATION">0.5</field><next><block type="sound_play_note"><field name="NOTE">293.66</field><field name="DURATION">0.5</field><next><block type="sound_play_note"><field name="NOTE">329.63</field><field name="DURATION">0.5</field><next><block type="sound_play_note"><field name="NOTE">523.25</field><field name="DURATION">0.8</field><next><block type="sound_play_effect"><field name="EFFECT">cheer</field></block></next></block></next></block></next></block></next></block></xml>`
+  },
+  {
+    id: 'robot-square',
+    name: 'Robotics Square Patrol',
+    category: 'Robotics',
+    icon: '🏎️',
+    description: 'Program the rover to move forward and turn in a square path 4 times!',
+    badge: 'Rover',
+    xml: `<xml xmlns="https://developers.google.com/blockly/xml"><block type="controls_repeat_ext" x="30" y="30"><value name="TIMES"><shadow type="math_number"><field name="NUM">4</field></shadow></value><statement name="DO"><block type="robot_move"><field name="DIR">forward</field><field name="SPEED">80</field><next><block type="robot_turn"><field name="DIR">left</field><field name="ANGLE">90</field></block></next></block></statement></block></xml>`
+  },
+  {
+    id: 'kitten-translator',
+    name: 'Kitten Voice Translator',
+    category: 'Text-to-Speech',
+    icon: '🐱',
+    description: 'Switch the speech engine to Kitten voice mode and translate words into meows!',
+    badge: 'Cool',
+    xml: `<xml xmlns="https://developers.google.com/blockly/xml"><block type="tts_set_voice" x="30" y="30"><field name="VOICE">kitten</field><next><block type="tts_speak"><field name="TEXT">Hello there little friend! I love coding!</field><next><block type="sound_play_effect"><field name="EFFECT">coin</field></block></next></block></next></block></xml>`
+  }
+];
+
 const KidsIDE: React.FC = () => {
   const { t, i18n } = useTranslation();
   const blocklyDiv = useRef<HTMLDivElement>(null);
@@ -75,6 +124,7 @@ const KidsIDE: React.FC = () => {
   const [hasStartedMission, setHasStartedMission] = useState(false);
   const [blockError, setBlockError] = useState<string[] | null>(null);
   const [hintIndex, setHintIndex] = useState(0);
+  const [showTemplatesModal, setShowTemplatesModal] = useState(false);
   
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
@@ -802,6 +852,23 @@ const KidsIDE: React.FC = () => {
     }
   };
 
+  const handleLoadTemplate = (project: StarterProject) => {
+    if (!workspace.current) return;
+    try {
+      workspace.current.clear();
+      const xmlDom = Blockly.utils.xml.textToDom(project.xml);
+      Blockly.Xml.domToWorkspace(xmlDom, workspace.current);
+      setShowTemplatesModal(false);
+      sounds.playSuccess();
+      try {
+        Haptics.impact({ style: ImpactStyle.Medium }).catch(() => {});
+      } catch (e) {}
+      mascotRef.current?.speak(`Loaded ${project.name}! Click Run Code to test it.`);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const exportProject = () => {
     if (!workspace.current) return;
     try {
@@ -1441,6 +1508,27 @@ const KidsIDE: React.FC = () => {
             >
               {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
             </button>
+
+            <button
+              onClick={() => setShowTemplatesModal(true)}
+              title="Load Example Starter Projects"
+              style={{
+                background: 'rgba(168, 85, 247, 0.15)',
+                border: '1px solid rgba(168, 85, 247, 0.3)',
+                color: '#c084fc',
+                padding: isMobile ? '0.35rem 0.6rem' : '0.45rem 0.9rem',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                fontSize: isMobile ? '0.7rem' : '0.82rem',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'all 0.2s'
+              }}
+            >
+              <span>✨ Examples</span>
+            </button>
           </div>
 
           <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px', gap: '4px' }}>
@@ -1929,6 +2017,83 @@ const KidsIDE: React.FC = () => {
         />
       )}
       {showShop && <MascotShop onClose={() => setShowShop(false)} />}
+
+      {/* Starter Templates Picker Modal */}
+      {showTemplatesModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(12px)',
+          zIndex: 100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: '#0f172a',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '24px',
+            maxWidth: '560px',
+            width: '100%',
+            padding: isMobile ? '1.2rem' : '1.8rem',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6)',
+            position: 'relative',
+            maxHeight: '90vh',
+            overflowY: 'auto'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
+              <div>
+                <h3 style={{ margin: 0, color: 'white', fontSize: '1.3rem', fontWeight: 900 }}>✨ Starter Projects</h3>
+                <p style={{ margin: '0.2rem 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>Pick a template to instantly load example code into your workspace!</p>
+              </div>
+              <button
+                onClick={() => setShowTemplatesModal(false)}
+                style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'white', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', fontSize: '1rem', fontWeight: 900 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              {STARTER_PROJECTS.map(proj => (
+                <div
+                  key={proj.id}
+                  onClick={() => handleLoadTemplate(proj)}
+                  style={{
+                    background: 'rgba(30, 41, 59, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '16px',
+                    padding: '1rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#c084fc')}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)')}
+                >
+                  <div style={{ fontSize: '2.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', width: '54px', height: '54px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    {proj.icon}
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.2rem' }}>
+                      <span style={{ color: 'white', fontWeight: 800, fontSize: '0.95rem' }}>{proj.name}</span>
+                      <span style={{ background: 'rgba(168, 85, 247, 0.2)', color: '#c084fc', fontSize: '0.7rem', fontWeight: 800, padding: '2px 8px', borderRadius: '6px' }}>{proj.badge}</span>
+                    </div>
+                    <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.8rem', lineHeight: '1.3' }}>{proj.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
