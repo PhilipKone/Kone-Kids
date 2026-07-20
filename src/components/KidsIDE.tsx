@@ -295,6 +295,78 @@ const KidsIDE: React.FC = () => {
       return `tts.set_language("${block.getFieldValue('LANG')}")\n`;
     };
 
+    // --- Sound & Music Blocks ---
+    Blockly.Blocks['sound_play_note'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.play_note', '🎵 Play Note'))
+            .appendField(new Blockly.FieldDropdown([
+              ["C4 (Do) 🎵", "261.63"],
+              ["D4 (Re) 🎵", "293.66"],
+              ["E4 (Mi) 🎵", "329.63"],
+              ["F4 (Fa) 🎵", "349.23"],
+              ["G4 (Sol) 🎵", "392.00"],
+              ["A4 (La) 🎵", "440.00"],
+              ["B4 (Ti) 🎵", "493.88"],
+              ["C5 (High Do) 🎵", "523.25"]
+            ]), "NOTE")
+            .appendField(t('blocks.for', 'for'))
+            .appendField(new Blockly.FieldNumber(0.5, 0.1, 10), "DURATION")
+            .appendField(t('blocks.sec', 'sec'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#d946ef');
+      }
+    };
+    javascriptGenerator.forBlock['sound_play_note'] = (block: any) => {
+      return `await music.playNote(${block.getFieldValue('NOTE')}, ${block.getFieldValue('DURATION')});\n`;
+    };
+    pythonGenerator.forBlock['sound_play_note'] = (block: any) => {
+      return `music.play_note(${block.getFieldValue('NOTE')}, ${block.getFieldValue('DURATION')})\n`;
+    };
+
+    Blockly.Blocks['sound_play_effect'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.play_effect', '🔊 Play Sound Effect'))
+            .appendField(new Blockly.FieldDropdown([
+              ["Cheer 🎉", "cheer"],
+              ["Coin 🪙", "coin"],
+              ["Laser 🔫", "laser"],
+              ["Pop 🎈", "pop"],
+              ["Explosion 💥", "explosion"],
+              ["Win 🏆", "win"]
+            ]), "EFFECT");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#d946ef');
+      }
+    };
+    javascriptGenerator.forBlock['sound_play_effect'] = (block: any) => {
+      return `await music.playEffect("${block.getFieldValue('EFFECT')}");\n`;
+    };
+    pythonGenerator.forBlock['sound_play_effect'] = (block: any) => {
+      return `music.play_effect("${block.getFieldValue('EFFECT')}")\n`;
+    };
+
+    Blockly.Blocks['sound_rest'] = {
+      init: function() {
+        this.appendDummyInput()
+            .appendField(t('blocks.rest', '🔕 Rest for'))
+            .appendField(new Blockly.FieldNumber(0.5, 0.1, 10), "SECS")
+            .appendField(t('blocks.sec', 'sec'));
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour('#d946ef');
+      }
+    };
+    javascriptGenerator.forBlock['sound_rest'] = (block: any) => {
+      return `await new Promise(res => setTimeout(res, ${block.getFieldValue('SECS')} * 1000));\n`;
+    };
+    pythonGenerator.forBlock['sound_rest'] = (block: any) => {
+      return `time.sleep(${block.getFieldValue('SECS')})\n`;
+    };
+
     // --- Robotics Blocks ---
     Blockly.Blocks['robot_move'] = {
       init: function() {
@@ -607,6 +679,16 @@ const KidsIDE: React.FC = () => {
             { kind: 'block', type: 'tts_set_language' }
           ]
         },
+        {
+          kind: 'category',
+          name: t('category.sound', '🎵 Sound & Music'),
+          colour: '#d946ef',
+          contents: [
+            { kind: 'block', type: 'sound_play_note' },
+            { kind: 'block', type: 'sound_play_effect' },
+            { kind: 'block', type: 'sound_rest' }
+          ]
+        },
         { kind: 'category', name: t('category.logic', '🧠 Logic'), categorystyle: 'logic_category', contents: [{ kind: 'block', type: 'controls_if' }] },
         { kind: 'category', name: t('category.loops', '🔄 Loops'), categorystyle: 'loop_category', contents: [{ kind: 'block', type: 'controls_repeat_ext' }] },
         { kind: 'category', name: t('category.variables', '📦 Variables'), categorystyle: 'variable_category', custom: 'VARIABLE' }
@@ -896,6 +978,9 @@ const KidsIDE: React.FC = () => {
           tts_speak: '🗣️ Speak block',
           tts_set_voice: '🗣️ Set Voice block',
           tts_set_language: '🗣️ Set Language block',
+          sound_play_note: '🎵 Play Note block',
+          sound_play_effect: '🔊 Sound Effect block',
+          sound_rest: '🔕 Rest block',
         };
         const missingLabels = missing.map(m => friendlyNames[m] || m);
         setBlockError(missingLabels);
@@ -1067,11 +1152,82 @@ const KidsIDE: React.FC = () => {
       })
     };
 
+    const music = {
+      playNote: (freq: number, duration: number) => new Promise(res => {
+        try {
+          const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+          if (AudioContextClass) {
+            const audioCtx = new AudioContextClass();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            
+            gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+            
+            setTimeout(() => {
+              try { audioCtx.close(); } catch(e) {}
+              res(true);
+            }, duration * 1000);
+          } else {
+            res(true);
+          }
+        } catch (e) {
+          res(true);
+        }
+      }),
+      playEffect: (effect: string) => new Promise(res => {
+        if (effect === 'cheer') {
+          sounds.playWin();
+          setTimeout(res, 1200);
+        } else if (effect === 'coin') {
+          sounds.playSuccess();
+          setTimeout(res, 600);
+        } else if (effect === 'explosion') {
+          sounds.playExplosion();
+          setTimeout(res, 800);
+        } else if (effect === 'pop') {
+          sounds.playClick();
+          setTimeout(res, 300);
+        } else if (effect === 'win') {
+          sounds.playWin();
+          setTimeout(res, 1500);
+        } else {
+          try {
+            const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+            if (AudioContextClass) {
+              const ctx = new AudioContextClass();
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+              osc.type = 'sawtooth';
+              osc.frequency.setValueAtTime(880, ctx.currentTime);
+              osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.25);
+              gain.gain.setValueAtTime(0.15, ctx.currentTime);
+              gain.gain.linearRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+              osc.start();
+              osc.stop(ctx.currentTime + 0.25);
+              setTimeout(() => { try { ctx.close(); } catch(e){} res(true); }, 250);
+            } else { res(true); }
+          } catch(e) { res(true); }
+        }
+      })
+    };
+
     let ranSuccessfully = false;
     try {
       const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
-      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', 'highlightBlock', 'tts', code);
-      await fn(mascot, robot, game, electronics, ai, highlightBlock, tts);
+      const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', 'highlightBlock', 'tts', 'music', code);
+      await fn(mascot, robot, game, electronics, ai, highlightBlock, tts, music);
       ranSuccessfully = true;
     } catch (e) {
       console.error(e);
