@@ -100,6 +100,34 @@ const STARTER_PROJECTS: StarterProject[] = [
   }
 ];
 
+interface SearchableBlock {
+  type: string;
+  name: string;
+  category: string;
+  color: string;
+  keywords: string;
+}
+
+const SEARCHABLE_BLOCKS: SearchableBlock[] = [
+  { type: 'mascot_speak', name: '🗣️ Say Text', category: 'Mascot', color: '#0ea5e9', keywords: 'speak say talk word text mascot message' },
+  { type: 'mascot_wave', name: '👋 Wave Hand', category: 'Mascot', color: '#0ea5e9', keywords: 'wave hand mascot greet hello gesture' },
+  { type: 'mascot_blink', name: '👁️ Blink Eyes', category: 'Mascot', color: '#0ea5e9', keywords: 'blink eye mascot face wink' },
+  { type: 'mascot_wait', name: '🕐 Wait', category: 'Mascot', color: '#0ea5e9', keywords: 'wait delay sleep pause time second' },
+  { type: 'tts_speak', name: '🗣️ Speak Speech', category: 'Text to Speech', color: '#8b5cf6', keywords: 'speech voice talk speak tts audio accent' },
+  { type: 'tts_set_voice', name: '🗣️ Set Voice', category: 'Text to Speech', color: '#8b5cf6', keywords: 'voice tone pitch alto giant kitten squeak' },
+  { type: 'tts_set_language', name: '🗣️ Set Language', category: 'Text to Speech', color: '#8b5cf6', keywords: 'language accent english french spanish portuguese' },
+  { type: 'sound_play_note', name: '🎵 Play Musical Note', category: 'Sound & Music', color: '#d946ef', keywords: 'note music pitch piano song sound tone tune' },
+  { type: 'sound_play_effect', name: '🔊 Play Sound Effect', category: 'Sound & Music', color: '#d946ef', keywords: 'sound effect cheer coin laser pop win explosion audio' },
+  { type: 'sound_rest', name: '🔕 Rest', category: 'Sound & Music', color: '#d946ef', keywords: 'rest pause silent quiet music rhythm' },
+  { type: 'robot_move', name: '🚜 Move Rover', category: 'Robotics', color: '#10b981', keywords: 'robot move forward backward drive rover motor' },
+  { type: 'robot_turn', name: '🔄 Turn Rover', category: 'Robotics', color: '#10b981', keywords: 'turn left right rotate angle degree rover' },
+  { type: 'robot_stop', name: '🛑 Stop Rover', category: 'Robotics', color: '#10b981', keywords: 'stop halt brake freeze rover' },
+  { type: 'robot_distance', name: '📏 Distance Sensor', category: 'Robotics', color: '#10b981', keywords: 'distance sensor ultrasonic range obstacle cm' },
+  { type: 'controls_repeat_ext', name: '🔄 Repeat Loop', category: 'Loops', color: '#0ea5e9', keywords: 'repeat loop for count times again iterate' },
+  { type: 'controls_if', name: '🧠 If Condition', category: 'Logic', color: '#a855f7', keywords: 'if condition then logic decide check else' },
+  { type: 'variables_set', name: '📦 Set Variable', category: 'Variables', color: '#f97316', keywords: 'variable set store value score count name' }
+];
+
 const KidsIDE: React.FC = () => {
   const { t, i18n } = useTranslation();
   const blocklyDiv = useRef<HTMLDivElement>(null);
@@ -125,6 +153,8 @@ const KidsIDE: React.FC = () => {
   const [blockError, setBlockError] = useState<string[] | null>(null);
   const [hintIndex, setHintIndex] = useState(0);
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
@@ -852,6 +882,31 @@ const KidsIDE: React.FC = () => {
     }
   };
 
+  const handleInsertBlock = (blockType: string) => {
+    if (!workspace.current) return;
+    try {
+      const newBlock = workspace.current.newBlock(blockType);
+      newBlock.initSvg();
+      newBlock.render();
+
+      const metrics = workspace.current.getMetrics();
+      if (metrics) {
+        const x = metrics.viewLeft + metrics.viewWidth / 2 - 100;
+        const y = metrics.viewTop + metrics.viewHeight / 2 - 50;
+        newBlock.moveBy(x, y);
+      }
+
+      setShowSearchModal(false);
+      setSearchQuery('');
+      sounds.playClick();
+      try {
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+      } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleLoadTemplate = (project: StarterProject) => {
     if (!workspace.current) return;
     try {
@@ -939,6 +994,12 @@ const KidsIDE: React.FC = () => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         exportProject();
+      }
+
+      // Ctrl/Cmd + K -> Open Block Search
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowSearchModal(prev => !prev);
       }
     };
 
@@ -1780,6 +1841,25 @@ const KidsIDE: React.FC = () => {
                 <span>🧹 Clean Up</span>
               </button>
               <button
+                onClick={() => setShowSearchModal(true)}
+                title="Search Blocks (Ctrl+K)"
+                style={{
+                  background: 'rgba(14, 165, 233, 0.15)',
+                  border: '1px solid rgba(14, 165, 233, 0.3)',
+                  color: '#38bdf8',
+                  borderRadius: '10px',
+                  padding: isMobile ? '4px 8px' : '6px 10px',
+                  cursor: 'pointer',
+                  fontSize: isMobile ? '0.75rem' : '0.8rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+              >
+                <span>🔍 Search</span>
+              </button>
+              <button
                 onClick={handleCenterWorkspace}
                 title="Center All Blocks"
                 style={{
@@ -2088,6 +2168,99 @@ const KidsIDE: React.FC = () => {
                     </div>
                     <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.8rem', lineHeight: '1.3' }}>{proj.description}</p>
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Quick Block Search Modal */}
+      {showSearchModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(12px)',
+          zIndex: 100,
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          padding: '2rem 1rem'
+        }}>
+          <div style={{
+            background: '#0f172a',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '24px',
+            maxWidth: '540px',
+            width: '100%',
+            padding: '1.4rem',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6)',
+            position: 'relative',
+            maxHeight: '80vh',
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ fontSize: '1.2rem' }}>🔍</span>
+                <h3 style={{ margin: 0, color: 'white', fontSize: '1.2rem', fontWeight: 900 }}>Search Blocks</h3>
+              </div>
+              <button
+                onClick={() => { setShowSearchModal(false); setSearchQuery(''); }}
+                style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'white', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', fontSize: '1rem', fontWeight: 900 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <input
+              type="text"
+              autoFocus
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by block name or keyword (e.g. move, speak, note, repeat)..."
+              style={{
+                width: '100%',
+                background: 'rgba(30, 41, 59, 0.8)',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                borderRadius: '12px',
+                padding: '0.8rem 1rem',
+                color: 'white',
+                fontSize: '0.95rem',
+                outline: 'none',
+                marginBottom: '1rem',
+                boxSizing: 'border-box'
+              }}
+            />
+
+            <div style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {SEARCHABLE_BLOCKS.filter(b => {
+                const q = searchQuery.toLowerCase().trim();
+                if (!q) return true;
+                return b.name.toLowerCase().includes(q) || b.keywords.toLowerCase().includes(q) || b.category.toLowerCase().includes(q);
+              }).map(b => (
+                <div
+                  key={b.type}
+                  onClick={() => handleInsertBlock(b.type)}
+                  style={{
+                    background: 'rgba(30, 41, 59, 0.6)',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '14px',
+                    padding: '0.75rem 1rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    transition: 'all 0.15s'
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = b.color)}
+                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)')}
+                >
+                  <span style={{ color: 'white', fontWeight: 800, fontSize: '0.9rem' }}>{b.name}</span>
+                  <span style={{ background: `${b.color}25`, color: b.color, fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px' }}>{b.category}</span>
                 </div>
               ))}
             </div>
