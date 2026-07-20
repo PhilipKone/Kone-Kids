@@ -2178,49 +2178,18 @@ const KidsIDE: React.FC = () => {
                   background: 'rgba(56, 189, 248, 0.15)',
                   border: '1px solid rgba(56, 189, 248, 0.3)',
                   color: '#38bdf8',
-                  borderRadius: '10px',
-                  padding: isMobile ? '4px 8px' : '6px 10px',
+                  borderRadius: '8px',
+                  padding: isMobile ? '3px 6px' : '6px 10px',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.75rem' : '0.8rem',
+                  fontSize: isMobile ? '0.7rem' : '0.8rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px'
+                  gap: '3px',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                <span>🎯 Center</span>
-              </button>
-              <button
-                onClick={handleZoomIn}
-                title="Zoom In"
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'white',
-                  borderRadius: '10px',
-                  padding: '4px 8px',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem',
-                  fontWeight: 800
-                }}
-              >
-                ➕
-              </button>
-              <button
-                onClick={handleZoomOut}
-                title="Zoom Out"
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  color: 'white',
-                  borderRadius: '10px',
-                  padding: '4px 8px',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem',
-                  fontWeight: 800
-                }}
-              >
-                ➖
+                <span>🎯 {!isMobile && 'Center'}</span>
               </button>
             </div>
           </div>
