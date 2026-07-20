@@ -18,6 +18,7 @@ import { Play, Square, FileCode, Blocks, Eye, EyeOff, Volume2, VolumeX, Music } 
 import MascotShop from './MascotShop';
 import { sounds } from '../utils/sounds';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Share } from '@capacitor/share';
 
 // Define a premium dark theme for Blockly
 const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
@@ -155,6 +156,9 @@ const KidsIDE: React.FC = () => {
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
@@ -823,6 +827,9 @@ const KidsIDE: React.FC = () => {
         if (onboardingStep === 2 && event.type === Blockly.Events.BLOCK_CREATE) {
           setOnboardingStep(3);
         }
+        if (event.type === Blockly.Events.FINISHED_LOADING) {
+          Blockly.svgResize(ws);
+        }
 
         // Trigger light snap haptic if block was connected to a parent
         if (event.type === Blockly.Events.BLOCK_MOVE && event.newParentId) {
@@ -839,6 +846,31 @@ const KidsIDE: React.FC = () => {
         }
       });
 
+      // Check if URL contains shared project code: #code=... or ?code=...
+      try {
+        const hash = window.location.hash;
+        const search = window.location.search;
+        let encodedCode = '';
+        if (hash.includes('code=')) {
+          encodedCode = hash.split('code=')[1]?.split('&')[0];
+        } else if (search.includes('code=')) {
+          const params = new URLSearchParams(search);
+          encodedCode = params.get('code') || '';
+        }
+
+        if (encodedCode) {
+          const xmlText = decodeURIComponent(atob(encodedCode));
+          const xmlDom = Blockly.utils.xml.textToDom(xmlText);
+          Blockly.Xml.domToWorkspace(xmlDom, ws);
+          sounds.playSuccess();
+          setTimeout(() => {
+            mascotRef.current?.speak('Loaded shared project! Click Run Code to test it.');
+          }, 1000);
+        }
+      } catch (e) {
+        console.error('Failed to parse shared code:', e);
+      }
+
       return () => {
         window.removeEventListener('resize', handleResize);
         ws.dispose();
@@ -846,6 +878,66 @@ const KidsIDE: React.FC = () => {
       };
     }
   }, [onboardingStep, language, isMobile, mission, i18n.language]);
+
+  const getSharedUrl = () => {
+    if (!workspace.current) return window.location.href;
+    try {
+      const xmlDom = Blockly.Xml.workspaceToDom(workspace.current);
+      const xmlText = Blockly.Xml.domToText(xmlDom);
+      const encoded = btoa(encodeURIComponent(xmlText));
+      return `${window.location.origin}${window.location.pathname}#code=${encoded}`;
+    } catch (e) {
+      return window.location.href;
+    }
+  };
+
+  const handleCopyShareLink = async () => {
+    try {
+      const url = getSharedUrl();
+      await navigator.clipboard.writeText(url);
+      setShareCopied(true);
+      sounds.playSuccess();
+      setTimeout(() => setShareCopied(false), 3000);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleNativeShare = async () => {
+    try {
+      const url = getSharedUrl();
+      await Share.share({
+        title: 'My Kone Kids Coding Project 🚀',
+        text: 'Check out the awesome block coding project I built on Kone Kids Academy!',
+        url: url,
+        dialogTitle: 'Share Project with Friends & Family'
+      });
+      sounds.playSuccess();
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !workspace.current) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        workspace.current?.clear();
+        const xmlDom = Blockly.utils.xml.textToDom(content);
+        Blockly.Xml.domToWorkspace(xmlDom, workspace.current!);
+        setShowShareModal(false);
+        sounds.playSuccess();
+        mascotRef.current?.speak('Imported saved project! Click Run Code to test it.');
+      } catch (err) {
+        setBlockError(['Invalid project file. Please select a valid .kone file.']);
+        setTimeout(() => setBlockError(null), 4000);
+      }
+    };
+    reader.readAsText(file);
+  };
 
   const handleCleanUpBlocks = () => {
     if (workspace.current) {
@@ -1463,76 +1555,6 @@ const KidsIDE: React.FC = () => {
             </select>
           </div>
 
-          {/* Import/Export buttons */}
-          <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px 6px' }}>
-            <button
-              onClick={() => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.kone,.xml';
-                input.onchange = (e: any) => {
-                  const file = e.target.files?.[0];
-                  if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (ev) => {
-                      const text = ev.target?.result as string;
-                      try {
-                        const parser = new DOMParser();
-                        const xmlDom = parser.parseFromString(text, 'text/xml').documentElement;
-                        workspace.current?.clear();
-                        Blockly.Xml.domToWorkspace(xmlDom, workspace.current!);
-                        sounds.playSuccess();
-                        mascotRef.current?.speak("Project loaded successfully! 📂");
-                      } catch (err) {
-                        console.error('Failed to import project:', err);
-                        alert('Failed to load project: invalid project file format.');
-                      }
-                    };
-                    reader.readAsText(file);
-                  }
-                };
-                input.click();
-              }}
-              title="Open Project (.kone)"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#cbd5e1',
-                padding: '0.25rem',
-                outline: 'none',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                gap: '0.2rem'
-              }}
-            >
-              <span>📂 Open</span>
-            </button>
-            <button
-              onClick={exportProject}
-              title="Save Project (.kone)"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#cbd5e1',
-                padding: '0.25rem',
-                outline: 'none',
-                fontSize: '0.75rem',
-                fontWeight: 800,
-                gap: '0.2rem'
-              }}
-            >
-              <span>💾 Save</span>
-            </button>
-          </div>
-
           {/* Audio controls */}
           <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px 6px' }}>
             <button
@@ -1577,49 +1599,77 @@ const KidsIDE: React.FC = () => {
                 background: 'rgba(168, 85, 247, 0.15)',
                 border: '1px solid rgba(168, 85, 247, 0.3)',
                 color: '#c084fc',
-                padding: isMobile ? '0.35rem 0.6rem' : '0.45rem 0.9rem',
-                borderRadius: '10px',
+                padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
+                borderRadius: '8px',
                 cursor: 'pointer',
-                fontSize: isMobile ? '0.7rem' : '0.82rem',
+                fontSize: isMobile ? '0.72rem' : '0.8rem',
                 fontWeight: 800,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '4px',
-                transition: 'all 0.2s'
+                transition: 'all 0.2s',
+                minHeight: isMobile ? '32px' : '36px'
               }}
             >
               <span>✨ Examples</span>
             </button>
+
+            <button
+              onClick={() => setShowShareModal(true)}
+              title="Save, Download & Share Project"
+              style={{
+                background: 'rgba(16, 185, 129, 0.15)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                color: '#34d399',
+                padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: isMobile ? '0.72rem' : '0.8rem',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                transition: 'all 0.2s',
+                minHeight: isMobile ? '32px' : '36px'
+              }}
+            >
+              <span>📤 Share</span>
+            </button>
           </div>
 
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px', gap: '4px' }}>
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImportFile}
+            accept=".kone,.xml"
+            style={{ display: 'none' }}
+          />
+
+          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', padding: '3px', gap: '3px' }}>
             <button 
               onClick={() => setLanguage('javascript')} 
               style={{ 
                 background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent', 
                 border: 'none', 
                 color: 'white', 
-                padding: isMobile ? '0.3rem 0.6rem' : '0.5rem 1rem', 
-                borderRadius: '10px', 
+                padding: isMobile ? '0.25rem 0.5rem' : '0.35rem 0.75rem', 
+                borderRadius: '6px', 
                 cursor: 'pointer', 
-                fontSize: isMobile ? '0.7rem' : '0.85rem', 
+                fontSize: isMobile ? '0.7rem' : '0.8rem', 
                 fontWeight: 800,
-                boxShadow: language === 'javascript' ? '0 4px 0 #9a3412' : 'none',
+                boxShadow: language === 'javascript' ? '0 2px 0 #9a3412' : 'none',
                 transition: 'all 0.2s',
-                transform: language === 'javascript' ? 'translateY(2px)' : 'none'
+                minHeight: isMobile ? '30px' : '34px'
               }}
-            >JS</button>
+            >
+              JS
+            </button>
             <button 
               onClick={() => setLanguage('python')} 
               style={{ 
                 background: language === 'python' ? 'var(--kids-blue)' : 'transparent', 
                 border: 'none', 
                 color: 'white', 
-                padding: isMobile ? '0.3rem 0.6rem' : '0.5rem 1rem', 
-                borderRadius: '10px', 
-                cursor: 'pointer', 
-                fontSize: isMobile ? '0.7rem' : '0.85rem', 
-                fontWeight: 800,
                 boxShadow: language === 'python' ? '0 4px 0 #0369a1' : 'none',
                 transition: 'all 0.2s',
                 transform: language === 'python' ? 'translateY(2px)' : 'none'
@@ -2263,6 +2313,140 @@ const KidsIDE: React.FC = () => {
                   <span style={{ background: `${b.color}25`, color: b.color, fontSize: '0.72rem', fontWeight: 800, padding: '3px 8px', borderRadius: '6px' }}>{b.category}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Project Share & Save Hub Modal */}
+      {showShareModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(12px)',
+          zIndex: 100,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: '#0f172a',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '24px',
+            maxWidth: '520px',
+            width: '100%',
+            padding: isMobile ? '1.2rem' : '1.8rem',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.6)',
+            position: 'relative'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
+              <div>
+                <h3 style={{ margin: 0, color: 'white', fontSize: '1.3rem', fontWeight: 900 }}>📤 Share & Save Project</h3>
+                <p style={{ margin: '0.2rem 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>Save your code, copy a share link, or send it to friends!</p>
+              </div>
+              <button
+                onClick={() => setShowShareModal(false)}
+                style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'white', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', fontSize: '1rem', fontWeight: 900 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              <div
+                onClick={handleCopyShareLink}
+                style={{
+                  background: 'rgba(30, 41, 59, 0.7)',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  borderRadius: '16px',
+                  padding: '1rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  transition: 'all 0.2s'
+                }}
+              >
+                <div style={{ fontSize: '2rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', borderRadius: '14px', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  🔗
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: 'white', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.2rem' }}>{shareCopied ? '✅ Link Copied to Clipboard!' : 'Copy Shareable Link'}</div>
+                  <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.8rem' }}>Generate a link that opens your code on any device</p>
+                </div>
+              </div>
+
+              <div
+                onClick={handleNativeShare}
+                style={{
+                  background: 'rgba(30, 41, 59, 0.7)',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                  borderRadius: '16px',
+                  padding: '1rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  transition: 'all 0.2s'
+                }}
+              >
+                <div style={{ fontSize: '2rem', background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', borderRadius: '14px', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  📱
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ color: 'white', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.2rem' }}>Send to WhatsApp & Friends</div>
+                  <p style={{ margin: 0, color: '#94a3b8', fontSize: '0.8rem' }}>Launch native mobile share sheet (WhatsApp, Messages, Bluetooth)</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', marginTop: '0.4rem' }}>
+                <button
+                  onClick={exportProject}
+                  style={{
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    border: '1px solid rgba(16, 185, 129, 0.3)',
+                    color: '#34d399',
+                    borderRadius: '14px',
+                    padding: '0.8rem',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.3rem'
+                  }}
+                >
+                  <span style={{ fontSize: '1.4rem' }}>💾</span>
+                  <span>Save .kone File</span>
+                </button>
+
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    background: 'rgba(245, 158, 11, 0.15)',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    color: '#fbbf24',
+                    borderRadius: '14px',
+                    padding: '0.8rem',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '0.3rem'
+                  }}
+                >
+                  <span style={{ fontSize: '1.4rem' }}>📥</span>
+                  <span>Open Saved File</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
