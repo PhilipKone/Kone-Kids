@@ -1661,17 +1661,20 @@ const KidsIDE: React.FC = () => {
 
   return (
     <div className="kids-ide-container engineering-lab-wrapper" style={{ 
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100vw',
-      height: '100vh',
-      zIndex: 40,
+      width: '100%',
+      maxWidth: '1440px',
+      margin: '0 auto',
+      height: isMobile ? 'auto' : 'calc(100vh - 120px)',
+      minHeight: isMobile ? 'auto' : '750px',
+      borderRadius: '24px',
       overflow: 'hidden',
       background: isDark ? 'linear-gradient(135deg, #0b0f19 0%, #0f172a 100%)' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
       color: isDark ? 'white' : '#0f172a',
       display: 'flex',
       flexDirection: 'column',
+      position: 'relative',
+      boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
+      border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1',
       fontFamily: "'Outfit', 'Inter', sans-serif"
     }}>
       {/* Header Bar */}
@@ -1683,7 +1686,8 @@ const KidsIDE: React.FC = () => {
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        gap: '0.6rem'
+        gap: '0.6rem',
+        flexWrap: 'wrap'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <button 
@@ -1997,7 +2001,15 @@ const KidsIDE: React.FC = () => {
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '1rem', height: isMobile ? 'auto' : '600px', flexDirection: isMobile ? 'column' : 'row' }}>
+      <div style={{ 
+        flex: 1, 
+        display: 'flex', 
+        gap: isMobile ? '0.5rem' : '1rem', 
+        padding: isMobile ? '0.5rem' : '1rem',
+        flexDirection: isMobile ? 'column' : 'row',
+        minHeight: 0,
+        overflow: 'hidden'
+      }}>
         {/* Workspace */}
         <div style={{ 
           flex: 2, 
