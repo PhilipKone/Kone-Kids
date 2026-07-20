@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useGamification, Badge } from '../context/GamificationContext';
 import BadgeModal from './BadgeModal';
+import CertificateModal from './CertificateModal';
 
 const BadgeTray: React.FC = () => {
   const { badges } = useGamification();
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
+  const [showCertificateModal, setShowCertificateModal] = useState(false);
 
   return (
     <section className="badge-tray-section" style={{ padding: 'clamp(2rem, 8vw, 4rem) 5%', background: '#f8fafc' }}>
@@ -12,6 +14,27 @@ const BadgeTray: React.FC = () => {
         <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 style={{ color: 'var(--kids-dark)', margin: 0 }}>My Achievement Gallery 🏆</h2>
           <p style={{ color: 'var(--kids-text-muted)', marginTop: '0.5rem' }}>Collect them all as you explore the future!</p>
+          <button
+            onClick={() => setShowCertificateModal(true)}
+            style={{
+              marginTop: '1rem',
+              background: 'linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)',
+              border: 'none',
+              color: '#0f172a',
+              padding: '0.75rem 1.6rem',
+              borderRadius: '16px',
+              fontWeight: 900,
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              boxShadow: '0 6px 20px rgba(245, 158, 11, 0.35)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            <span>📜 Generate Official Certificate</span>
+          </button>
         </div>
 
         <div style={{ 
@@ -94,6 +117,12 @@ const BadgeTray: React.FC = () => {
         <BadgeModal 
           badge={selectedBadge} 
           onClose={() => setSelectedBadge(null)} 
+        />
+      )}
+      {showCertificateModal && (
+        <CertificateModal
+          isOpen={showCertificateModal}
+          onClose={() => setShowCertificateModal(false)}
         />
       )}
     </section>

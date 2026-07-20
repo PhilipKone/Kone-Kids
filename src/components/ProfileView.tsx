@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import Mascot from './Mascot';
 import BadgeModal from './BadgeModal';
+import CertificateModal from './CertificateModal';
 import { sounds } from '../utils/sounds';
 import User from 'lucide-react/dist/esm/icons/user.mjs';
 import Award from 'lucide-react/dist/esm/icons/award.mjs';
@@ -31,6 +32,7 @@ const ProfileView: React.FC = () => {
   } = useGamification();
 
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
+  const [showCertificateModal, setShowCertificateModal] = useState(false);
   
   // Audio controls state
   const [muted, setMuted] = useState(sounds.getMuted());
@@ -394,6 +396,32 @@ const ProfileView: React.FC = () => {
           display: 'flex',
           flexDirection: 'column'
         }}>
+          <button
+            onClick={() => {
+              sounds.playWin();
+              setShowCertificateModal(true);
+            }}
+            style={{
+              width: '100%',
+              background: 'linear-gradient(135deg, #fbbf24 0%, #d97706 100%)',
+              border: 'none',
+              color: '#0f172a',
+              borderRadius: '18px',
+              padding: '0.75rem 1rem',
+              fontWeight: 900,
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              marginBottom: '1rem',
+              boxShadow: '0 6px 20px rgba(217, 119, 6, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem'
+            }}
+          >
+            <span>📜 Generate Official Certificate</span>
+          </button>
+
           <h2 style={{ fontSize: '1.5rem', margin: '0 0 1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <Award size={22} style={{ color: 'var(--kids-orange)' }} /> Achievements
           </h2>
@@ -446,6 +474,14 @@ const ProfileView: React.FC = () => {
         <BadgeModal 
           badge={selectedBadge} 
           onClose={() => setSelectedBadge(null)} 
+        />
+      )}
+
+      {showCertificateModal && (
+        <CertificateModal
+          isOpen={showCertificateModal}
+          onClose={() => setShowCertificateModal(false)}
+          defaultName={studentName || 'Junior Coder'}
         />
       )}
 
