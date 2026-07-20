@@ -66,6 +66,7 @@ const KidsIDE: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [onboardingStep, setOnboardingStep] = useState<number>(-1);
   const [activeTab, setActiveTab] = useState<'blocks' | 'code'>('blocks');
+  const [activeMobileTab, setActiveMobileTab] = useState<'workspace' | 'simulator' | 'code'>('workspace');
   const [generatedCode, setGeneratedCode] = useState('');
   const [showCode, setShowCode] = useState(true);
   const [language, setLanguage] = useState<'javascript' | 'python'>('javascript');
@@ -148,6 +149,16 @@ const KidsIDE: React.FC = () => {
       });
     }
   }, [isMobile, showCode]);
+
+  useEffect(() => {
+    if (activeMobileTab === 'workspace' && workspace.current) {
+      setTimeout(() => {
+        if (workspace.current) {
+          Blockly.svgResize(workspace.current);
+        }
+      }, 50);
+    }
+  }, [activeMobileTab]);
 
   useEffect(() => {
     // Save current blocks if workspace exists to prevent code loss
@@ -867,6 +878,10 @@ const KidsIDE: React.FC = () => {
       return;
     }
 
+    if (isMobile) {
+      setActiveMobileTab('simulator');
+    }
+
     setIsRunning(true);
     isRunningRef.current = true;
     setIsStopping(false);
@@ -1280,10 +1295,101 @@ const KidsIDE: React.FC = () => {
           </button>
         </div>
       </div>
+      
+      {/* Mobile-Friendly Section Tabs */}
+      {isMobile && (
+        <div style={{
+          display: 'flex',
+          background: '#151921',
+          borderRadius: '16px',
+          padding: '6px',
+          gap: '6px',
+          marginBottom: '1rem',
+          border: '1px solid rgba(255,255,255,0.05)',
+          boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.3)'
+        }}>
+          <button
+            onClick={() => setActiveMobileTab('workspace')}
+            style={{
+              flex: 1,
+              background: activeMobileTab === 'workspace' ? 'var(--kids-orange)' : 'transparent',
+              border: 'none',
+              color: 'white',
+              padding: '0.65rem',
+              borderRadius: '12px',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.4rem',
+              boxShadow: activeMobileTab === 'workspace' ? '0 3px 0 #9a3412' : 'none',
+              transform: activeMobileTab === 'workspace' ? 'translateY(1px)' : 'none',
+              transition: 'all 0.15s ease',
+              cursor: 'pointer'
+            }}
+          >
+            <span>🧩 {t('tabs.blocks', 'Blocks')}</span>
+          </button>
+          <button
+            onClick={() => setActiveMobileTab('simulator')}
+            style={{
+              flex: 1,
+              background: activeMobileTab === 'simulator' ? 'var(--kids-blue)' : 'transparent',
+              border: 'none',
+              color: 'white',
+              padding: '0.65rem',
+              borderRadius: '12px',
+              fontWeight: 800,
+              fontSize: '0.85rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.4rem',
+              boxShadow: activeMobileTab === 'simulator' ? '0 3px 0 #0369a1' : 'none',
+              transform: activeMobileTab === 'simulator' ? 'translateY(1px)' : 'none',
+              transition: 'all 0.15s ease',
+              cursor: 'pointer'
+            }}
+          >
+            <span>📺 {t('tabs.playground', 'Playground')}</span>
+          </button>
+          {showCode && (
+            <button
+              onClick={() => setActiveMobileTab('code')}
+              style={{
+                flex: 1,
+                background: activeMobileTab === 'code' ? 'var(--kids-purple)' : 'transparent',
+                border: 'none',
+                color: 'white',
+                padding: '0.65rem',
+                borderRadius: '12px',
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                boxShadow: activeMobileTab === 'code' ? '0 3px 0 #7e22ce' : 'none',
+                transform: activeMobileTab === 'code' ? 'translateY(1px)' : 'none',
+                transition: 'all 0.15s ease',
+                cursor: 'pointer'
+              }}
+            >
+              <span>💻 {t('tabs.code_preview', 'Code')}</span>
+            </button>
+          )}
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: '1rem', height: isMobile ? 'auto' : '600px', flexDirection: isMobile ? 'column' : 'row' }}>
         {/* Workspace */}
-        <div style={{ flex: 2, display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div style={{ 
+          flex: 2, 
+          display: (!isMobile || activeMobileTab === 'workspace') ? 'flex' : 'none', 
+          flexDirection: 'column', 
+          gap: '1rem' 
+        }}>
           {mission && (
             <div style={{ 
               background: 'rgba(14, 165, 233, 0.08)', 
@@ -1349,14 +1455,20 @@ const KidsIDE: React.FC = () => {
         </div>
 
         {/* Side Panel */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: isMobile ? '100%' : '350px' }}>
+        <div style={{ 
+          flex: 1, 
+          display: (!isMobile || activeMobileTab !== 'workspace') ? 'flex' : 'none', 
+          flexDirection: 'column', 
+          gap: '1rem', 
+          minWidth: isMobile ? '100%' : '350px' 
+        }}>
           <div style={{ 
             background: '#151921', 
             borderRadius: '20px', 
             padding: '1.5rem', 
             border: '1px solid rgba(255,255,255,0.05)', 
-            height: '350px', 
-            display: 'flex', 
+            height: isMobile ? '400px' : '350px', 
+            display: (!isMobile || activeMobileTab === 'simulator') ? 'flex' : 'none', 
             alignItems: 'center', 
             justifyContent: 'center', 
             position: 'relative',
@@ -1398,7 +1510,16 @@ const KidsIDE: React.FC = () => {
           </div>
 
           {showCode && (
-            <div className="code-preview-panel" style={{ flex: 1, background: '#1e1e1e', borderRadius: '12px', border: '1px solid #333', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+            <div className="code-preview-panel" style={{ 
+              flex: 1, 
+              background: '#1e1e1e', 
+              borderRadius: '12px', 
+              border: '1px solid #333', 
+              overflow: 'hidden', 
+              display: (!isMobile || activeMobileTab === 'code') ? 'flex' : 'none', 
+              flexDirection: 'column',
+              minHeight: isMobile ? '350px' : 'auto'
+            }}>
               <div style={{ background: '#252526', padding: '8px 12px', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', gap: '8px', color: '#94a3b8', fontSize: '0.8rem' }}>
                 <FileCode size={16} />
                 <span>main.{language === 'javascript' ? 'js' : 'py'}</span>
