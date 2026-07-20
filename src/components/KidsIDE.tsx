@@ -192,6 +192,9 @@ const KidsIDE: React.FC = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [projectName, setProjectName] = useState('My Kone Project 🚀');
+  const [autoSaveStatus, setAutoSaveStatus] = useState<'saved' | 'saving'>('saved');
+  const [isArenaFullscreen, setIsArenaFullscreen] = useState(false);
 
   let currentTheme = 'light';
   let toggleThemeHandler = () => {};
@@ -1018,6 +1021,26 @@ const KidsIDE: React.FC = () => {
     }
   };
 
+  const handleUndo = () => {
+    if (workspace.current) {
+      workspace.current.undo(false);
+      sounds.playClick();
+      try {
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+      } catch (e) {}
+    }
+  };
+
+  const handleRedo = () => {
+    if (workspace.current) {
+      workspace.current.undo(true);
+      sounds.playClick();
+      try {
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+      } catch (e) {}
+    }
+  };
+
   const handleInsertBlock = (blockType: string) => {
     if (!workspace.current) return;
     try {
@@ -1130,6 +1153,18 @@ const KidsIDE: React.FC = () => {
       if ((e.ctrlKey || e.metaKey) && e.key === 's') {
         e.preventDefault();
         exportProject();
+      }
+
+      // Ctrl/Cmd + Z -> Undo
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        handleUndo();
+      }
+
+      // Ctrl/Cmd + Y or Ctrl/Cmd + Shift + Z -> Redo
+      if (((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y') || ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z')) {
+        e.preventDefault();
+        handleRedo();
       }
 
       // Ctrl/Cmd + K -> Open Block Search
@@ -1559,28 +1594,70 @@ const KidsIDE: React.FC = () => {
 
   return (
     <div className="kids-ide-container engineering-lab-wrapper" style={{ 
-      margin: '2rem 0', 
-      padding: isMobile ? '1rem' : '1.5rem', 
-      borderRadius: '24px', 
-      overflow: 'hidden', 
-      position: 'relative',
-      background: isDark ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.8)',
-      color: isDark ? '#f1f5f9' : '#1e293b'
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      zIndex: 40,
+      overflow: 'hidden',
+      background: isDark ? 'linear-gradient(135deg, #0b0f19 0%, #0f172a 100%)' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
+      color: isDark ? 'white' : '#0f172a',
+      display: 'flex',
+      flexDirection: 'column',
+      fontFamily: "'Outfit', 'Inter', sans-serif"
     }}>
-      {/* Header */}
+      {/* Header Bar */}
       <div style={{ 
+        padding: isMobile ? '0.4rem 0.6rem' : '0.6rem 1.2rem', 
+        background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
+        backdropFilter: 'blur(10px)',
+        borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
         display: 'flex', 
         justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginBottom: isMobile ? '1rem' : '1.5rem',
-        background: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
-        padding: isMobile ? '0.5rem 1rem' : '0',
-        margin: isMobile ? '-1rem -1rem 1rem -1rem' : '0 0 1.5rem 0',
-        borderBottom: isMobile ? '1px solid rgba(255,255,255,0.05)' : 'none'
+        alignItems: 'center',
+        gap: '0.6rem'
       }}>
-        <div>
-          <h3 className="lab-title" style={{ margin: 0, fontSize: isMobile ? '1.1rem' : '1.8rem' }}>KONE KIDS IDE</h3>
-          {!isMobile && <p style={{ margin: 0, color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)', fontSize: '0.9rem' }}>Build the future, one block at a time!</p>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+          <button 
+            onClick={() => navigate(hubPath)} 
+            className="kids-button" 
+            style={{ 
+              padding: '0.25rem 0.5rem', 
+              fontSize: '0.75rem', 
+              background: isDark ? 'var(--kids-surface)' : '#ffffff', 
+              border: isDark ? '1px solid var(--kids-border)' : '1px solid #cbd5e1', 
+              color: isDark ? 'white' : '#0f172a', 
+              borderRadius: '8px' 
+            }}
+          >
+            ← Map
+          </button>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <input
+              type="text"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              placeholder="Untitled Project..."
+              style={{
+                background: 'transparent',
+                border: '1px solid transparent',
+                color: isDark ? 'white' : '#0f172a',
+                fontSize: isMobile ? '0.85rem' : '1rem',
+                fontWeight: 900,
+                borderRadius: '6px',
+                padding: '2px 4px',
+                outline: 'none',
+                maxWidth: isMobile ? '120px' : '220px'
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#0ea5e9')}
+              onBlur={(e) => (e.target.style.borderColor = 'transparent')}
+            />
+            <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700, display: isMobile ? 'none' : 'inline-flex', alignItems: 'center', gap: '3px' }}>
+              ☁️ Auto-saved
+            </span>
+          </div>
         </div>
         
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
@@ -1961,6 +2038,38 @@ const KidsIDE: React.FC = () => {
                 <span>🧹 Clean Up</span>
               </button>
               <button
+                onClick={handleUndo}
+                title="Undo (Ctrl+Z)"
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  color: isDark ? 'white' : '#0f172a',
+                  borderRadius: '10px',
+                  padding: '4px 8px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem',
+                  fontWeight: 800
+                }}
+              >
+                ↩️
+              </button>
+              <button
+                onClick={handleRedo}
+                title="Redo (Ctrl+Y)"
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  color: isDark ? 'white' : '#0f172a',
+                  borderRadius: '10px',
+                  padding: '4px 8px',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem',
+                  fontWeight: 800
+                }}
+              >
+                ↪️
+              </button>
+              <button
                 onClick={() => setShowSearchModal(true)}
                 title="Search Blocks (Ctrl+K)"
                 style={{
@@ -2035,19 +2144,52 @@ const KidsIDE: React.FC = () => {
         </div>
 
         {/* Side Panel */}
-        <div style={{ 
+        <div style={isArenaFullscreen ? {
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 250,
+          background: isDark ? '#0f172a' : '#ffffff',
+          display: 'flex',
+          flexDirection: 'column',
+          padding: '1rem'
+        } : { 
           flex: 1, 
           display: (!isMobile || activeMobileTab !== 'workspace') ? 'flex' : 'none', 
           flexDirection: 'column', 
           gap: '1rem', 
-          minWidth: isMobile ? '100%' : '350px' 
+          minWidth: isMobile ? '100%' : '350px',
+          position: 'relative'
         }}>
+          <button
+            onClick={() => setIsArenaFullscreen(prev => !prev)}
+            title={isArenaFullscreen ? "Exit Fullscreen Theater Mode" : "Expand Fullscreen Theater Mode (⛶)"}
+            style={{
+              position: 'absolute',
+              top: '8px',
+              right: '8px',
+              zIndex: 300,
+              background: 'rgba(0,0,0,0.6)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              color: 'white',
+              borderRadius: '8px',
+              padding: '4px 8px',
+              cursor: 'pointer',
+              fontSize: '0.75rem',
+              fontWeight: 800,
+              backdropFilter: 'blur(4px)'
+            }}
+          >
+            {isArenaFullscreen ? '↙ Exit Fullscreen' : '⛶ Fullscreen'}
+          </button>
           <div style={{ 
-            background: '#151921', 
+            background: isDark ? '#151921' : '#f8fafc', 
             borderRadius: '20px', 
             padding: '1.5rem', 
-            border: '1px solid rgba(255,255,255,0.05)', 
-            height: isMobile ? '400px' : '350px', 
+            border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0', 
+            height: isArenaFullscreen ? '100%' : (isMobile ? '400px' : '350px'), 
             display: (!isMobile || activeMobileTab === 'simulator') ? 'flex' : 'none', 
             alignItems: 'center', 
             justifyContent: 'center', 
