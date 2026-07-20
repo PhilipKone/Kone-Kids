@@ -1679,23 +1679,24 @@ const KidsIDE: React.FC = () => {
     }}>
       {/* Header Bar */}
       <div style={{ 
-        padding: isMobile ? '0.4rem 0.6rem' : '0.6rem 1.2rem', 
+        padding: isMobile ? '0.3rem 0.5rem' : '0.6rem 1.2rem', 
         background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
         backdropFilter: 'blur(10px)',
         borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        gap: '0.6rem',
-        flexWrap: 'wrap'
+        gap: '0.4rem',
+        overflowX: isMobile ? 'auto' : 'visible',
+        maxWidth: '100%'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
           <button 
             onClick={() => navigate(hubPath)} 
             className="kids-button" 
             style={{ 
-              padding: '0.25rem 0.5rem', 
-              fontSize: '0.75rem', 
+              padding: isMobile ? '0.2rem 0.4rem' : '0.25rem 0.5rem', 
+              fontSize: isMobile ? '0.7rem' : '0.75rem', 
               background: isDark ? 'var(--kids-surface)' : '#ffffff', 
               border: isDark ? '1px solid var(--kids-border)' : '1px solid #cbd5e1', 
               color: isDark ? 'white' : '#0f172a', 
@@ -1705,7 +1706,7 @@ const KidsIDE: React.FC = () => {
             ← Map
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
             <input
               type="text"
               value={projectName}
@@ -1715,12 +1716,12 @@ const KidsIDE: React.FC = () => {
                 background: 'transparent',
                 border: '1px solid transparent',
                 color: isDark ? 'white' : '#0f172a',
-                fontSize: isMobile ? '0.85rem' : '1rem',
+                fontSize: isMobile ? '0.78rem' : '1rem',
                 fontWeight: 900,
                 borderRadius: '6px',
                 padding: '2px 4px',
                 outline: 'none',
-                maxWidth: isMobile ? '120px' : '220px'
+                maxWidth: isMobile ? '90px' : '220px'
               }}
               onFocus={(e) => (e.target.style.borderColor = '#0ea5e9')}
               onBlur={(e) => (e.target.style.borderColor = 'transparent')}
@@ -2084,15 +2085,17 @@ const KidsIDE: React.FC = () => {
             {/* Quick Workspace Controls Bar */}
             <div style={{
               position: 'absolute',
-              top: isMobile ? '8px' : '12px',
-              right: isMobile ? '8px' : '12px',
+              top: isMobile ? '6px' : '12px',
+              right: isMobile ? '6px' : '12px',
+              maxWidth: isMobile ? 'calc(100% - 12px)' : 'auto',
+              overflowX: isMobile ? 'auto' : 'visible',
               zIndex: 20,
               display: 'flex',
-              gap: '4px',
+              gap: isMobile ? '3px' : '4px',
               background: isDark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              padding: '4px 6px',
-              borderRadius: '14px',
+              padding: isMobile ? '3px 4px' : '4px 6px',
+              borderRadius: isMobile ? '10px' : '14px',
               border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1',
               boxShadow: isDark ? '0 8px 24px rgba(0,0,0,0.4)' : '0 8px 24px rgba(0,0,0,0.08)'
             }}>
@@ -2103,18 +2106,18 @@ const KidsIDE: React.FC = () => {
                   background: 'rgba(251, 191, 36, 0.15)',
                   border: '1px solid rgba(251, 191, 36, 0.3)',
                   color: '#fbbf24',
-                  borderRadius: '10px',
-                  padding: isMobile ? '4px 8px' : '6px 10px',
+                  borderRadius: '8px',
+                  padding: isMobile ? '3px 6px' : '6px 10px',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.75rem' : '0.8rem',
+                  fontSize: isMobile ? '0.7rem' : '0.8rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px',
-                  transition: 'all 0.2s'
+                  gap: '3px',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                <span>🧹 Clean Up</span>
+                <span>🧹 {!isMobile && 'Clean Up'}</span>
               </button>
               <button
                 onClick={handleUndo}
@@ -2123,10 +2126,10 @@ const KidsIDE: React.FC = () => {
                   background: 'rgba(255,255,255,0.08)',
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   color: isDark ? 'white' : '#0f172a',
-                  borderRadius: '10px',
-                  padding: '4px 8px',
+                  borderRadius: '8px',
+                  padding: isMobile ? '3px 6px' : '4px 8px',
                   cursor: 'pointer',
-                  fontSize: '0.85rem',
+                  fontSize: isMobile ? '0.75rem' : '0.85rem',
                   fontWeight: 800
                 }}
               >
@@ -2139,10 +2142,10 @@ const KidsIDE: React.FC = () => {
                   background: 'rgba(255,255,255,0.08)',
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   color: isDark ? 'white' : '#0f172a',
-                  borderRadius: '10px',
-                  padding: '4px 8px',
+                  borderRadius: '8px',
+                  padding: isMobile ? '3px 6px' : '4px 8px',
                   cursor: 'pointer',
-                  fontSize: '0.85rem',
+                  fontSize: isMobile ? '0.75rem' : '0.85rem',
                   fontWeight: 800
                 }}
               >
@@ -2152,20 +2155,21 @@ const KidsIDE: React.FC = () => {
                 onClick={() => setShowSearchModal(true)}
                 title="Search Blocks (Ctrl+K)"
                 style={{
-                  background: 'rgba(14, 165, 233, 0.15)',
-                  border: '1px solid rgba(14, 165, 233, 0.3)',
-                  color: '#38bdf8',
-                  borderRadius: '10px',
-                  padding: isMobile ? '4px 8px' : '6px 10px',
+                  background: 'rgba(168, 85, 247, 0.15)',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                  color: '#c084fc',
+                  borderRadius: '8px',
+                  padding: isMobile ? '3px 6px' : '6px 10px',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.75rem' : '0.8rem',
+                  fontSize: isMobile ? '0.7rem' : '0.8rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px'
+                  gap: '3px',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                <span>🔍 Search</span>
+                <span>🔍 {!isMobile && 'Search'}</span>
               </button>
               <button
                 onClick={handleCenterWorkspace}
@@ -2335,17 +2339,18 @@ const KidsIDE: React.FC = () => {
 
       {/* Studio Status Bar */}
       <div style={{ 
-        padding: isMobile ? '0.4rem 0.8rem' : '0.5rem 1.2rem', 
+        padding: isMobile ? '0.3rem 0.5rem' : '0.5rem 1.2rem', 
         background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
         backdropFilter: 'blur(10px)',
         borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        gap: '0.8rem',
-        zIndex: 50
+        gap: '0.4rem',
+        zIndex: 50,
+        overflowX: isMobile ? 'auto' : 'visible'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.75rem', color: isDark ? '#94a3b8' : '#475569', fontWeight: 700 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: isMobile ? '0.68rem' : '0.75rem', color: isDark ? '#94a3b8' : '#475569', fontWeight: 700, flexShrink: 0 }}>
           <span>📦 {blockCount} {blockCount === 1 ? 'Block' : 'Blocks'}</span>
           <span>•</span>
           <span>📜 {lineCount} {lineCount === 1 ? 'Line' : 'Lines'}</span>
@@ -2353,7 +2358,7 @@ const KidsIDE: React.FC = () => {
           <span style={{ display: isMobile ? 'none' : 'inline', color: '#10b981' }}>⚡ 60 FPS</span>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: isMobile ? '0.3rem' : '0.5rem', alignItems: 'center', flexShrink: 0 }}>
         {/* Hardware Connect/Upload buttons */}
         {('serial' in navigator) && (
           <>
