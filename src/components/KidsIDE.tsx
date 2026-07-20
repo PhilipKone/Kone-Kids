@@ -19,6 +19,7 @@ import MascotShop from './MascotShop';
 import { sounds } from '../utils/sounds';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
 import { Share } from '@capacitor/share';
+import { useTheme } from '../context/ThemeContext';
 
 // Define a premium dark theme for Blockly
 const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
@@ -49,6 +50,38 @@ const KoneDark = Blockly.Theme.defineTheme('kone_dark', {
     math_category: { colour: '#10b981' },
     procedure_category: { colour: '#ec4899' },
     variable_category: { colour: '#f97316' },
+  }
+});
+
+// Define a crisp light theme for Blockly
+const KoneLight = Blockly.Theme.defineTheme('kone_light', {
+  name: 'kone_light',
+  base: Blockly.Themes.Classic,
+  componentStyles: {
+    workspaceBackgroundColour: '#ffffff',
+    toolboxBackgroundColour: '#f8fafc',
+    toolboxForegroundColour: '#0f172a',
+    flyoutBackgroundColour: '#f1f5f9',
+    flyoutForegroundColour: '#0f172a',
+    insertionMarkerColour: '#f97316',
+    insertionMarkerOpacity: 0.3,
+    scrollbarColour: '#cbd5e1',
+    scrollbarOpacity: 0.5,
+    cursorColour: '#0ea5e9',
+  },
+  blockStyles: {
+    logic_blocks: { colourPrimary: '#9333ea', colourSecondary: '#7e22ce', colourTertiary: '#6b21a8' },
+    loop_blocks: { colourPrimary: '#0284c7', colourSecondary: '#0369a1', colourTertiary: '#075985' },
+    math_blocks: { colourPrimary: '#059669', colourSecondary: '#047857', colourTertiary: '#065f46' },
+    procedure_blocks: { colourPrimary: '#db2777', colourSecondary: '#be185d', colourTertiary: '#9d174d' },
+    variable_blocks: { colourPrimary: '#ea580c', colourSecondary: '#c2410c', colourTertiary: '#9a3412' },
+  },
+  categoryStyles: {
+    logic_category: { colour: '#9333ea' },
+    loop_category: { colour: '#0284c7' },
+    math_category: { colour: '#059669' },
+    procedure_category: { colour: '#db2777' },
+    variable_category: { colour: '#ea580c' },
   }
 });
 
@@ -159,6 +192,17 @@ const KidsIDE: React.FC = () => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  let currentTheme = 'light';
+  let toggleThemeHandler = () => {};
+  try {
+    const themeCtx = useTheme();
+    currentTheme = themeCtx.theme;
+    toggleThemeHandler = themeCtx.toggleTheme;
+  } catch (e) {
+    currentTheme = 'light';
+  }
+  const isDark = currentTheme === 'dark';
   
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
@@ -782,14 +826,14 @@ const KidsIDE: React.FC = () => {
 
       const ws = Blockly.inject(blocklyDiv.current, {
         toolbox: { kind: 'categoryToolbox', contents: toolboxContents },
-        theme: KoneDark,
+        theme: isDark ? KoneDark : KoneLight,
         trashcan: true,
         renderer: 'zelos',
         zoom: {
           controls: true,
           wheel: true,
-          startScale: isMobile ? 0.8 : 1.0,
-          maxScale: 3,
+          startScale: isMobile ? 0.75 : 0.9,
+          maxScale: 2.0,
           minScale: 0.3,
           scaleSpeed: 1.2
         },
@@ -1097,7 +1141,7 @@ const KidsIDE: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isRunning, missionId]);
+  }, []);
 
   const connectHardware = async () => {
     if (!('serial' in navigator)) {
@@ -1487,17 +1531,6 @@ const KidsIDE: React.FC = () => {
     }
   };
 
-  const stopCode = () => {
-    setIsStopping(true);
-    setIsRunning(false);
-    isRunningRef.current = false;
-    window.speechSynthesis.cancel();
-    electronicsRef.current?.reset();
-    aiRef.current?.reset();
-    workspace.current?.highlightBlock(null);
-    sounds.playClick();
-  };
-
   const handleNextMission = () => {
     const currentIndex = CODING_MISSIONS.findIndex(m => m.id === missionId);
     const hubMissions = CODING_MISSIONS.filter(m =>
@@ -1513,50 +1546,87 @@ const KidsIDE: React.FC = () => {
     }
   };
 
+  const stopCode = () => {
+    setIsStopping(true);
+    setIsRunning(false);
+    isRunningRef.current = false;
+    window.speechSynthesis.cancel();
+    electronicsRef.current?.reset();
+    aiRef.current?.reset();
+    workspace.current?.highlightBlock(null);
+    sounds.playClick();
+  };
+
   return (
-    <div className="kids-ide-container engineering-lab-wrapper" style={{ margin: '2rem 0', padding: isMobile ? '1rem' : '1.5rem', borderRadius: '24px', overflow: 'hidden', position: 'relative' }}>
+    <div className="kids-ide-container engineering-lab-wrapper" style={{ 
+      margin: '2rem 0', 
+      padding: isMobile ? '1rem' : '1.5rem', 
+      borderRadius: '24px', 
+      overflow: 'hidden', 
+      position: 'relative',
+      background: isDark ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.8)',
+      color: isDark ? '#f1f5f9' : '#1e293b'
+    }}>
       {/* Header */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
         marginBottom: isMobile ? '1rem' : '1.5rem',
-        background: 'rgba(255,255,255,0.02)',
+        background: isDark ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)',
         padding: isMobile ? '0.5rem 1rem' : '0',
         margin: isMobile ? '-1rem -1rem 1rem -1rem' : '0 0 1.5rem 0',
         borderBottom: isMobile ? '1px solid rgba(255,255,255,0.05)' : 'none'
       }}>
         <div>
           <h3 className="lab-title" style={{ margin: 0, fontSize: isMobile ? '1.1rem' : '1.8rem' }}>KONE KIDS IDE</h3>
-          {!isMobile && <p style={{ margin: 0, color: 'rgba(255,255,255,0.5)', fontSize: '0.9rem' }}>Build the future, one block at a time!</p>}
+          {!isMobile && <p style={{ margin: 0, color: isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)', fontSize: '0.9rem' }}>Build the future, one block at a time!</p>}
         </div>
         
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           {/* Dialect selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px 8px' }}>
-            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.6)', display: isMobile ? 'none' : 'inline' }}>🗣️ Voice:</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '14px', padding: '4px 8px' }}>
+            <span style={{ fontSize: '0.75rem', color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)', display: isMobile ? 'none' : 'inline' }}>🗣️ Voice:</span>
             <select
               value={dialect}
               onChange={(e) => setDialect(e.target.value as any)}
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: 'white',
+                color: isDark ? 'white' : 'black',
                 fontSize: isMobile ? '0.75rem' : '0.85rem',
                 fontWeight: 800,
                 outline: 'none',
                 cursor: 'pointer'
               }}
             >
-              <option value="en" style={{ background: '#1e293b', color: 'white' }}>English</option>
-              <option value="twi" style={{ background: '#1e293b', color: 'white' }}>Twi (Asante)</option>
-              <option value="ga" style={{ background: '#1e293b', color: 'white' }}>Ga</option>
-              <option value="ewe" style={{ background: '#1e293b', color: 'white' }}>Ewe</option>
+              <option value="en" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>English</option>
+              <option value="twi" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Twi (Asante)</option>
+              <option value="ga" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Ga</option>
+              <option value="ewe" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Ewe</option>
             </select>
           </div>
 
-          {/* Audio controls */}
-          <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center', background: 'rgba(255,255,255,0.05)', borderRadius: '14px', padding: '4px 6px' }}>
+          {/* Audio & Theme controls */}
+          <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '14px', padding: '4px 6px' }}>
+            <button
+              onClick={toggleThemeHandler}
+              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: isDark ? '#fbbf24' : '#0284c7',
+                padding: '0.25rem',
+                outline: 'none',
+                fontSize: '0.95rem'
+              }}
+            >
+              {isDark ? '☀️' : '🌙'}
+            </button>
             <button
               onClick={handleToggleMusic}
               title={musicOn ? 'Mute Music' : 'Play Background Music'}
@@ -1850,8 +1920,8 @@ const KidsIDE: React.FC = () => {
                 width: '100%',
                 borderRadius: '20px', 
                 overflow: 'hidden', 
-                border: '1px solid rgba(255,255,255,0.1)', 
-                background: '#0b0e14' 
+                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1', 
+                background: isDark ? '#0b0e14' : '#ffffff' 
               }} 
             />
 
@@ -1863,12 +1933,12 @@ const KidsIDE: React.FC = () => {
               zIndex: 20,
               display: 'flex',
               gap: '4px',
-              background: 'rgba(15, 23, 42, 0.85)',
+              background: isDark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
               padding: '4px 6px',
               borderRadius: '14px',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.4)'
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1',
+              boxShadow: isDark ? '0 8px 24px rgba(0,0,0,0.4)' : '0 8px 24px rgba(0,0,0,0.08)'
             }}>
               <button
                 onClick={handleCleanUpBlocks}
