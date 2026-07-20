@@ -63,6 +63,8 @@ const KidsIDE: React.FC = () => {
   const isRunningRef = useRef(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
+  const [isSlowMo, setIsSlowMo] = useState(false);
+  const isSlowMoRef = useRef(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [onboardingStep, setOnboardingStep] = useState<number>(-1);
   const [activeTab, setActiveTab] = useState<'blocks' | 'code'>('blocks');
@@ -946,14 +948,35 @@ const KidsIDE: React.FC = () => {
   };
 
   const runCode = async () => {
-    if (!workspace.current || isRunning) return;
+    if (!workspace.current) return;
 
-    // ── 1. Empty workspace guard ──────────────────────────────────────────────
-    const allBlocks = workspace.current.getAllBlocks(true);
+    const friendlyNames: Record<string, string> = {
+      mascot_speak: '🗣️ Say block',
+      mascot_wave: '👋 Wave Hand block',
+      mascot_blink: '👁️ Blink Eyes block',
+      mascot_wait: '🕐 Wait block',
+      controls_repeat_ext: '🔄 Repeat block',
+      variables_set: '📦 Set Variable block',
+      math_number: '🔢 Number block',
+      controls_if: '🧠 If block',
+      robot_move: '🚜 Move block',
+      robot_turn: '🔄 Turn block',
+      robot_stop: '🛑 Stop Robot block',
+      robot_distance: '📏 Distance Sensor block',
+      tts_speak: '🗣️ Speak block',
+      tts_set_voice: '🗣️ Set Voice block',
+      tts_set_language: '🗣️ Set Language block',
+      sound_play_note: '🎵 Play Note block',
+      sound_play_effect: '🔊 Sound Effect block',
+      sound_rest: '🔕 Rest block',
+    };
+
+    // ── 1. Empty workspace check ──────────────────────────────────────────────
+    const allBlocks = workspace.current.getAllBlocks(false);
     if (allBlocks.length === 0) {
-      setBlockError(['Your workspace is empty! Drag some blocks in first. 👆']);
+      setBlockError(['Your workspace is empty! Drag some blocks from the left toolbox to get started.']);
       setTimeout(() => setBlockError(null), 4000);
-      mascotRef.current?.speak("Your workspace is empty! Drag some blocks in first.");
+      mascotRef.current?.speak('Your workspace is empty! Drag blocks from the left toolbar.');
       return;
     }
 
@@ -962,26 +985,6 @@ const KidsIDE: React.FC = () => {
       const presentTypes = new Set(allBlocks.map((b: any) => b.type));
       const missing = mission.requiredBlocks.filter(req => !presentTypes.has(req));
       if (missing.length > 0) {
-        const friendlyNames: Record<string, string> = {
-          mascot_speak: '🗣️ Say block',
-          mascot_wave: '👋 Wave Hand block',
-          mascot_blink: '👁️ Blink Eyes block',
-          mascot_wait: '🕐 Wait block',
-          controls_repeat_ext: '🔄 Repeat block',
-          variables_set: '📦 Set Variable block',
-          math_number: '🔢 Number block',
-          controls_if: '🧠 If block',
-          robot_move: '🚜 Move block',
-          robot_turn: '🔄 Turn block',
-          robot_stop: '🛑 Stop Robot block',
-          robot_distance: '📏 Distance Sensor block',
-          tts_speak: '🗣️ Speak block',
-          tts_set_voice: '🗣️ Set Voice block',
-          tts_set_language: '🗣️ Set Language block',
-          sound_play_note: '🎵 Play Note block',
-          sound_play_effect: '🔊 Sound Effect block',
-          sound_rest: '🔕 Rest block',
-        };
         const missingLabels = missing.map(m => friendlyNames[m] || m);
         setBlockError(missingLabels);
         setTimeout(() => setBlockError(null), 5000);
@@ -1023,10 +1026,18 @@ const KidsIDE: React.FC = () => {
         throw new Error('stopped');
       }
       workspace.current?.highlightBlock(id);
+
+      const block = workspace.current?.getBlockById(id);
+      if (isSlowMoRef.current && block) {
+        const blockName = friendlyNames[block.type] || block.type;
+        mascotRef.current?.speak(`Step: ${blockName}`);
+      }
+
+      const stepDelay = isSlowMoRef.current ? 1800 : 600;
       
-      // Delay to show highlighting (600ms)
+      // Delay to show highlighting
       await new Promise((resolve, reject) => {
-        const timeout = setTimeout(resolve, 600);
+        const timeout = setTimeout(resolve, stepDelay);
         const checkInterval = setInterval(() => {
           if (!isRunningRef.current) {
             clearTimeout(timeout);
@@ -1848,6 +1859,32 @@ const KidsIDE: React.FC = () => {
             )}
           </>
         )}
+
+        <button
+          onClick={() => {
+            setIsSlowMo(prev => {
+              isSlowMoRef.current = !prev;
+              return !prev;
+            });
+          }}
+          title={isSlowMo ? "Slow-Motion Debugger Active (1.8s per step)" : "Enable Slow-Motion Debugger Mode"}
+          className="kids-button"
+          style={{
+            padding: '0.45rem 0.8rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            fontSize: '0.9rem',
+            minHeight: '44px',
+            background: isSlowMo ? '#f59e0b' : 'var(--kids-surface)',
+            borderColor: isSlowMo ? '#d97706' : 'var(--kids-border)',
+            color: 'white',
+            '--shadow-color': isSlowMo ? '#b45309' : 'var(--kids-border)'
+          } as any}
+        >
+          <span style={{ fontSize: '1rem' }}>🐢</span>
+          <span style={{ display: isMobile ? 'none' : 'inline' }}>{isSlowMo ? 'Slow Mo ON' : 'Slow Mo'}</span>
+        </button>
 
         {!isRunning ? (
           <button id="run-code-btn" className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px' }} onClick={runCode}>
