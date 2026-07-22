@@ -7,6 +7,7 @@ import RoboticsSimulator, { RoboticsHandle } from './RoboticsSimulator';
 import GameSimulator, { GameHandle } from './GameSimulator';
 import ElectronicsSimulator, { ElectronicsHandle } from './ElectronicsSimulator';
 import AISimulator, { AIHandle } from './AISimulator';
+import SpriteInspector, { SpriteInfo } from './SpriteInspector';
 import MissionBriefing from './MissionBriefing';
 import { getTranslation } from '../utils/translations';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
@@ -222,6 +223,47 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const isMissionCompleted = completedMissions.includes(missionId || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showShop, setShowShop] = useState(false);
+
+  // Live Sprite Inspector state
+  const [sprites, setSprites] = useState<SpriteInfo[]>([
+    { id: 'mascot', name: 'Kone Mascot', icon: '🦊', x: 50, y: 300, size: 100, direction: 90, visible: true },
+    { id: 'star1', name: 'Bonus Star', icon: '⭐', x: 250, y: 150, size: 100, direction: 90, visible: true }
+  ]);
+  const [selectedSpriteId, setSelectedSpriteId] = useState<string>('mascot');
+  const [activeBackdrop, setActiveBackdrop] = useState<string>('default');
+
+  const handleUpdateSprite = (id: string, updates: Partial<SpriteInfo>) => {
+    setSprites(prev => prev.map(s => s.id === id ? { ...s, ...updates } : s));
+    if (id === 'mascot' || id === selectedSpriteId) {
+      if (gameRef.current?.updatePlayerProps) {
+        gameRef.current.updatePlayerProps(updates);
+      }
+    }
+  };
+
+  const handleAddSprite = (preset: { name: string; icon: string }) => {
+    const newSprite: SpriteInfo = {
+      id: `sprite-${Date.now()}`,
+      name: preset.name,
+      icon: preset.icon,
+      x: 100 + Math.floor(Math.random() * 200),
+      y: 100 + Math.floor(Math.random() * 200),
+      size: 100,
+      direction: 90,
+      visible: true,
+    };
+    setSprites(prev => [...prev, newSprite]);
+    setSelectedSpriteId(newSprite.id);
+    sounds.playSuccess();
+  };
+
+  const handleChangeBackdrop = (backdropId: string) => {
+    setActiveBackdrop(backdropId);
+    if (gameRef.current?.setBackdrop) {
+      gameRef.current.setBackdrop(backdropId);
+    }
+    sounds.playClick();
+  };
 
   // Web Serial API states
   const [serialPort, setSerialPort] = useState<any | null>(null);
@@ -1687,34 +1729,34 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     }}>
       {/* Header Bar */}
       <div style={{ 
-        padding: isMobile ? '0.3rem 0.5rem' : '0.6rem 1.2rem', 
+        padding: isMobile ? '2px 6px' : '0.6rem 1.2rem', 
         background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
         backdropFilter: 'blur(10px)',
         borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        gap: '0.4rem',
+        gap: '0.3rem',
         overflowX: isMobile ? 'auto' : 'visible',
         maxWidth: '100%'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
           <button 
             onClick={() => navigate(hubPath)} 
             className="kids-button" 
             style={{ 
-              padding: isMobile ? '0.2rem 0.4rem' : '0.25rem 0.5rem', 
-              fontSize: isMobile ? '0.7rem' : '0.75rem', 
+              padding: isMobile ? '0.15rem 0.35rem' : '0.25rem 0.5rem', 
+              fontSize: isMobile ? '0.68rem' : '0.75rem', 
               background: isDark ? 'var(--kids-surface)' : '#ffffff', 
               border: isDark ? '1px solid var(--kids-border)' : '1px solid #cbd5e1', 
               color: isDark ? 'white' : '#0f172a', 
-              borderRadius: '8px' 
+              borderRadius: '7px' 
             }}
           >
             ← Map
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
             <input
               type="text"
               value={projectName}
@@ -1724,12 +1766,12 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 background: 'transparent',
                 border: '1px solid transparent',
                 color: isDark ? 'white' : '#0f172a',
-                fontSize: isMobile ? '0.78rem' : '1rem',
+                fontSize: isMobile ? '0.72rem' : '1rem',
                 fontWeight: 900,
                 borderRadius: '6px',
-                padding: '2px 4px',
+                padding: '1px 3px',
                 outline: 'none',
-                maxWidth: isMobile ? '90px' : '220px'
+                maxWidth: isMobile ? '80px' : '220px'
               }}
               onFocus={(e) => (e.target.style.borderColor = '#0ea5e9')}
               onBlur={(e) => (e.target.style.borderColor = 'transparent')}
@@ -1740,9 +1782,9 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           </div>
         </div>
         
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: isMobile ? '0.25rem' : '0.75rem', alignItems: 'center' }}>
           {/* Dialect selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '14px', padding: '4px 8px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '10px', padding: isMobile ? '2px 4px' : '4px 8px' }}>
             <span style={{ fontSize: '0.75rem', color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)', display: isMobile ? 'none' : 'inline' }}>🗣️ Voice:</span>
             <select
               value={dialect}
@@ -1751,21 +1793,21 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 background: 'transparent',
                 border: 'none',
                 color: isDark ? 'white' : 'black',
-                fontSize: isMobile ? '0.75rem' : '0.85rem',
+                fontSize: isMobile ? '0.7rem' : '0.85rem',
                 fontWeight: 800,
                 outline: 'none',
                 cursor: 'pointer'
               }}
             >
               <option value="en" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>English</option>
-              <option value="twi" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Twi (Asante)</option>
+              <option value="twi" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Twi</option>
               <option value="ga" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Ga</option>
               <option value="ewe" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Ewe</option>
             </select>
           </div>
 
           {/* Audio & Theme controls */}
-          <div style={{ display: 'flex', gap: '0.2rem', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '14px', padding: '4px 6px' }}>
+          <div style={{ display: 'flex', gap: '0.15rem', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '10px', padding: isMobile ? '2px 4px' : '4px 6px' }}>
             <button
               onClick={toggleThemeHandler}
               title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
@@ -1777,9 +1819,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: isDark ? '#fbbf24' : '#0284c7',
-                padding: '0.25rem',
+                padding: '0.15rem',
                 outline: 'none',
-                fontSize: '0.95rem'
+                fontSize: isMobile ? '0.8rem' : '0.95rem',
+                width: isMobile ? '24px' : 'auto',
+                height: isMobile ? '24px' : 'auto'
               }}
             >
               {isDark ? '☀️' : '🌙'}
@@ -1826,19 +1870,19 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 background: 'rgba(168, 85, 247, 0.15)',
                 border: '1px solid rgba(168, 85, 247, 0.3)',
                 color: '#c084fc',
-                padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
+                padding: isMobile ? '0.2rem 0.4rem' : '0.4rem 0.8rem',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: isMobile ? '0.72rem' : '0.8rem',
                 fontWeight: 800,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '3px',
                 transition: 'all 0.2s',
-                minHeight: isMobile ? '32px' : '36px'
+                minHeight: isMobile ? '28px' : '36px'
               }}
             >
-              <span>✨ Examples</span>
+              <span>✨{!isMobile && ' Examples'}</span>
             </button>
 
             <button
@@ -1848,19 +1892,19 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 background: 'rgba(16, 185, 129, 0.15)',
                 border: '1px solid rgba(16, 185, 129, 0.3)',
                 color: '#34d399',
-                padding: isMobile ? '0.3rem 0.6rem' : '0.4rem 0.8rem',
+                padding: isMobile ? '0.2rem 0.4rem' : '0.4rem 0.8rem',
                 borderRadius: '8px',
                 cursor: 'pointer',
                 fontSize: isMobile ? '0.72rem' : '0.8rem',
                 fontWeight: 800,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '3px',
                 transition: 'all 0.2s',
-                minHeight: isMobile ? '32px' : '36px'
+                minHeight: isMobile ? '28px' : '36px'
               }}
             >
-              <span>📤 Share</span>
+              <span>📤{!isMobile && ' Share'}</span>
             </button>
           </div>
 
@@ -2093,17 +2137,17 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             {/* Quick Workspace Controls Bar */}
             <div style={{
               position: 'absolute',
-              top: isMobile ? '6px' : '12px',
-              right: isMobile ? '6px' : '12px',
-              maxWidth: isMobile ? 'calc(100% - 12px)' : 'auto',
+              top: isMobile ? '4px' : '12px',
+              right: isMobile ? '4px' : '12px',
+              maxWidth: isMobile ? 'calc(100% - 8px)' : 'auto',
               overflowX: isMobile ? 'auto' : 'visible',
               zIndex: 20,
               display: 'flex',
-              gap: isMobile ? '3px' : '4px',
+              gap: isMobile ? '2px' : '4px',
               background: isDark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
-              padding: isMobile ? '3px 4px' : '4px 6px',
-              borderRadius: isMobile ? '10px' : '14px',
+              padding: isMobile ? '2px' : '4px 6px',
+              borderRadius: isMobile ? '8px' : '14px',
               border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1',
               boxShadow: isDark ? '0 8px 24px rgba(0,0,0,0.4)' : '0 8px 24px rgba(0,0,0,0.08)'
             }}>
@@ -2114,13 +2158,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   background: 'rgba(251, 191, 36, 0.15)',
                   border: '1px solid rgba(251, 191, 36, 0.3)',
                   color: '#fbbf24',
-                  borderRadius: '8px',
-                  padding: isMobile ? '3px 6px' : '6px 10px',
+                  borderRadius: isMobile ? '6px' : '8px',
+                  padding: isMobile ? '0' : '6px 10px',
+                  width: isMobile ? '26px' : 'auto',
+                  height: isMobile ? '26px' : 'auto',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.7rem' : '0.8rem',
+                  fontSize: isMobile ? '0.72rem' : '0.8rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '3px',
                   whiteSpace: 'nowrap'
                 }}
@@ -2134,10 +2181,15 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   background: 'rgba(255,255,255,0.08)',
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   color: isDark ? 'white' : '#0f172a',
-                  borderRadius: '8px',
-                  padding: isMobile ? '3px 6px' : '4px 8px',
+                  borderRadius: isMobile ? '6px' : '8px',
+                  padding: isMobile ? '0' : '4px 8px',
+                  width: isMobile ? '26px' : 'auto',
+                  height: isMobile ? '26px' : 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  fontSize: isMobile ? '0.72rem' : '0.85rem',
                   fontWeight: 800
                 }}
               >
@@ -2150,10 +2202,15 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   background: 'rgba(255,255,255,0.08)',
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   color: isDark ? 'white' : '#0f172a',
-                  borderRadius: '8px',
-                  padding: isMobile ? '3px 6px' : '4px 8px',
+                  borderRadius: isMobile ? '6px' : '8px',
+                  padding: isMobile ? '0' : '4px 8px',
+                  width: isMobile ? '26px' : 'auto',
+                  height: isMobile ? '26px' : 'auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  fontSize: isMobile ? '0.72rem' : '0.85rem',
                   fontWeight: 800
                 }}
               >
@@ -2166,13 +2223,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   background: 'rgba(168, 85, 247, 0.15)',
                   border: '1px solid rgba(168, 85, 247, 0.3)',
                   color: '#c084fc',
-                  borderRadius: '8px',
-                  padding: isMobile ? '3px 6px' : '6px 10px',
+                  borderRadius: isMobile ? '6px' : '8px',
+                  padding: isMobile ? '0' : '6px 10px',
+                  width: isMobile ? '26px' : 'auto',
+                  height: isMobile ? '26px' : 'auto',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.7rem' : '0.8rem',
+                  fontSize: isMobile ? '0.72rem' : '0.8rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '3px',
                   whiteSpace: 'nowrap'
                 }}
@@ -2186,13 +2246,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   background: 'rgba(56, 189, 248, 0.15)',
                   border: '1px solid rgba(56, 189, 248, 0.3)',
                   color: '#38bdf8',
-                  borderRadius: '8px',
-                  padding: isMobile ? '3px 6px' : '6px 10px',
+                  borderRadius: isMobile ? '6px' : '8px',
+                  padding: isMobile ? '0' : '6px 10px',
+                  width: isMobile ? '26px' : 'auto',
+                  height: isMobile ? '26px' : 'auto',
                   cursor: 'pointer',
-                  fontSize: isMobile ? '0.7rem' : '0.8rem',
+                  fontSize: isMobile ? '0.72rem' : '0.8rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '3px',
                   whiteSpace: 'nowrap'
                 }}
@@ -2203,7 +2266,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           </div>
         </div>
 
-        {/* Side Panel */}
+        {/* Side Panel (Simulator & Code Preview) */}
         <div style={isArenaFullscreen ? {
           position: 'fixed',
           top: 0,
@@ -2219,34 +2282,147 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           flex: 1, 
           display: (!isMobile || activeMobileTab !== 'workspace') ? 'flex' : 'none', 
           flexDirection: 'column', 
-          gap: '1rem', 
+          gap: '0', 
           minWidth: isMobile ? '100%' : '350px',
           position: 'relative'
         }}>
-          <button
-            onClick={() => setIsArenaFullscreen(prev => !prev)}
-            title={isArenaFullscreen ? "Exit Fullscreen Theater Mode" : "Expand Fullscreen Theater Mode (⛶)"}
-            style={{
-              position: 'absolute',
-              top: '8px',
-              right: '8px',
-              zIndex: 300,
-              background: 'rgba(0,0,0,0.6)',
-              border: '1px solid rgba(255,255,255,0.2)',
-              color: 'white',
-              borderRadius: '8px',
-              padding: '4px 8px',
-              cursor: 'pointer',
-              fontSize: '0.75rem',
-              fontWeight: 800,
-              backdropFilter: 'blur(4px)'
-            }}
-          >
-            {isArenaFullscreen ? '↙ Exit Fullscreen' : '⛶ Fullscreen'}
-          </button>
+          {/* Scratch 3.0 Stage Control Header Bar (Green Flag & Red Stop) */}
+          <div className="stage-control-bar" style={{
+            display: (!isMobile || activeMobileTab === 'simulator') ? 'flex' : 'none',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: isDark ? '#1e293b' : '#ffffff',
+            padding: '0.5rem 0.85rem',
+            borderRadius: '16px 16px 0 0',
+            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0',
+            borderBottom: 'none',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+          }}>
+            {/* Left Controls: Green Flag & Red Stop */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+              <button
+                onClick={runCode}
+                disabled={isRunning}
+                title="Run Project (Green Flag 🚩)"
+                style={{
+                  background: isRunning 
+                    ? 'linear-gradient(135deg, #16a34a, #15803d)' 
+                    : 'linear-gradient(135deg, #4ade80, #22c55e)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: isRunning ? 'default' : 'pointer',
+                  boxShadow: isRunning 
+                    ? '0 0 12px rgba(34, 197, 94, 0.6), 0 3px 0 #15803d' 
+                    : '0 3px 0 #15803d',
+                  transition: 'all 0.2s ease',
+                  transform: isRunning ? 'scale(1.05)' : 'none'
+                }}
+              >
+                <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>🚩</span>
+              </button>
+
+              <button
+                onClick={stopCode}
+                disabled={!isRunning}
+                title="Stop Project (Red Octagon 🛑)"
+                style={{
+                  background: isRunning
+                    ? 'linear-gradient(135deg, #ef4444, #dc2626)'
+                    : 'rgba(239, 68, 68, 0.2)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '36px',
+                  height: '36px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: isRunning ? 'pointer' : 'default',
+                  boxShadow: isRunning ? '0 3px 0 #b91c1c' : 'none',
+                  opacity: isRunning ? 1 : 0.4,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>🛑</span>
+              </button>
+
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                color: isRunning ? '#22c55e' : (isDark ? '#94a3b8' : '#64748b'),
+                background: isDark ? 'rgba(15, 23, 42, 0.5)' : 'rgba(241, 245, 249, 0.8)',
+                padding: '0.25rem 0.6rem',
+                borderRadius: '20px'
+              }}>
+                <span style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  background: isRunning ? '#22c55e' : '#94a3b8',
+                  boxShadow: isRunning ? '0 0 8px #22c55e' : 'none'
+                }} />
+                <span>{isRunning ? 'RUNNING (60 FPS)' : 'READY'}</span>
+              </div>
+            </div>
+
+            {/* Right Controls: Fullscreen & Shop */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button
+                onClick={() => setIsArenaFullscreen(prev => !prev)}
+                title="Toggle Fullscreen Theater Mode"
+                style={{
+                  background: 'rgba(14, 165, 233, 0.1)',
+                  border: '1px solid rgba(14, 165, 233, 0.25)',
+                  color: '#0ea5e9',
+                  borderRadius: '8px',
+                  padding: '0.35rem 0.65rem',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
+                }}
+              >
+                <span>⛶</span>
+                <span>{isArenaFullscreen ? 'Exit' : 'Fullscreen'}</span>
+              </button>
+
+              <button
+                onClick={() => setShowShop(true)}
+                style={{
+                  background: 'var(--kids-orange)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 0 #9a3412',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
+                }}
+              >
+                <span>🛒</span>
+                <span>Shop</span>
+              </button>
+            </div>
+          </div>
+
           <div style={{ 
             background: isDark ? '#151921' : '#f8fafc', 
-            borderRadius: '20px', 
+            borderRadius: '0 0 20px 20px', 
             padding: '1.5rem', 
             border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0', 
             height: isArenaFullscreen ? '100%' : (isMobile ? '400px' : '350px'), 
@@ -2256,32 +2432,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             position: 'relative',
             overflow: 'hidden'
           }}>
-            {/* Mascot Shop button */}
-            <button 
-              onClick={() => setShowShop(true)}
-              className="kids-button"
-              style={{
-                position: 'absolute',
-                top: '2rem',
-                right: '2rem',
-                zIndex: 30,
-                padding: '0.6rem 1.25rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                background: 'var(--kids-orange)',
-                boxShadow: '0 3px 0 #9a3412',
-                fontSize: isMobile ? '0.75rem' : '0.85rem',
-                whiteSpace: 'nowrap',
-                minHeight: isMobile ? '32px' : '40px'
-              }}
-            >
-              🛒 Shop
-            </button>
             {mission?.pathway === 'Robotics (Robotics 4 Kids)' ? (
               <RoboticsSimulator ref={robotRef} missionId={missionId} />
             ) : mission?.pathway === 'Game Dev' ? (
-              <GameSimulator ref={gameRef} />
+              <GameSimulator ref={gameRef} backdrop={activeBackdrop} />
             ) : mission?.pathway === 'Electronics (Robotics 4 Kids)' ? (
               <ElectronicsSimulator ref={electronicsRef} />
             ) : (mission?.pathway === 'Data Science (AI 4 Kids)' || mission?.pathway === 'ML (AI 4 Kids)' || mission?.pathway === 'AI (AI 4 Kids)') ? (
@@ -2290,6 +2444,25 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               <Mascot ref={mascotRef} />
             )}
           </div>
+
+          {/* Scratch 3.0 Live Sprite Inspector Toolbar */}
+          {(!isMobile || activeMobileTab === 'simulator') && (
+            <SpriteInspector
+              sprites={sprites}
+              selectedSpriteId={selectedSpriteId}
+              activeBackdrop={activeBackdrop}
+              onSelectSprite={(id) => {
+                setSelectedSpriteId(id);
+                const sp = sprites.find(s => s.id === id);
+                if (sp && gameRef.current?.updatePlayerProps) {
+                  gameRef.current.updatePlayerProps(sp);
+                }
+              }}
+              onUpdateSprite={handleUpdateSprite}
+              onAddSprite={handleAddSprite}
+              onChangeBackdrop={handleChangeBackdrop}
+            />
+          )}
 
           {showCode && (
             <div className="code-preview-panel" style={{ 
@@ -2316,18 +2489,18 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
       {/* Studio Status Bar */}
       <div style={{ 
-        padding: isMobile ? '0.3rem 0.5rem' : '0.5rem 1.2rem', 
+        padding: isMobile ? '2px 6px' : '0.5rem 1.2rem', 
         background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
         backdropFilter: 'blur(10px)',
         borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        gap: '0.4rem',
+        gap: '0.3rem',
         zIndex: 50,
         overflowX: isMobile ? 'auto' : 'visible'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: isMobile ? '0.68rem' : '0.75rem', color: isDark ? '#94a3b8' : '#475569', fontWeight: 700, flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.65rem' : '0.75rem', color: isDark ? '#94a3b8' : '#475569', fontWeight: 700, flexShrink: 0 }}>
           <span>📦 {blockCount} {blockCount === 1 ? 'Block' : 'Blocks'}</span>
           <span>•</span>
           <span>📜 {lineCount} {lineCount === 1 ? 'Line' : 'Lines'}</span>
@@ -2335,7 +2508,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           <span style={{ display: isMobile ? 'none' : 'inline', color: '#10b981' }}>⚡ 60 FPS</span>
         </div>
 
-        <div style={{ display: 'flex', gap: isMobile ? '0.3rem' : '0.5rem', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ display: 'flex', gap: isMobile ? '0.2rem' : '0.5rem', alignItems: 'center', flexShrink: 0 }}>
         {/* Hardware Connect/Upload buttons */}
         {('serial' in navigator) && (
           <>
@@ -2343,24 +2516,24 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               <button 
                 onClick={connectHardware} 
                 className="kids-button" 
-                style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', color: 'white', '--shadow-color': 'var(--kids-border)' } as any}
+                style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'var(--kids-surface)', border: isMobile ? '1px solid var(--kids-border)' : '2px solid var(--kids-border)', color: 'white', '--shadow-color': 'var(--kids-border)' } as any}
               >
-                <span>🔌 Connect Board</span>
+                <span>🔌 Connect</span>
               </button>
             ) : (
-              <div style={{ display: 'flex', gap: '0.4rem' }}>
+              <div style={{ display: 'flex', gap: '0.3rem' }}>
                 <button 
                   onClick={uploadToHardware} 
                   disabled={uploading} 
                   className="kids-button pulse-neon" 
-                  style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', '--shadow-color': '#047857' } as any}
+                  style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', '--shadow-color': '#047857' } as any}
                 >
-                  <span>🚀 {uploading ? 'Uploading...' : 'Upload Board'}</span>
+                  <span>🚀 {uploading ? 'Uploading...' : 'Upload'}</span>
                 </button>
                 <button 
                   onClick={disconnectHardware} 
                   className="kids-button" 
-                  style={{ padding: '0.45rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '44px', width: '44px', background: '#ef4444', '--shadow-color': '#991b1b' } as any} 
+                  style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: isMobile ? '32px' : '44px', width: isMobile ? '32px' : '44px', background: '#ef4444', '--shadow-color': '#991b1b' } as any} 
                   title="Disconnect Board"
                 >
                   🔌
@@ -2380,30 +2553,30 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           title={isSlowMo ? "Slow-Motion Debugger Active (1.8s per step)" : "Enable Slow-Motion Debugger Mode"}
           className="kids-button"
           style={{
-            padding: '0.45rem 0.8rem',
+            padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 0.8rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.4rem',
-            fontSize: '0.9rem',
-            minHeight: '44px',
+            gap: '0.3rem',
+            fontSize: isMobile ? '0.72rem' : '0.9rem',
+            minHeight: isMobile ? '32px' : '44px',
             background: isSlowMo ? '#f59e0b' : 'var(--kids-surface)',
             borderColor: isSlowMo ? '#d97706' : 'var(--kids-border)',
             color: 'white',
             '--shadow-color': isSlowMo ? '#b45309' : 'var(--kids-border)'
           } as any}
         >
-          <span style={{ fontSize: '1rem' }}>🐢</span>
+          <span style={{ fontSize: '0.85rem' }}>🐢</span>
           <span style={{ display: isMobile ? 'none' : 'inline' }}>{isSlowMo ? 'Slow Mo ON' : 'Slow Mo'}</span>
         </button>
 
         {!isRunning ? (
-          <button id="run-code-btn" className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', minHeight: '44px' }} onClick={runCode}>
-            <Play size={18} fill="currentColor" />
+          <button id="run-code-btn" className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px' }} onClick={runCode}>
+            <Play size={isMobile ? 14 : 18} fill="currentColor" />
             <span>Run Code</span>
           </button>
         ) : (
-          <button className="kids-button" style={{ padding: '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.95rem', background: '#ef4444', '--shadow-color': '#991b1b', minHeight: '44px' } as any} onClick={stopCode}>
-            <Square size={16} fill="currentColor" />
+          <button className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', background: '#ef4444', '--shadow-color': '#991b1b', minHeight: isMobile ? '32px' : '44px' } as any} onClick={stopCode}>
+            <Square size={isMobile ? 13 : 16} fill="currentColor" />
             <span>Stop</span>
           </button>
         )}
