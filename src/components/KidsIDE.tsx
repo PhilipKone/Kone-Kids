@@ -162,7 +162,11 @@ const SEARCHABLE_BLOCKS: SearchableBlock[] = [
   { type: 'variables_set', name: '📦 Set Variable', category: 'Variables', color: '#f97316', keywords: 'variable set store value score count name' }
 ];
 
-const KidsIDE: React.FC = () => {
+interface KidsIDEProps {
+  standalone?: boolean;
+}
+
+const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const { t, i18n } = useTranslation();
   const blocklyDiv = useRef<HTMLDivElement>(null);
   const workspace = useRef<Blockly.WorkspaceSvg | null>(null);
@@ -212,6 +216,7 @@ const KidsIDE: React.FC = () => {
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const isStandalone = propStandalone || location.pathname === '/studio' || location.pathname === '/editor' || location.pathname === '/playground' || new URLSearchParams(location.search).get('standalone') === 'true';
   const { unlockBadge, completeMission, completedMissions, hasCompletedOnboarding, completeOnboarding, dialect, setDialect } = useGamification();
   const mission = CODING_MISSIONS.find(m => m.id === missionId);
   const isMissionCompleted = completedMissions.includes(missionId || '');
@@ -937,14 +942,14 @@ const KidsIDE: React.FC = () => {
   }, [onboardingStep, language, isMobile, mission, i18n.language]);
 
   const getSharedUrl = () => {
-    if (!workspace.current) return window.location.href;
+    if (!workspace.current) return `${window.location.origin}/studio`;
     try {
       const xmlDom = Blockly.Xml.workspaceToDom(workspace.current);
       const xmlText = Blockly.Xml.domToText(xmlDom);
       const encoded = btoa(encodeURIComponent(xmlText));
-      return `${window.location.origin}${window.location.pathname}#code=${encoded}`;
+      return `${window.location.origin}/studio#code=${encoded}`;
     } catch (e) {
-      return window.location.href;
+      return `${window.location.origin}/studio`;
     }
   };
 
@@ -1661,20 +1666,23 @@ const KidsIDE: React.FC = () => {
 
   return (
     <div className="kids-ide-container engineering-lab-wrapper" style={{ 
-      width: '100%',
-      maxWidth: '1440px',
-      margin: '0 auto',
-      height: isMobile ? 'auto' : 'calc(100vh - 120px)',
-      minHeight: isMobile ? 'auto' : '750px',
-      borderRadius: '24px',
+      position: isStandalone ? 'fixed' : 'relative',
+      top: isStandalone ? 0 : 'auto',
+      left: isStandalone ? 0 : 'auto',
+      width: isStandalone ? '100vw' : '100%',
+      maxWidth: isStandalone ? '100vw' : '1440px',
+      margin: isStandalone ? 0 : '0 auto',
+      height: isStandalone ? '100vh' : (isMobile ? 'auto' : 'calc(100vh - 120px)'),
+      minHeight: isStandalone ? '100vh' : (isMobile ? 'auto' : '750px'),
+      zIndex: isStandalone ? 99999 : 40,
+      borderRadius: isStandalone ? 0 : '24px',
+      border: isStandalone ? 'none' : (isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1'),
       overflow: 'hidden',
       background: isDark ? 'linear-gradient(135deg, #0b0f19 0%, #0f172a 100%)' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
       color: isDark ? 'white' : '#0f172a',
       display: 'flex',
       flexDirection: 'column',
-      position: 'relative',
-      boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)',
-      border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1',
+      boxShadow: isStandalone ? 'none' : '0 20px 50px rgba(0, 0, 0, 0.3)',
       fontFamily: "'Outfit', 'Inter', sans-serif"
     }}>
       {/* Header Bar */}

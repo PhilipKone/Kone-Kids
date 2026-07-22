@@ -28,6 +28,7 @@ import { sounds } from './utils/sounds'
 const ProgramDetails = React.lazy(() => import('./components/ProgramDetails'))
 const EnrollmentModal = React.lazy(() => import('./components/EnrollmentModal'))
 const BadgeTray = React.lazy(() => import('./components/BadgeTray'))
+const KidsIDE = React.lazy(() => import('./components/KidsIDE'))
 const MissionMap = React.lazy(() => import('./components/MissionMap'))
 const Blog = React.lazy(() => import('./components/Blog'))
 const ArticleReader = React.lazy(() => import('./components/ArticleReader'))
@@ -594,6 +595,20 @@ function Home() {
               </span>
               <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
               <a href="https://www.koneacademy.io" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)' }}>Kone Academy Home</a>
+              <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
+              <a href="https://www.tiktok.com/@kone.kids?_r=1&_t=ZS-98EwXcAnK4r" target="_blank" rel="noopener noreferrer" style={{ color: '#ff0050', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style={{ verticalAlign: 'middle' }}>
+                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.74-3.94-1.78-.22-.22-.41-.47-.58-.73v7.02c0 3.94-3.19 7.14-7.13 7.14C6.83 21.66 3.63 18.46 3.63 14.52c0-3.94 3.2-7.14 7.14-7.14.33 0 .66.02.99.07v4.11c-.33-.09-.68-.13-1.02-.12-1.63.02-3.03 1.25-3.17 2.87-.19 2.22 1.74 3.99 3.97 3.8 1.43-.12 2.54-1.25 2.54-2.69V0h.44z"/>
+                </svg>
+                TikTok
+              </a>
+              <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
+              <a href="https://www.linkedin.com/showcase/konekids/" target="_blank" rel="noopener noreferrer" style={{ color: '#0a66c2', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style={{ verticalAlign: 'middle' }}>
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                </svg>
+                LinkedIn
+              </a>
             </div>
             <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
               +233 55 199 3820
@@ -647,7 +662,8 @@ function AppContent() {
   const [activeBadge, setActiveBadge] = React.useState<any>(null);
   const location = useLocation();
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
-  const isMissionPage = location.pathname.includes('/mission/');
+  const isStandaloneStudio = location.pathname === '/studio' || location.pathname === '/editor' || location.pathname === '/playground';
+  const isMissionPage = location.pathname.includes('/mission/') || isStandaloneStudio;
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -725,6 +741,9 @@ function AppContent() {
             <Route path="/robotics" element={<MissionMap hub="robotics" />} />
             <Route path="/ai" element={<MissionMap hub="ai" />} />
             <Route path="/profile" element={<ProfileView />} />
+            <Route path="/studio" element={<KidsIDE standalone={true} />} />
+            <Route path="/editor" element={<KidsIDE standalone={true} />} />
+            <Route path="/playground" element={<KidsIDE standalone={true} />} />
             {/* ... other routes ... */}
             <Route 
               path="/coding/mission/:missionId" 
