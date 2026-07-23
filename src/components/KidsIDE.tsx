@@ -255,6 +255,24 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   // Scratch 3.0 Workspace Mode Tabs (Code vs Costumes vs Sounds)
   const [editorModeTab, setEditorModeTab] = useState<'code' | 'costumes' | 'sounds'>('code');
 
+  // URL Query Param Sub-Tab Auto-Switching (?tab=costumes | sounds | playground | code)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab')?.toLowerCase();
+      if (tabParam === 'costumes') {
+        setEditorModeTab('costumes');
+      } else if (tabParam === 'sounds') {
+        setEditorModeTab('sounds');
+      } else if (tabParam === 'playground' || tabParam === 'simulator') {
+        setActiveMobileTab('simulator');
+      } else if (tabParam === 'code') {
+        setActiveMobileTab('code');
+        setActiveTab('code');
+      }
+    }
+  }, []);
+
   useEffect(() => {
     if (editorModeTab === 'code' && workspace.current) {
       setTimeout(() => {
