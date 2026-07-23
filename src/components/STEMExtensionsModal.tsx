@@ -14,6 +14,7 @@ interface ExtensionTool {
   description: string;
   url: string;
   badge: string;
+  buttonText: string;
 }
 
 const EXTENSION_TOOLS: ExtensionTool[] = [
@@ -22,66 +23,72 @@ const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Scratch 3.0 (MIT)',
     category: 'Block Coding',
     icon: '🐱',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Scratch_logo.svg',
+    logoUrl: 'https://scratch.mit.edu/favicon.ico',
     color: '#f59e0b',
     description: 'The world famous MIT visual programming language for stories, games, and animations.',
     url: 'https://scratch.mit.edu/create',
-    badge: 'MIT Media Lab'
+    badge: 'MIT Media Lab',
+    buttonText: 'Launch Scratch'
   },
   {
     id: 'codeorg',
     name: 'Code.org Studio',
     category: 'CS Fundamentals',
     icon: '🟩',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/87/Code.org_logo.svg',
+    logoUrl: 'https://studio.code.org/favicon.ico',
     color: '#10b981',
     description: 'Hour of Code adventures, Dance Party, App Lab, and K-12 Computer Science courses.',
     url: 'https://studio.code.org',
-    badge: 'Hour of Code'
+    badge: 'Hour of Code',
+    buttonText: 'Launch Code.org'
   },
   {
     id: 'makecode',
     name: 'BBC micro:bit MakeCode',
     category: 'Hardware & Microcontrollers',
     icon: '🔌',
-    logoUrl: 'https://cdn.simpleicons.org/microbit/0ea5e9',
+    logoUrl: 'https://makecode.microbit.org/favicon.ico',
     color: '#0ea5e9',
     description: 'Official Microsoft block & JavaScript editor for pocket-sized micro:bit hardware.',
     url: 'https://makecode.microbit.org',
-    badge: 'Microsoft STEM'
+    badge: 'Microsoft STEM',
+    buttonText: 'Launch MakeCode'
   },
   {
     id: 'tinkercad',
     name: 'Tinkercad Circuits',
     category: '3D & Electronics',
     icon: '🧊',
-    logoUrl: 'https://cdn.simpleicons.org/autodesk/ec4899',
+    logoUrl: 'https://www.tinkercad.com/favicon.ico',
     color: '#ec4899',
     description: 'Simulate Arduino circuits, breadboards, sensors, and 3D printing design.',
     url: 'https://www.tinkercad.com/circuits',
-    badge: 'Autodesk 3D'
+    badge: 'Autodesk 3D',
+    buttonText: 'Launch Tinkercad'
   },
   {
     id: 'replit',
     name: 'Replit Python & Web',
     category: 'Text-Based Coding',
     icon: '⚡',
-    logoUrl: 'https://cdn.simpleicons.org/replit/a855f7',
+    logoUrl: 'https://replit.com/favicon.ico',
     color: '#a855f7',
     description: 'Collaborative cloud IDE for writing Python, HTML, CSS, JavaScript, and Node.js.',
     url: 'https://replit.com',
-    badge: 'Cloud IDE'
+    badge: 'Cloud IDE',
+    buttonText: 'Launch Replit'
   },
   {
     id: 'tynker',
     name: 'Tynker STEM',
     category: 'Gamified Coding',
     icon: '🎮',
-    logoUrl: 'https://cdn.simpleicons.org/fortinet/f97316',
+    logoUrl: 'https://www.tynker.com/favicon.ico',
     color: '#f97316',
     description: 'Gamified block coding courses, Minecraft modding, and robotics challenges.',
     url: 'https://www.tynker.com',
-    badge: 'Gamified CS'
+    badge: 'Gamified CS',
+    buttonText: 'Launch Tynker'
   }
 ];
 
@@ -269,7 +276,7 @@ const STEMExtensionsModal: React.FC<STEMExtensionsModalProps> = ({ isOpen, onClo
                   transition: 'all 0.2s'
                 }}
               >
-                Launch {tool.name.split(' ')[0]} <ExternalLink size={14} />
+                {tool.buttonText} <ExternalLink size={14} />
               </a>
             </div>
           ))}
