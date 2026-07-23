@@ -17,12 +17,12 @@ export interface ExtensionTool {
 }
 
 const EXTERNAL_LOGO_URLS: Record<string, string> = {
-  scratch: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/scratch/scratch-original.svg',
-  codeorg: 'https://raw.githubusercontent.com/code-dot-org/code-dot-org/main/apps/static/code-dot-org-logo.png',
-  makecode: 'https://cdn.simpleicons.org/microbit/0ea5e9',
-  tinkercad: 'https://cdn.simpleicons.org/autodesk/ec4899',
-  replit: 'https://cdn.simpleicons.org/replit/a855f7',
-  tynker: 'https://raw.githubusercontent.com/PK-KCA/KCA-Assets/main/tynker.png'
+  scratch: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Scratch_S.svg/500px-Scratch_S.svg.png',
+  codeorg: 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Code.org_logo.svg',
+  makecode: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-IdbAy3flfl2XnUKy5IfWoUgu1hzywyZxknjkLWMxRQ&s=10',
+  tinkercad: 'https://i0.wp.com/www.arduinofactory.fr/wp-content/uploads/2021/09/logo-tinkercad-256.png?fit=256%2C256&ssl=1',
+  replit: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-rRf0x0j8mjLShynqXpYt8OCslLaXJP2NtM6x91rq1A&s=10',
+  tynker: 'https://play-lh.googleusercontent.com/dYPLtQCdxnEroNlt73Su_0RpXm07mW7gqNy5URMq0fwkUWrr9j9GH6rc19Jk8LY2VW2N-f_Ir3jhBQiYAdWebA'
 };
 
 export const ToolBrandLogo: React.FC<{ toolId: string; size?: number }> = ({ toolId, size = 36 }) => {
