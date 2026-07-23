@@ -532,21 +532,35 @@ function Home() {
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                      <div style={{
-                        background: `${t.color}15`,
-                        border: `1px solid ${t.color}35`,
-                        padding: '0.35rem 0.75rem',
-                        borderRadius: '12px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.4rem',
-                        color: t.color,
-                        fontWeight: 900,
-                        fontSize: '0.92rem',
-                        fontFamily: "'Baloo 2', cursive"
-                      }}>
-                        <span style={{ fontSize: '1.1rem' }}>{t.icon}</span> {t.name.split(' ')[0]}
-                      </div>
+                      {t.id === 'scratch' ? (
+                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Scratch_logo.svg" alt="Scratch Logo" style={{ height: '20px', width: 'auto' }} />
+                        </div>
+                      ) : t.id === 'codeorg' ? (
+                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Code.org_logo.svg" alt="Code.org Logo" style={{ height: '20px', width: 'auto' }} />
+                        </div>
+                      ) : t.id === 'makecode' ? (
+                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/0/07/BBC_micro-bit_logo.svg" alt="BBC micro:bit" style={{ height: '18px', width: 'auto' }} />
+                        </div>
+                      ) : t.id === 'tinkercad' ? (
+                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Tinkercad_logo.svg" alt="Tinkercad" style={{ height: '18px', width: 'auto' }} />
+                        </div>
+                      ) : t.id === 'replit' ? (
+                        <div style={{ background: '#0f172a', border: '1px solid #a855f7', padding: '3px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', height: '28px' }}>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="#a855f7">
+                            <path d="M2 1.5A1.5 1.5 0 0 1 3.5 0h7A1.5 1.5 0 0 1 12 1.5V7H3.5A1.5 1.5 0 0 1 2 5.5v-4zM12 8.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-4A1.5 1.5 0 0 1 3.5 7H12v1.5zm1.5-7A1.5 1.5 0 0 1 15 0h7.5A1.5 1.5 0 0 1 24 1.5v4A1.5 1.5 0 0 1 22.5 7H15V1.5z"/>
+                          </svg>
+                          <span style={{ color: 'white', fontWeight: 800, fontSize: '0.85rem' }}>replit</span>
+                        </div>
+                      ) : (
+                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Tynker_logo.svg" alt="Tynker" style={{ height: '18px', width: 'auto' }} />
+                        </div>
+                      )}
+
                       <span style={{
                         background: 'rgba(255, 255, 255, 0.05)',
                         color: 'var(--kids-text-muted)',
