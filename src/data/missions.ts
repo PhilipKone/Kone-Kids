@@ -90,6 +90,16 @@ export const GAME_SERIES: GameSeries[] = [
     difficulty: 'Beginner',
     gameCount: 10,
     accentColor: '#8b5cf6'
+  },
+  {
+    id: 'series_arrow_escape',
+    title: 'Arrow Escape Logic',
+    description: 'Tap and unblock directional arrow tiles to clear the board in this spatial logic puzzle!',
+    coverImage: '/series/arrow-escape-cover.png',
+    price: 250,
+    difficulty: 'Intermediate',
+    gameCount: 12,
+    accentColor: '#ec4899'
   }
 ];
 

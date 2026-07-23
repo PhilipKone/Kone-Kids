@@ -8,6 +8,8 @@ import GameSimulator, { GameHandle } from './GameSimulator';
 import ElectronicsSimulator, { ElectronicsHandle } from './ElectronicsSimulator';
 import AISimulator, { AIHandle } from './AISimulator';
 import SpriteInspector, { SpriteInfo } from './SpriteInspector';
+import CostumeStudio from './CostumeStudio';
+import SoundStudio from './SoundStudio';
 import MissionBriefing from './MissionBriefing';
 import { getTranslation } from '../utils/translations';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
@@ -144,20 +146,45 @@ interface SearchableBlock {
 }
 
 const SEARCHABLE_BLOCKS: SearchableBlock[] = [
+  // Mascot
   { type: 'mascot_speak', name: '🗣️ Say Text', category: 'Mascot', color: '#0ea5e9', keywords: 'speak say talk word text mascot message' },
   { type: 'mascot_wave', name: '👋 Wave Hand', category: 'Mascot', color: '#0ea5e9', keywords: 'wave hand mascot greet hello gesture' },
   { type: 'mascot_blink', name: '👁️ Blink Eyes', category: 'Mascot', color: '#0ea5e9', keywords: 'blink eye mascot face wink' },
   { type: 'mascot_wait', name: '🕐 Wait', category: 'Mascot', color: '#0ea5e9', keywords: 'wait delay sleep pause time second' },
-  { type: 'tts_speak', name: '🗣️ Speak Speech', category: 'Text to Speech', color: '#8b5cf6', keywords: 'speech voice talk speak tts audio accent' },
-  { type: 'tts_set_voice', name: '🗣️ Set Voice', category: 'Text to Speech', color: '#8b5cf6', keywords: 'voice tone pitch alto giant kitten squeak' },
-  { type: 'tts_set_language', name: '🗣️ Set Language', category: 'Text to Speech', color: '#8b5cf6', keywords: 'language accent english french spanish portuguese' },
-  { type: 'sound_play_note', name: '🎵 Play Musical Note', category: 'Sound & Music', color: '#d946ef', keywords: 'note music pitch piano song sound tone tune' },
-  { type: 'sound_play_effect', name: '🔊 Play Sound Effect', category: 'Sound & Music', color: '#d946ef', keywords: 'sound effect cheer coin laser pop win explosion audio' },
-  { type: 'sound_rest', name: '🔕 Rest', category: 'Sound & Music', color: '#d946ef', keywords: 'rest pause silent quiet music rhythm' },
+  
+  // Robotics
   { type: 'robot_move', name: '🚜 Move Rover', category: 'Robotics', color: '#10b981', keywords: 'robot move forward backward drive rover motor' },
   { type: 'robot_turn', name: '🔄 Turn Rover', category: 'Robotics', color: '#10b981', keywords: 'turn left right rotate angle degree rover' },
   { type: 'robot_stop', name: '🛑 Stop Rover', category: 'Robotics', color: '#10b981', keywords: 'stop halt brake freeze rover' },
   { type: 'robot_distance', name: '📏 Distance Sensor', category: 'Robotics', color: '#10b981', keywords: 'distance sensor ultrasonic range obstacle cm' },
+
+  // Electronics
+  { type: 'led_state', name: '💡 LED Light State', category: 'Electronics', color: '#f59e0b', keywords: 'led light lamp pin on off pin high low digital' },
+  { type: 'ghana_kit_buzzer', name: '🔔 Buzzer Alarm Tone', category: 'Electronics', color: '#f59e0b', keywords: 'buzzer alarm sound tone speaker pin beep siren' },
+  { type: 'ghana_kit_servo', name: '⚙️ Servo Motor Angle', category: 'Electronics', color: '#f59e0b', keywords: 'servo motor angle degree rotate arm pin joint' },
+
+  // Game Dev
+  { type: 'game_gravity', name: '🌌 Set Game Gravity', category: 'Game Dev', color: '#ec4899', keywords: 'gravity physics fall jump weight acceleration drop world' },
+  { type: 'character_jump', name: '🚀 Character Jump Force', category: 'Game Dev', color: '#ec4899', keywords: 'jump bounce hop leap force velocity player up' },
+  { type: 'spawn_stars', name: '⭐ Spawn Collectible Stars', category: 'Game Dev', color: '#ec4899', keywords: 'star item spawn coin collectible reward bonus create' },
+  { type: 'on_key_press', name: '⌨️ On Key Press Event', category: 'Game Dev', color: '#ec4899', keywords: 'key press keyboard arrow space enter control trigger' },
+  { type: 'update_score', name: '🏆 Update Player Score', category: 'Game Dev', color: '#ec4899', keywords: 'score points add increase reward count player' },
+
+  // Text to Speech
+  { type: 'tts_speak', name: '🗣️ Speak Speech', category: 'Text to Speech', color: '#8b5cf6', keywords: 'speech voice talk speak tts audio accent' },
+  { type: 'tts_set_voice', name: '🗣️ Set Voice', category: 'Text to Speech', color: '#8b5cf6', keywords: 'voice tone pitch alto giant kitten squeak' },
+  { type: 'tts_set_language', name: '🗣️ Set Language', category: 'Text to Speech', color: '#8b5cf6', keywords: 'language accent english french spanish portuguese' },
+
+  // Sound & Music
+  { type: 'sound_play_note', name: '🎵 Play Musical Note', category: 'Sound & Music', color: '#d946ef', keywords: 'note music pitch piano song sound tone tune' },
+  { type: 'sound_play_effect', name: '🔊 Play Sound Effect', category: 'Sound & Music', color: '#d946ef', keywords: 'sound effect cheer coin laser pop win explosion audio' },
+  { type: 'sound_rest', name: '🔕 Rest', category: 'Sound & Music', color: '#d946ef', keywords: 'rest pause silent quiet music rhythm' },
+
+  // AI
+  { type: 'ai_class', name: '🧠 Train AI Detector', category: 'AI', color: '#6366f1', keywords: 'ai train machine learning vision camera detect object label' },
+  { type: 'on_class_detect', name: '👁️ On Object Detected', category: 'AI', color: '#6366f1', keywords: 'detect see vision camera trigger label object' },
+
+  // Loops & Logic & Variables
   { type: 'controls_repeat_ext', name: '🔄 Repeat Loop', category: 'Loops', color: '#0ea5e9', keywords: 'repeat loop for count times again iterate' },
   { type: 'controls_if', name: '🧠 If Condition', category: 'Logic', color: '#a855f7', keywords: 'if condition then logic decide check else' },
   { type: 'variables_set', name: '📦 Set Variable', category: 'Variables', color: '#f97316', keywords: 'variable set store value score count name' }
@@ -179,8 +206,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const isRunningRef = useRef(false);
   const [isRunning, setIsRunning] = useState(false);
   const [isStopping, setIsStopping] = useState(false);
-  const [isSlowMo, setIsSlowMo] = useState(false);
-  const isSlowMoRef = useRef(false);
+  const [execSpeed, setExecSpeed] = useState<'slowmo' | 'normal' | 'turbo'>('normal');
+  const execSpeedRef = useRef<'slowmo' | 'normal' | 'turbo'>('normal');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [onboardingStep, setOnboardingStep] = useState<number>(-1);
   const [activeTab, setActiveTab] = useState<'blocks' | 'code'>('blocks');
@@ -194,6 +221,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const [showTemplatesModal, setShowTemplatesModal] = useState(false);
   const [showSearchModal, setShowSearchModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchCategory, setSearchCategory] = useState<string>('All');
   const [showShareModal, setShowShareModal] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -223,6 +251,17 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const isMissionCompleted = completedMissions.includes(missionId || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showShop, setShowShop] = useState(false);
+
+  // Scratch 3.0 Workspace Mode Tabs (Code vs Costumes vs Sounds)
+  const [editorModeTab, setEditorModeTab] = useState<'code' | 'costumes' | 'sounds'>('code');
+
+  useEffect(() => {
+    if (editorModeTab === 'code' && workspace.current) {
+      setTimeout(() => {
+        if (workspace.current) Blockly.svgResize(workspace.current);
+      }, 50);
+    }
+  }, [editorModeTab]);
 
   // Live Sprite Inspector state
   const [sprites, setSprites] = useState<SpriteInfo[]>([
@@ -1439,12 +1478,12 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       workspace.current?.highlightBlock(id);
 
       const block = workspace.current?.getBlockById(id);
-      if (isSlowMoRef.current && block) {
+      if (execSpeedRef.current === 'slowmo' && block) {
         const blockName = friendlyNames[block.type] || block.type;
         mascotRef.current?.speak(`Step: ${blockName}`);
       }
 
-      const stepDelay = isSlowMoRef.current ? 1800 : 600;
+      const stepDelay = execSpeedRef.current === 'turbo' ? 50 : execSpeedRef.current === 'slowmo' ? 1800 : 600;
       
       // Delay to show highlighting
       await new Promise((resolve, reject) => {
@@ -2119,6 +2158,75 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               💡 Hint ({hintIndex % (mission.hints.length) === 0 && hintIndex > 0 ? 'all used!' : `${mission.hints.length - (hintIndex % mission.hints.length)} left`})
             </button>
           )}
+          {/* Scratch 3.0 Workspace Mode Tabs: Code vs Costumes vs Sounds */}
+          <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '-2px', zIndex: 10 }}>
+            <button
+              type="button"
+              onClick={() => setEditorModeTab('code')}
+              style={{
+                padding: '0.45rem 1.1rem',
+                borderRadius: '14px 14px 0 0',
+                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                borderBottom: editorModeTab === 'code' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                background: editorModeTab === 'code' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                color: editorModeTab === 'code' ? '#0ea5e9' : (isDark ? '#94a3b8' : '#64748b'),
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>🧩 Code</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setEditorModeTab('costumes')}
+              style={{
+                padding: '0.45rem 1.1rem',
+                borderRadius: '14px 14px 0 0',
+                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                borderBottom: editorModeTab === 'costumes' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                background: editorModeTab === 'costumes' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                color: editorModeTab === 'costumes' ? '#ec4899' : (isDark ? '#94a3b8' : '#64748b'),
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>🎨 Costumes</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setEditorModeTab('sounds')}
+              style={{
+                padding: '0.45rem 1.1rem',
+                borderRadius: '14px 14px 0 0',
+                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                borderBottom: editorModeTab === 'sounds' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                background: editorModeTab === 'sounds' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                color: editorModeTab === 'sounds' ? '#a855f7' : (isDark ? '#94a3b8' : '#64748b'),
+                fontWeight: 800,
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span>🔊 Sounds</span>
+            </button>
+          </div>
+
           <div style={{ position: 'relative', flex: 1, height: isMobile ? '450px' : '100%', minHeight: isMobile ? '400px' : '500px' }}>
             <div 
               ref={blocklyDiv} 
@@ -2127,22 +2235,36 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               style={{ 
                 height: '100%', 
                 width: '100%',
-                borderRadius: '20px', 
+                borderRadius: '0 20px 20px 20px', 
                 overflow: 'hidden', 
                 border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1', 
-                background: isDark ? '#0b0e14' : '#ffffff' 
+                background: isDark ? '#0b0e14' : '#ffffff',
+                display: editorModeTab === 'code' ? 'block' : 'none'
               }} 
             />
 
+            {editorModeTab === 'costumes' && (
+              <div style={{ height: '100%', width: '100%' }}>
+                <CostumeStudio />
+              </div>
+            )}
+
+            {editorModeTab === 'sounds' && (
+              <div style={{ height: '100%', width: '100%' }}>
+                <SoundStudio />
+              </div>
+            )}
+
             {/* Quick Workspace Controls Bar */}
-            <div style={{
-              position: 'absolute',
-              top: isMobile ? '4px' : '12px',
-              right: isMobile ? '4px' : '12px',
-              maxWidth: isMobile ? 'calc(100% - 8px)' : 'auto',
-              overflowX: isMobile ? 'auto' : 'visible',
-              zIndex: 20,
-              display: 'flex',
+            {editorModeTab === 'code' && (
+              <div style={{
+                position: 'absolute',
+                top: isMobile ? '4px' : '12px',
+                right: isMobile ? '4px' : '12px',
+                maxWidth: isMobile ? 'calc(100% - 8px)' : 'auto',
+                overflowX: isMobile ? 'auto' : 'visible',
+                zIndex: 20,
+                display: 'flex',
               gap: isMobile ? '2px' : '4px',
               background: isDark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(10px)',
@@ -2263,6 +2385,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 <span>🎯 {!isMobile && 'Center'}</span>
               </button>
             </div>
+          )}
           </div>
         </div>
 
@@ -2371,6 +2494,72 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   boxShadow: isRunning ? '0 0 8px #22c55e' : 'none'
                 }} />
                 <span>{isRunning ? 'RUNNING (60 FPS)' : 'READY'}</span>
+              </div>
+
+              {/* Execution Speed Selector (Slow-Mo / Normal / Turbo) */}
+              <div style={{
+                display: 'flex',
+                background: isDark ? 'rgba(15, 23, 42, 0.7)' : 'rgba(241, 245, 249, 0.9)',
+                borderRadius: '20px',
+                padding: '2px',
+                border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1'
+              }}>
+                <button
+                  type="button"
+                  title="Slow-Mo Debugger Mode (1.8s per block step + voice callouts)"
+                  onClick={() => { setExecSpeed('slowmo'); execSpeedRef.current = 'slowmo'; sounds.playClick(); }}
+                  style={{
+                    background: execSpeed === 'slowmo' ? '#f59e0b' : 'transparent',
+                    color: execSpeed === 'slowmo' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
+                    border: 'none',
+                    borderRadius: '16px',
+                    padding: '0.2rem 0.5rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  🐢 {!isMobile && 'Slow'}
+                </button>
+
+                <button
+                  type="button"
+                  title="Normal Execution Speed (0.6s step delay)"
+                  onClick={() => { setExecSpeed('normal'); execSpeedRef.current = 'normal'; sounds.playClick(); }}
+                  style={{
+                    background: execSpeed === 'normal' ? '#0ea5e9' : 'transparent',
+                    color: execSpeed === 'normal' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
+                    border: 'none',
+                    borderRadius: '16px',
+                    padding: '0.2rem 0.5rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  ⚡ {!isMobile && 'Normal'}
+                </button>
+
+                <button
+                  type="button"
+                  title="Turbo Speed (50ms step delay for fast math & physics)"
+                  onClick={() => { setExecSpeed('turbo'); execSpeedRef.current = 'turbo'; sounds.playClick(); }}
+                  style={{
+                    background: execSpeed === 'turbo' ? '#ec4899' : 'transparent',
+                    color: execSpeed === 'turbo' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
+                    border: 'none',
+                    borderRadius: '16px',
+                    padding: '0.2rem 0.5rem',
+                    fontSize: '0.72rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  🚀 {!isMobile && 'Turbo'}
+                </button>
               </div>
             </div>
 
@@ -2545,12 +2734,12 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
         <button
           onClick={() => {
-            setIsSlowMo(prev => {
-              isSlowMoRef.current = !prev;
-              return !prev;
-            });
+            const nextSpeed = execSpeed === 'normal' ? 'slowmo' : execSpeed === 'slowmo' ? 'turbo' : 'normal';
+            setExecSpeed(nextSpeed);
+            execSpeedRef.current = nextSpeed;
+            sounds.playClick();
           }}
-          title={isSlowMo ? "Slow-Motion Debugger Active (1.8s per step)" : "Enable Slow-Motion Debugger Mode"}
+          title={`Execution Speed: ${execSpeed === 'slowmo' ? 'Slow-Motion Debugger' : execSpeed === 'turbo' ? 'Turbo Mode' : 'Normal'}`}
           className="kids-button"
           style={{
             padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 0.8rem',
@@ -2559,14 +2748,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             gap: '0.3rem',
             fontSize: isMobile ? '0.72rem' : '0.9rem',
             minHeight: isMobile ? '32px' : '44px',
-            background: isSlowMo ? '#f59e0b' : 'var(--kids-surface)',
-            borderColor: isSlowMo ? '#d97706' : 'var(--kids-border)',
+            background: execSpeed === 'slowmo' ? '#f59e0b' : execSpeed === 'turbo' ? '#ec4899' : 'var(--kids-surface)',
+            borderColor: execSpeed === 'slowmo' ? '#d97706' : execSpeed === 'turbo' ? '#be185d' : 'var(--kids-border)',
             color: 'white',
-            '--shadow-color': isSlowMo ? '#b45309' : 'var(--kids-border)'
+            '--shadow-color': execSpeed === 'slowmo' ? '#b45309' : execSpeed === 'turbo' ? '#9d174d' : 'var(--kids-border)'
           } as any}
         >
-          <span style={{ fontSize: '0.85rem' }}>🐢</span>
-          <span style={{ display: isMobile ? 'none' : 'inline' }}>{isSlowMo ? 'Slow Mo ON' : 'Slow Mo'}</span>
+          <span style={{ fontSize: '0.85rem' }}>{execSpeed === 'slowmo' ? '🐢' : execSpeed === 'turbo' ? '🚀' : '⚡'}</span>
+          <span style={{ display: isMobile ? 'none' : 'inline' }}>
+            {execSpeed === 'slowmo' ? 'Slow Mo' : execSpeed === 'turbo' ? 'Turbo' : 'Normal'}
+          </span>
         </button>
 
         {!isRunning ? (
@@ -2723,9 +2914,12 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <span style={{ fontSize: '1.2rem' }}>🔍</span>
                 <h3 style={{ margin: 0, color: 'white', fontSize: '1.2rem', fontWeight: 900 }}>Search Blocks</h3>
+                <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', fontSize: '0.7rem', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', marginLeft: '0.4rem' }}>
+                  Ctrl + K
+                </span>
               </div>
               <button
-                onClick={() => { setShowSearchModal(false); setSearchQuery(''); }}
+                onClick={() => { setShowSearchModal(false); setSearchQuery(''); setSearchCategory('All'); }}
                 style={{ background: 'rgba(255,255,255,0.08)', border: 'none', color: 'white', borderRadius: '50%', width: '32px', height: '32px', cursor: 'pointer', fontSize: '1rem', fontWeight: 900 }}
               >
                 ✕
@@ -2747,16 +2941,45 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 color: 'white',
                 fontSize: '0.95rem',
                 outline: 'none',
-                marginBottom: '1rem',
+                marginBottom: '0.75rem',
                 boxSizing: 'border-box'
               }}
             />
 
+            {/* Quick Category Jump Chips */}
+            <div style={{ display: 'flex', gap: '0.4rem', overflowX: 'auto', paddingBottom: '0.6rem', marginBottom: '0.8rem' }}>
+              {['All', 'Mascot', 'Robotics', 'Electronics', 'Game Dev', 'Text to Speech', 'Sound & Music', 'AI', 'Loops', 'Logic', 'Variables'].map(cat => {
+                const isActive = searchCategory === cat;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setSearchCategory(cat)}
+                    style={{
+                      background: isActive ? 'linear-gradient(135deg, #0ea5e9, #0284c7)' : 'rgba(30, 41, 59, 0.7)',
+                      color: isActive ? '#ffffff' : '#94a3b8',
+                      border: isActive ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.08)',
+                      borderRadius: '20px',
+                      padding: '0.3rem 0.75rem',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+
             <div style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               {SEARCHABLE_BLOCKS.filter(b => {
+                const matchesCat = searchCategory === 'All' || b.category === searchCategory;
                 const q = searchQuery.toLowerCase().trim();
-                if (!q) return true;
-                return b.name.toLowerCase().includes(q) || b.keywords.toLowerCase().includes(q) || b.category.toLowerCase().includes(q);
+                const matchesQuery = !q || b.name.toLowerCase().includes(q) || b.keywords.toLowerCase().includes(q) || b.category.toLowerCase().includes(q);
+                return matchesCat && matchesQuery;
               }).map(b => (
                 <div
                   key={b.type}
