@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import X from 'lucide-react/dist/esm/icons/x.mjs';
 import ExternalLink from 'lucide-react/dist/esm/icons/external-link.mjs';
@@ -16,7 +16,39 @@ export interface ExtensionTool {
   buttonText: string;
 }
 
-export const ToolBrandLogo: React.FC<{ toolId: string; size?: number }> = ({ toolId, size = 32 }) => {
+const EXTERNAL_LOGO_URLS: Record<string, string> = {
+  scratch: 'https://raw.githubusercontent.com/devicons/devicon/master/icons/scratch/scratch-original.svg',
+  codeorg: 'https://raw.githubusercontent.com/code-dot-org/code-dot-org/main/apps/static/code-dot-org-logo.png',
+  makecode: 'https://cdn.simpleicons.org/microbit/0ea5e9',
+  tinkercad: 'https://cdn.simpleicons.org/autodesk/ec4899',
+  replit: 'https://cdn.simpleicons.org/replit/a855f7',
+  tynker: 'https://raw.githubusercontent.com/PK-KCA/KCA-Assets/main/tynker.png'
+};
+
+export const ToolBrandLogo: React.FC<{ toolId: string; size?: number }> = ({ toolId, size = 36 }) => {
+  const [hasError, setHasError] = useState(false);
+  const externalUrl = EXTERNAL_LOGO_URLS[toolId];
+
+  if (!hasError && externalUrl) {
+    return (
+      <div style={{ height: `${size}px`, display: 'flex', alignItems: 'center' }}>
+        <img
+          src={externalUrl}
+          alt={`${toolId} official logo`}
+          referrerPolicy="no-referrer"
+          onError={() => setHasError(true)}
+          style={{
+            maxHeight: `${size}px`,
+            maxWidth: '120px',
+            objectFit: 'contain',
+            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))'
+          }}
+        />
+      </div>
+    );
+  }
+
+  // Fallback SVG Badge
   switch (toolId) {
     case 'scratch':
       return (
