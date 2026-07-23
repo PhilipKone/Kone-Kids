@@ -248,7 +248,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isStandalone = propStandalone || location.pathname === '/studio' || location.pathname === '/editor' || location.pathname === '/playground' || new URLSearchParams(location.search).get('standalone') === 'true';
-  const { unlockBadge, completeMission, completedMissions, hasCompletedOnboarding, completeOnboarding, dialect, setDialect } = useGamification();
+  const { user, unlockBadge, completeMission, completedMissions, hasCompletedOnboarding, completeOnboarding, dialect, setDialect } = useGamification();
   const mission = CODING_MISSIONS.find(m => m.id === missionId);
   const isMissionCompleted = completedMissions.includes(missionId || '');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -282,6 +282,9 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       }, 50);
     }
   }, [editorModeTab]);
+
+  // Stage Grid Overlay State
+  const [showGrid, setShowGrid] = useState(false);
 
   // Live Sprite Inspector state
   const [sprites, setSprites] = useState<SpriteInfo[]>([
@@ -2605,8 +2608,34 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               </div>
             </div>
 
-            {/* Right Controls: Fullscreen & Shop */}
+            {/* Right Controls: Grid, Fullscreen & Shop */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <button
+                onClick={() => {
+                  setShowGrid(prev => !prev);
+                  sounds.playClick();
+                }}
+                title="Toggle Stage X/Y Coordinate Grid Overlay"
+                style={{
+                  background: showGrid ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.1)',
+                  border: showGrid ? '1.5px solid #38bdf8' : '1px solid rgba(56, 189, 248, 0.25)',
+                  color: '#38bdf8',
+                  borderRadius: '8px',
+                  padding: '0.35rem 0.65rem',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem',
+                  boxShadow: showGrid ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>🌐</span>
+                <span>{showGrid ? 'Grid ON' : 'Grid'}</span>
+              </button>
+
               <button
                 onClick={() => setIsArenaFullscreen(prev => !prev)}
                 title="Toggle Fullscreen Theater Mode"
@@ -2666,13 +2695,13 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             {mission?.pathway === 'Robotics (Robotics 4 Kids)' ? (
               <RoboticsSimulator ref={robotRef} missionId={missionId} />
             ) : mission?.pathway === 'Game Dev' ? (
-              <GameSimulator ref={gameRef} backdrop={activeBackdrop} />
+              <GameSimulator ref={gameRef} backdrop={activeBackdrop} showGrid={showGrid} />
             ) : mission?.pathway === 'Electronics (Robotics 4 Kids)' ? (
               <ElectronicsSimulator ref={electronicsRef} />
             ) : (mission?.pathway === 'Data Science (AI 4 Kids)' || mission?.pathway === 'ML (AI 4 Kids)' || mission?.pathway === 'AI (AI 4 Kids)') ? (
               <AISimulator ref={aiRef} />
             ) : (
-              <Mascot ref={mascotRef} />
+              <GameSimulator ref={gameRef} backdrop={activeBackdrop} showGrid={showGrid} />
             )}
           </div>
 
@@ -3087,6 +3116,64 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 ✕
               </button>
             </div>
+
+            {/* Guest Mode vs Account Cloud Status Banner */}
+            {!user ? (
+              <div style={{
+                background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(168, 85, 247, 0.12))',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: '16px',
+                padding: '0.85rem 1rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '0.8rem'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.69rem' }}>
+                  <span style={{ fontSize: '1.5rem' }}>🌟</span>
+                  <div>
+                    <div style={{ color: 'white', fontWeight: 800, fontSize: '0.85rem' }}>Guest Mode Active</div>
+                    <div style={{ color: '#94a3b8', fontSize: '0.75rem', lineHeight: 1.3 }}>Progress auto-saved in browser memory. Create an account to backup to Cloud & sync across devices!</div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => { setShowShareModal(false); navigate('/class-login'); }}
+                  style={{
+                    background: 'linear-gradient(135deg, #0ea5e9, #0284c7)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '10px',
+                    padding: '0.45rem 0.85rem',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    whiteSpace: 'nowrap',
+                    boxShadow: '0 2px 8px rgba(14, 165, 233, 0.3)'
+                  }}
+                >
+                  🔑 Login / Register
+                </button>
+              </div>
+            ) : (
+              <div style={{
+                background: 'rgba(16, 185, 129, 0.12)',
+                border: '1px solid rgba(16, 185, 129, 0.3)',
+                borderRadius: '14px',
+                padding: '0.65rem 0.9rem',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                color: '#34d399',
+                fontSize: '0.8rem',
+                fontWeight: 700
+              }}>
+                <span>☁️</span>
+                <span>Logged in as <strong>{user.displayName || user.email || 'Student'}</strong> • Cloud Auto-Sync Active</span>
+              </div>
+            )}
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
               <div
