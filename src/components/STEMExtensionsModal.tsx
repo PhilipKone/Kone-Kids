@@ -216,14 +216,26 @@ const STEMExtensionsModal: React.FC<STEMExtensionsModalProps> = ({ isOpen, onClo
               }}
             >
               <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <img src={tool.logoUrl} alt={tool.name} style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                  <div style={{
+                    background: `${tool.color}15`,
+                    border: `1px solid ${tool.color}35`,
+                    padding: '0.35rem 0.75rem',
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    color: tool.color,
+                    fontWeight: 900,
+                    fontSize: '0.92rem',
+                    fontFamily: "'Baloo 2', cursive"
+                  }}>
+                    <span style={{ fontSize: '1.1rem' }}>{tool.icon}</span> {tool.name.split(' ')[0]}
                   </div>
                   <span style={{
-                    background: `${tool.color}20`,
-                    color: tool.color,
-                    border: `1px solid ${tool.color}40`,
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    color: '#94a3b8',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
                     fontSize: '0.7rem',
                     fontWeight: 800,
                     padding: '0.2rem 0.6rem',

@@ -532,11 +532,25 @@ function Home() {
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                      <img src={t.logoUrl} alt={t.name} style={{ width: '28px', height: '28px', borderRadius: '6px', objectFit: 'contain' }} />
-                      <span style={{
+                      <div style={{
                         background: `${t.color}15`,
-                        color: t.color,
                         border: `1px solid ${t.color}35`,
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        color: t.color,
+                        fontWeight: 900,
+                        fontSize: '0.92rem',
+                        fontFamily: "'Baloo 2', cursive"
+                      }}>
+                        <span style={{ fontSize: '1.1rem' }}>{t.icon}</span> {t.name.split(' ')[0]}
+                      </div>
+                      <span style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        color: 'var(--kids-text-muted)',
+                        border: '1px solid var(--blog-card-border)',
                         fontSize: '0.72rem',
                         fontWeight: 800,
                         padding: '0.2rem 0.65rem',
