@@ -14,6 +14,7 @@ export interface GameHandle {
 
 interface GameSimulatorProps {
   backdrop?: string;
+  showGrid?: boolean;
 }
 
 const GameSimulator = forwardRef<GameHandle, GameSimulatorProps>((props, ref) => {
@@ -40,7 +41,8 @@ const GameSimulator = forwardRef<GameHandle, GameSimulatorProps>((props, ref) =>
     floorY: 350,
     isRunning: false,
     lastTime: 0,
-    backdrop: props.backdrop || 'default'
+    backdrop: props.backdrop || 'default',
+    showGrid: props.showGrid || false
   });
 
   const mascotImg = useRef<HTMLImageElement | null>(null);
@@ -49,7 +51,8 @@ const GameSimulator = forwardRef<GameHandle, GameSimulatorProps>((props, ref) =>
     if (props.backdrop) {
       gameState.current.backdrop = props.backdrop;
     }
-  }, [props.backdrop]);
+    gameState.current.showGrid = !!props.showGrid;
+  }, [props.backdrop, props.showGrid]);
 
   useEffect(() => {
     const img = new Image();
@@ -269,12 +272,37 @@ const GameSimulator = forwardRef<GameHandle, GameSimulatorProps>((props, ref) =>
         ctx.arc(520, 60, 35, 0, Math.PI * 2);
         ctx.fill();
 
-        // Grass floor
-        ctx.fillStyle = '#22c55e';
-        ctx.fillRect(0, floorY, canvas.width, canvas.height - floorY);
-        ctx.strokeStyle = '#15803d';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(0, floorY, canvas.width, canvas.height - floorY);
+        // Stage X/Y Coordinate Grid Overlay
+      if (props.showGrid) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+
+        for (let x = 0; x <= canvas.width; x += 50) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+          ctx.stroke();
+
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.75)';
+          ctx.font = 'bold 9px monospace';
+          ctx.fillText(`x:${x}`, x + 3, 14);
+        }
+
+        for (let y = 0; y <= canvas.height; y += 50) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvas.width, y);
+          ctx.stroke();
+
+          ctx.fillStyle = 'rgba(56, 189, 248, 0.75)';
+          ctx.font = 'bold 9px monospace';
+          ctx.fillText(`y:${y}`, 4, y - 4);
+        }
+
+        ctx.restore();
+      }
 
       } else {
         // Default Stage
@@ -286,6 +314,84 @@ const GameSimulator = forwardRef<GameHandle, GameSimulatorProps>((props, ref) =>
         ctx.strokeStyle = '#1e293b';
         ctx.lineWidth = 4;
         ctx.strokeRect(0, floorY, canvas.width, canvas.height - floorY);
+      }
+
+      // Draw X/Y Coordinate Grid Overlay if active
+      if (gameState.current.showGrid) {
+        ctx.save();
+        const midX = canvas.width / 2;
+        const midY = canvas.height / 2;
+
+        // Minor grid lines
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 4]);
+
+        for (let x = 0; x <= canvas.width; x += 50) {
+          if (x === midX) continue;
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+          ctx.stroke();
+        }
+
+        for (let y = 0; y <= canvas.height; y += 50) {
+          if (y === midY) continue;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvas.width, y);
+          ctx.stroke();
+        }
+
+        // Major X & Y Axis
+        ctx.setLineDash([]);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+
+        // X-Axis (Horizontal)
+        ctx.beginPath();
+        ctx.moveTo(0, midY);
+        ctx.lineTo(canvas.width, midY);
+        ctx.stroke();
+
+        // Y-Axis (Vertical)
+        ctx.beginPath();
+        ctx.moveTo(midX, 0);
+        ctx.lineTo(midX, canvas.height);
+        ctx.stroke();
+
+        // Coordinate Labels
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = 'bold 10px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        // X Labels
+        for (let x = 50; x < canvas.width; x += 100) {
+          const scratchX = x - midX;
+          ctx.fillText(`X:${scratchX}`, x, midY + 4);
+        }
+
+        // Y Labels
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        for (let y = 50; y < canvas.height; y += 100) {
+          const scratchY = midY - y;
+          if (scratchY !== 0) {
+            ctx.fillText(`Y:${scratchY}`, midX + 6, y);
+          }
+        }
+
+        // Center Origin (0,0) Marker
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(midX, midY, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = 'bold 11px monospace';
+        ctx.fillText('(0,0)', midX + 8, midY - 10);
+
+        ctx.restore();
       }
 
       // Draw Collectible Stars
