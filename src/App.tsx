@@ -39,8 +39,30 @@ const ProfileView = React.lazy(() => import('./components/ProfileView'))
 
 function Home() {
   const { t, i18n } = useTranslation()
+  const location = useLocation()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { studentName, logoutStudent, streak } = useGamification()
+
+  // Deep-link triggers: Auto-open modal on ?join=true or ?enroll=true
+  React.useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    if (params.get('join') === 'true' || params.get('enroll') === 'true') {
+      setIsModalOpen(true)
+    }
+  }, [location.search])
+
+  // Deep-link hash anchors: Smooth scroll to #hubs, #badges, #parent-hub
+  React.useEffect(() => {
+    if (location.hash) {
+      const targetId = location.hash.replace('#', '')
+      setTimeout(() => {
+        const elem = document.getElementById(targetId)
+        if (elem) {
+          elem.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }, 100)
+    }
+  }, [location.hash])
 
   // Audio control state
   const [muted, setMuted] = useState(sounds.getMuted())
@@ -313,7 +335,7 @@ function Home() {
                 </span>
               </div>
               
-              <div className="app-tiles-grid">
+              <div id="hubs" className="app-tiles-grid">
                 <Link to="/coding" className="app-tile" style={{ '--tile-color': 'var(--kids-orange)' } as any}>
                   <div className="app-tile-icon" style={{ background: 'rgba(249, 115, 22, 0.1)', color: 'var(--kids-orange)' }}>
                     <Code size={32} />
@@ -364,10 +386,12 @@ function Home() {
         </header>
         
         {/* Achievement Gallery */}
-        <BadgeTray />
+        <div id="badges">
+          <BadgeTray />
+        </div>
 
       {/* Featured Blog/Insights Section for Parents & Teachers */}
-      <section style={{
+      <section id="parent-hub" style={{
         padding: '5rem 5% 6rem',
         background: 'var(--kids-section-bg)',
         borderTop: '1px solid var(--kids-section-border)',

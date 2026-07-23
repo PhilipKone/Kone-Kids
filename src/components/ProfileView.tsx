@@ -34,6 +34,16 @@ const ProfileView: React.FC = () => {
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
   const [showCertificateModal, setShowCertificateModal] = useState(false);
   
+  // Auto-open certificate modal on ?certificate=true or #certificate
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('certificate') === 'true' || window.location.hash === '#certificate') {
+        setShowCertificateModal(true);
+      }
+    }
+  }, []);
+  
   // Audio controls state
   const [muted, setMuted] = useState(sounds.getMuted());
   const [musicOn, setMusicOn] = useState(sounds.getMusicOn());
