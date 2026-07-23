@@ -104,7 +104,33 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   }, []);
   
   const pathways = HUB_PATHWAYS[hub];
-  const [selectedPathway, setSelectedPathway] = useState<Pathway>(pathways[0]);
+  
+  // Resolve initial pathway from URL search params (?pathway=... or ?tab=... or ?p=...)
+  const initialPathway = useMemo(() => {
+    const rawParam = searchParams.get('pathway') || searchParams.get('tab') || searchParams.get('p');
+    if (rawParam) {
+      const match = pathways.find(p => p.toLowerCase().includes(rawParam.toLowerCase().trim()) || rawParam.toLowerCase().includes(p.toLowerCase()));
+      if (match) return match;
+    }
+    return pathways[0];
+  }, [hub, searchParams, pathways]);
+
+  const [selectedPathway, setSelectedPathway] = useState<Pathway>(initialPathway);
+
+  // Sync selected pathway if URL query param changes
+  React.useEffect(() => {
+    setSelectedPathway(initialPathway);
+  }, [initialPathway]);
+
+  const handleSelectPathway = (pathway: Pathway) => {
+    setSelectedPathway(pathway);
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.set('pathway', pathway);
+      return next;
+    });
+    sounds.playClick();
+  };
 
   const world = PATHWAY_WORLDS[selectedPathway][theme];
 
@@ -338,7 +364,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.4rem',
               gap: '0.75rem'
             } as any}
-            onClick={() => setSelectedPathway(pathway)}
+            onClick={() => handleSelectPathway(pathway)}
           >
             <span className="pathway-tab-icon" style={{ fontSize: isMobile ? '0.9rem' : '1.1rem' }}>
               {PATHWAY_WORLDS[pathway][theme].icon.length > 2 ? (
