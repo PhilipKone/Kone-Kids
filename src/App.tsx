@@ -51,7 +51,7 @@ function Home() {
     }
   }, [location.search])
 
-  // Deep-link hash anchors: Smooth scroll to #hubs, #badges, #parent-hub
+  // Deep-link hash anchors: Smooth scroll to #hubs, #badges, #extensions, #parent-hub
   React.useEffect(() => {
     if (location.hash) {
       const targetId = location.hash.replace('#', '')
@@ -389,6 +389,200 @@ function Home() {
         <div id="badges">
           <BadgeTray />
         </div>
+
+        {/* Global STEM Extensions & Tools Section */}
+        <section id="extensions" style={{
+          padding: '4rem 5% 5rem',
+          background: 'var(--kids-surface)',
+          borderTop: '1px solid var(--kids-section-border)',
+          borderBottom: '1px solid var(--kids-section-border)'
+        }}>
+          <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                background: 'rgba(168, 85, 247, 0.1)',
+                color: '#a855f7',
+                padding: '0.4rem 1rem',
+                borderRadius: '20px',
+                fontSize: '0.85rem',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '1rem'
+              }}>
+                <Sparkles size={14} /> Global Coding Extensions
+              </div>
+              <h2 style={{
+                fontFamily: "'Baloo 2', cursive",
+                fontSize: 'clamp(1.8rem, 4vw, 2.6rem)',
+                fontWeight: 800,
+                margin: '0 0 0.75rem 0',
+                color: 'var(--nav-text)'
+              }}>
+                🚀 STEM Extensions &amp; External Labs
+              </h2>
+              <p style={{
+                fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
+                color: 'var(--kids-text-muted)',
+                maxWidth: '650px',
+                margin: '0 auto',
+                lineHeight: 1.5
+              }}>
+                Launch world-class platforms directly—Scratch 3.0, Code.org, BBC micro:bit MakeCode, Tinkercad, and Replit.
+              </p>
+            </div>
+
+            {/* Tools Cards Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '1.5rem'
+            }}>
+              {[
+                {
+                  id: 'scratch',
+                  name: 'Scratch 3.0 (MIT)',
+                  category: 'Visual Block Coding',
+                  icon: '🐱',
+                  color: '#f59e0b',
+                  desc: 'Create interactive stories, games, and animations with MIT Scratch.',
+                  url: 'https://scratch.mit.edu/create',
+                  badge: 'MIT Media Lab'
+                },
+                {
+                  id: 'codeorg',
+                  name: 'Code.org Studio',
+                  category: 'CS Fundamentals',
+                  icon: '🟩',
+                  color: '#10b981',
+                  desc: 'Hour of Code adventures, Dance Party, App Lab, and K-12 CS curricula.',
+                  url: 'https://studio.code.org',
+                  badge: 'Hour of Code'
+                },
+                {
+                  id: 'makecode',
+                  name: 'BBC micro:bit MakeCode',
+                  category: 'Hardware & Microcontrollers',
+                  icon: '🔌',
+                  color: '#0ea5e9',
+                  desc: 'Official Microsoft block & JavaScript editor for micro:bit hardware.',
+                  url: 'https://makecode.microbit.org',
+                  badge: 'Microsoft STEM'
+                },
+                {
+                  id: 'tinkercad',
+                  name: 'Tinkercad Circuits',
+                  category: '3D Design & Electronics',
+                  icon: '🧊',
+                  color: '#ec4899',
+                  desc: 'Simulate Arduino circuits, breadboards, sensors, and 3D printing.',
+                  url: 'https://www.tinkercad.com/circuits',
+                  badge: 'Autodesk 3D'
+                },
+                {
+                  id: 'replit',
+                  name: 'Replit Python & Web',
+                  category: 'Text-Based Cloud IDE',
+                  icon: '⚡',
+                  color: '#a855f7',
+                  desc: 'Collaborative cloud environment for Python, HTML, CSS, & Node.js.',
+                  url: 'https://replit.com',
+                  badge: 'Cloud IDE'
+                },
+                {
+                  id: 'tynker',
+                  name: 'Tynker STEM',
+                  category: 'Gamified Storytelling',
+                  icon: '🎮',
+                  color: '#f97316',
+                  desc: 'Gamified block courses, Minecraft modding, & game development.',
+                  url: 'https://www.tynker.com',
+                  badge: 'Gamified CS'
+                }
+              ].map(t => (
+                <div
+                  key={t.id}
+                  style={{
+                    background: 'var(--blog-card-bg)',
+                    border: '1px solid var(--blog-card-border)',
+                    borderRadius: '20px',
+                    padding: '1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
+                    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+                  }}
+                  className="blog-card-hover"
+                >
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
+                      <span style={{ fontSize: '2.2rem' }}>{t.icon}</span>
+                      <span style={{
+                        background: `${t.color}15`,
+                        color: t.color,
+                        border: `1px solid ${t.color}35`,
+                        fontSize: '0.72rem',
+                        fontWeight: 800,
+                        padding: '0.2rem 0.65rem',
+                        borderRadius: '12px'
+                      }}>
+                        {t.badge}
+                      </span>
+                    </div>
+
+                    <h3 style={{
+                      fontFamily: "'Baloo 2', cursive",
+                      fontSize: '1.2rem',
+                      fontWeight: 800,
+                      color: 'var(--nav-text)',
+                      margin: '0 0 0.4rem 0'
+                    }}>
+                      {t.name}
+                    </h3>
+
+                    <p style={{
+                      margin: 0,
+                      fontSize: '0.85rem',
+                      color: 'var(--kids-text-muted)',
+                      lineHeight: '1.45',
+                      fontWeight: 500
+                    }}>
+                      {t.desc}
+                    </p>
+                  </div>
+
+                  <a
+                    href={t.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      marginTop: '1.25rem',
+                      background: `linear-gradient(135deg, ${t.color} 0%, ${t.color}dd 100%)`,
+                      color: 'white',
+                      textDecoration: 'none',
+                      padding: '0.6rem 1rem',
+                      borderRadius: '12px',
+                      fontSize: '0.88rem',
+                      fontWeight: 800,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.4rem',
+                      boxShadow: `0 4px 12px ${t.color}30`,
+                      fontFamily: "'Baloo 2', cursive"
+                    }}
+                  >
+                    Launch {t.name.split(' ')[0]} ↗
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
       {/* Featured Blog/Insights Section for Parents & Teachers */}
       <section id="parent-hub" style={{
