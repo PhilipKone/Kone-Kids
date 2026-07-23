@@ -10,6 +10,7 @@ import AISimulator, { AIHandle } from './AISimulator';
 import SpriteInspector, { SpriteInfo } from './SpriteInspector';
 import CostumeStudio from './CostumeStudio';
 import SoundStudio from './SoundStudio';
+import STEMExtensionsModal from './STEMExtensionsModal';
 import MissionBriefing from './MissionBriefing';
 import { getTranslation } from '../utils/translations';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
@@ -223,6 +224,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState<string>('All');
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showExtensionsModal, setShowExtensionsModal] = useState(false);
   const [shareCopied, setShareCopied] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [projectName, setProjectName] = useState('My Kone Project 🚀');
@@ -1940,6 +1942,28 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               }}
             >
               <span>✨{!isMobile && ' Examples'}</span>
+            </button>
+
+            <button
+              onClick={() => setShowExtensionsModal(true)}
+              title="Explore Scratch, Code.org & STEM Extensions"
+              style={{
+                background: 'rgba(14, 165, 233, 0.15)',
+                border: '1px solid rgba(14, 165, 233, 0.3)',
+                color: '#38bdf8',
+                padding: isMobile ? '0.2rem 0.4rem' : '0.4rem 0.8rem',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: isMobile ? '0.72rem' : '0.8rem',
+                fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '3px',
+                transition: 'all 0.2s',
+                minHeight: isMobile ? '28px' : '36px'
+              }}
+            >
+              <span>🚀{!isMobile && ' Extensions'}</span>
             </button>
 
             <button

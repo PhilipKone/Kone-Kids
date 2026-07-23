@@ -8,6 +8,7 @@ import Mascot from './Mascot';
 import MascotShop from './MascotShop';
 import SeriesLibrary from './SeriesLibrary';
 import CoinStoreModal from './CoinStoreModal';
+import STEMExtensionsModal from './STEMExtensionsModal';
 import { sounds } from '../utils/sounds';
 
 type HubType = 'coding' | 'robotics' | 'ai';
@@ -77,9 +78,17 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const showLibrary = searchParams.get('library') === 'true' || !!searchParams.get('series');
   const activeSeriesId = searchParams.get('series');
   const [showCoinStore, setShowCoinStore] = useState(false);
+  const [showExtensions, setShowExtensions] = useState(false);
   const { xp, level, completedMissions, coins } = useGamification();
   const { theme, toggleTheme } = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Auto-open extensions modal on ?extensions=true
+  React.useEffect(() => {
+    if (searchParams.get('extensions') === 'true') {
+      setShowExtensions(true);
+    }
+  }, [searchParams]);
 
   // Audio control state
   const [muted, setMuted] = useState(sounds.getMuted());
@@ -376,7 +385,32 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             {pathway}
           </div>
         ))}
+
+        <div
+          className="pathway-tab"
+          style={{
+            '--tab-color': '#a855f7',
+            fontSize: isMobile ? '0.75rem' : '0.9rem',
+            padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.4rem',
+            gap: '0.75rem',
+            background: 'rgba(168, 85, 247, 0.12)',
+            border: '1.5px dashed rgba(168, 85, 247, 0.4)',
+            color: '#c084fc',
+            cursor: 'pointer'
+          } as any}
+          onClick={() => { setShowExtensions(true); sounds.playClick(); }}
+        >
+          <span className="pathway-tab-icon" style={{ fontSize: isMobile ? '0.9rem' : '1.1rem' }}>🚀</span>
+          STEM Extensions
+        </div>
       </div>
+
+      {showExtensions && (
+        <STEMExtensionsModal
+          isOpen={showExtensions}
+          onClose={() => setShowExtensions(false)}
+        />
+      )}
 
       {/* Pathway Progress Panel */}
       {(() => {
