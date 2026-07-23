@@ -100,6 +100,16 @@ export const GAME_SERIES: GameSeries[] = [
     difficulty: 'Intermediate',
     gameCount: 12,
     accentColor: '#ec4899'
+  },
+  {
+    id: 'series_zuma_marble',
+    title: 'Zuma Marble Blast',
+    description: 'Shoot marbles, match 3 of a color, and stop the rolling chain before it reaches the pit!',
+    coverImage: '/series/zuma-marble-cover.png',
+    price: 350,
+    difficulty: 'Intermediate',
+    gameCount: 15,
+    accentColor: '#06b6d4'
   }
 ];
 

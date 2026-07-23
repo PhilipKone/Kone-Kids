@@ -6,6 +6,7 @@ import WordSearchGame from './WordSearchGame';
 import RetroRacerGame from './RetroRacerGame';
 import MazeRunnerGame from './MazeRunnerGame';
 import ArrowEscapeGame from './ArrowEscapeGame';
+import ZumaMarbleGame from './ZumaMarbleGame';
 import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface SeriesPlayViewProps {
@@ -52,6 +53,12 @@ const SeriesPlayView: React.FC<SeriesPlayViewProps> = ({ series, onBack }) => {
           />
         ) : series.id === 'series_arrow_escape' ? (
           <ArrowEscapeGame 
+            level={playingLevel}
+            onComplete={handleComplete}
+            onExit={() => setPlayingLevel(null)}
+          />
+        ) : series.id === 'series_zuma_marble' ? (
+          <ZumaMarbleGame 
             level={playingLevel}
             onComplete={handleComplete}
             onExit={() => setPlayingLevel(null)}
