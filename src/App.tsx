@@ -571,84 +571,190 @@ function Home() {
       
       {/* Footer */}
       <footer style={{ 
-        padding: 'clamp(1.5rem, 4vw, 2rem) 5%', 
+        padding: 'clamp(2.5rem, 5vw, 4rem) 5% 2rem', 
         background: 'var(--footer-bg)', 
         borderTop: '1px solid var(--footer-border)',
+        position: 'relative',
+        overflow: 'hidden'
       }}>
         <div style={{
           maxWidth: '1200px',
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
-          gap: '1.5rem'
+          gap: '2.5rem'
         }}>
+          {/* Main Multi-Column Grid */}
           <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '0.75rem'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: '2rem 1.5rem',
+            alignItems: 'start'
           }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem 1rem' }}>
-              <span style={{ color: 'var(--kids-text-muted)', fontSize: 'clamp(0.8rem, 2.5vw, 0.9rem)' }}>
-                © 2026 Kone Kids. All rights reserved.
-              </span>
-              <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
-              <a href="https://www.koneacademy.io" style={{ color: '#3b82f6', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)' }}>Kone Academy Home</a>
-              <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
-              <a href="https://www.tiktok.com/@kone.kids?_r=1&_t=ZS-98EwXcAnK4r" target="_blank" rel="noopener noreferrer" style={{ color: '#ff0050', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style={{ verticalAlign: 'middle' }}>
-                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.74-3.94-1.78-.22-.22-.41-.47-.58-.73v7.02c0 3.94-3.19 7.14-7.13 7.14C6.83 21.66 3.63 18.46 3.63 14.52c0-3.94 3.2-7.14 7.14-7.14.33 0 .66.02.99.07v4.11c-.33-.09-.68-.13-1.02-.12-1.63.02-3.03 1.25-3.17 2.87-.19 2.22 1.74 3.99 3.97 3.8 1.43-.12 2.54-1.25 2.54-2.69V0h.44z"/>
-                </svg>
-                TikTok
-              </a>
-              <span style={{ color: 'var(--kids-section-border)', fontSize: '0.9rem' }}>•</span>
-              <a href="https://www.linkedin.com/showcase/konekids/" target="_blank" rel="noopener noreferrer" style={{ color: '#0a66c2', textDecoration: 'none', fontWeight: 700, fontSize: 'clamp(0.8rem, 2.5vw, 0.85rem)', display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" style={{ verticalAlign: 'middle' }}>
-                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-                </svg>
-                LinkedIn
-              </a>
+            {/* Column 1: Brand & Mascot */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <img src="/mascot.svg" alt="Kone Kids Mascot" style={{ width: '38px', height: '38px', filter: 'drop-shadow(0 4px 8px rgba(14, 165, 233, 0.3))' }} />
+                <span style={{ 
+                  fontFamily: "'Baloo 2', cursive", 
+                  fontSize: '1.4rem', 
+                  fontWeight: 800, 
+                  background: 'linear-gradient(135deg, var(--kids-blue) 0%, var(--kids-purple) 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>
+                  Kone Kids
+                </span>
+              </div>
+              <p style={{ 
+                margin: 0, 
+                fontSize: '0.88rem', 
+                color: 'var(--kids-text-muted)', 
+                lineHeight: '1.5',
+                fontWeight: 500
+              }}>
+                Empowering the next generation of tech leaders in Ghana & beyond through gamified Coding, Robotics, and AI.
+              </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
+                <span style={{ 
+                  background: 'rgba(14, 165, 233, 0.1)', 
+                  color: 'var(--kids-blue)', 
+                  padding: '0.2rem 0.6rem', 
+                  borderRadius: '20px', 
+                  fontSize: '0.75rem', 
+                  fontWeight: 800 
+                }}>
+                  🇬🇭 Made for Future Leaders
+                </span>
+              </div>
             </div>
-            <p style={{ fontSize: 'clamp(0.95rem, 3vw, 1.1rem)', color: 'var(--kids-orange)', fontWeight: 'bold', margin: 0 }}>
-              +233 55 199 3820
-            </p>
+
+            {/* Column 2: Programs */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <h4 style={{ 
+                margin: 0, 
+                fontFamily: "'Baloo 2', cursive", 
+                fontSize: '1.05rem', 
+                color: 'var(--kids-orange)', 
+                fontWeight: 800 
+              }}>
+                Explore Hubs 🚀
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', fontWeight: 600 }}>
+                <Link to="/coding" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>💻 Coding 4 Kids</Link>
+                <Link to="/robotics" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>🤖 Robotics 4 Kids</Link>
+                <Link to="/ai" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>🧠 AI 4 Kids</Link>
+                <Link to="/class-login" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>🎒 Classroom Login</Link>
+                <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>📚 STEM Insights</Link>
+              </div>
+            </div>
+
+            {/* Column 3: Academic Network */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <h4 style={{ 
+                margin: 0, 
+                fontFamily: "'Baloo 2', cursive", 
+                fontSize: '1.05rem', 
+                color: 'var(--kids-blue)', 
+                fontWeight: 800 
+              }}>
+                Kone Network 🌐
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', fontWeight: 600 }}>
+                <a href="https://www.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Academy Hub</a>
+                <a href="https://code.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Code</a>
+                <a href="https://lab.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Lab</a>
+                <a href="https://consult.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Consult</a>
+                <a href="https://shop.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Shop</a>
+              </div>
+            </div>
+
+            {/* Column 4: Playful Social Buttons & Contact */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <h4 style={{ 
+                margin: 0, 
+                fontFamily: "'Baloo 2', cursive", 
+                fontSize: '1.05rem', 
+                color: 'var(--kids-purple)', 
+                fontWeight: 800 
+              }}>
+                Join Our Community ✨
+              </h4>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--kids-text-muted)', fontWeight: 500 }}>
+                Follow our STEM journeys, student showcases & updates:
+              </p>
+              <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+                <a 
+                  href="https://www.tiktok.com/@kone.kids?_r=1&_t=ZS-98EwXcAnK4r" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ 
+                    background: 'rgba(255, 0, 80, 0.1)', 
+                    border: '1px solid rgba(255, 0, 80, 0.25)', 
+                    color: '#ff0050', 
+                    padding: '0.4rem 0.85rem', 
+                    borderRadius: '20px', 
+                    fontSize: '0.82rem', 
+                    fontWeight: 800, 
+                    textDecoration: 'none', 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    gap: '0.35rem'
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.89-.74-3.94-1.78-.22-.22-.41-.47-.58-.73v7.02c0 3.94-3.19 7.14-7.13 7.14C6.83 21.66 3.63 18.46 3.63 14.52c0-3.94 3.2-7.14 7.14-7.14.33 0 .66.02.99.07v4.11c-.33-.09-.68-.13-1.02-.12-1.63.02-3.03 1.25-3.17 2.87-.19 2.22 1.74 3.99 3.97 3.8 1.43-.12 2.54-1.25 2.54-2.69V0h.44z"/>
+                  </svg>
+                  TikTok
+                </a>
+                <a 
+                  href="https://www.linkedin.com/showcase/konekids/" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ 
+                    background: 'rgba(10, 102, 194, 0.1)', 
+                    border: '1px solid rgba(10, 102, 194, 0.25)', 
+                    color: '#0a66c2', 
+                    padding: '0.4rem 0.85rem', 
+                    borderRadius: '20px', 
+                    fontSize: '0.82rem', 
+                    fontWeight: 800, 
+                    textDecoration: 'none', 
+                    display: 'inline-flex', 
+                    alignItems: 'center', 
+                    gap: '0.35rem'
+                  }}
+                >
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                  </svg>
+                  LinkedIn
+                </a>
+              </div>
+              <div style={{ marginTop: '0.5rem' }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', display: 'block', fontWeight: 600 }}>Direct Line / WhatsApp:</span>
+                <span style={{ fontSize: '1rem', color: 'var(--kids-orange)', fontWeight: 800 }}>+233 55 199 3820</span>
+              </div>
+            </div>
           </div>
 
+          {/* Bottom Copyright Strip */}
           <div style={{
             borderTop: '1px solid var(--kids-section-border)',
             paddingTop: '1.25rem',
             display: 'flex',
-            flexDirection: 'column',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            gap: '0.75rem'
+            gap: '0.75rem',
+            fontSize: '0.82rem',
+            color: 'var(--kids-text-muted)'
           }}>
-            <span style={{ 
-              fontSize: '0.75rem', 
-              fontWeight: 800, 
-              color: 'var(--kids-text-muted)', 
-              textTransform: 'uppercase', 
-              letterSpacing: '0.1em',
-              fontFamily: "'Baloo 2', cursive"
-            }}>
-              Our Academic Network
-            </span>
-            <div style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              gap: '0.5rem 1.25rem',
-              fontSize: '0.8rem'
-            }}>
-              <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Academy Hub</a>
-              <a href="https://code.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Code</a>
-              <a href="https://lab.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Lab</a>
-              <a href="https://ai.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone AI</a>
-              <a href="https://consult.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Consult</a>
-              <a href="https://farms.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Farms</a>
-              <a href="https://shop.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Shop</a>
-              <a href="https://warp.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Warp</a>
-              <a href="https://digital.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Digital</a>
+            <span>© 2026 Kone Kids. All rights reserved.</span>
+            <div style={{ display: 'flex', gap: '1rem', fontWeight: 600 }}>
+              <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Academy Home</a>
+              <span>•</span>
+              <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Insights & Articles</Link>
             </div>
           </div>
         </div>
