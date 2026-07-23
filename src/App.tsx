@@ -24,6 +24,7 @@ import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right.mjs'
 import User from 'lucide-react/dist/esm/icons/user.mjs'
 import { blogArticles, getLocalized } from './data/blogArticles'
 import { sounds } from './utils/sounds'
+import STEMExtensionsModal, { ToolBrandLogo, EXTENSION_TOOLS } from './components/STEMExtensionsModal'
 
 const ProgramDetails = React.lazy(() => import('./components/ProgramDetails'))
 const EnrollmentModal = React.lazy(() => import('./components/EnrollmentModal'))
@@ -441,80 +442,7 @@ function Home() {
               gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
               gap: '1.5rem'
             }}>
-              {[
-                {
-                  id: 'scratch',
-                  name: 'Scratch 3.0 (MIT)',
-                  category: 'Visual Block Coding',
-                  icon: '🐱',
-                  logoUrl: 'https://scratch.mit.edu/favicon.ico',
-                  color: '#f59e0b',
-                  desc: 'Create interactive stories, games, and animations with MIT Scratch.',
-                  url: 'https://scratch.mit.edu/create',
-                  badge: 'MIT Media Lab',
-                  buttonText: 'Launch Scratch'
-                },
-                {
-                  id: 'codeorg',
-                  name: 'Code.org Studio',
-                  category: 'CS Fundamentals',
-                  icon: '🟩',
-                  logoUrl: 'https://studio.code.org/favicon.ico',
-                  color: '#10b981',
-                  desc: 'Hour of Code adventures, Dance Party, App Lab, and K-12 CS curricula.',
-                  url: 'https://studio.code.org',
-                  badge: 'Hour of Code',
-                  buttonText: 'Launch Code.org'
-                },
-                {
-                  id: 'makecode',
-                  name: 'BBC micro:bit MakeCode',
-                  category: 'Hardware & Microcontrollers',
-                  icon: '🔌',
-                  logoUrl: 'https://makecode.microbit.org/favicon.ico',
-                  color: '#0ea5e9',
-                  desc: 'Official Microsoft block & JavaScript editor for micro:bit hardware.',
-                  url: 'https://makecode.microbit.org',
-                  badge: 'Microsoft STEM',
-                  buttonText: 'Launch MakeCode'
-                },
-                {
-                  id: 'tinkercad',
-                  name: 'Tinkercad Circuits',
-                  category: '3D Design & Electronics',
-                  icon: '🧊',
-                  logoUrl: 'https://www.tinkercad.com/favicon.ico',
-                  color: '#ec4899',
-                  desc: 'Simulate Arduino circuits, breadboards, sensors, and 3D printing.',
-                  url: 'https://www.tinkercad.com/circuits',
-                  badge: 'Autodesk 3D',
-                  buttonText: 'Launch Tinkercad'
-                },
-                {
-                  id: 'replit',
-                  name: 'Replit Python & Web',
-                  category: 'Text-Based Cloud IDE',
-                  icon: '⚡',
-                  logoUrl: 'https://replit.com/favicon.ico',
-                  color: '#a855f7',
-                  desc: 'Collaborative cloud environment for Python, HTML, CSS, & Node.js.',
-                  url: 'https://replit.com',
-                  badge: 'Cloud IDE',
-                  buttonText: 'Launch Replit'
-                },
-                {
-                  id: 'tynker',
-                  name: 'Tynker STEM',
-                  category: 'Gamified Storytelling',
-                  icon: '🎮',
-                  logoUrl: 'https://www.tynker.com/favicon.ico',
-                  color: '#f97316',
-                  desc: 'Gamified block courses, Minecraft modding, & game development.',
-                  url: 'https://www.tynker.com',
-                  badge: 'Gamified CS',
-                  buttonText: 'Launch Tynker'
-                }
-              ].map(t => (
+              {EXTENSION_TOOLS.map(t => (
                 <div
                   key={t.id}
                   style={{
@@ -532,39 +460,11 @@ function Home() {
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                      {t.id === 'scratch' ? (
-                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/e/eb/Scratch_logo.svg" alt="Scratch Logo" style={{ height: '20px', width: 'auto' }} />
-                        </div>
-                      ) : t.id === 'codeorg' ? (
-                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Code.org_logo.svg" alt="Code.org Logo" style={{ height: '20px', width: 'auto' }} />
-                        </div>
-                      ) : t.id === 'makecode' ? (
-                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/0/07/BBC_micro-bit_logo.svg" alt="BBC micro:bit" style={{ height: '18px', width: 'auto' }} />
-                        </div>
-                      ) : t.id === 'tinkercad' ? (
-                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Tinkercad_logo.svg" alt="Tinkercad" style={{ height: '18px', width: 'auto' }} />
-                        </div>
-                      ) : t.id === 'replit' ? (
-                        <div style={{ background: '#0f172a', border: '1px solid #a855f7', padding: '3px 10px', borderRadius: '8px', display: 'flex', alignItems: 'center', gap: '6px', height: '28px' }}>
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="#a855f7">
-                            <path d="M2 1.5A1.5 1.5 0 0 1 3.5 0h7A1.5 1.5 0 0 1 12 1.5V7H3.5A1.5 1.5 0 0 1 2 5.5v-4zM12 8.5V14H3.5A1.5 1.5 0 0 1 2 12.5v-4A1.5 1.5 0 0 1 3.5 7H12v1.5zm1.5-7A1.5 1.5 0 0 1 15 0h7.5A1.5 1.5 0 0 1 24 1.5v4A1.5 1.5 0 0 1 22.5 7H15V1.5z"/>
-                          </svg>
-                          <span style={{ color: 'white', fontWeight: 800, fontSize: '0.85rem' }}>replit</span>
-                        </div>
-                      ) : (
-                        <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '8px', display: 'flex', alignItems: 'center', height: '28px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Tynker_logo.svg" alt="Tynker" style={{ height: '18px', width: 'auto' }} />
-                        </div>
-                      )}
-
+                      <ToolBrandLogo toolId={t.id} size={36} />
                       <span style={{
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        color: 'var(--kids-text-muted)',
-                        border: '1px solid var(--blog-card-border)',
+                        background: `${t.color}15`,
+                        color: t.color,
+                        border: `1px solid ${t.color}35`,
                         fontSize: '0.72rem',
                         fontWeight: 800,
                         padding: '0.2rem 0.65rem',
@@ -591,7 +491,7 @@ function Home() {
                       lineHeight: '1.45',
                       fontWeight: 500
                     }}>
-                      {t.desc}
+                      {t.description}
                     </p>
                   </div>
 
