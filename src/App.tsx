@@ -447,6 +447,7 @@ function Home() {
                   name: 'Scratch 3.0 (MIT)',
                   category: 'Visual Block Coding',
                   icon: '🐱',
+                  logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Scratch_logo.svg',
                   color: '#f59e0b',
                   desc: 'Create interactive stories, games, and animations with MIT Scratch.',
                   url: 'https://scratch.mit.edu/create',
@@ -457,6 +458,7 @@ function Home() {
                   name: 'Code.org Studio',
                   category: 'CS Fundamentals',
                   icon: '🟩',
+                  logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/87/Code.org_logo.svg',
                   color: '#10b981',
                   desc: 'Hour of Code adventures, Dance Party, App Lab, and K-12 CS curricula.',
                   url: 'https://studio.code.org',
@@ -467,6 +469,7 @@ function Home() {
                   name: 'BBC micro:bit MakeCode',
                   category: 'Hardware & Microcontrollers',
                   icon: '🔌',
+                  logoUrl: 'https://cdn.simpleicons.org/microbit/0ea5e9',
                   color: '#0ea5e9',
                   desc: 'Official Microsoft block & JavaScript editor for micro:bit hardware.',
                   url: 'https://makecode.microbit.org',
@@ -477,6 +480,7 @@ function Home() {
                   name: 'Tinkercad Circuits',
                   category: '3D Design & Electronics',
                   icon: '🧊',
+                  logoUrl: 'https://cdn.simpleicons.org/autodesk/ec4899',
                   color: '#ec4899',
                   desc: 'Simulate Arduino circuits, breadboards, sensors, and 3D printing.',
                   url: 'https://www.tinkercad.com/circuits',
@@ -487,6 +491,7 @@ function Home() {
                   name: 'Replit Python & Web',
                   category: 'Text-Based Cloud IDE',
                   icon: '⚡',
+                  logoUrl: 'https://cdn.simpleicons.org/replit/a855f7',
                   color: '#a855f7',
                   desc: 'Collaborative cloud environment for Python, HTML, CSS, & Node.js.',
                   url: 'https://replit.com',
@@ -497,6 +502,7 @@ function Home() {
                   name: 'Tynker STEM',
                   category: 'Gamified Storytelling',
                   icon: '🎮',
+                  logoUrl: 'https://cdn.simpleicons.org/fortinet/f97316',
                   color: '#f97316',
                   desc: 'Gamified block courses, Minecraft modding, & game development.',
                   url: 'https://www.tynker.com',
@@ -520,7 +526,7 @@ function Home() {
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                      <span style={{ fontSize: '2.2rem' }}>{t.icon}</span>
+                      <img src={t.logoUrl} alt={t.name} style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
                       <span style={{
                         background: `${t.color}15`,
                         color: t.color,

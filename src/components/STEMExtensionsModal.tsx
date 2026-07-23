@@ -9,6 +9,7 @@ interface ExtensionTool {
   name: string;
   category: string;
   icon: string;
+  logoUrl: string;
   color: string;
   description: string;
   url: string;
@@ -21,6 +22,7 @@ const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Scratch 3.0 (MIT)',
     category: 'Block Coding',
     icon: '🐱',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/e/eb/Scratch_logo.svg',
     color: '#f59e0b',
     description: 'The world famous MIT visual programming language for stories, games, and animations.',
     url: 'https://scratch.mit.edu/create',
@@ -31,6 +33,7 @@ const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Code.org Studio',
     category: 'CS Fundamentals',
     icon: '🟩',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/8/87/Code.org_logo.svg',
     color: '#10b981',
     description: 'Hour of Code adventures, Dance Party, App Lab, and K-12 Computer Science courses.',
     url: 'https://studio.code.org',
@@ -41,6 +44,7 @@ const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'BBC micro:bit MakeCode',
     category: 'Hardware & Microcontrollers',
     icon: '🔌',
+    logoUrl: 'https://cdn.simpleicons.org/microbit/0ea5e9',
     color: '#0ea5e9',
     description: 'Official Microsoft block & JavaScript editor for pocket-sized micro:bit hardware.',
     url: 'https://makecode.microbit.org',
@@ -51,6 +55,7 @@ const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Tinkercad Circuits',
     category: '3D & Electronics',
     icon: '🧊',
+    logoUrl: 'https://cdn.simpleicons.org/autodesk/ec4899',
     color: '#ec4899',
     description: 'Simulate Arduino circuits, breadboards, sensors, and 3D printing design.',
     url: 'https://www.tinkercad.com/circuits',
@@ -61,6 +66,7 @@ const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Replit Python & Web',
     category: 'Text-Based Coding',
     icon: '⚡',
+    logoUrl: 'https://cdn.simpleicons.org/replit/a855f7',
     color: '#a855f7',
     description: 'Collaborative cloud IDE for writing Python, HTML, CSS, JavaScript, and Node.js.',
     url: 'https://replit.com',
@@ -71,6 +77,7 @@ const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Tynker STEM',
     category: 'Gamified Coding',
     icon: '🎮',
+    logoUrl: 'https://cdn.simpleicons.org/fortinet/f97316',
     color: '#f97316',
     description: 'Gamified block coding courses, Minecraft modding, and robotics challenges.',
     url: 'https://www.tynker.com',
@@ -203,7 +210,9 @@ const STEMExtensionsModal: React.FC<STEMExtensionsModalProps> = ({ isOpen, onClo
             >
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.75rem' }}>
-                  <span style={{ fontSize: '2rem' }}>{tool.icon}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <img src={tool.logoUrl} alt={tool.name} style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
+                  </div>
                   <span style={{
                     background: `${tool.color}20`,
                     color: tool.color,
