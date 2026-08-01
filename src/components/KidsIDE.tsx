@@ -152,7 +152,7 @@ const SEARCHABLE_BLOCKS: SearchableBlock[] = [
   { type: 'mascot_wave', name: '👋 Wave Hand', category: 'Mascot', color: '#0ea5e9', keywords: 'wave hand mascot greet hello gesture' },
   { type: 'mascot_blink', name: '👁️ Blink Eyes', category: 'Mascot', color: '#0ea5e9', keywords: 'blink eye mascot face wink' },
   { type: 'mascot_wait', name: '🕐 Wait', category: 'Mascot', color: '#0ea5e9', keywords: 'wait delay sleep pause time second' },
-  
+
   // Robotics
   { type: 'robot_move', name: '🚜 Move Rover', category: 'Robotics', color: '#10b981', keywords: 'robot move forward backward drive rover motor' },
   { type: 'robot_turn', name: '🔄 Turn Rover', category: 'Robotics', color: '#10b981', keywords: 'turn left right rotate angle degree rover' },
@@ -234,7 +234,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const [lineCount, setLineCount] = useState(0);
 
   let currentTheme = 'light';
-  let toggleThemeHandler = () => {};
+  let toggleThemeHandler = () => { };
   try {
     const themeCtx = useTheme();
     currentTheme = themeCtx.theme;
@@ -243,7 +243,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     currentTheme = 'light';
   }
   const isDark = currentTheme === 'dark';
-  
+
   const { missionId } = useParams<{ missionId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -352,8 +352,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const _rawSegment = location.pathname.split('/')[1];
   const hubPath: string =
     _rawSegment === 'robotics' ? '/robotics' :
-    _rawSegment === 'ai'       ? '/ai'       :
-                                 '/coding';
+      _rawSegment === 'ai' ? '/ai' :
+        '/coding';
 
   useEffect(() => {
     if (missionId && !hasCompletedOnboarding) {
@@ -428,7 +428,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     // --- Block Definitions ---
     // We register/redefine the blocks dynamically so that their display text updates to the active language
     Blockly.Blocks['mascot_speak'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput().appendField(t('blocks.speak', '🗣️ Say')).appendField(new Blockly.FieldTextInput("Hello!"), "TEXT");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -439,11 +439,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['mascot_speak'] = (block: any) => `mascot.speak("${block.getFieldValue('TEXT')}")\n`;
 
     Blockly.Blocks['mascot_wait'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.wait_1', '🕐 Wait'))
-            .appendField(new Blockly.FieldNumber(1, 0.1, 30), "SECS")
-            .appendField(t('blocks.wait_2', 'seconds'));
+          .appendField(t('blocks.wait_1', '🕐 Wait'))
+          .appendField(new Blockly.FieldNumber(1, 0.1, 30), "SECS")
+          .appendField(t('blocks.wait_2', 'seconds'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(20);
@@ -453,7 +453,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['mascot_wait'] = (block: any) => `time.sleep(${block.getFieldValue('SECS')})\n`;
 
     Blockly.Blocks['mascot_wave'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput().appendField(t('blocks.wave', '👋 Wave Hand'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -464,7 +464,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['mascot_wave'] = () => `mascot.wave()\n`;
 
     Blockly.Blocks['mascot_blink'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput().appendField(t('blocks.blink', '👁️ Blink Eyes'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -476,10 +476,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
     // --- Text-to-Speech Blocks ---
     Blockly.Blocks['tts_speak'] = {
-      init: function() {
+      init: function () {
         this.appendValueInput("TEXT")
-            .setCheck("String")
-            .appendField(t('blocks.tts_speak', '🗣️ Speak'));
+          .setCheck("String")
+          .appendField(t('blocks.tts_speak', '🗣️ Speak'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour('#8b5cf6');
@@ -495,16 +495,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     };
 
     Blockly.Blocks['tts_set_voice'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.tts_set_voice', '🗣️ Set Voice to'))
-            .appendField(new Blockly.FieldDropdown([
-              ["Alto 👩", "alto"],
-              ["Baritone 👨", "baritone"],
-              ["Squeak 🐿️", "squeak"],
-              ["Giant 👹", "giant"],
-              ["Kitten 🐱", "kitten"]
-            ]), "VOICE");
+          .appendField(t('blocks.tts_set_voice', '🗣️ Set Voice to'))
+          .appendField(new Blockly.FieldDropdown([
+            ["Alto 👩", "alto"],
+            ["Baritone 👨", "baritone"],
+            ["Squeak 🐿️", "squeak"],
+            ["Giant 👹", "giant"],
+            ["Kitten 🐱", "kitten"]
+          ]), "VOICE");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour('#8b5cf6');
@@ -518,15 +518,15 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     };
 
     Blockly.Blocks['tts_set_language'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.tts_set_lang', '🗣️ Set Language to'))
-            .appendField(new Blockly.FieldDropdown([
-              ["English 🇺🇸", "en"],
-              ["French 🇫🇷", "fr"],
-              ["Spanish 🇪🇸", "es"],
-              ["Portuguese 🇵🇹", "pt"]
-            ]), "LANG");
+          .appendField(t('blocks.tts_set_lang', '🗣️ Set Language to'))
+          .appendField(new Blockly.FieldDropdown([
+            ["English 🇺🇸", "en"],
+            ["French 🇫🇷", "fr"],
+            ["Spanish 🇪🇸", "es"],
+            ["Portuguese 🇵🇹", "pt"]
+          ]), "LANG");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour('#8b5cf6');
@@ -541,22 +541,22 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
     // --- Sound & Music Blocks ---
     Blockly.Blocks['sound_play_note'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.play_note', '🎵 Play Note'))
-            .appendField(new Blockly.FieldDropdown([
-              ["C4 (Do) 🎵", "261.63"],
-              ["D4 (Re) 🎵", "293.66"],
-              ["E4 (Mi) 🎵", "329.63"],
-              ["F4 (Fa) 🎵", "349.23"],
-              ["G4 (Sol) 🎵", "392.00"],
-              ["A4 (La) 🎵", "440.00"],
-              ["B4 (Ti) 🎵", "493.88"],
-              ["C5 (High Do) 🎵", "523.25"]
-            ]), "NOTE")
-            .appendField(t('blocks.for', 'for'))
-            .appendField(new Blockly.FieldNumber(0.5, 0.1, 10), "DURATION")
-            .appendField(t('blocks.sec', 'sec'));
+          .appendField(t('blocks.play_note', '🎵 Play Note'))
+          .appendField(new Blockly.FieldDropdown([
+            ["C4 (Do) 🎵", "261.63"],
+            ["D4 (Re) 🎵", "293.66"],
+            ["E4 (Mi) 🎵", "329.63"],
+            ["F4 (Fa) 🎵", "349.23"],
+            ["G4 (Sol) 🎵", "392.00"],
+            ["A4 (La) 🎵", "440.00"],
+            ["B4 (Ti) 🎵", "493.88"],
+            ["C5 (High Do) 🎵", "523.25"]
+          ]), "NOTE")
+          .appendField(t('blocks.for', 'for'))
+          .appendField(new Blockly.FieldNumber(0.5, 0.1, 10), "DURATION")
+          .appendField(t('blocks.sec', 'sec'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour('#d946ef');
@@ -570,17 +570,17 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     };
 
     Blockly.Blocks['sound_play_effect'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.play_effect', '🔊 Play Sound Effect'))
-            .appendField(new Blockly.FieldDropdown([
-              ["Cheer 🎉", "cheer"],
-              ["Coin 🪙", "coin"],
-              ["Laser 🔫", "laser"],
-              ["Pop 🎈", "pop"],
-              ["Explosion 💥", "explosion"],
-              ["Win 🏆", "win"]
-            ]), "EFFECT");
+          .appendField(t('blocks.play_effect', '🔊 Play Sound Effect'))
+          .appendField(new Blockly.FieldDropdown([
+            ["Cheer 🎉", "cheer"],
+            ["Coin 🪙", "coin"],
+            ["Laser 🔫", "laser"],
+            ["Pop 🎈", "pop"],
+            ["Explosion 💥", "explosion"],
+            ["Win 🏆", "win"]
+          ]), "EFFECT");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour('#d946ef');
@@ -594,11 +594,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     };
 
     Blockly.Blocks['sound_rest'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.rest', '🔕 Rest for'))
-            .appendField(new Blockly.FieldNumber(0.5, 0.1, 10), "SECS")
-            .appendField(t('blocks.sec', 'sec'));
+          .appendField(t('blocks.rest', '🔕 Rest for'))
+          .appendField(new Blockly.FieldNumber(0.5, 0.1, 10), "SECS")
+          .appendField(t('blocks.sec', 'sec'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour('#d946ef');
@@ -613,13 +613,13 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
     // --- Robotics Blocks ---
     Blockly.Blocks['robot_move'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.move', '🚜 Move'))
-            .appendField(new Blockly.FieldDropdown([[t('blocks.forward', 'Forward'), "forward"], [t('blocks.backward', 'Backward'), "backward"]]), "DIR")
-            .appendField(t('blocks.for', 'for'))
-            .appendField(new Blockly.FieldNumber(2, 0.1, 10), "DURATION")
-            .appendField(t('blocks.sec', 'sec'));
+          .appendField(t('blocks.move', '🚜 Move'))
+          .appendField(new Blockly.FieldDropdown([[t('blocks.forward', 'Forward'), "forward"], [t('blocks.backward', 'Backward'), "backward"]]), "DIR")
+          .appendField(t('blocks.for', 'for'))
+          .appendField(new Blockly.FieldNumber(2, 0.1, 10), "DURATION")
+          .appendField(t('blocks.sec', 'sec'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(20);
@@ -629,13 +629,13 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['robot_move'] = (block: any) => `robot.move("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
 
     Blockly.Blocks['robot_turn'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.turn', '🔄 Turn'))
-            .appendField(new Blockly.FieldDropdown([[t('blocks.left', 'Left ⟲'), "left"], [t('blocks.right', 'Right ⟳'), "right"]]), "DIR")
-            .appendField(t('blocks.for', 'for'))
-            .appendField(new Blockly.FieldNumber(1, 0.1, 10), "DURATION")
-            .appendField(t('blocks.sec', 'sec'));
+          .appendField(t('blocks.turn', '🔄 Turn'))
+          .appendField(new Blockly.FieldDropdown([[t('blocks.left', 'Left ⟲'), "left"], [t('blocks.right', 'Right ⟳'), "right"]]), "DIR")
+          .appendField(t('blocks.for', 'for'))
+          .appendField(new Blockly.FieldNumber(1, 0.1, 10), "DURATION")
+          .appendField(t('blocks.sec', 'sec'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(45);
@@ -645,7 +645,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['robot_turn'] = (block: any) => `robot.turn("${block.getFieldValue('DIR')}", ${block.getFieldValue('DURATION')})\n`;
 
     Blockly.Blocks['robot_stop'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput().appendField(t('blocks.stop', '🛑 Stop Robot'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -656,7 +656,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['robot_stop'] = () => `robot.stop()\n`;
 
     Blockly.Blocks['robot_distance'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput().appendField(t('blocks.distance', '📐 Distance Sensor'));
         this.setOutput(true, "Number");
         this.setColour(60);
@@ -667,12 +667,12 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
     // --- Electronics Blocks ---
     Blockly.Blocks['led_state'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.led_state', '💡 Turn LED'))
-            .appendField(new Blockly.FieldDropdown([["Red 🔴", "red"], ["Yellow 🟡", "yellow"], ["Green 🟢", "green"]]), "COLOR")
-            .appendField("to")
-            .appendField(new Blockly.FieldDropdown([[t('blocks.led_on', 'ON'), "on"], [t('blocks.led_off', 'OFF'), "off"]]), "STATE");
+          .appendField(t('blocks.led_state', '💡 Turn LED'))
+          .appendField(new Blockly.FieldDropdown([["Red 🔴", "red"], ["Yellow 🟡", "yellow"], ["Green 🟢", "green"]]), "COLOR")
+          .appendField("to")
+          .appendField(new Blockly.FieldDropdown([[t('blocks.led_on', 'ON'), "on"], [t('blocks.led_off', 'OFF'), "off"]]), "STATE");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(60);
@@ -683,22 +683,22 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
     // --- Ghana Kit Custom Blocks ---
     Blockly.Blocks['ghana_kit_buzzer'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.buzzer', '🔊 Buzzer Note'))
-            .appendField(new Blockly.FieldDropdown([
-              ["C4 (262Hz) 🎵", "262"],
-              ["D4 (294Hz) 🎵", "294"],
-              ["E4 (330Hz) 🎵", "330"],
-              ["F4 (349Hz) 🎵", "349"],
-              ["G4 (392Hz) 🎵", "392"],
-              ["A4 (440Hz) 🎵", "440"],
-              ["B4 (494Hz) 🎵", "494"],
-              ["C5 (523Hz) 🎵", "523"]
-            ]), "FREQ")
-            .appendField(t('blocks.for', 'for'))
-            .appendField(new Blockly.FieldNumber(0.5, 0.1, 5.0), "DURATION")
-            .appendField(t('blocks.sec', 'sec'));
+          .appendField(t('blocks.buzzer', '🔊 Buzzer Note'))
+          .appendField(new Blockly.FieldDropdown([
+            ["C4 (262Hz) 🎵", "262"],
+            ["D4 (294Hz) 🎵", "294"],
+            ["E4 (330Hz) 🎵", "330"],
+            ["F4 (349Hz) 🎵", "349"],
+            ["G4 (392Hz) 🎵", "392"],
+            ["A4 (440Hz) 🎵", "440"],
+            ["B4 (494Hz) 🎵", "494"],
+            ["C5 (523Hz) 🎵", "523"]
+          ]), "FREQ")
+          .appendField(t('blocks.for', 'for'))
+          .appendField(new Blockly.FieldNumber(0.5, 0.1, 5.0), "DURATION")
+          .appendField(t('blocks.sec', 'sec'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(260);
@@ -708,10 +708,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['ghana_kit_buzzer'] = (block: any) => `ghana_kit.play_buzzer(${block.getFieldValue('FREQ')}, ${block.getFieldValue('DURATION')})\n`;
 
     Blockly.Blocks['ghana_kit_servo'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.servo', '🔌 Rotate Servo Pin 4 to'))
-            .appendField(new Blockly.FieldNumber(90, 0, 180), "ANGLE");
+          .appendField(t('blocks.servo', '🔌 Rotate Servo Pin 4 to'))
+          .appendField(new Blockly.FieldNumber(90, 0, 180), "ANGLE");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(120);
@@ -723,7 +723,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
     // --- Game Dev Blocks ---
     Blockly.Blocks['game_physics'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput().appendField(t('blocks.physics', '🚀 Enable Physics Scene'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
@@ -734,11 +734,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['game_physics'] = () => `game.reset()\n`;
 
     Blockly.Blocks['game_gravity'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.gravity', '🌍 Set Gravity to'))
-            .appendField(new Blockly.FieldNumber(9.8, 0, 50), "G")
-            .appendField(t('blocks.gravity_unit', 'm/s²'));
+          .appendField(t('blocks.gravity', '🌍 Set Gravity to'))
+          .appendField(new Blockly.FieldNumber(9.8, 0, 50), "G")
+          .appendField(t('blocks.gravity_unit', 'm/s²'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(200);
@@ -748,10 +748,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['game_gravity'] = (block: any) => `game.set_gravity(${block.getFieldValue('G')})\n`;
 
     Blockly.Blocks['character_jump'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.jump', '🚀 Jump with force'))
-            .appendField(new Blockly.FieldNumber(500, 100, 2000), "FORCE");
+          .appendField(t('blocks.jump', '🚀 Jump with force'))
+          .appendField(new Blockly.FieldNumber(500, 100, 2000), "FORCE");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(200);
@@ -761,11 +761,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['character_jump'] = (block: any) => `game.jump(${block.getFieldValue('FORCE')})\n`;
 
     Blockly.Blocks['spawn_stars'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.spawn_stars', '✨ Spawn'))
-            .appendField(new Blockly.FieldNumber(5, 1, 50), "COUNT")
-            .appendField("Stars");
+          .appendField(t('blocks.spawn_stars', '✨ Spawn'))
+          .appendField(new Blockly.FieldNumber(5, 1, 50), "COUNT")
+          .appendField("Stars");
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(200);
@@ -775,11 +775,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['spawn_stars'] = (block: any) => `game.spawn_stars(${block.getFieldValue('COUNT')})\n`;
 
     Blockly.Blocks['on_key_press'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.when_key', '⌨️ When'))
-            .appendField(new Blockly.FieldDropdown([[t('blocks.key_space', 'Space'), " "], [t('blocks.key_left', 'Arrow Left'), "ArrowUp"], ["Any Key", "any"]]), "KEY")
-            .appendField(t('blocks.is_pressed', 'is pressed'));
+          .appendField(t('blocks.when_key', '⌨️ When'))
+          .appendField(new Blockly.FieldDropdown([[t('blocks.key_space', 'Space'), " "], [t('blocks.key_left', 'Arrow Left'), "ArrowUp"], ["Any Key", "any"]]), "KEY")
+          .appendField(t('blocks.is_pressed', 'is pressed'));
         this.appendStatementInput("DO").appendField("do");
         this.setColour(200);
         this.setTooltip("Run code when a key is pressed");
@@ -795,11 +795,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     };
 
     Blockly.Blocks['update_score'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.update_score_1', '🏆 Add'))
-            .appendField(new Blockly.FieldNumber(10, 1, 1000), "POINTS")
-            .appendField(t('blocks.update_score_2', 'to Score'));
+          .appendField(t('blocks.update_score_1', '🏆 Add'))
+          .appendField(new Blockly.FieldNumber(10, 1, 1000), "POINTS")
+          .appendField(t('blocks.update_score_2', 'to Score'));
         this.setPreviousStatement(true, null);
         this.setNextStatement(true, null);
         this.setColour(200);
@@ -810,7 +810,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
     // --- AI Blocks ---
     Blockly.Blocks['ai_class'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput().appendField(t('blocks.ai_class', '🧠 AI Detected Class'));
         this.setOutput(true, "String");
         this.setColour(260);
@@ -820,10 +820,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     pythonGenerator.forBlock['ai_class'] = () => [`ai.get_class()`, (pythonGenerator as any).ORDER_ATOMIC];
 
     Blockly.Blocks['on_class_detect'] = {
-      init: function() {
+      init: function () {
         this.appendDummyInput()
-            .appendField(t('blocks.on_detect', '🧠 When AI sees'))
-            .appendField(new Blockly.FieldTextInput("Cocoa Pod"), "CLASS");
+          .appendField(t('blocks.on_detect', '🧠 When AI sees'))
+          .appendField(new Blockly.FieldTextInput("Cocoa Pod"), "CLASS");
         this.appendStatementInput("DO").appendField("do");
         this.setColour(260);
         this.setTooltip("Run code when AI detects the specified class");
@@ -993,7 +993,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         if (event.type === Blockly.Events.BLOCK_MOVE && event.newParentId) {
           sounds.playSnap();
           try {
-            Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
+            Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
           } catch (e) {
             // Browser fallback
           }
@@ -1074,7 +1074,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       const url = getSharedUrl();
       await Share.share({
         title: 'My Kone Kids Coding Project 🚀',
-        text: 'Check out the awesome block coding project I built on Kone Kids Academy!',
+        text: 'Check out the awesome block coding project I built on Kone Kids IDE!',
         url: url,
         dialogTitle: 'Share Project with Friends & Family'
       });
@@ -1110,8 +1110,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       workspace.current.cleanUp();
       sounds.playSuccess();
       try {
-        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
-      } catch (e) {}
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
+      } catch (e) { }
     }
   };
 
@@ -1123,8 +1123,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         (workspace.current as any).zoomToFit();
       }
       try {
-        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
-      } catch (e) {}
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
+      } catch (e) { }
     }
   };
 
@@ -1145,8 +1145,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       workspace.current.undo(false);
       sounds.playClick();
       try {
-        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
-      } catch (e) {}
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
+      } catch (e) { }
     }
   };
 
@@ -1155,8 +1155,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       workspace.current.undo(true);
       sounds.playClick();
       try {
-        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
-      } catch (e) {}
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
+      } catch (e) { }
     }
   };
 
@@ -1178,8 +1178,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       setSearchQuery('');
       sounds.playClick();
       try {
-        Haptics.impact({ style: ImpactStyle.Light }).catch(() => {});
-      } catch (e) {}
+        Haptics.impact({ style: ImpactStyle.Light }).catch(() => { });
+      } catch (e) { }
     } catch (e) {
       console.error(e);
     }
@@ -1194,8 +1194,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       setShowTemplatesModal(false);
       sounds.playSuccess();
       try {
-        Haptics.impact({ style: ImpactStyle.Medium }).catch(() => {});
-      } catch (e) {}
+        Haptics.impact({ style: ImpactStyle.Medium }).catch(() => { });
+      } catch (e) { }
       mascotRef.current?.speak(`Loaded ${project.name}! Click Run Code to test it.`);
     } catch (e) {
       console.error(e);
@@ -1207,7 +1207,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     try {
       const xmlDom = Blockly.Xml.workspaceToDom(workspace.current);
       const xmlText = Blockly.Xml.domToText(xmlDom);
-      
+
       const blob = new Blob([xmlText], { type: 'text/xml' });
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -1217,7 +1217,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(url);
-      
+
       sounds.playSuccess();
       mascotRef.current?.speak("Project saved to your computer! 💾");
     } catch (err) {
@@ -1228,7 +1228,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!workspace.current) return;
-    
+
     const file = e.dataTransfer.files[0];
     if (file && (file.name.endsWith('.kone') || file.name.endsWith('.xml'))) {
       const reader = new FileReader();
@@ -1302,7 +1302,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         }
       };
       animate();
-    } catch (e) {}
+    } catch (e) { }
   };
 
   useEffect(() => {
@@ -1507,7 +1507,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       }
 
       const stepDelay = execSpeedRef.current === 'turbo' ? 50 : execSpeedRef.current === 'slowmo' ? 1800 : 600;
-      
+
       // Delay to show highlighting
       await new Promise((resolve, reject) => {
         const timeout = setTimeout(resolve, stepDelay);
@@ -1644,21 +1644,21 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             const audioCtx = new AudioContextClass();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            
+
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            
+
             gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-            
+
             osc.connect(gain);
             gain.connect(audioCtx.destination);
-            
+
             osc.start();
             osc.stop(audioCtx.currentTime + duration);
-            
+
             setTimeout(() => {
-              try { audioCtx.close(); } catch(e) {}
+              try { audioCtx.close(); } catch (e) { }
               res(true);
             }, duration * 1000);
           } else {
@@ -1700,16 +1700,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               gain.connect(ctx.destination);
               osc.start();
               osc.stop(ctx.currentTime + 0.25);
-              setTimeout(() => { try { ctx.close(); } catch(e){} res(true); }, 250);
+              setTimeout(() => { try { ctx.close(); } catch (e) { } res(true); }, 250);
             } else { res(true); }
-          } catch(e) { res(true); }
+          } catch (e) { res(true); }
         }
       })
     };
 
     let ranSuccessfully = false;
     try {
-      const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+      const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
       const fn = new AsyncFunction('mascot', 'robot', 'game', 'electronics', 'ai', 'highlightBlock', 'tts', 'music', code);
       await fn(mascot, robot, game, electronics, ai, highlightBlock, tts, music);
       ranSuccessfully = true;
@@ -1769,7 +1769,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   };
 
   return (
-    <div className="kids-ide-container engineering-lab-wrapper" style={{ 
+    <div className="kids-ide-container engineering-lab-wrapper" style={{
       position: isStandalone ? 'fixed' : 'relative',
       top: isStandalone ? 0 : 'auto',
       left: isStandalone ? 0 : 'auto',
@@ -1782,7 +1782,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       borderRadius: isStandalone ? 0 : '24px',
       border: isStandalone ? 'none' : (isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1'),
       overflow: 'hidden',
-      background: isDark ? 'linear-gradient(135deg, #0b0f19 0%, #0f172a 100%)' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', 
+      background: isDark ? 'linear-gradient(135deg, #0b0f19 0%, #0f172a 100%)' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
       color: isDark ? 'white' : '#0f172a',
       display: 'flex',
       flexDirection: 'column',
@@ -1790,29 +1790,29 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       fontFamily: "'Outfit', 'Inter', sans-serif"
     }}>
       {/* Header Bar */}
-      <div style={{ 
-        padding: isMobile ? '2px 6px' : '0.6rem 1.2rem', 
-        background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
+      <div style={{
+        padding: isMobile ? '2px 6px' : '0.6rem 1.2rem',
+        background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(10px)',
-        borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+        borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1',
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
         gap: '0.3rem',
         overflowX: isMobile ? 'auto' : 'visible',
         maxWidth: '100%'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
-          <button 
-            onClick={() => navigate(hubPath)} 
-            className="kids-button" 
-            style={{ 
-              padding: isMobile ? '0.15rem 0.35rem' : '0.25rem 0.5rem', 
-              fontSize: isMobile ? '0.68rem' : '0.75rem', 
-              background: isDark ? 'var(--kids-surface)' : '#ffffff', 
-              border: isDark ? '1px solid var(--kids-border)' : '1px solid #cbd5e1', 
-              color: isDark ? 'white' : '#0f172a', 
-              borderRadius: '7px' 
+          <button
+            onClick={() => navigate(hubPath)}
+            className="kids-button"
+            style={{
+              padding: isMobile ? '0.15rem 0.35rem' : '0.25rem 0.5rem',
+              fontSize: isMobile ? '0.68rem' : '0.75rem',
+              background: isDark ? 'var(--kids-surface)' : '#ffffff',
+              border: isDark ? '1px solid var(--kids-border)' : '1px solid #cbd5e1',
+              color: isDark ? 'white' : '#0f172a',
+              borderRadius: '7px'
             }}
           >
             ← Map
@@ -1843,7 +1843,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             </span>
           </div>
         </div>
-        
+
         <div style={{ display: 'flex', gap: isMobile ? '0.25rem' : '0.75rem', alignItems: 'center' }}>
           {/* Dialect selector */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '10px', padding: isMobile ? '2px 4px' : '4px 8px' }}>
@@ -2001,16 +2001,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           />
 
           <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', padding: '3px', gap: '3px' }}>
-            <button 
-              onClick={() => setLanguage('javascript')} 
-              style={{ 
-                background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent', 
-                border: 'none', 
-                color: 'white', 
-                padding: isMobile ? '0.25rem 0.5rem' : '0.35rem 0.75rem', 
-                borderRadius: '6px', 
-                cursor: 'pointer', 
-                fontSize: isMobile ? '0.7rem' : '0.8rem', 
+            <button
+              onClick={() => setLanguage('javascript')}
+              style={{
+                background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent',
+                border: 'none',
+                color: 'white',
+                padding: isMobile ? '0.25rem 0.5rem' : '0.35rem 0.75rem',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: isMobile ? '0.7rem' : '0.8rem',
                 fontWeight: 800,
                 boxShadow: language === 'javascript' ? '0 2px 0 #9a3412' : 'none',
                 transition: 'all 0.2s',
@@ -2019,28 +2019,28 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             >
               JS
             </button>
-            <button 
-              onClick={() => setLanguage('python')} 
-              style={{ 
-                background: language === 'python' ? 'var(--kids-blue)' : 'transparent', 
-                border: 'none', 
-                color: 'white', 
+            <button
+              onClick={() => setLanguage('python')}
+              style={{
+                background: language === 'python' ? 'var(--kids-blue)' : 'transparent',
+                border: 'none',
+                color: 'white',
                 boxShadow: language === 'python' ? '0 4px 0 #0369a1' : 'none',
                 transition: 'all 0.2s',
                 transform: language === 'python' ? 'translateY(2px)' : 'none'
               }}
             >PY</button>
           </div>
-          
-          <button 
+
+          <button
             onClick={() => setShowCode(!showCode)}
             className="kids-button"
-            style={{ 
-              background: 'var(--kids-surface)', 
-              border: '2px solid var(--kids-border)', 
-              color: 'white', 
-              padding: '0.4rem', 
-              borderRadius: '10px', 
+            style={{
+              background: 'var(--kids-surface)',
+              border: '2px solid var(--kids-border)',
+              color: 'white',
+              padding: '0.4rem',
+              borderRadius: '10px',
               cursor: 'pointer',
               width: isMobile ? '32px' : '40px',
               height: isMobile ? '32px' : '40px',
@@ -2051,7 +2051,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           </button>
         </div>
       </div>
-      
+
       {/* Mobile-Friendly Section Tabs */}
       {isMobile && (
         <div style={{
@@ -2138,28 +2138,28 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         </div>
       )}
 
-      <div style={{ 
-        flex: 1, 
-        display: 'flex', 
-        gap: isMobile ? '0.5rem' : '1rem', 
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        gap: isMobile ? '0.5rem' : '1rem',
         padding: isMobile ? '0.5rem' : '1rem',
         flexDirection: isMobile ? 'column' : 'row',
         minHeight: 0,
         overflow: 'hidden'
       }}>
         {/* Workspace */}
-        <div style={{ 
-          flex: 2, 
-          display: (!isMobile || activeMobileTab === 'workspace') ? 'flex' : 'none', 
-          flexDirection: 'column', 
-          gap: '1rem' 
+        <div style={{
+          flex: 2,
+          display: (!isMobile || activeMobileTab === 'workspace') ? 'flex' : 'none',
+          flexDirection: 'column',
+          gap: '1rem'
         }}>
           {mission && (
-            <div style={{ 
-              background: 'rgba(14, 165, 233, 0.08)', 
-              border: '1px solid rgba(14, 165, 233, 0.3)', 
-              borderRadius: '16px', 
-              padding: isMobile ? '0.75rem' : '1rem' 
+            <div style={{
+              background: 'rgba(14, 165, 233, 0.08)',
+              border: '1px solid rgba(14, 165, 233, 0.3)',
+              borderRadius: '16px',
+              padding: isMobile ? '0.75rem' : '1rem'
             }}>
               <div style={{ display: 'flex', gap: isMobile ? '0.75rem' : '1rem', alignItems: 'flex-start', marginBottom: (mission.steps && !isMobile) ? '0.75rem' : '0' }}>
                 <div style={{ fontSize: isMobile ? '1.4rem' : '2rem', flexShrink: 0 }}>🎯</div>
@@ -2172,7 +2172,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 <div style={{ borderTop: '1px solid rgba(14, 165, 233, 0.2)', paddingTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                   {mission.steps.map((step, i) => (
                     <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)' }}>
-                      <span style={{ background: 'rgba(14,165,233,0.3)', color: 'var(--kids-blue)', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 800, flexShrink: 0 }}>{i+1}</span>
+                      <span style={{ background: 'rgba(14,165,233,0.3)', color: 'var(--kids-blue)', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 800, flexShrink: 0 }}>{i + 1}</span>
                       <span>{getTranslation(step, dialect).text}</span>
                     </div>
                   ))}
@@ -2273,19 +2273,19 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           </div>
 
           <div style={{ position: 'relative', flex: 1, height: isMobile ? '450px' : '100%', minHeight: isMobile ? '400px' : '500px' }}>
-            <div 
-              ref={blocklyDiv} 
+            <div
+              ref={blocklyDiv}
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileDrop}
-              style={{ 
-                height: '100%', 
+              style={{
+                height: '100%',
                 width: '100%',
-                borderRadius: '0 20px 20px 20px', 
-                overflow: 'hidden', 
-                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1', 
+                borderRadius: '0 20px 20px 20px',
+                overflow: 'hidden',
+                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                 background: isDark ? '#0b0e14' : '#ffffff',
                 display: editorModeTab === 'code' ? 'block' : 'none'
-              }} 
+              }}
             />
 
             {editorModeTab === 'costumes' && (
@@ -2310,127 +2310,127 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 overflowX: isMobile ? 'auto' : 'visible',
                 zIndex: 20,
                 display: 'flex',
-              gap: isMobile ? '2px' : '4px',
-              background: isDark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
-              padding: isMobile ? '2px' : '4px 6px',
-              borderRadius: isMobile ? '8px' : '14px',
-              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1',
-              boxShadow: isDark ? '0 8px 24px rgba(0,0,0,0.4)' : '0 8px 24px rgba(0,0,0,0.08)'
-            }}>
-              <button
-                onClick={handleCleanUpBlocks}
-                title="Clean Up & Organize Blocks"
-                style={{
-                  background: 'rgba(251, 191, 36, 0.15)',
-                  border: '1px solid rgba(251, 191, 36, 0.3)',
-                  color: '#fbbf24',
-                  borderRadius: isMobile ? '6px' : '8px',
-                  padding: isMobile ? '0' : '6px 10px',
-                  width: isMobile ? '26px' : 'auto',
-                  height: isMobile ? '26px' : 'auto',
-                  cursor: 'pointer',
-                  fontSize: isMobile ? '0.72rem' : '0.8rem',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '3px',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                <span>🧹 {!isMobile && 'Clean Up'}</span>
-              </button>
-              <button
-                onClick={handleUndo}
-                title="Undo (Ctrl+Z)"
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
-                  color: isDark ? 'white' : '#0f172a',
-                  borderRadius: isMobile ? '6px' : '8px',
-                  padding: isMobile ? '0' : '4px 8px',
-                  width: isMobile ? '26px' : 'auto',
-                  height: isMobile ? '26px' : 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: isMobile ? '0.72rem' : '0.85rem',
-                  fontWeight: 800
-                }}
-              >
-                ↩️
-              </button>
-              <button
-                onClick={handleRedo}
-                title="Redo (Ctrl+Y)"
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
-                  color: isDark ? 'white' : '#0f172a',
-                  borderRadius: isMobile ? '6px' : '8px',
-                  padding: isMobile ? '0' : '4px 8px',
-                  width: isMobile ? '26px' : 'auto',
-                  height: isMobile ? '26px' : 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: isMobile ? '0.72rem' : '0.85rem',
-                  fontWeight: 800
-                }}
-              >
-                ↪️
-              </button>
-              <button
-                onClick={() => setShowSearchModal(true)}
-                title="Search Blocks (Ctrl+K)"
-                style={{
-                  background: 'rgba(168, 85, 247, 0.15)',
-                  border: '1px solid rgba(168, 85, 247, 0.3)',
-                  color: '#c084fc',
-                  borderRadius: isMobile ? '6px' : '8px',
-                  padding: isMobile ? '0' : '6px 10px',
-                  width: isMobile ? '26px' : 'auto',
-                  height: isMobile ? '26px' : 'auto',
-                  cursor: 'pointer',
-                  fontSize: isMobile ? '0.72rem' : '0.8rem',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '3px',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                <span>🔍 {!isMobile && 'Search'}</span>
-              </button>
-              <button
-                onClick={handleCenterWorkspace}
-                title="Center All Blocks"
-                style={{
-                  background: 'rgba(56, 189, 248, 0.15)',
-                  border: '1px solid rgba(56, 189, 248, 0.3)',
-                  color: '#38bdf8',
-                  borderRadius: isMobile ? '6px' : '8px',
-                  padding: isMobile ? '0' : '6px 10px',
-                  width: isMobile ? '26px' : 'auto',
-                  height: isMobile ? '26px' : 'auto',
-                  cursor: 'pointer',
-                  fontSize: isMobile ? '0.72rem' : '0.8rem',
-                  fontWeight: 800,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '3px',
-                  whiteSpace: 'nowrap'
-                }}
-              >
-                <span>🎯 {!isMobile && 'Center'}</span>
-              </button>
-            </div>
-          )}
+                gap: isMobile ? '2px' : '4px',
+                background: isDark ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(10px)',
+                padding: isMobile ? '2px' : '4px 6px',
+                borderRadius: isMobile ? '8px' : '14px',
+                border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1',
+                boxShadow: isDark ? '0 8px 24px rgba(0,0,0,0.4)' : '0 8px 24px rgba(0,0,0,0.08)'
+              }}>
+                <button
+                  onClick={handleCleanUpBlocks}
+                  title="Clean Up & Organize Blocks"
+                  style={{
+                    background: 'rgba(251, 191, 36, 0.15)',
+                    border: '1px solid rgba(251, 191, 36, 0.3)',
+                    color: '#fbbf24',
+                    borderRadius: isMobile ? '6px' : '8px',
+                    padding: isMobile ? '0' : '6px 10px',
+                    width: isMobile ? '26px' : 'auto',
+                    height: isMobile ? '26px' : 'auto',
+                    cursor: 'pointer',
+                    fontSize: isMobile ? '0.72rem' : '0.8rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <span>🧹 {!isMobile && 'Clean Up'}</span>
+                </button>
+                <button
+                  onClick={handleUndo}
+                  title="Undo (Ctrl+Z)"
+                  style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                    color: isDark ? 'white' : '#0f172a',
+                    borderRadius: isMobile ? '6px' : '8px',
+                    padding: isMobile ? '0' : '4px 8px',
+                    width: isMobile ? '26px' : 'auto',
+                    height: isMobile ? '26px' : 'auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: isMobile ? '0.72rem' : '0.85rem',
+                    fontWeight: 800
+                  }}
+                >
+                  ↩️
+                </button>
+                <button
+                  onClick={handleRedo}
+                  title="Redo (Ctrl+Y)"
+                  style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                    color: isDark ? 'white' : '#0f172a',
+                    borderRadius: isMobile ? '6px' : '8px',
+                    padding: isMobile ? '0' : '4px 8px',
+                    width: isMobile ? '26px' : 'auto',
+                    height: isMobile ? '26px' : 'auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: isMobile ? '0.72rem' : '0.85rem',
+                    fontWeight: 800
+                  }}
+                >
+                  ↪️
+                </button>
+                <button
+                  onClick={() => setShowSearchModal(true)}
+                  title="Search Blocks (Ctrl+K)"
+                  style={{
+                    background: 'rgba(168, 85, 247, 0.15)',
+                    border: '1px solid rgba(168, 85, 247, 0.3)',
+                    color: '#c084fc',
+                    borderRadius: isMobile ? '6px' : '8px',
+                    padding: isMobile ? '0' : '6px 10px',
+                    width: isMobile ? '26px' : 'auto',
+                    height: isMobile ? '26px' : 'auto',
+                    cursor: 'pointer',
+                    fontSize: isMobile ? '0.72rem' : '0.8rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <span>🔍 {!isMobile && 'Search'}</span>
+                </button>
+                <button
+                  onClick={handleCenterWorkspace}
+                  title="Center All Blocks"
+                  style={{
+                    background: 'rgba(56, 189, 248, 0.15)',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    color: '#38bdf8',
+                    borderRadius: isMobile ? '6px' : '8px',
+                    padding: isMobile ? '0' : '6px 10px',
+                    width: isMobile ? '26px' : 'auto',
+                    height: isMobile ? '26px' : 'auto',
+                    cursor: 'pointer',
+                    fontSize: isMobile ? '0.72rem' : '0.8rem',
+                    fontWeight: 800,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '3px',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  <span>🎯 {!isMobile && 'Center'}</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -2446,11 +2446,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           display: 'flex',
           flexDirection: 'column',
           padding: '1rem'
-        } : { 
-          flex: 1, 
-          display: (!isMobile || activeMobileTab !== 'workspace') ? 'flex' : 'none', 
-          flexDirection: 'column', 
-          gap: '0', 
+        } : {
+          flex: 1,
+          display: (!isMobile || activeMobileTab !== 'workspace') ? 'flex' : 'none',
+          flexDirection: 'column',
+          gap: '0',
           minWidth: isMobile ? '100%' : '350px',
           position: 'relative'
         }}>
@@ -2473,8 +2473,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 disabled={isRunning}
                 title="Run Project (Green Flag 🚩)"
                 style={{
-                  background: isRunning 
-                    ? 'linear-gradient(135deg, #16a34a, #15803d)' 
+                  background: isRunning
+                    ? 'linear-gradient(135deg, #16a34a, #15803d)'
                     : 'linear-gradient(135deg, #4ade80, #22c55e)',
                   color: '#ffffff',
                   border: 'none',
@@ -2485,8 +2485,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: isRunning ? 'default' : 'pointer',
-                  boxShadow: isRunning 
-                    ? '0 0 12px rgba(34, 197, 94, 0.6), 0 3px 0 #15803d' 
+                  boxShadow: isRunning
+                    ? '0 0 12px rgba(34, 197, 94, 0.6), 0 3px 0 #15803d'
                     : '0 3px 0 #15803d',
                   transition: 'all 0.2s ease',
                   transform: isRunning ? 'scale(1.05)' : 'none'
@@ -2680,15 +2680,15 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             </div>
           </div>
 
-          <div style={{ 
-            background: isDark ? '#151921' : '#f8fafc', 
-            borderRadius: '0 0 20px 20px', 
-            padding: '1.5rem', 
-            border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0', 
-            height: isArenaFullscreen ? '100%' : (isMobile ? '400px' : '350px'), 
-            display: (!isMobile || activeMobileTab === 'simulator') ? 'flex' : 'none', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
+          <div style={{
+            background: isDark ? '#151921' : '#f8fafc',
+            borderRadius: '0 0 20px 20px',
+            padding: '1.5rem',
+            border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0',
+            height: isArenaFullscreen ? '100%' : (isMobile ? '400px' : '350px'),
+            display: (!isMobile || activeMobileTab === 'simulator') ? 'flex' : 'none',
+            alignItems: 'center',
+            justifyContent: 'center',
             position: 'relative',
             overflow: 'hidden'
           }}>
@@ -2725,13 +2725,13 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           )}
 
           {showCode && (
-            <div className="code-preview-panel" style={{ 
-              flex: 1, 
-              background: '#1e1e1e', 
-              borderRadius: '12px', 
-              border: '1px solid #333', 
-              overflow: 'hidden', 
-              display: (!isMobile || activeMobileTab === 'code') ? 'flex' : 'none', 
+            <div className="code-preview-panel" style={{
+              flex: 1,
+              background: '#1e1e1e',
+              borderRadius: '12px',
+              border: '1px solid #333',
+              overflow: 'hidden',
+              display: (!isMobile || activeMobileTab === 'code') ? 'flex' : 'none',
               flexDirection: 'column',
               minHeight: isMobile ? '350px' : 'auto'
             }}>
@@ -2748,13 +2748,13 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       </div>
 
       {/* Studio Status Bar */}
-      <div style={{ 
-        padding: isMobile ? '2px 6px' : '0.5rem 1.2rem', 
-        background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)', 
+      <div style={{
+        padding: isMobile ? '2px 6px' : '0.5rem 1.2rem',
+        background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(10px)',
-        borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+        borderTop: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1',
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
         gap: '0.3rem',
         zIndex: 50,
@@ -2769,86 +2769,86 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         </div>
 
         <div style={{ display: 'flex', gap: isMobile ? '0.2rem' : '0.5rem', alignItems: 'center', flexShrink: 0 }}>
-        {/* Hardware Connect/Upload buttons */}
-        {('serial' in navigator) && (
-          <>
-            {!isConnected ? (
-              <button 
-                onClick={connectHardware} 
-                className="kids-button" 
-                style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'var(--kids-surface)', border: isMobile ? '1px solid var(--kids-border)' : '2px solid var(--kids-border)', color: 'white', '--shadow-color': 'var(--kids-border)' } as any}
-              >
-                <span>🔌 Connect</span>
-              </button>
-            ) : (
-              <div style={{ display: 'flex', gap: '0.3rem' }}>
-                <button 
-                  onClick={uploadToHardware} 
-                  disabled={uploading} 
-                  className="kids-button pulse-neon" 
-                  style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', '--shadow-color': '#047857' } as any}
+          {/* Hardware Connect/Upload buttons */}
+          {('serial' in navigator) && (
+            <>
+              {!isConnected ? (
+                <button
+                  onClick={connectHardware}
+                  className="kids-button"
+                  style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'var(--kids-surface)', border: isMobile ? '1px solid var(--kids-border)' : '2px solid var(--kids-border)', color: 'white', '--shadow-color': 'var(--kids-border)' } as any}
                 >
-                  <span>🚀 {uploading ? 'Uploading...' : 'Upload'}</span>
+                  <span>🔌 Connect</span>
                 </button>
-                <button 
-                  onClick={disconnectHardware} 
-                  className="kids-button" 
-                  style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: isMobile ? '32px' : '44px', width: isMobile ? '32px' : '44px', background: '#ef4444', '--shadow-color': '#991b1b' } as any} 
-                  title="Disconnect Board"
-                >
-                  🔌
-                </button>
-              </div>
-            )}
-          </>
-        )}
+              ) : (
+                <div style={{ display: 'flex', gap: '0.3rem' }}>
+                  <button
+                    onClick={uploadToHardware}
+                    disabled={uploading}
+                    className="kids-button pulse-neon"
+                    style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', '--shadow-color': '#047857' } as any}
+                  >
+                    <span>🚀 {uploading ? 'Uploading...' : 'Upload'}</span>
+                  </button>
+                  <button
+                    onClick={disconnectHardware}
+                    className="kids-button"
+                    style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: isMobile ? '32px' : '44px', width: isMobile ? '32px' : '44px', background: '#ef4444', '--shadow-color': '#991b1b' } as any}
+                    title="Disconnect Board"
+                  >
+                    🔌
+                  </button>
+                </div>
+              )}
+            </>
+          )}
 
-        <button
-          onClick={() => {
-            const nextSpeed = execSpeed === 'normal' ? 'slowmo' : execSpeed === 'slowmo' ? 'turbo' : 'normal';
-            setExecSpeed(nextSpeed);
-            execSpeedRef.current = nextSpeed;
-            sounds.playClick();
-          }}
-          title={`Execution Speed: ${execSpeed === 'slowmo' ? 'Slow-Motion Debugger' : execSpeed === 'turbo' ? 'Turbo Mode' : 'Normal'}`}
-          className="kids-button"
-          style={{
-            padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 0.8rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.3rem',
-            fontSize: isMobile ? '0.72rem' : '0.9rem',
-            minHeight: isMobile ? '32px' : '44px',
-            background: execSpeed === 'slowmo' ? '#f59e0b' : execSpeed === 'turbo' ? '#ec4899' : 'var(--kids-surface)',
-            borderColor: execSpeed === 'slowmo' ? '#d97706' : execSpeed === 'turbo' ? '#be185d' : 'var(--kids-border)',
-            color: 'white',
-            '--shadow-color': execSpeed === 'slowmo' ? '#b45309' : execSpeed === 'turbo' ? '#9d174d' : 'var(--kids-border)'
-          } as any}
-        >
-          <span style={{ fontSize: '0.85rem' }}>{execSpeed === 'slowmo' ? '🐢' : execSpeed === 'turbo' ? '🚀' : '⚡'}</span>
-          <span style={{ display: isMobile ? 'none' : 'inline' }}>
-            {execSpeed === 'slowmo' ? 'Slow Mo' : execSpeed === 'turbo' ? 'Turbo' : 'Normal'}
-          </span>
-        </button>
+          <button
+            onClick={() => {
+              const nextSpeed = execSpeed === 'normal' ? 'slowmo' : execSpeed === 'slowmo' ? 'turbo' : 'normal';
+              setExecSpeed(nextSpeed);
+              execSpeedRef.current = nextSpeed;
+              sounds.playClick();
+            }}
+            title={`Execution Speed: ${execSpeed === 'slowmo' ? 'Slow-Motion Debugger' : execSpeed === 'turbo' ? 'Turbo Mode' : 'Normal'}`}
+            className="kids-button"
+            style={{
+              padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 0.8rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              fontSize: isMobile ? '0.72rem' : '0.9rem',
+              minHeight: isMobile ? '32px' : '44px',
+              background: execSpeed === 'slowmo' ? '#f59e0b' : execSpeed === 'turbo' ? '#ec4899' : 'var(--kids-surface)',
+              borderColor: execSpeed === 'slowmo' ? '#d97706' : execSpeed === 'turbo' ? '#be185d' : 'var(--kids-border)',
+              color: 'white',
+              '--shadow-color': execSpeed === 'slowmo' ? '#b45309' : execSpeed === 'turbo' ? '#9d174d' : 'var(--kids-border)'
+            } as any}
+          >
+            <span style={{ fontSize: '0.85rem' }}>{execSpeed === 'slowmo' ? '🐢' : execSpeed === 'turbo' ? '🚀' : '⚡'}</span>
+            <span style={{ display: isMobile ? 'none' : 'inline' }}>
+              {execSpeed === 'slowmo' ? 'Slow Mo' : execSpeed === 'turbo' ? 'Turbo' : 'Normal'}
+            </span>
+          </button>
 
-        {!isRunning ? (
-          <button id="run-code-btn" className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px' }} onClick={runCode}>
-            <Play size={isMobile ? 14 : 18} fill="currentColor" />
-            <span>Run Code</span>
-          </button>
-        ) : (
-          <button className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', background: '#ef4444', '--shadow-color': '#991b1b', minHeight: isMobile ? '32px' : '44px' } as any} onClick={stopCode}>
-            <Square size={isMobile ? 13 : 16} fill="currentColor" />
-            <span>Stop</span>
-          </button>
-        )}
+          {!isRunning ? (
+            <button id="run-code-btn" className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px' }} onClick={runCode}>
+              <Play size={isMobile ? 14 : 18} fill="currentColor" />
+              <span>Run Code</span>
+            </button>
+          ) : (
+            <button className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', background: '#ef4444', '--shadow-color': '#991b1b', minHeight: isMobile ? '32px' : '44px' } as any} onClick={stopCode}>
+              <Square size={isMobile ? 13 : 16} fill="currentColor" />
+              <span>Stop</span>
+            </button>
+          )}
         </div>
       </div>
 
       {onboardingStep !== -1 && (
-        <OnboardingTour 
-          currentStep={onboardingStep} 
-          onNext={() => setOnboardingStep(prev => prev + 1)} 
+        <OnboardingTour
+          currentStep={onboardingStep}
+          onNext={() => setOnboardingStep(prev => prev + 1)}
           onSkip={() => { completeOnboarding(); setOnboardingStep(-1); }}
         />
       )}
@@ -2868,10 +2868,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       )}
 
       {mission?.briefing && !hasStartedMission && (
-        <MissionBriefing 
-          missionName={getTranslation(mission.name, dialect).text} 
-          briefing={getTranslation(mission.briefing, dialect).text} 
-          onStart={() => setHasStartedMission(true)} 
+        <MissionBriefing
+          missionName={getTranslation(mission.name, dialect).text}
+          briefing={getTranslation(mission.briefing, dialect).text}
+          onStart={() => setHasStartedMission(true)}
         />
       )}
       {showShop && <MascotShop onClose={() => setShowShop(false)} />}

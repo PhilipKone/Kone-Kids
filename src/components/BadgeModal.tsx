@@ -65,11 +65,11 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
 
     // 3. Draw Header Text
     ctx.textAlign = 'center';
-    
+
     // Academy name
     ctx.fillStyle = '#fbbf24'; // bright gold
     ctx.font = 'bold 26px sans-serif';
-    ctx.fillText('KONE CODE ACADEMY', 500, 115);
+    ctx.fillText('KONE KIDS', 500, 115);
 
     // "Certificate of Achievement"
     ctx.fillStyle = '#ffffff';
@@ -129,7 +129,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
     ctx.shadowBlur = 0;
     ctx.fillStyle = '#0f172a';
     ctx.font = 'bold 16px sans-serif';
-    ctx.fillText('KCA', 0, 6);
+    ctx.fillText('KK', 0, 6);
     ctx.restore();
 
     // Left Signature: Byte
@@ -147,7 +147,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
     ctx.font = '14px sans-serif';
     ctx.fillText('AI Mascot Mentor', 250, 670);
 
-    // Right Signature: Philip Kone
+    // Right Signature: Philip Hotor
     ctx.strokeStyle = '#475569';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -157,10 +157,10 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
 
     ctx.fillStyle = '#cbd5e1';
     ctx.font = 'italic 20px Georgia, serif';
-    ctx.fillText('Philip Kone', 750, 630); // simulated signature text
+    ctx.fillText('Philip Hotor', 750, 630); // simulated signature text
     ctx.fillStyle = '#64748b';
     ctx.font = '14px sans-serif';
-    ctx.fillText('Founder, Kone Academy', 750, 670);
+    ctx.fillText('Founder, Kone Kids', 750, 670);
 
   }, [name, badge]);
 
@@ -191,7 +191,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
   };
 
   return (
-    <div 
+    <div
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
@@ -224,7 +224,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
         color: 'white'
       }}>
         {/* Close Button */}
-        <button 
+        <button
           onClick={onClose}
           style={{
             position: 'absolute',
@@ -265,9 +265,9 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.25rem' }}>
             <h4 style={{ margin: '0 0 0.5rem', fontSize: '1rem', color: '#fbbf24', fontWeight: 700 }}>Custom Certificate Generator</h4>
             <p style={{ margin: '0 0 1rem', fontSize: '0.8rem', color: '#94a3b8' }}>Type your name below to print your graduation certificate!</p>
-            
-            <input 
-              type="text" 
+
+            <input
+              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name..."
@@ -299,7 +299,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
 
             {/* Actions Grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', paddingBottom: '8px' }}>
-              <button 
+              <button
                 onClick={downloadCertificate}
                 className="kids-button pulse-neon"
                 style={{
@@ -317,7 +317,7 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
                 <Download size={18} />
                 <span>Download PNG</span>
               </button>
-              <button 
+              <button
                 onClick={shareAchievement}
                 className="kids-button"
                 style={{

@@ -70,7 +70,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
     ctx.fillStyle = '#38bdf8';
     ctx.font = '900 24px "Outfit", sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText('🚀 KONE KIDS CODE ACADEMY', width / 2, 110);
+    ctx.fillText('🚀 KONE KIDS', width / 2, 110);
 
     ctx.fillStyle = '#fbbf24';
     ctx.font = '900 44px "Outfit", sans-serif';
@@ -147,7 +147,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
     const sigX = width - 220;
     ctx.fillStyle = '#38bdf8';
     ctx.font = 'italic 900 28px "Outfit", sans-serif';
-    ctx.fillText('Philip Kone', sigX, 655);
+    ctx.fillText('Philip Hotor', sigX, 655);
     ctx.strokeStyle = '#475569';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -161,7 +161,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
     // Serial ID Footer
     ctx.fillStyle = '#64748b';
     ctx.font = '600 13px "Outfit", sans-serif';
-    ctx.fillText(`VERIFIED ID: ${certId} • KONE KIDS ACADEMY`, width / 2, 785);
+    ctx.fillText(`VERIFIED ID: ${certId} • KONE KIDS`, width / 2, 785);
   };
 
   useEffect(() => {
@@ -242,7 +242,7 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
               🏆 Official Student Certificate
             </h3>
             <p style={{ margin: '0.2rem 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>
-              Personalize, print, or download your official Kone Kids Academy Certificate!
+              Personalize, print, or download your official Kone Kids Certificate!
             </p>
           </div>
           <button

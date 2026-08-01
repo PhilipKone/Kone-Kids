@@ -59,24 +59,24 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
 
   return (
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1000 }}>
-      <div 
-        className="modal-content glass-card" 
+      <div
+        className="modal-content glass-card"
         onClick={(e) => e.stopPropagation()}
         style={{
-          borderTop: inquiryType === 'school' 
-            ? '8px solid var(--kids-orange)' 
-            : inquiryType === 'online' 
-            ? '8px solid var(--kids-purple)' 
-            : '8px solid var(--kids-blue)',
+          borderTop: inquiryType === 'school'
+            ? '8px solid var(--kids-orange)'
+            : inquiryType === 'online'
+              ? '8px solid var(--kids-purple)'
+              : '8px solid var(--kids-blue)',
           padding: '2.5rem 2rem'
         }}
       >
-        <button 
+        <button
           onClick={onClose}
           className="modal-close-btn"
-          style={{ 
-            position: 'absolute', top: isMobile ? '15px' : '25px', right: isMobile ? '15px' : '25px', 
-            background: 'var(--kids-bg)', border: '1px solid var(--kids-border)', width: '36px', height: '36px', 
+          style={{
+            position: 'absolute', top: isMobile ? '15px' : '25px', right: isMobile ? '15px' : '25px',
+            background: 'var(--kids-bg)', border: '1px solid var(--kids-border)', width: '36px', height: '36px',
             borderRadius: '50%', fontSize: '1.2rem', cursor: 'pointer',
             color: 'var(--kids-text-muted)', display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'all 0.2s',
@@ -91,46 +91,46 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
             <div style={{ marginBottom: '1.5rem' }}>
               <Mascot />
             </div>
-            <h2 style={{ 
-              color: inquiryType === 'school' 
-                ? 'var(--kids-orange)' 
-                : inquiryType === 'online' 
-                ? 'var(--kids-purple)' 
-                : 'var(--kids-blue)', 
-              margin: '1rem 0', 
-              fontSize: 'clamp(1.8rem, 6vw, 2.5rem)', 
-              fontFamily: "'Baloo 2', cursive", 
-              fontWeight: 800 
+            <h2 style={{
+              color: inquiryType === 'school'
+                ? 'var(--kids-orange)'
+                : inquiryType === 'online'
+                  ? 'var(--kids-purple)'
+                  : 'var(--kids-blue)',
+              margin: '1rem 0',
+              fontSize: 'clamp(1.8rem, 6vw, 2.5rem)',
+              fontFamily: "'Baloo 2', cursive",
+              fontWeight: 800
             }}>
-              {inquiryType === 'school' 
-                ? "Let's Partner! 🏫" 
-                : inquiryType === 'online' 
-                ? "Virtual Mission Launched! 🌐" 
-                : "Welcome, Hero! 🚀"}
+              {inquiryType === 'school'
+                ? "Let's Partner! 🏫"
+                : inquiryType === 'online'
+                  ? "Virtual Mission Launched! 🌐"
+                  : "Welcome, Hero! 🚀"}
             </h2>
             <p style={{ color: '#475569', maxWidth: '400px', margin: '0 auto', fontSize: '1.05rem', lineHeight: 1.5 }}>
-              {inquiryType === 'school' 
-                ? 'Your partnership inquiry has been successfully received. A Kone Academy School Partnership specialist will reach out shortly to plan your Live Lab Demo!' 
+              {inquiryType === 'school'
+                ? 'Your partnership inquiry has been successfully received. A Kone Kids School Partnership specialist will reach out shortly to plan your Live Lab Demo!'
                 : inquiryType === 'online'
-                ? "Your virtual training begins now! A Kone Academy Online Specialist will contact you soon to set up your kid's free 1-on-1 virtual onboarding session."
-                : 'Your mission starts here! A Kone Academy representative will contact you soon to begin your home tutoring journey.'}
+                  ? "Your virtual training begins now! A Kone Kids Online Specialist will contact you soon to set up your kid's free 1-on-1 virtual onboarding session."
+                  : 'Your mission starts here! A Kone Kids representative will contact you soon to begin your home tutoring journey.'}
             </p>
-            <button 
-              className="kids-button" 
-              style={{ 
-                marginTop: '2.5rem', 
+            <button
+              className="kids-button"
+              style={{
+                marginTop: '2.5rem',
                 width: '100%',
-                background: inquiryType === 'school' 
-                  ? 'var(--kids-orange)' 
-                  : inquiryType === 'online' 
-                  ? 'var(--kids-purple)' 
-                  : 'var(--kids-blue)',
-                boxShadow: inquiryType === 'school' 
-                  ? '0 4px 0 #9a3412' 
-                  : inquiryType === 'online' 
-                  ? '0 4px 0 #7e22ce' 
-                  : '0 4px 0 #0369a1'
-              }} 
+                background: inquiryType === 'school'
+                  ? 'var(--kids-orange)'
+                  : inquiryType === 'online'
+                    ? 'var(--kids-purple)'
+                    : 'var(--kids-blue)',
+                boxShadow: inquiryType === 'school'
+                  ? '0 4px 0 #9a3412'
+                  : inquiryType === 'online'
+                    ? '0 4px 0 #7e22ce'
+                    : '0 4px 0 #0369a1'
+              }}
               onClick={onClose}
             >
               Great! 👍
@@ -139,8 +139,8 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
         ) : (
           <>
             <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-              <h2 style={{ 
-                marginBottom: '0.5rem', 
+              <h2 style={{
+                marginBottom: '0.5rem',
                 fontSize: 'clamp(1.8rem, 6vw, 2.4rem)',
                 fontFamily: "'Baloo 2', cursive",
                 fontWeight: 800
@@ -151,10 +151,10 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
             </div>
 
             {/* Segment Toggle */}
-            <div style={{ 
-              display: 'flex', 
-              background: '#f1f5f9', 
-              borderRadius: '30px', 
+            <div style={{
+              display: 'flex',
+              background: '#f1f5f9',
+              borderRadius: '30px',
               padding: '0.25rem',
               maxWidth: '380px',
               margin: '0 auto 2rem',
@@ -239,17 +239,17 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 🏫 School
               </button>
             </div>
-            
+
             <form onSubmit={handleSubmit}>
               <div className="input-group" style={{ marginBottom: '1.25rem' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                   <span>👤</span> {inquiryType === 'school' ? 'Your Name & Role (e.g. Principal)' : 'What is your name (Parent/Guardian)?'}
                 </label>
-                <input 
-                  type="text" required className="kids-input" 
+                <input
+                  type="text" required className="kids-input"
                   placeholder={inquiryType === 'school' ? 'e.g. Kojo Mensah (Director)' : 'e.g. Ama Kone'}
                   value={formData.parentName}
-                  onChange={(e) => setFormData({...formData, parentName: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
                 />
               </div>
@@ -258,18 +258,18 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                   <span>{inquiryType === 'school' ? '🏫' : '✨'}</span> {inquiryType === 'school' ? 'School Name' : "My Future Tech Leader's Name is..."}
                 </label>
-                <input 
-                  type="text" required className="kids-input" 
+                <input
+                  type="text" required className="kids-input"
                   placeholder={inquiryType === 'school' ? "e.g. Ridge International School" : "Child's full name"}
                   value={formData.studentName}
-                  onChange={(e) => setFormData({...formData, studentName: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
                 />
               </div>
 
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))', 
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(180px, 1fr))',
                 gap: '1rem',
                 marginBottom: '1.25rem'
               }}>
@@ -277,11 +277,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                     <span>📧</span> Email Address
                   </label>
-                  <input 
-                    type="email" required className="kids-input" 
+                  <input
+                    type="email" required className="kids-input"
                     placeholder="hello@example.com"
                     value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
                   />
                 </div>
@@ -289,11 +289,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                     <span>{inquiryType === 'school' ? '👥' : '🎂'}</span> {inquiryType === 'school' ? 'Approximate Students' : 'Student Age'}
                   </label>
-                  <input 
-                    type="number" required className="kids-input" 
+                  <input
+                    type="number" required className="kids-input"
                     placeholder={inquiryType === 'school' ? 'e.g. 150' : 'e.g. 8'}
                     value={formData.age}
-                    onChange={(e) => setFormData({...formData, age: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, age: e.target.value })}
                     style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
                   />
                 </div>
@@ -303,10 +303,10 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
                   <span>🎯</span> {inquiryType === 'school' ? 'Proposed Partnership...' : "I'm Interested In..."}
                 </label>
-                <select 
+                <select
                   className="kids-input"
                   value={formData.program}
-                  onChange={(e) => setFormData({...formData, program: e.target.value})}
+                  onChange={(e) => setFormData({ ...formData, program: e.target.value })}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1.05rem', fontFamily: "'Baloo 2', cursive", fontWeight: 700, width: '100%', boxSizing: 'border-box' }}
                 >
                   {inquiryType === 'school' ? (
@@ -334,23 +334,23 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 </select>
               </div>
 
-              <button 
-                type="submit" 
-                className="kids-button pulse-neon" 
-                style={{ 
-                  width: '100%', 
-                  marginTop: '0.5rem', 
-                  background: inquiryType === 'school' 
-                    ? 'var(--kids-orange)' 
-                    : inquiryType === 'online' 
-                    ? 'var(--kids-purple)' 
-                    : 'var(--kids-blue)',
+              <button
+                type="submit"
+                className="kids-button pulse-neon"
+                style={{
+                  width: '100%',
+                  marginTop: '0.5rem',
+                  background: inquiryType === 'school'
+                    ? 'var(--kids-orange)'
+                    : inquiryType === 'online'
+                      ? 'var(--kids-purple)'
+                      : 'var(--kids-blue)',
                   '--shadow-height': '4px',
-                  '--shadow-color': inquiryType === 'school' 
-                    ? '#9a3412' 
-                    : inquiryType === 'online' 
-                    ? '#7e22ce' 
-                    : '#0369a1',
+                  '--shadow-color': inquiryType === 'school'
+                    ? '#9a3412'
+                    : inquiryType === 'online'
+                      ? '#7e22ce'
+                      : '#0369a1',
                   minHeight: '42px',
                   fontSize: '1rem',
                   padding: '0.75rem 1rem',
@@ -358,13 +358,13 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 } as any}
                 disabled={status === 'sending'}
               >
-                {status === 'sending' 
-                  ? 'Transmitting Mission Data...' 
-                  : inquiryType === 'school' 
-                  ? 'Schedule Free School Demo! 🏫' 
-                  : inquiryType === 'online'
-                  ? 'Launch Online Mission! 🚀'
-                  : 'Launch Home Mission! 🚀'}
+                {status === 'sending'
+                  ? 'Transmitting Mission Data...'
+                  : inquiryType === 'school'
+                    ? 'Schedule Free School Demo! 🏫'
+                    : inquiryType === 'online'
+                      ? 'Launch Online Mission! 🚀'
+                      : 'Launch Home Mission! 🚀'}
               </button>
 
               {status === 'error' && (
@@ -380,18 +380,18 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--kids-text-muted)', fontSize: '0.75rem', letterSpacing: '2px', fontWeight: 800 }}>
                   PREVIEW YOUR FUTURE CERTIFICATE
                 </h3>
-                <div style={{ 
-                  transform: `scale(${isMobile ? 0.35 : 0.6})`, 
+                <div style={{
+                  transform: `scale(${isMobile ? 0.35 : 0.6})`,
                   transformOrigin: 'top center',
                   margin: '0 auto',
                   width: 'fit-content',
-                  height: isMobile ? '130px' : '260px', 
+                  height: isMobile ? '130px' : '260px',
                   maxWidth: '100%',
                   overflow: 'visible'
                 }}>
-                  <CertificatePreview 
-                    pathway={formData.program} 
-                    studentName={formData.studentName || 'Future Engineer'} 
+                  <CertificatePreview
+                    pathway={formData.program}
+                    studentName={formData.studentName || 'Future Engineer'}
                   />
                 </div>
                 <p style={{ textAlign: 'center', marginTop: isMobile ? '0.5rem' : '1rem', color: 'var(--kids-text-muted)', fontSize: '0.75rem', fontWeight: 600 }}>

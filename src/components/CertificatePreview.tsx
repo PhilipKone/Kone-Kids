@@ -7,10 +7,10 @@ interface CertificatePreviewProps {
   date?: string;
 }
 
-const CertificatePreview: React.FC<CertificatePreviewProps> = ({ 
-  pathway, 
-  studentName = "Future Engineer", 
-  date = new Date().toLocaleDateString() 
+const CertificatePreview: React.FC<CertificatePreviewProps> = ({
+  pathway,
+  studentName = "Future Engineer",
+  date = new Date().toLocaleDateString()
 }) => {
   return (
     <div className="certificate-frame" style={{
@@ -47,7 +47,7 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
         zIndex: 0,
         whiteSpace: 'nowrap'
       }}>
-        KONE KIDS ACADEMY
+        KONE KIDS
       </div>
 
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
@@ -60,9 +60,9 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
 
         <main>
           <p style={{ fontSize: '1.1rem', fontStyle: 'italic', margin: '20px 0' }}>This is to certify that</p>
-          <h1 style={{ 
-            fontSize: '3.5rem', 
-            margin: '10px 0', 
+          <h1 style={{
+            fontSize: '3.5rem',
+            margin: '10px 0',
             fontFamily: '"Playfair Display", serif',
             borderBottom: '2px solid #e2e8f0',
             display: 'inline-block',
@@ -84,7 +84,7 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
         <footer style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'flex-end', paddingBottom: '20px' }}>
           <div style={{ textAlign: 'center' }}>
             <div style={{ fontFamily: '"Sacramento", cursive', fontSize: '1.8rem', borderBottom: '1px solid #1e293b', width: '150px' }}>
-              Philip Kone
+              Philip Hotor
             </div>
             <div style={{ fontSize: '0.8rem', fontWeight: 700, marginTop: '5px' }}>CHIEF INSTRUCTOR</div>
           </div>
@@ -104,7 +104,7 @@ const CertificatePreview: React.FC<CertificatePreviewProps> = ({
             textAlign: 'center',
             transform: 'rotate(-15deg)'
           }}>
-            OFFICIAL<br/>KONE SEAL<br/>2026
+            OFFICIAL<br />KONE SEAL<br />2026
           </div>
 
           <div style={{ textAlign: 'center' }}>

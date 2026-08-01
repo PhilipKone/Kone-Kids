@@ -981,7 +981,7 @@ function AppContent() {
         }} 
       />
       
-      <div style={{ paddingBottom: (isMobile && !isMissionPage) ? '80px' : '0' }}>
+      <div style={{ paddingBottom: (isMobile && !isMissionPage) ? '100px' : '0' }}>
         <React.Suspense fallback={
           <div style={{
             display: 'flex',

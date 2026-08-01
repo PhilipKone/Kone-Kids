@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, RefreshCcw, Volume2, Trophy, Users } from 'lucide-react';
+import { CheckCircle, RefreshCcw, Volume2, Trophy, Lightbulb, Compass, Grid } from 'lucide-react';
 import { sounds } from '../utils/sounds';
 
 interface WordSearchGameProps {
@@ -8,20 +8,89 @@ interface WordSearchGameProps {
   onExit: () => void;
 }
 
+// Word pools categorized by complexity level
+const WORD_POOLS = {
+  novice: [
+    'CODE', 'BYTE', 'DATA', 'CHIP', 'LINK', 'KONE', 'VITE', 'NODE', 'LOOP', 'MATH', 
+    'BITS', 'FLAG', 'PIXEL', 'BOT', 'STEM', 'APP', 'TAG', 'GRID', 'BUG', 'WEB'
+  ],
+  builder: [
+    'PYTHON', 'BLOCKS', 'ROBOT', 'SENSOR', 'SPRITE', 'CANVAS', 'SCRIPT', 'ACTION', 
+    'VECTOR', 'ENGINE', 'INPUT', 'OUTPUT', 'BOOLEAN', 'DESIGN', 'CYBER', 'PIPELINE',
+    'MEMORY', 'ARRAY', 'REACT', 'WIDGET'
+  ],
+  architect: [
+    'ALGORITHM', 'VARIABLE', 'FUNCTION', 'ROBOTICS', 'FRONTEND', 'BACKEND', 'DATABASE', 
+    'HARDWARE', 'COMPILER', 'TELEMETRY', 'SEQUENCE', 'STRUCTURE', 'ASYNCHRONOUS',
+    'ITERATOR', 'ENCRYPTION', 'PROTOCOL'
+  ],
+  master: [
+    'ARTIFICIAL', 'INTELLIGENCE', 'CYBERSECURITY', 'FULLSTACK', 'MICROCONTROLLER', 
+    'NEURALNETWORK', 'TRANSFORMER', 'CRYPTOGRAPHY', 'SUPERVISED', 'AUTONOMOUS',
+    'EXPRESSION', 'POLYMORPHISM', 'ARCHITECTURE'
+  ]
+};
+
+// Calculate grid size based on level
+const getGridSize = (lvl: number): number => {
+  if (lvl <= 2) return 8;
+  if (lvl <= 4) return 9;
+  if (lvl <= 6) return 10;
+  if (lvl <= 9) return 11;
+  if (lvl <= 12) return 12;
+  if (lvl <= 15) return 13;
+  if (lvl <= 19) return 14;
+  return 15;
+};
+
+// Calculate allowed search directions based on level
+const getDirectionsForLevel = (lvl: number): number[][] => {
+  const dirs = [
+    [0, 1],   // Horizontal Right ➡️
+    [1, 0],   // Vertical Down ⬇️
+  ];
+  if (lvl >= 3) {
+    dirs.push([1, 1]); // Diagonal Down-Right ↘️
+  }
+  if (lvl >= 6) {
+    dirs.push([-1, 1]); // Diagonal Up-Right ↗️
+  }
+  if (lvl >= 9) {
+    dirs.push([0, -1], [-1, 0]); // Backwards Horizontal ⬅️ & Vertical ⬆️
+  }
+  if (lvl >= 13) {
+    dirs.push([-1, -1], [1, -1]); // Reverse Diagonals ↖️ ↙️
+  }
+  return dirs;
+};
+
+// Difficulty meta info
+const getDifficultyInfo = (lvl: number) => {
+  if (lvl <= 3) return { title: 'Novice Coder', badge: '🟢 Easy', color: '#22c55e', dirsText: '2 Directions (➡️ ⬇️)' };
+  if (lvl <= 7) return { title: 'App Builder', badge: '🔵 Medium', color: '#0ea5e9', dirsText: '4 Directions (➡️ ⬇️ ↘️ ↗️)' };
+  if (lvl <= 12) return { title: 'Tech Architect', badge: '🟣 Hard', color: '#a855f7', dirsText: '6 Directions (+ Backwards ⬅️ ⬆️)' };
+  if (lvl <= 16) return { title: 'Cyber Master', badge: '🔴 Expert', color: '#ef4444', dirsText: '8 Directions (360° All Directions)' };
+  return { title: 'AI Supermind', badge: '👑 Master', color: '#f59e0b', dirsText: '8 Directions • Large Grid' };
+};
+
 const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onExit }) => {
   const [grid, setGrid] = useState<string[][]>([]);
-  const [words, setWords] = useState<{ word: string, found: boolean }[]>([]);
-  const [selectedCells, setSelectedCells] = useState<{r: number, c: number}[]>([]);
+  const [words, setWords] = useState<{ word: string; found: boolean; startR?: number; startC?: number }[]>([]);
+  const [selectedCells, setSelectedCells] = useState<{ r: number; c: number }[]>([]);
   const [isWon, setIsWon] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Hint & Timer States
+  const [hintCell, setHintCell] = useState<{ r: number; c: number } | null>(null);
+  const [hintsRemaining, setHintsRemaining] = useState(2);
 
   // Co-op Multiplayer States
   const [isCoop, setIsCoop] = useState(false);
   const [activePlayer, setActivePlayer] = useState<1 | 2>(1);
   const [p1Score, setP1Score] = useState(0);
   const [p2Score, setP2Score] = useState(0);
-  const [p1Selected, setP1Selected] = useState<{r: number, c: number}[]>([]);
-  const [p2Selected, setP2Selected] = useState<{r: number, c: number}[]>([]);
+  const [p1Selected, setP1Selected] = useState<{ r: number; c: number }[]>([]);
+  const [p2Selected, setP2Selected] = useState<{ r: number; c: number }[]>([]);
   const [wordFoundBy, setWordFoundBy] = useState<Record<string, 'P1' | 'P2'>>({});
 
   useEffect(() => {
@@ -30,52 +99,46 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const difficulty = level <= 5 ? 'beginner' : (level <= 12 ? 'intermediate' : 'pro');
-  const size = level <= 5 ? 10 : (level <= 12 ? 12 : 14);
-
-  const wordPools = {
-    beginner: ['CODE', 'BYTE', 'DATA', 'CHIP', 'LINK', 'KONE', 'VITE', 'REACT'],
-    intermediate: ['ALGORITHM', 'VARIABLE', 'FUNCTION', 'ROBOTICS', 'FRONTEND', 'BACKEND'],
-    pro: ['ARTIFICIAL', 'INTELLIGENCE', 'BLOCKCHAIN', 'CYBERSECURITY', 'FULLSTACK']
-  };
+  const size = getGridSize(level);
+  const diffInfo = getDifficultyInfo(level);
+  const allowedDirs = getDirectionsForLevel(level);
 
   useEffect(() => {
     initGame();
   }, [level]);
 
   const initGame = () => {
-    const pool = wordPools[difficulty];
+    // Determine word pool by level
+    let pool: string[];
+    if (level <= 3) pool = WORD_POOLS.novice;
+    else if (level <= 7) pool = WORD_POOLS.builder;
+    else if (level <= 12) pool = [...WORD_POOLS.builder, ...WORD_POOLS.architect];
+    else pool = [...WORD_POOLS.architect, ...WORD_POOLS.master];
+
+    const targetWordCount = Math.min(12, 4 + Math.floor((level - 1) / 2));
+    
+    // Pick random unique words
     const levelWords = [...pool]
       .sort(() => 0.5 - Math.random())
-      .slice(0, 5 + Math.floor(level / 4))
-      .map(w => ({ word: w, found: false }));
-    
-    setWords(levelWords);
-    
+      .slice(0, targetWordCount)
+      .map(w => ({ word: w, found: false, startR: 0, startC: 0 }));
+
     const newGrid = Array(size).fill(null).map(() => Array(size).fill(''));
 
-    const directions = [
-      [0, 1],   // Horizontal
-      [1, 0],   // Vertical
-      [1, 1],   // Diagonal Down-Right
-      [-1, 1],  // Diagonal Up-Right
-    ];
-
-    if (difficulty !== 'beginner') {
-      directions.push([0, -1], [-1, 0]);
-    }
-
-    levelWords.forEach(({ word }) => {
+    // Place words in grid
+    levelWords.forEach(wObj => {
       let placed = false;
       let attempts = 0;
-      while (!placed && attempts < 100) {
-        const dir = directions[Math.floor(Math.random() * directions.length)];
+      while (!placed && attempts < 150) {
+        const dir = allowedDirs[Math.floor(Math.random() * allowedDirs.length)];
         const r = Math.floor(Math.random() * size);
         const c = Math.floor(Math.random() * size);
         
-        if (canPlace(word, r, c, dir, size, newGrid)) {
-          for (let i = 0; i < word.length; i++) {
-            newGrid[r + i * dir[0]][c + i * dir[1]] = word[i];
+        if (canPlace(wObj.word, r, c, dir, size, newGrid)) {
+          wObj.startR = r;
+          wObj.startC = c;
+          for (let i = 0; i < wObj.word.length; i++) {
+            newGrid[r + i * dir[0]][c + i * dir[1]] = wObj.word[i];
           }
           placed = true;
         }
@@ -83,15 +146,24 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
       }
     });
 
+    // Fill remaining cells with weighted letters for higher levels
+    const commonDistractors = 'ETAOINSHRDLCUMWFGYPBVKJXQZ';
     for (let r = 0; r < size; r++) {
       for (let c = 0; c < size; c++) {
         if (newGrid[r][c] === '') {
-          newGrid[r][c] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+          if (level >= 8) {
+            // Weighted random letter from common STEM distractors
+            const randIdx = Math.floor(Math.pow(Math.random(), 1.5) * commonDistractors.length);
+            newGrid[r][c] = commonDistractors[Math.min(randIdx, commonDistractors.length - 1)];
+          } else {
+            newGrid[r][c] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+          }
         }
       }
     }
 
     setGrid(newGrid);
+    setWords(levelWords);
     setSelectedCells([]);
     setP1Selected([]);
     setP2Selected([]);
@@ -99,25 +171,37 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
     setP2Score(0);
     setWordFoundBy({});
     setIsWon(false);
+    setHintCell(null);
+    setHintsRemaining(2);
   };
 
-  const canPlace = (word: string, r: number, c: number, dir: number[], size: number, grid: string[][]) => {
+  const canPlace = (word: string, r: number, c: number, dir: number[], gridSize: number, gridState: string[][]) => {
     const endR = r + (word.length - 1) * dir[0];
     const endC = c + (word.length - 1) * dir[1];
     
-    if (endR < 0 || endR >= size || endC < 0 || endC >= size) return false;
+    if (endR < 0 || endR >= gridSize || endC < 0 || endC >= gridSize) return false;
     
     for (let i = 0; i < word.length; i++) {
       const currR = r + i * dir[0];
       const currC = c + i * dir[1];
-      if (grid[currR][currC] !== '' && grid[currR][currC] !== word[i]) return false;
+      if (gridState[currR][currC] !== '' && gridState[currR][currC] !== word[i]) return false;
     }
     return true;
   };
 
+  const handleUseHint = () => {
+    if (hintsRemaining <= 0 || isWon) return;
+    const unfound = words.find(w => !w.found);
+    if (unfound && unfound.startR !== undefined && unfound.startC !== undefined) {
+      sounds.playClick();
+      setHintCell({ r: unfound.startR, c: unfound.startC });
+      setHintsRemaining(prev => prev - 1);
+      setTimeout(() => setHintCell(null), 3000);
+    }
+  };
+
   const handleCellClick = (r: number, c: number) => {
     if (isWon) return;
-    
     sounds.playClick();
     
     if (!isCoop) {
@@ -127,7 +211,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
       if (isSelected) {
         newSelection = newSelection.filter(cell => !(cell.r === r && cell.c === c));
       } else {
-        newSelection.push({r, c});
+        newSelection.push({ r, c });
       }
       
       setSelectedCells(newSelection);
@@ -143,11 +227,12 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
         newWords[wordIdx].found = true;
         setWords(newWords);
         setSelectedCells([]);
+        setHintCell(null);
         
         if (newWords.every(w => w.found)) {
           sounds.playWin();
           setIsWon(true);
-          setTimeout(() => onComplete(100 + level * 10), 2000);
+          setTimeout(() => onComplete(100 + level * 15), 2000);
         }
       }
     } else {
@@ -160,7 +245,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
       if (isSelected) {
         newSelection = newSelection.filter(cell => !(cell.r === r && cell.c === c));
       } else {
-        newSelection.push({r, c});
+        newSelection.push({ r, c });
       }
       
       setSelection(newSelection);
@@ -177,6 +262,7 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
         newWords[wordIdx].found = true;
         setWords(newWords);
         setSelection([]);
+        setHintCell(null);
 
         if (activePlayer === 1) {
           setP1Score(prev => prev + 1);
@@ -189,39 +275,85 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
         if (newWords.every(w => w.found)) {
           sounds.playWin();
           setIsWon(true);
-          setTimeout(() => onComplete(Math.round((100 + level * 10) * 1.2)), 2000);
+          setTimeout(() => onComplete(Math.round((100 + level * 15) * 1.25)), 2000);
         }
       }
     }
   };
 
   const gridSize = grid.length || 10;
+  const foundCount = words.filter(w => w.found).length;
 
   return (
     <div className="game-container" style={{
-      background: '#1e293b',
-      padding: 'clamp(1rem, 4vw, 2rem)',
+      background: '#0f172a',
+      border: '1px solid rgba(255, 255, 255, 0.1)',
+      padding: 'clamp(1rem, 3.5vw, 1.8rem)',
       borderRadius: '24px',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      gap: '1.25rem',
-      boxShadow: '0 20px 50px rgba(0,0,0,0.3)',
-      maxWidth: '800px',
+      gap: '1.2rem',
+      boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+      maxWidth: '850px',
       width: '100%',
       position: 'relative',
       margin: '0 auto'
     }}>
-      {/* Header */}
+      {/* Header Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
         <div>
-          <h2 style={{ margin: 0, fontFamily: '"Baloo 2", cursive', color: '#f472b6', fontSize: 'clamp(1.2rem, 5vw, 1.8rem)' }}>Level {level}</h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 800 }}>{difficulty.toUpperCase()}</span>
-            <Volume2 size={12} color="#94a3b8" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <h2 style={{ margin: 0, fontFamily: '"Baloo 2", cursive', color: '#f472b6', fontSize: 'clamp(1.3rem, 5vw, 1.9rem)' }}>
+              Level {level}: {diffInfo.title}
+            </h2>
+            <span style={{
+              background: `${diffInfo.color}25`,
+              color: diffInfo.color,
+              border: `1px solid ${diffInfo.color}44`,
+              borderRadius: '8px',
+              padding: '2px 8px',
+              fontSize: '0.75rem',
+              fontWeight: 800
+            }}>
+              {diffInfo.badge}
+            </span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.2rem' }}>
+            <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <Grid size={13} color="#94a3b8" /> {size}x{size} Grid
+            </span>
+            <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <Compass size={13} color="#94a3b8" /> {allowedDirs.length} Directions
+            </span>
           </div>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          {/* Hint Button */}
+          <button
+            onClick={handleUseHint}
+            disabled={hintsRemaining <= 0 || isWon}
+            title={hintsRemaining > 0 ? "Reveal starting letter of 1 hidden word" : "No hints left"}
+            style={{
+              background: hintsRemaining > 0 ? 'rgba(245, 158, 11, 0.2)' : 'rgba(255,255,255,0.05)',
+              border: `1px solid ${hintsRemaining > 0 ? '#f59e0b' : 'rgba(255,255,255,0.1)'}`,
+              color: hintsRemaining > 0 ? '#fbbf24' : '#64748b',
+              padding: isMobile ? '0.35rem 0.6rem' : '0.45rem 0.85rem',
+              borderRadius: '12px',
+              fontWeight: 800,
+              cursor: hintsRemaining > 0 ? 'pointer' : 'not-allowed',
+              fontSize: isMobile ? '0.72rem' : '0.82rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              transition: 'all 0.2s ease'
+            }}
+          >
+            <Lightbulb size={14} />
+            <span>Hint ({hintsRemaining})</span>
+          </button>
+
           {((!isCoop && selectedCells.length > 0) || (isCoop && (p1Selected.length > 0 || p2Selected.length > 0))) && (
             <button 
               onClick={() => {
@@ -235,23 +367,24 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
                 background: 'rgba(239, 68, 68, 0.2)', 
                 border: '1px solid #ef4444', 
                 color: '#ef4444', 
-                padding: isMobile ? '0.35rem 0.6rem' : '0.5rem 1rem',
+                padding: isMobile ? '0.35rem 0.6rem' : '0.45rem 0.85rem',
                 borderRadius: '12px',
                 fontWeight: 800,
                 cursor: 'pointer',
-                fontSize: isMobile ? '0.7rem' : '0.85rem'
+                fontSize: isMobile ? '0.72rem' : '0.82rem'
               }}
             >Clear</button>
           )}
+
           <button onClick={onExit} style={{ 
-            background: 'rgba(255,255,255,0.1)', 
-            border: 'none', 
+            background: 'rgba(255,255,255,0.08)', 
+            border: '1px solid rgba(255,255,255,0.15)', 
             color: 'white', 
-            padding: isMobile ? '0.35rem 0.6rem' : '0.5rem 1rem',
+            padding: isMobile ? '0.35rem 0.6rem' : '0.45rem 0.85rem',
             borderRadius: '12px',
             fontWeight: 800,
             cursor: 'pointer',
-            fontSize: isMobile ? '0.7rem' : '0.85rem'
+            fontSize: isMobile ? '0.72rem' : '0.82rem'
           }}>{isMobile ? 'Exit' : 'Close Game'}</button>
         </div>
       </div>
@@ -262,34 +395,34 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
           display: 'flex',
           justifyContent: 'space-around',
           width: '100%',
-          background: 'rgba(0,0,0,0.15)',
-          padding: '0.75rem 1rem',
+          background: 'rgba(0,0,0,0.25)',
+          padding: '0.6rem 1rem',
           borderRadius: '16px',
           gap: '1rem',
-          flexWrap: 'wrap'
+          flexWrap: 'wrap',
+          border: '1px solid rgba(255,255,255,0.05)'
         }}>
           {/* Player 1 Card */}
           <div 
             onClick={() => setActivePlayer(1)}
             style={{
               flex: 1,
-              padding: '0.5rem 1rem',
+              padding: '0.45rem 0.85rem',
               borderRadius: '12px',
               border: `2px solid ${activePlayer === 1 ? '#f472b6' : 'transparent'}`,
-              background: activePlayer === 1 ? 'rgba(244, 114, 182, 0.1)' : 'rgba(255,255,255,0.02)',
+              background: activePlayer === 1 ? 'rgba(244, 114, 182, 0.15)' : 'rgba(255,255,255,0.02)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              transition: 'all 0.2s',
-              boxShadow: activePlayer === 1 ? '0 0 10px rgba(244, 114, 182, 0.2)' : 'none'
+              transition: 'all 0.2s'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.25rem' }}>🐰</span>
-              <span style={{ fontWeight: 800, color: '#f472b6', fontSize: '0.9rem' }}>Player 1</span>
+              <span style={{ fontSize: '1.2rem' }}>🐰</span>
+              <span style={{ fontWeight: 800, color: '#f472b6', fontSize: '0.85rem' }}>Player 1</span>
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#f472b6' }}>{p1Score} found</div>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#f472b6' }}>{p1Score} found</div>
           </div>
 
           {/* Player 2 Card */}
@@ -297,71 +430,80 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
             onClick={() => setActivePlayer(2)}
             style={{
               flex: 1,
-              padding: '0.5rem 1rem',
+              padding: '0.45rem 0.85rem',
               borderRadius: '12px',
               border: `2px solid ${activePlayer === 2 ? '#22d3ee' : 'transparent'}`,
-              background: activePlayer === 2 ? 'rgba(34, 211, 238, 0.1)' : 'rgba(255,255,255,0.02)',
+              background: activePlayer === 2 ? 'rgba(34, 211, 238, 0.15)' : 'rgba(255,255,255,0.02)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              transition: 'all 0.2s',
-              boxShadow: activePlayer === 2 ? '0 0 10px rgba(34, 211, 238, 0.2)' : 'none'
+              transition: 'all 0.2s'
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.25rem' }}>🐱</span>
-              <span style={{ fontWeight: 800, color: '#22d3ee', fontSize: '0.9rem' }}>Player 2</span>
+              <span style={{ fontSize: '1.2rem' }}>🐱</span>
+              <span style={{ fontWeight: 800, color: '#22d3ee', fontSize: '0.85rem' }}>Player 2</span>
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 900, color: '#22d3ee' }}>{p2Score} found</div>
+            <div style={{ fontSize: '1rem', fontWeight: 900, color: '#22d3ee' }}>{p2Score} found</div>
           </div>
         </div>
       )}
 
-      {/* Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-        gap: gridSize > 12 ? '2px' : '4px',
-        background: '#334155',
-        padding: '6px',
-        borderRadius: '12px',
-        width: '100%',
-        maxWidth: 'min(90vw, 450px)',
-        margin: '0 auto'
-      }}>
+      {/* Main Responsive Grid Canvas */}
+      <div 
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
+          gap: gridSize > 12 ? '3px' : (gridSize > 10 ? '4px' : '6px'),
+          width: '100%',
+          maxWidth: '560px',
+          aspectRatio: '1/1',
+          background: 'rgba(15, 23, 42, 0.8)',
+          padding: '10px',
+          borderRadius: '20px',
+          border: '1.5px solid rgba(255,255,255,0.1)',
+          boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.5)',
+          touchAction: 'none'
+        }}
+      >
         {grid.map((row, r) => row.map((char, c) => {
-          let isSelected = false;
-          let cellColor = '#1e293b';
-          let textColor = '#cbd5e1';
+          const isSelected = !isCoop
+            ? selectedCells.some(cell => cell.r === r && cell.c === c)
+            : (activePlayer === 1 ? p1Selected : p2Selected).some(cell => cell.r === r && cell.c === c);
+
+          const isHint = hintCell?.r === r && hintCell?.c === c;
+
+          const p1Sel = isCoop && p1Selected.some(cell => cell.r === r && cell.c === c);
+          const p2Sel = isCoop && p2Selected.some(cell => cell.r === r && cell.c === c);
+
+          let cellColor = 'rgba(30, 41, 59, 0.7)';
+          let textColor = '#e2e8f0';
           let shadow = 'none';
+          let border = '1px solid rgba(255,255,255,0.05)';
 
-          if (!isCoop) {
-            isSelected = selectedCells.some(cell => cell.r === r && cell.c === c);
-            if (isSelected) {
-              cellColor = '#f472b6';
-              textColor = 'white';
-              shadow = '0 0 10px #f472b688';
-            }
-          } else {
-            const p1Sel = p1Selected.some(cell => cell.r === r && cell.c === c);
-            const p2Sel = p2Selected.some(cell => cell.r === r && cell.c === c);
-
+          if (isHint) {
+            cellColor = '#f59e0b';
+            textColor = '#ffffff';
+            shadow = '0 0 16px #f59e0b';
+            border = '2px solid #fbbf24';
+          } else if (!isCoop && isSelected) {
+            cellColor = '#f472b6';
+            textColor = 'white';
+            shadow = '0 0 10px #f472b688';
+          } else if (isCoop) {
             if (p1Sel && p2Sel) {
               cellColor = 'linear-gradient(135deg, #f472b6 0%, #22d3ee 100%)';
               textColor = 'white';
               shadow = '0 0 12px #c084fc88';
-              isSelected = true;
             } else if (p1Sel) {
               cellColor = '#f472b6';
               textColor = 'white';
               shadow = '0 0 10px #f472b688';
-              isSelected = true;
             } else if (p2Sel) {
               cellColor = '#22d3ee';
               textColor = '#0f172a';
               shadow = '0 0 10px #22d3ee88';
-              isSelected = true;
             }
           }
 
@@ -377,11 +519,12 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
                 background: cellColor,
                 color: textColor,
                 borderRadius: gridSize > 12 ? '4px' : '6px',
+                border: border,
                 fontWeight: 900,
                 cursor: 'pointer',
-                fontSize: gridSize > 12 ? (isMobile ? '0.6rem' : '0.7rem') : 'clamp(0.8rem, 3.5vw, 1.1rem)',
+                fontSize: gridSize > 13 ? (isMobile ? '0.55rem' : '0.65rem') : (gridSize > 10 ? (isMobile ? '0.65rem' : '0.78rem') : 'clamp(0.85rem, 3.5vw, 1.15rem)'),
                 userSelect: 'none',
-                transition: 'all 0.1s',
+                transition: 'all 0.15s ease',
                 boxShadow: shadow,
                 WebkitTapHighlightColor: 'transparent'
               }}
@@ -392,44 +535,61 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
         }))}
       </div>
 
-      {/* Word List with Found By attributions */}
+      {/* Target Word List HUD */}
       <div style={{ 
         display: 'flex', 
-        gap: '0.5rem', 
-        flexWrap: 'wrap', 
-        justifyContent: 'center',
-        background: 'rgba(0,0,0,0.2)',
+        flexDirection: 'column',
+        gap: '0.6rem',
+        width: '100%',
+        background: 'rgba(0,0,0,0.25)',
         padding: '1rem',
-        borderRadius: '16px',
-        width: '100%'
+        borderRadius: '18px',
+        border: '1px solid rgba(255,255,255,0.05)'
       }}>
-        {words.map((w, i) => {
-          const finder = wordFoundBy[w.word];
-          return (
-            <div key={i} style={{
-              padding: '0.35rem 0.75rem',
-              background: w.found ? '#22c55e22' : 'rgba(255,255,255,0.05)',
-              borderRadius: '10px',
-              color: w.found ? '#22c55e' : '#cbd5e1',
-              border: `1px solid ${w.found ? '#22c55e44' : 'transparent'}`,
-              fontWeight: 800,
-              fontSize: 'clamp(0.7rem, 2.5vw, 0.85rem)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              textDecoration: w.found ? 'line-through' : 'none',
-              opacity: w.found ? 0.6 : 1
-            }}>
-              {w.found && <CheckCircle size={12} />}
-              {w.word}
-              {isCoop && w.found && finder && (
-                <span style={{ fontSize: '0.7rem', opacity: 0.8, fontStyle: 'italic', marginLeft: '0.2rem' }}>
-                  ({finder === 'P1' ? '🐰 P1' : '🐱 P2'})
-                </span>
-              )}
-            </div>
-          );
-        })}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 800 }}>
+            TARGET WORDS ({foundCount}/{words.length})
+          </span>
+          <span style={{ fontSize: '0.75rem', color: diffInfo.color, fontWeight: 800 }}>
+            {diffInfo.dirsText}
+          </span>
+        </div>
+
+        <div style={{ 
+          display: 'flex', 
+          gap: '0.5rem', 
+          flexWrap: 'wrap', 
+          justifyContent: 'center'
+        }}>
+          {words.map((w, i) => {
+            const finder = wordFoundBy[w.word];
+            return (
+              <div key={i} style={{
+                padding: '0.35rem 0.75rem',
+                background: w.found ? '#22c55e22' : 'rgba(255,255,255,0.05)',
+                borderRadius: '10px',
+                color: w.found ? '#22c55e' : '#cbd5e1',
+                border: `1px solid ${w.found ? '#22c55e44' : 'rgba(255,255,255,0.08)'}`,
+                fontWeight: 800,
+                fontSize: 'clamp(0.7rem, 2.5vw, 0.85rem)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                textDecoration: w.found ? 'line-through' : 'none',
+                opacity: w.found ? 0.6 : 1,
+                transition: 'all 0.2s ease'
+              }}>
+                {w.found && <CheckCircle size={12} />}
+                {w.word}
+                {isCoop && w.found && finder && (
+                  <span style={{ fontSize: '0.7rem', opacity: 0.85, fontStyle: 'italic', marginLeft: '0.2rem' }}>
+                    ({finder === 'P1' ? '🐰 P1' : '🐱 P2'})
+                  </span>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Game Mode Selector Toolbar */}
@@ -437,10 +597,10 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
         display: 'flex',
         alignItems: 'center',
         gap: '0.5rem',
-        background: 'rgba(0,0,0,0.15)',
+        background: 'rgba(0,0,0,0.2)',
         padding: '6px 12px',
         borderRadius: '12px',
-        marginTop: '0.25rem'
+        border: '1px solid rgba(255,255,255,0.05)'
       }}>
         <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 800 }}>GAME MODE:</span>
         <button
@@ -480,21 +640,21 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
             gap: '0.25rem'
           }}
         >
-          <Users size={12} /> Co-op (2 Players)
+          2-Player Co-op
         </button>
       </div>
 
-      {/* Victory Screen */}
+      {/* Win Banner */}
       {isWon && (
         <div style={{
           position: 'absolute',
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          background: 'rgba(30, 41, 59, 0.98)',
+          background: '#0f172a',
           padding: '2rem',
           borderRadius: '24px',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+          boxShadow: '0 0 50px rgba(34, 197, 94, 0.4)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -519,14 +679,14 @@ const WordSearchGame: React.FC<WordSearchGameProps> = ({ level, onComplete, onEx
             fontWeight: 900,
             fontSize: '1.6rem',
           }}>
-            AWESOME!<br/>Level Complete! 🚀
+            AWESOME!<br/>Level {level} Complete! 🚀
           </div>
           {isCoop && (
             <div style={{ color: '#cbd5e1', fontSize: '0.95rem', background: 'rgba(255,255,255,0.05)', padding: '0.75rem 1rem', borderRadius: '12px', width: '100%', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
               <div style={{ fontWeight: 800, color: '#f472b6' }}>🐰 Player 1 found: {p1Score} words</div>
               <div style={{ fontWeight: 800, color: '#22d3ee' }}>🐱 Player 2 found: {p2Score} words</div>
               <div style={{ fontSize: '0.8rem', color: '#10b981', fontWeight: 800, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '0.5rem', marginTop: '0.25rem' }}>
-                🤝 Teamwork Bonus: +20% XP!
+                🤝 Teamwork Bonus: +25% XP!
               </div>
             </div>
           )}

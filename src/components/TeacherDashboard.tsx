@@ -11,23 +11,23 @@ const ADMIN_EMAILS = ['philipkone45@gmail.com', 'phconsultgh@gmail.com'];
 
 const MASCOTS = [
   // Animals (75)
-  '🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵',
-  '🐔','🐧','🐦','🦆','🦅','🦉','🦇','🐺','🐗','🐴','🦄','🐢','🐍','🦎','🐙',
-  '🦑','🦞','🦀','🐡','🐠','🐟','🐬','🐳','🐋','🦈','🐊','🐘','🦛','🦏','🐪',
-  '🦒','🦘','🦬','🐿️','🦔','🦦','🦥','🦡','🦖','🦕','🐏','🐑','🐐','🦌','🐓',
-  '🦃','🦚','🦜','🦢','🦩','🕊️','🐇','🐈','🐕','🦭','🦋','🐌','🐞','🐜','🐝',
+  '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵',
+  '🐔', '🐧', '🐦', '🦆', '🦅', '🦉', '🦇', '🐺', '🐗', '🐴', '🦄', '🐢', '🐍', '🦎', '🐙',
+  '🦑', '🦞', '🦀', '🐡', '🐠', '🐟', '🐬', '🐳', '🐋', '🦈', '🐊', '🐘', '🦛', '🦏', '🐪',
+  '🦒', '🦘', '🦬', '🐿️', '🦔', '🦦', '🦥', '🦡', '🦖', '🦕', '🐏', '🐑', '🐐', '🦌', '🐓',
+  '🦃', '🦚', '🦜', '🦢', '🦩', '🕊️', '🐇', '🐈', '🐕', '🦭', '🦋', '🐌', '🐞', '🐜', '🐝',
   // Food & Treats (40)
-  '🍎','🍐','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝',
-  '🍅','🍆','🥑','🥦','🥬','🥒','🌶️','🌽','🥕','🫑','🧅','🧄','🥔','🍠','🥐',
-  '🍞','🥖','🥨','🍕','🍟','🍔','🌭','🌮','🌯','🍿','🥚','🍳','🥞','🧇','🧀',
+  '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝',
+  '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🌽', '🥕', '🫑', '🧅', '🧄', '🥔', '🍠', '🥐',
+  '🍞', '🥖', '🥨', '🍕', '🍟', '🍔', '🌭', '🌮', '🌯', '🍿', '🥚', '🍳', '🥞', '🧇', '🧀',
   // Space, Vehicles & Nature (45)
-  '🚀','🛸','🚁','✈️','🪂','🛰️','🚂','🚌','🚑','🚒','🚓','🚕','🚗','🏎️','🚙',
-  '🛻','🚜','🚲','🛴','🛹','🛺','⛵','🚢','⚓','🌍','🌙','☀️','⭐','🪐','☄️',
-  '🌈','⚡','❄️','🔥','💧','🌴','🌲','🌵','🍀','🍁','🍄','🌻','🌸','🎈','🎉',
+  '🚀', '🛸', '🚁', '✈️', '🪂', '🛰️', '🚂', '🚌', '🚑', '🚒', '🚓', '🚕', '🚗', '🏎️', '🚙',
+  '🛻', '🚜', '🚲', '🛴', '🛹', '🛺', '⛵', '🚢', '⚓', '🌍', '🌙', '☀️', '⭐', '🪐', '☄️',
+  '🌈', '⚡', '❄️', '🔥', '💧', '🌴', '🌲', '🌵', '🍀', '🍁', '🍄', '🌻', '🌸', '🎈', '🎉',
   // Tools, Gadgets & Play (40)
-  '🧠','🦾','🎮','📱','💻','🖥️','⌨️','🖱️','🎧','🎙️','🕶️','👑','💎','🔔','🎁',
-  '🏆','🥇','🎖️','🧭','🔭','🔬','🧪','🧬','🦫','🪓','🔨','🛠️','🔧','🔩','⚙️',
-  '🧲','🛡️','🏹','🗝️','🔑','🧸','🪁','🪀','🎨','🧩'
+  '🧠', '🦾', '🎮', '📱', '💻', '🖥️', '⌨️', '🖱️', '🎧', '🎙️', '🕶️', '👑', '💎', '🔔', '🎁',
+  '🏆', '🥇', '🎖️', '🧭', '🔭', '🔬', '🧪', '🧬', '🦫', '🪓', '🔨', '🛠️', '🔧', '🔩', '⚙️',
+  '🧲', '🛡️', '🏹', '🗝️', '🔑', '🧸', '🪁', '🪀', '🎨', '🧩'
 ];
 
 export default function TeacherDashboard() {
@@ -269,12 +269,12 @@ export default function TeacherDashboard() {
         const currentMock = [newSecObj, ...mySections];
         localStorage.setItem('kone_teacher_sections', JSON.stringify(currentMock));
       }
-      
+
       setActiveCode(code);
       setMySections(prev => [newSecObj, ...prev.filter(c => c.id !== code)]);
       setSectionName('');
       setStudents([]);
-      
+
       confetti({
         particleCount: 80,
         spread: 60,
@@ -326,7 +326,7 @@ export default function TeacherDashboard() {
       if (db && (db as any).app) {
         // Delete students in the subcollection first
         const studentsSnapshot = await getDocs(collection(db, 'sections', activeCode, 'students'));
-        const deletePromises = studentsSnapshot.docs.map(studentDoc => 
+        const deletePromises = studentsSnapshot.docs.map(studentDoc =>
           deleteDoc(doc(db, 'sections', activeCode, 'students', studentDoc.id))
         );
         await Promise.all(deletePromises);
@@ -415,7 +415,7 @@ export default function TeacherDashboard() {
     setLoading(true);
     const randomMascot = MASCOTS[Math.floor(Math.random() * MASCOTS.length)];
     const studentId = 'student_' + Math.random().toString(36).substr(2, 9);
-    
+
     const newStudent = {
       name: newStudentName.trim(),
       secretPicture: randomMascot,
@@ -447,7 +447,7 @@ export default function TeacherDashboard() {
 
   const handleDeleteStudent = async (studentId: string) => {
     if (!activeCode || !window.confirm("Are you sure you want to delete this student? All their saved progress (XP, level, coins) will be lost permanently.")) return;
-    
+
     setLoading(true);
     try {
       if (db && (db as any).app) {
@@ -466,25 +466,25 @@ export default function TeacherDashboard() {
 
   const handleUpdateStudent = async (studentId: string, updatedName: string, updatedMascot: string) => {
     if (!updatedName.trim() || !activeCode) return;
-    
+
     setLoading(true);
     try {
       const studentData = students.find(s => s.id === studentId);
       if (!studentData) return;
-      
+
       const updatedFields = {
         ...studentData,
         name: updatedName.trim(),
         secretPicture: updatedMascot
       };
-      
+
       if (db && (db as any).app) {
         await setDoc(doc(db, 'sections', activeCode, 'students', studentId), updatedFields);
       } else {
         const currentMock = students.map(s => s.id === studentId ? { ...s, name: updatedName.trim(), secretPicture: updatedMascot } : s);
         localStorage.setItem(`kone_kids_mock_roster_${activeCode}`, JSON.stringify(currentMock));
       }
-      
+
       setStudents(prev => prev.map(s => s.id === studentId ? { ...s, name: updatedName.trim(), secretPicture: updatedMascot } : s));
     } catch (err) {
       setError('Failed to update student details.');
@@ -745,7 +745,7 @@ export default function TeacherDashboard() {
           }}>
             <h4 style={{ margin: '0 0 0.5rem 0', color: '#1e3a8a', fontFamily: "'Baloo 2', cursive", fontSize: '1.1rem' }}>How to activate your account:</h4>
             <p style={{ margin: 0, fontSize: '0.9rem', color: '#64748b', lineHeight: 1.4 }}>
-              Please message the Kone Academy Administrator (Philip Kone) with your registered email (<strong>{currentUser.email}</strong>) to request activation.
+              Please message the Kone Kids Administrator (Philip Hotor) with your registered email (<strong>{currentUser.email}</strong>) to request activation.
             </p>
             <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem', fontWeight: 700 }}>
               <span style={{ color: 'var(--kids-orange)' }}>📞 Phone / WhatsApp: +233 55 199 3820</span>
@@ -778,7 +778,7 @@ export default function TeacherDashboard() {
       color: '#0f172a',
       padding: '3rem 5% 6rem'
     }} className="teacher-hub-page">
-      
+
       <style>{`
         @media print {
           body * {
@@ -817,7 +817,7 @@ export default function TeacherDashboard() {
       `}</style>
 
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        
+
         {/* Header Title */}
         <div style={{ marginBottom: '3rem', textAlign: 'center' }} className="no-print">
           <div style={{
@@ -855,10 +855,10 @@ export default function TeacherDashboard() {
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '2.5rem'
         }} className="no-print">
-          
+
           {/* Left Column: Roster Setup & Sections list */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-            
+
             {/* Create Section Form */}
             <div className="glass-card" style={{
               background: 'white',
@@ -870,10 +870,10 @@ export default function TeacherDashboard() {
               <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0 0 1.25rem', color: '#1e3a8a', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <Users size={20} /> Create New Class Code
               </h3>
-              
+
               <form onSubmit={handleCreateSection} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   value={sectionName}
                   onChange={(e) => setSectionName(e.target.value)}
                   placeholder="e.g. Primary 4 Coding Lab"
@@ -887,9 +887,9 @@ export default function TeacherDashboard() {
                     fontFamily: 'inherit'
                   }}
                 />
-                
-                <button 
-                  type="submit" 
+
+                <button
+                  type="submit"
                   disabled={loading}
                   className="kids-button"
                   style={{ width: '100%', padding: '0.75rem' }}
@@ -911,7 +911,7 @@ export default function TeacherDashboard() {
                 <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0 0 1.25rem', color: 'var(--kids-blue)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   👥 Teacher Directory <span style={{ fontSize: '0.8rem', background: 'rgba(14, 165, 233, 0.1)', color: 'var(--kids-blue)', padding: '0.2rem 0.6rem', borderRadius: '8px' }}>ADMIN</span>
                 </h3>
-                
+
                 {loadingTeachers ? (
                   <p style={{ color: 'var(--kids-text-muted)', fontSize: '0.9rem' }}>Loading teachers directory...</p>
                 ) : teachersList.length === 0 ? (
@@ -945,7 +945,7 @@ export default function TeacherDashboard() {
                             {t.approved ? '🟢 Approved' : '⏳ Pending'}
                           </span>
                         </div>
-                        
+
                         <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
                           <button
                             onClick={() => handleToggleApproval(t.uid, !!t.approved)}
@@ -994,7 +994,7 @@ export default function TeacherDashboard() {
                 <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.3rem', margin: '0 0 1.25rem', color: '#475569' }}>
                   My Active Classes
                 </h3>
-                
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   {mySections.map((sec) => (
                     <button
@@ -1062,7 +1062,7 @@ export default function TeacherDashboard() {
                       <span style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--kids-orange)', letterSpacing: '0.02em', display: 'block', marginBottom: '0.2rem' }}>
                         Active Classroom
                       </span>
-                      
+
                       {!isEditingClassName ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
                           <h2 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.2rem', color: '#1e3a8a', margin: 0, lineHeight: 1.1 }}>
@@ -1090,7 +1090,7 @@ export default function TeacherDashboard() {
                           <button onClick={() => setIsEditingClassName(false)} className="kids-button" style={{ padding: '0.4rem 0.85rem', fontSize: '0.85rem', background: '#94a3b8', boxShadow: '0 3px 0 #64748b' }}>Cancel</button>
                         </div>
                       )}
-                      
+
                       <span style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--kids-text-muted)', display: 'block', marginTop: '0.35rem' }}>
                         Class Code: <code style={{ background: '#f1f5f9', padding: '0.15rem 0.4rem', borderRadius: '6px', color: '#0f172a', fontWeight: 900 }}>{activeCode}</code>
                         <button
@@ -1120,7 +1120,7 @@ export default function TeacherDashboard() {
                     </div>
 
                     <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                      <button 
+                      <button
                         onClick={handlePrintPasskeys}
                         className="kids-button"
                         style={{
@@ -1135,7 +1135,7 @@ export default function TeacherDashboard() {
                         <Printer size={16} /> Print Passkeys
                       </button>
 
-                      <button 
+                      <button
                         onClick={handlePrintReport}
                         className="kids-button"
                         style={{
@@ -1149,8 +1149,8 @@ export default function TeacherDashboard() {
                       >
                         <Award size={16} /> Print Report (PDF)
                       </button>
-                      
-                      <button 
+
+                      <button
                         onClick={handleDeleteClass}
                         className="kids-button"
                         style={{
@@ -1170,8 +1170,8 @@ export default function TeacherDashboard() {
 
                 {/* Add Student to Roster */}
                 <form onSubmit={handleAddStudent} style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem' }}>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={newStudentName}
                     onChange={(e) => setNewStudentName(e.target.value)}
                     placeholder="Enter Student Name..."
@@ -1185,8 +1185,8 @@ export default function TeacherDashboard() {
                       fontFamily: 'inherit'
                     }}
                   />
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="kids-button"
                     style={{ padding: '0.65rem 1.25rem', fontSize: '0.95rem' }}
                   >
@@ -1197,7 +1197,7 @@ export default function TeacherDashboard() {
                 {/* Students Roster Grid */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                   <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem', color: '#475569', fontWeight: 700 }}>Students Roster ({students.length})</h3>
-                  
+
                   {students.length === 0 ? (
                     <div style={{ textAlign: 'center', padding: '3rem 1rem', border: '2px dashed #e2e8f0', borderRadius: '16px', color: 'var(--kids-text-muted)' }}>
                       <p style={{ margin: '0 0 0.5rem' }}>Roster is empty!</p>
@@ -1208,7 +1208,7 @@ export default function TeacherDashboard() {
                       {students.map((student) => {
                         if (editingStudentId === student.id) {
                           return (
-                            <div 
+                            <div
                               key={student.id}
                               style={{
                                 display: 'flex',
@@ -1221,8 +1221,8 @@ export default function TeacherDashboard() {
                               }}
                             >
                               <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                <input 
-                                  type="text" 
+                                <input
+                                  type="text"
                                   value={editingName}
                                   onChange={(e) => setEditingName(e.target.value)}
                                   style={{
@@ -1271,7 +1271,7 @@ export default function TeacherDashboard() {
                         }
 
                         return (
-                          <div 
+                          <div
                             key={student.id}
                             style={{
                               display: 'flex',
@@ -1394,7 +1394,7 @@ export default function TeacherDashboard() {
                   gap: '1.5rem'
                 }}>
                   {students.map((student) => (
-                    <div 
+                    <div
                       key={student.id}
                       style={{
                         border: '2px solid #cbd5e1',
@@ -1410,7 +1410,7 @@ export default function TeacherDashboard() {
                       <div>
                         <div style={{ fontSize: '0.8rem', color: 'var(--kids-orange)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Kone Kids Login Card</div>
                         <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0.25rem 0 0.75rem', color: '#1e3a8a' }}>{student.name}</h3>
-                        
+
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.85rem', color: '#475569' }}>
                           <div>1. Visit: <strong>kids.koneacademy.io</strong></div>
                           <div>2. Click <strong>Student Login</strong> button</div>
@@ -1439,11 +1439,11 @@ export default function TeacherDashboard() {
             ) : (
               // ─── CLASSROOM PROGRESS REPORT ───────────────────────────────────────
               <div style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto', fontFamily: 'system-ui, sans-serif' }}>
-                
+
                 {/* PAGE 1: CLASS SUMMARY OVERVIEW */}
                 <div>
                   <div style={{ borderBottom: '4px solid #3b82f6', paddingBottom: '1rem', marginBottom: '2rem', textAlign: 'center' }}>
-                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Kone Code Academy</div>
+                    <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#3b82f6', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Kone Kids</div>
                     <h1 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '2.8rem', color: '#1e3a8a', margin: '0.25rem 0' }}>Classroom Progress Report</h1>
                     <p style={{ margin: 0, fontSize: '1.1rem', color: '#475569' }}>
                       Classroom Section: <strong>{mySections.find(s => s.id === activeCode)?.name || 'Classroom'}</strong> &nbsp;|&nbsp; Code: <strong>{activeCode}</strong>
@@ -1579,7 +1579,7 @@ export default function TeacherDashboard() {
                           {student.completedMissions.map((missionId: string) => {
                             const m = CODING_MISSIONS.find((mission) => mission.id === missionId);
                             return (
-                              <div 
+                              <div
                                 key={missionId}
                                 style={{
                                   border: '1px solid #cbd5e1',

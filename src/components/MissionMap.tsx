@@ -79,7 +79,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const activeSeriesId = searchParams.get('series');
   const [showCoinStore, setShowCoinStore] = useState(false);
   const [showExtensions, setShowExtensions] = useState(false);
-  const { xp, level, completedMissions, coins } = useGamification();
+  const { xp, level, completedMissions, coins, studentName } = useGamification();
   const { theme, toggleTheme } = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -255,8 +255,47 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
               }}
             >
               <ShoppingBag size={isMobile ? 14 : 16} />
-              {!isMobile && 'SHOP'}
             </button>
+
+            {studentName ? (
+              <div
+                title="Class Account Logged In"
+                style={{
+                  background: 'rgba(14, 165, 233, 0.15)',
+                  border: '1px solid rgba(14, 165, 233, 0.3)',
+                  color: '#0ea5e9',
+                  borderRadius: '12px',
+                  padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.85rem',
+                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
+                }}
+              >
+                🎒 {!isMobile && studentName.split(' ')[0]}
+              </div>
+            ) : (
+              <button
+                onClick={() => navigate('/class-login')}
+                title="Guest Mode Active • Click to Log In"
+                style={{
+                  background: 'rgba(168, 85, 247, 0.15)',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                  color: '#c084fc',
+                  borderRadius: '12px',
+                  padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.85rem',
+                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.3rem'
+                }}
+              >
+                🌟 {!isMobile ? 'Guest • Login' : 'Login'}
+              </button>
+            )}
 
             <button 
               onClick={toggleTheme}
