@@ -98,6 +98,7 @@ export const SEOManager: React.FC = () => {
               "url": "https://www.koneacademy.io/",
               "sameAs": [
                 "https://www.linkedin.com/company/konecodeacdemy/",
+                "https://whatsapp.com/channel/0029VbDFpzmGU3BQETGRlZ1X",
                 "https://www.facebook.com/profile.php?id=61584327765846",
                 "https://www.instagram.com/koneacademy",
                 "https://x.com/koneacademy",
