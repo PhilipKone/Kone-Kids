@@ -313,8 +313,23 @@ export default function Blog() {
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ fontSize: '1.25rem' }}>{art.author.avatar}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      {art.author.avatar.startsWith('/') || art.author.avatar.startsWith('http') ? (
+                        <img 
+                          src={art.author.avatar} 
+                          alt={art.author.name} 
+                          style={{ 
+                            width: '36px', 
+                            height: '36px', 
+                            borderRadius: '50%', 
+                            objectFit: 'cover',
+                            border: '2px solid #0d9488',
+                            boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
+                          }} 
+                        />
+                      ) : (
+                        <span style={{ fontSize: '1.25rem' }}>{art.author.avatar}</span>
+                      )}
                       <div style={{ display: 'flex', flexDirection: 'column' }}>
                         <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>{art.author.name}</span>
                         <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{art.author.role}</span>

@@ -79,7 +79,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: '#06b6d4',
     coverGradient: 'linear-gradient(135deg, #ecfeff 0%, #cffafe 100%)',
@@ -228,7 +228,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: 'var(--kids-orange)',
     coverGradient: 'linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%)',
@@ -352,7 +352,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: 'var(--kids-blue)',
     coverGradient: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%)',
@@ -456,7 +456,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: 'var(--kids-purple)',
     coverGradient: 'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)',
@@ -518,7 +518,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: '#ec4899',
     coverGradient: 'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)',
@@ -577,7 +577,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: 'var(--kids-emerald)',
     coverGradient: 'linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)',
@@ -651,7 +651,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: 'var(--kids-purple)',
     coverGradient: 'linear-gradient(135deg, #f5f3ff 0%, #ddd6fe 100%)',
@@ -709,7 +709,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: 'var(--kids-orange)',
     coverGradient: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)',
@@ -940,7 +940,7 @@ export const blogArticles: BlogArticle[] = [
     author: {
       name: 'Philip Hotor',
       role: 'Founder, Kone Kids',
-      avatar: '👨‍🏫'
+      avatar: '/author-philip.jpg'
     },
     accentColor: 'var(--kids-orange)',
     coverGradient: 'linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%)',

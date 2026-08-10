@@ -174,8 +174,23 @@ export default function ArticleReader() {
             color: '#64748b',
             fontSize: '0.9rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ fontSize: '1.5rem' }}>{article.author.avatar}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              {article.author.avatar.startsWith('/') || article.author.avatar.startsWith('http') ? (
+                <img 
+                  src={article.author.avatar} 
+                  alt={article.author.name} 
+                  style={{ 
+                    width: '44px', 
+                    height: '44px', 
+                    borderRadius: '50%', 
+                    objectFit: 'cover',
+                    border: '2.5px solid #f97316',
+                    boxShadow: '0 3px 10px rgba(249, 115, 22, 0.2)' 
+                  }} 
+                />
+              ) : (
+                <span style={{ fontSize: '1.5rem' }}>{article.author.avatar}</span>
+              )}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <span style={{ fontWeight: 700, color: '#334155' }}>{article.author.name}</span>
                 <span style={{ fontSize: '0.75rem' }}>{article.author.role}</span>
