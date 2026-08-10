@@ -61,6 +61,18 @@ export const SEOManager: React.FC = () => {
   const params = useParams();
 
   useEffect(() => {
+    // Helper to set/update meta tag content
+    const updateMetaTag = (name: string, content: string, isProperty: boolean = false) => {
+      const attribute = isProperty ? 'property' : 'name';
+      let tag = document.querySelector(`meta[${attribute}="${name}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute(attribute, name);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', content);
+    };
+
     // 1. Identify active configuration
     let activeSEO = DEFAULT_SEO;
     const path = location.pathname;
@@ -83,11 +95,17 @@ export const SEOManager: React.FC = () => {
             "@type": "BlogPosting",
             "headline": article.title,
             "description": article.summary,
-            "datePublished": article.publishDate,
+            "image": [
+              "https://kids.koneacademy.io/og-image.png?v=2"
+            ],
+            "datePublished": article.isoDate,
+            "dateModified": article.isoDate,
             "author": {
               "@type": "Person",
               "name": article.author.name,
               "jobTitle": article.author.role,
+              "image": "https://kids.koneacademy.io/author-philip.jpg",
+              "url": "https://www.linkedin.com/in/philip-kone-hotor/",
               "sameAs": [
                 "https://www.linkedin.com/in/philip-kone-hotor/"
               ]
@@ -96,22 +114,23 @@ export const SEOManager: React.FC = () => {
               "@type": "Organization",
               "name": "Kone Academy",
               "url": "https://www.koneacademy.io/",
-              "sameAs": [
-                "https://www.linkedin.com/company/konecodeacdemy/",
-                "https://whatsapp.com/channel/0029VbDFpzmGU3BQETGRlZ1X",
-                "https://www.facebook.com/profile.php?id=61584327765846",
-                "https://www.instagram.com/koneacademy",
-                "https://x.com/koneacademy",
-                "https://www.tiktok.com/@koneacademy",
-                "https://youtube.com/@koneacademy"
-              ]
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://kids.koneacademy.io/og-image.png?v=2"
+              }
             },
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": `https://kids.koneacademy.io/blog/${article.slug}`
+              "@id": `https://kids.koneacademy.io/#/blog/${article.slug}`
             }
           }
         };
+
+        // Set article specific meta tags
+        updateMetaTag('author', article.author.name);
+        updateMetaTag('article:author', article.author.name, true);
+        updateMetaTag('article:published_time', article.isoDate, true);
+        updateMetaTag('article:modified_time', article.isoDate, true);
       } else {
         activeSEO = {
           title: `STEM Article | Kone Kids Parent Hub`,
@@ -123,18 +142,6 @@ export const SEOManager: React.FC = () => {
 
     // 2. Update Document Meta Details
     document.title = activeSEO.title;
-
-    // Helper to set/update meta tag content
-    const updateMetaTag = (name: string, content: string, isProperty: boolean = false) => {
-      const attribute = isProperty ? 'property' : 'name';
-      let tag = document.querySelector(`meta[${attribute}="${name}"]`);
-      if (!tag) {
-        tag = document.createElement('meta');
-        tag.setAttribute(attribute, name);
-        document.head.appendChild(tag);
-      }
-      tag.setAttribute('content', content);
-    };
 
     // Update main description & keyword tags
     updateMetaTag('description', activeSEO.description);

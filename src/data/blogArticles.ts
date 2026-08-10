@@ -26,6 +26,7 @@ export interface BlogArticle {
   category_es?: string;
   category_pt?: string;
   publishDate: string;
+  isoDate: string;
   readTime: string;
   author: {
     name: string;
@@ -75,6 +76,7 @@ export const blogArticles: BlogArticle[] = [
     category_es: 'Robótica y Ciencias',
     category_pt: 'Robótica e Ciências',
     publishDate: 'June 21, 2026',
+    isoDate: '2026-06-21T00:00:00Z',
     readTime: '4 min read',
     author: {
       name: 'Philip Hotor',
@@ -224,6 +226,7 @@ export const blogArticles: BlogArticle[] = [
     category_es: 'Programación y Lógica',
     category_pt: 'Código e Lógica',
     publishDate: 'May 15, 2026',
+    isoDate: '2026-05-15T00:00:00Z',
     readTime: '4 min read',
     author: {
       name: 'Philip Hotor',
@@ -348,6 +351,7 @@ export const blogArticles: BlogArticle[] = [
     category_es: 'Consejos para Padres',
     category_pt: 'Conselhos para Pais',
     publishDate: 'May 10, 2026',
+    isoDate: '2026-05-10T00:00:00Z',
     readTime: '3 min read',
     author: {
       name: 'Philip Hotor',
@@ -452,6 +456,7 @@ export const blogArticles: BlogArticle[] = [
     summary: 'Rote-learning ruins critical thinking. Discover how our two-part scientific learning methodology builds independent engineers.',
     category: 'Coding & Logic',
     publishDate: 'May 05, 2026',
+    isoDate: '2026-05-05T00:00:00Z',
     readTime: '5 min read',
     author: {
       name: 'Philip Hotor',
@@ -514,6 +519,7 @@ export const blogArticles: BlogArticle[] = [
     summary: 'Gender stereotypes in engineering set in as early as age 6. Discover how structured, early CS interventions can bridge the divide.',
     category: 'Parenting & Tech',
     publishDate: 'April 28, 2026',
+    isoDate: '2026-04-28T00:00:00Z',
     readTime: '4 min read',
     author: {
       name: 'Philip Hotor',
@@ -573,6 +579,7 @@ export const blogArticles: BlogArticle[] = [
     summary: 'AI is changing the global economy. Explore the five core Machine Learning pillars that will define your child\'s future.',
     category: 'Parenting & Tech',
     publishDate: 'April 20, 2026',
+    isoDate: '2026-04-20T00:00:00Z',
     readTime: '5 min read',
     author: {
       name: 'Philip Hotor',
@@ -647,6 +654,7 @@ export const blogArticles: BlogArticle[] = [
     summary: 'Why abstract coding is not enough. Explore how sensory physical computing connects math to local Ghanaian industries.',
     category: 'Robotics & Science',
     publishDate: 'April 12, 2026',
+    isoDate: '2026-04-12T00:00:00Z',
     readTime: '5 min read',
     author: {
       name: 'Philip Hotor',
@@ -705,6 +713,7 @@ export const blogArticles: BlogArticle[] = [
     summary: 'Coding is not just about math or science. Discover why early programming is a modern form of writing, self-expression, and creative storytelling.',
     category: 'Coding & Logic',
     publishDate: 'April 05, 2026',
+    isoDate: '2026-04-05T00:00:00Z',
     readTime: '4 min read',
     author: {
       name: 'Philip Hotor',
@@ -773,6 +782,7 @@ export const blogArticles: BlogArticle[] = [
     summary: 'Hundreds of coding websites exist for kids. Explore the top 10 scientifically vetted, creative programming platforms and how to choose the right one.',
     category: 'Coding & Logic',
     publishDate: 'March 28, 2026',
+    isoDate: '2026-03-28T00:00:00Z',
     readTime: '6 min read',
     author: {
       name: 'Philip Hotor',
@@ -936,6 +946,7 @@ export const blogArticles: BlogArticle[] = [
     summary: 'Can kids build actual mobile apps that run on phones? Discover the tools, step-by-step roadmap, and why building apps turns kids into real-world problem solvers.',
     category: 'Coding & Logic',
     publishDate: 'May 19, 2026',
+    isoDate: '2026-05-19T00:00:00Z',
     readTime: '5 min read',
     author: {
       name: 'Philip Hotor',
