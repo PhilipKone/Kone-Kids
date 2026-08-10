@@ -144,12 +144,12 @@ export const SEOManager: React.FC = () => {
     updateMetaTag('og:title', activeSEO.title, true);
     updateMetaTag('og:description', activeSEO.description, true);
     updateMetaTag('og:url', `https://kids.koneacademy.io${location.pathname}`, true);
-    updateMetaTag('og:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png', true);
+    updateMetaTag('og:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png?v=2', true);
 
     // Update Twitter Card Tags
     updateMetaTag('twitter:title', activeSEO.title);
     updateMetaTag('twitter:description', activeSEO.description);
-    updateMetaTag('twitter:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png');
+    updateMetaTag('twitter:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png?v=2');
 
     // Update Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
