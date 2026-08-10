@@ -143,20 +143,42 @@ export const SEOManager: React.FC = () => {
     // 2. Update Document Meta Details
     document.title = activeSEO.title;
 
+    const isBlogArticle = path.startsWith('/blog/') && Boolean(params.id);
+    const imgUrl = activeSEO.image || 'https://kids.koneacademy.io/og-image.png?v=2';
+
     // Update main description & keyword tags
     updateMetaTag('description', activeSEO.description);
     updateMetaTag('keywords', activeSEO.keywords);
 
-    // Update Open Graph (Social Sharing) Tags
+    // Update Open Graph (Social Sharing) Tags (Facebook, WhatsApp, LinkedIn, iMessage, Pinterest)
+    updateMetaTag('og:type', isBlogArticle ? 'article' : 'website', true);
+    updateMetaTag('og:site_name', 'Kone Kids Academy', true);
+    updateMetaTag('og:locale', 'en_US', true);
     updateMetaTag('og:title', activeSEO.title, true);
     updateMetaTag('og:description', activeSEO.description, true);
     updateMetaTag('og:url', `https://kids.koneacademy.io${location.pathname}`, true);
-    updateMetaTag('og:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png?v=2', true);
+    updateMetaTag('og:image', imgUrl, true);
+    updateMetaTag('og:image:secure_url', imgUrl, true);
+    updateMetaTag('og:image:type', 'image/png', true);
+    updateMetaTag('og:image:width', '1200', true);
+    updateMetaTag('og:image:height', '630', true);
+    updateMetaTag('og:image:alt', activeSEO.title, true);
 
-    // Update Twitter Card Tags
+    // Article Specific Social Meta Tags
+    if (isBlogArticle) {
+      updateMetaTag('article:publisher', 'https://www.facebook.com/profile.php?id=61584327765846', true);
+      updateMetaTag('article:section', 'STEM Education', true);
+    }
+
+    // Update Twitter Card Tags (Twitter / X, Discord, Telegram, Slack)
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:site', '@koneacademy');
+    updateMetaTag('twitter:creator', '@koneacademy');
+    updateMetaTag('twitter:domain', 'kids.koneacademy.io');
     updateMetaTag('twitter:title', activeSEO.title);
     updateMetaTag('twitter:description', activeSEO.description);
-    updateMetaTag('twitter:image', activeSEO.image || 'https://kids.koneacademy.io/og-image.png?v=2');
+    updateMetaTag('twitter:image', imgUrl);
+    updateMetaTag('twitter:image:alt', activeSEO.title);
 
     // Update Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
