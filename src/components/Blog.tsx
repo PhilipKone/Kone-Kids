@@ -313,7 +313,20 @@ export default function Blog() {
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <a 
+                      href={art.author.linkedinUrl || 'https://www.linkedin.com/in/philip-kone/'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title={`Visit ${art.author.name}'s LinkedIn profile`}
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '0.65rem',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        cursor: 'pointer'
+                      }}
+                    >
                       {art.author.avatar.startsWith('/') || art.author.avatar.startsWith('http') ? (
                         <img 
                           src={art.author.avatar} 
@@ -334,7 +347,7 @@ export default function Blog() {
                         <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>{art.author.name}</span>
                         <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{art.author.role}</span>
                       </div>
-                    </div>
+                    </a>
 
                     <Link to={`/blog/${art.slug}`} style={{
                       background: 'rgba(13, 148, 136, 0.06)',

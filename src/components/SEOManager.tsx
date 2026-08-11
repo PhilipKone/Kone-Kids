@@ -105,9 +105,9 @@ export const SEOManager: React.FC = () => {
               "name": article.author.name,
               "jobTitle": article.author.role,
               "image": "https://kids.koneacademy.io/author-philip.jpg",
-              "url": "https://www.linkedin.com/in/philip-kone-hotor/",
+              "url": "https://www.linkedin.com/in/philip-kone/",
               "sameAs": [
-                "https://www.linkedin.com/in/philip-kone-hotor/"
+                "https://www.linkedin.com/in/philip-kone/"
               ]
             },
             "publisher": {

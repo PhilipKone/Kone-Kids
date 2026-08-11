@@ -174,7 +174,20 @@ export default function ArticleReader() {
             color: '#64748b',
             fontSize: '0.9rem'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <a 
+              href={article.author.linkedinUrl || 'https://www.linkedin.com/in/philip-kone/'}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={`Visit ${article.author.name}'s LinkedIn profile`}
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.75rem',
+                textDecoration: 'none',
+                color: 'inherit',
+                cursor: 'pointer'
+              }}
+            >
               {article.author.avatar.startsWith('/') || article.author.avatar.startsWith('http') ? (
                 <img 
                   src={article.author.avatar} 
@@ -195,7 +208,7 @@ export default function ArticleReader() {
                 <span style={{ fontWeight: 700, color: '#334155' }}>{article.author.name}</span>
                 <span style={{ fontSize: '0.75rem' }}>{article.author.role}</span>
               </div>
-            </div>
+            </a>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <Calendar size={16} />
