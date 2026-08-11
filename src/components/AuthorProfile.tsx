@@ -32,7 +32,7 @@ export const AuthorProfile: React.FC = () => {
   const linkedinUrl = 'https://www.linkedin.com/in/philip-kone/';
 
   return (
-    <div style={{
+    <main itemScope itemType="https://schema.org/ProfilePage" style={{
       minHeight: '100vh',
       background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
       padding: '2rem 1rem 6rem',
@@ -474,7 +474,7 @@ export const AuthorProfile: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

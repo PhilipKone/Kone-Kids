@@ -72,7 +72,7 @@ export default function ArticleReader() {
   };
 
   return (
-    <div className="article-reader-page" style={{
+    <article className="article-reader-page" itemScope itemType="https://schema.org/TechArticle" style={{
       background: '#f8fafc',
       minHeight: '100vh',
       color: '#1e293b',
@@ -105,6 +105,7 @@ export default function ArticleReader() {
           
           <button 
             onClick={handleShare}
+            aria-label="Share this article"
             style={{
               background: 'white',
               border: '1px solid #e2e8f0',
@@ -152,7 +153,7 @@ export default function ArticleReader() {
           </span>
 
           {/* Article Title */}
-          <h1 style={{
+          <h1 itemProp="headline" style={{
             fontFamily: "'Baloo 2', cursive",
             fontSize: 'clamp(2.2rem, 4.5vw, 3.2rem)',
             fontWeight: 800,
@@ -177,6 +178,9 @@ export default function ArticleReader() {
             <Link 
               to="/author/philip-hotor"
               title={`View ${article.author.name}'s bio & profile`}
+              itemProp="author" 
+              itemScope 
+              itemType="https://schema.org/Person"
               style={{ 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -190,6 +194,7 @@ export default function ArticleReader() {
                 <img 
                   src={article.author.avatar} 
                   alt={article.author.name} 
+                  itemProp="image"
                   style={{ 
                     width: '44px', 
                     height: '44px', 
@@ -203,14 +208,14 @@ export default function ArticleReader() {
                 <span style={{ fontSize: '1.5rem' }}>{article.author.avatar}</span>
               )}
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span style={{ fontWeight: 700, color: '#334155' }}>{article.author.name}</span>
-                <span style={{ fontSize: '0.75rem' }}>{article.author.role}</span>
+                <span itemProp="name" style={{ fontWeight: 700, color: '#334155' }}>{article.author.name}</span>
+                <span itemProp="jobTitle" style={{ fontSize: '0.75rem' }}>{article.author.role}</span>
               </div>
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <Calendar size={16} />
-              <span>{article.publishDate}</span>
+              <time itemProp="datePublished" dateTime={article.isoDate}>{article.publishDate}</time>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
@@ -221,7 +226,7 @@ export default function ArticleReader() {
         </header>
 
         {/* Article Body Content */}
-        <main style={{ 
+        <main itemProp="articleBody" style={{ 
           fontSize: '1.1rem',
           lineHeight: '1.65',
           color: '#334155',
@@ -463,6 +468,6 @@ export default function ArticleReader() {
         </section>
 
       </div>
-    </div>
+    </article>
   );
 }
