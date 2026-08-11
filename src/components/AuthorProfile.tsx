@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ArrowLeft from 'lucide-react/dist/esm/icons/arrow-left.mjs';
 import ExternalLink from 'lucide-react/dist/esm/icons/external-link.mjs';
-import Linkedin from 'lucide-react/dist/esm/icons/linkedin.mjs';
 import BookOpen from 'lucide-react/dist/esm/icons/book-open.mjs';
 import Award from 'lucide-react/dist/esm/icons/award.mjs';
 import Globe from 'lucide-react/dist/esm/icons/globe.mjs';
@@ -14,6 +13,12 @@ import Clock from 'lucide-react/dist/esm/icons/clock.mjs';
 import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right.mjs';
 import Mail from 'lucide-react/dist/esm/icons/mail.mjs';
 import { blogArticles, getLocalized } from '../data/blogArticles';
+
+const LinkedinIcon: React.FC<{ size?: number; color?: string }> = ({ size = 20, color = 'white' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={color} xmlns="http://www.w3.org/2000/svg">
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.74a1.63 1.63 0 1 0 0 3.26 1.63 1.63 0 0 0 0-3.26Z"/>
+  </svg>
+);
 
 export const AuthorProfile: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -237,7 +242,7 @@ export const AuthorProfile: React.FC = () => {
                   transition: 'all 0.2s ease'
                 }}
               >
-                <Linkedin size={20} /> Connect on LinkedIn <ExternalLink size={16} />
+                <LinkedinIcon size={20} /> Connect on LinkedIn <ExternalLink size={16} />
               </a>
 
               {/* Kone Academy Site */}
