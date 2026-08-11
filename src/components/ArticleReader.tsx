@@ -175,7 +175,7 @@ export default function ArticleReader() {
             fontSize: '0.9rem'
           }}>
             <Link 
-              to="/author/philip-kone"
+              to="/author/philip-hotor"
               title={`View ${article.author.name}'s bio & profile`}
               style={{ 
                 display: 'flex', 

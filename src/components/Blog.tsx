@@ -314,7 +314,7 @@ export default function Blog() {
                     alignItems: 'center'
                   }}>
                     <Link 
-                      to="/author/philip-kone"
+                      to="/author/philip-hotor"
                       title={`View ${art.author.name}'s profile & articles`}
                       style={{ 
                         display: 'flex', 

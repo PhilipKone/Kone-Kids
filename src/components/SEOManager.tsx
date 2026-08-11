@@ -54,7 +54,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
     description: "Learn how artificial intelligence works by training custom models, classifying images, and coding neural networks.",
     keywords: "AI for kids, train machine learning, kids neural network, AI foundation school"
   },
-  '/author/philip-kone': {
+  '/author/philip-hotor': {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
     description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
     keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator, STEM Africa, kids coding founder",
@@ -82,7 +82,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       }
     }
   },
-  '/author/philip-hotor': {
+  '/author/philip-kone': {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
     description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
     keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator",
