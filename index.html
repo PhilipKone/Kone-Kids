@@ -50,43 +50,90 @@
 
     <title>Kone Kids | Playful AI & Coding STEM Hub</title>
     
-    <!-- Structured Data (Invisible SEO) -->
+    <!-- Structured Data (Google Sitelinks & Brand Schema) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Kone Kids",
+        "alternateName": ["Kone Kids Academy", "Kone Academy Kids"],
         "url": "https://kids.koneacademy.io/",
-        "parentOrganization": {
+        "description": "Playful AI, Coding, and Robotics STEM Hub for Youth aged 5-17.",
+        "publisher": {
           "@type": "Organization",
           "name": "Kone Academy",
-          "url": "https://www.koneacademy.io/"
-        }
+          "url": "https://www.koneacademy.io/",
+          "logo": "https://kids.koneacademy.io/logo512.png"
+        },
+        "hasPart": [
+          {
+            "@type": "WebPage",
+            "name": "Coding Lab",
+            "url": "https://kids.koneacademy.io/#/coding"
+          },
+          {
+            "@type": "WebPage",
+            "name": "Robotics Lab",
+            "url": "https://kids.koneacademy.io/#/robotics"
+          },
+          {
+            "@type": "WebPage",
+            "name": "AI Studio",
+            "url": "https://kids.koneacademy.io/#/ai"
+          },
+          {
+            "@type": "WebPage",
+            "name": "Parent Hub",
+            "url": "https://kids.koneacademy.io/#/blog"
+          },
+          {
+            "@type": "WebPage",
+            "name": "Founder Profile",
+            "url": "https://kids.koneacademy.io/#/author/philip-hotor"
+          }
+        ]
       }
     </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        "name": "Kone Kids Navigation",
+        "name": "Kone Kids Primary Sitelinks",
         "itemListElement": [
           {
             "@type": "SiteNavigationElement",
             "position": 1,
-            "name": "Mission Map",
-            "url": "https://kids.koneacademy.io/#/missions"
+            "name": "Coding Lab",
+            "description": "Master visual block logic, HTML/CSS, and Python missions.",
+            "url": "https://kids.koneacademy.io/#/coding"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 2,
-            "name": "Mascot Shop",
-            "url": "https://kids.koneacademy.io/#/shop"
+            "name": "Robotics Lab",
+            "description": "Circuit building, microcontrollers, and sensor programming.",
+            "url": "https://kids.koneacademy.io/#/robotics"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 3,
-            "name": "Coding Sandbox",
-            "url": "https://kids.koneacademy.io/#/sandbox"
+            "name": "AI Studio",
+            "description": "Train custom machine learning models and neural networks.",
+            "url": "https://kids.koneacademy.io/#/ai"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 4,
+            "name": "Parent Hub & Articles",
+            "description": "STEM learning resources, guides, and EdTech insights for parents.",
+            "url": "https://kids.koneacademy.io/#/blog"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 5,
+            "name": "Philip Hotor (Founder Profile)",
+            "description": "Biography, background, and publications by Philip Hotor.",
+            "url": "https://kids.koneacademy.io/#/author/philip-hotor"
           }
         ]
       }
