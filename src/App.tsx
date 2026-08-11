@@ -36,6 +36,7 @@ const ArticleReader = React.lazy(() => import('./components/ArticleReader'))
 const ClassLogin = React.lazy(() => import('./components/ClassLogin'))
 const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'))
 const ProfileView = React.lazy(() => import('./components/ProfileView'))
+const AuthorProfile = React.lazy(() => import('./components/AuthorProfile'))
 
 
 function Home() {
@@ -1024,6 +1025,9 @@ function AppContent() {
             <Route path="/teacher-dashboard" element={<TeacherDashboard />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<ArticleReader />} />
+            <Route path="/author/philip-kone" element={<AuthorProfile />} />
+            <Route path="/author/philip-hotor" element={<AuthorProfile />} />
+            <Route path="/author" element={<AuthorProfile />} />
             <Route path="/coding" element={<MissionMap hub="coding" />} />
             <Route path="/robotics" element={<MissionMap hub="robotics" />} />
             <Route path="/ai" element={<MissionMap hub="ai" />} />

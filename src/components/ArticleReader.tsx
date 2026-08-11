@@ -174,11 +174,9 @@ export default function ArticleReader() {
             color: '#64748b',
             fontSize: '0.9rem'
           }}>
-            <a 
-              href={article.author.linkedinUrl || 'https://www.linkedin.com/in/philip-kone/'}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={`Visit ${article.author.name}'s LinkedIn profile`}
+            <Link 
+              to="/author/philip-kone"
+              title={`View ${article.author.name}'s bio & profile`}
               style={{ 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -208,7 +206,7 @@ export default function ArticleReader() {
                 <span style={{ fontWeight: 700, color: '#334155' }}>{article.author.name}</span>
                 <span style={{ fontSize: '0.75rem' }}>{article.author.role}</span>
               </div>
-            </a>
+            </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
               <Calendar size={16} />

@@ -53,6 +53,46 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
     title: "AI & Machine Learning Studio for Youth - Kone Kids",
     description: "Learn how artificial intelligence works by training custom models, classifying images, and coding neural networks.",
     keywords: "AI for kids, train machine learning, kids neural network, AI foundation school"
+  },
+  '/author/philip-kone': {
+    title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
+    description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
+    keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator, STEM Africa, kids coding founder",
+    image: "https://kids.koneacademy.io/author-philip.jpg",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "mainEntity": {
+        "@type": "Person",
+        "name": "Philip Hotor",
+        "alternateName": "Philip Kone",
+        "jobTitle": "Founder & Head of Engineering",
+        "worksFor": {
+          "@type": "Organization",
+          "name": "Kone Academy",
+          "url": "https://www.koneacademy.io/"
+        },
+        "image": "https://kids.koneacademy.io/author-philip.jpg",
+        "url": "https://www.linkedin.com/in/philip-kone/",
+        "sameAs": [
+          "https://www.linkedin.com/in/philip-kone/",
+          "https://www.koneacademy.io",
+          "https://konetech.koneacademy.io"
+        ]
+      }
+    }
+  },
+  '/author/philip-hotor': {
+    title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
+    description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
+    keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator",
+    image: "https://kids.koneacademy.io/author-philip.jpg"
+  },
+  '/author': {
+    title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
+    description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
+    keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator",
+    image: "https://kids.koneacademy.io/author-philip.jpg"
   }
 };
 

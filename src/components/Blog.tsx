@@ -313,11 +313,9 @@ export default function Blog() {
                     justifyContent: 'space-between',
                     alignItems: 'center'
                   }}>
-                    <a 
-                      href={art.author.linkedinUrl || 'https://www.linkedin.com/in/philip-kone/'}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title={`Visit ${art.author.name}'s LinkedIn profile`}
+                    <Link 
+                      to="/author/philip-kone"
+                      title={`View ${art.author.name}'s profile & articles`}
                       style={{ 
                         display: 'flex', 
                         alignItems: 'center', 
@@ -347,7 +345,7 @@ export default function Blog() {
                         <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#334155' }}>{art.author.name}</span>
                         <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{art.author.role}</span>
                       </div>
-                    </a>
+                    </Link>
 
                     <Link to={`/blog/${art.slug}`} style={{
                       background: 'rgba(13, 148, 136, 0.06)',

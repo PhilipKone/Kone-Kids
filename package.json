@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
-        "postbuild": "react-snap || echo 'Pre-rendering timed out, deploying SPA...'",
+        "postbuild": "node -e \"try { require('child_process').execSync('npx react-snap', {stdio: 'inherit'}); } catch (e) { console.log('SPA fallback ready.'); }\"",
         "predeploy": "npm run build",
         "deploy": "gh-pages -d dist --dotfiles -f",
         "postinstall": "node patch-react-snap.cjs",
