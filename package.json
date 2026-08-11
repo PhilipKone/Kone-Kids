@@ -9,6 +9,7 @@
         "predeploy": "npm run build",
         "deploy": "gh-pages -d dist --dotfiles -f",
         "postinstall": "node patch-react-snap.cjs",
+        "submit-indexing": "npx google-indexing-script -p service_account.json",
         "cap:copy": "cap copy",
         "cap:sync": "cap sync",
         "cap:open:android": "cap open android"
