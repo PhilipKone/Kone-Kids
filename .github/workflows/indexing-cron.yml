@@ -1,0 +1,32 @@
+name: Automated Google Indexing Cron
+
+on:
+  schedule:
+    # Runs every Monday and Thursday at 09:00 UTC
+    - cron: '0 9 * * 1,4'
+  workflow_dispatch:
+
+jobs:
+  submit-indexing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Create Service Account Key File
+        run: |
+          echo "${{ secrets.SERVICE_ACCOUNT_JSON }}" > service_account.json
+
+      - name: Run Google Indexing Script
+        run: |
+          npx google-indexing-script https://kids.koneacademy.io/ --path service_account.json
+
+      - name: Clean up Credentials
+        if: always()
+        run: |
+          rm -f service_account.json
