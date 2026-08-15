@@ -2,8 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="color-scheme" content="light dark" />
+    <link rel="help" type="text/markdown" href="/llms.txt" title="LLMs Text File" />
+    <link rel="llms-txt" href="/llms.txt" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -49,6 +51,47 @@
     <meta name="twitter:image" content="https://kids.koneacademy.io/og-image.png?v=2" />
 
     <title>Kone Kids | Playful AI & Coding STEM Hub</title>
+
+    <!-- WebMCP Declarations for Autonomous Agentic Browsing -->
+    <script type="application/webmcp+json">
+    {
+      "version": "1.0",
+      "name": "Kone Kids Portal",
+      "description": "Agent tools for youth STEM education, coding missions, and robotics workshops",
+      "tools": [
+        {
+          "name": "enroll_kids_stem",
+          "description": "Enroll a student in youth coding, robotics, or AI courses",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "track": { 
+                "type": "string", 
+                "enum": ["Blockly & Scratch Coding", "Youth Robotics Lab", "Child-Safe AI Studio", "Game Development"] 
+              },
+              "parentEmail": { "type": "string", "format": "email" },
+              "ageGroup": { "type": "string", "enum": ["5-7", "8-11", "12-14", "15-17"] }
+            },
+            "required": ["track", "parentEmail", "ageGroup"]
+          }
+        },
+        {
+          "name": "navigate_kids_lab",
+          "description": "Navigate between coding missions, robotics studio, and parent resource hub",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "view": { 
+                "type": "string", 
+                "enum": ["coding", "robotics", "ai", "blog", "parent-hub"] 
+              }
+            },
+            "required": ["view"]
+          }
+        }
+      ]
+    }
+    </script>
     
     <!-- Structured Data (Google Sitelinks & Brand Schema) -->
     <script type="application/ld+json">

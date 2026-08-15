@@ -10,43 +10,15 @@ export interface ExtensionTool {
   category: string;
   icon: string;
   color: string;
+  textColor?: string;
   description: string;
   url: string;
   badge: string;
   buttonText: string;
 }
 
-const EXTERNAL_LOGO_URLS: Record<string, string> = {
-  scratch: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Scratch_S.svg/500px-Scratch_S.svg.png',
-  codeorg: 'https://upload.wikimedia.org/wikipedia/commons/f/f4/Code.org_logo.svg',
-  makecode: 'https://staging.svgrepo.com/show/306404/microbit.svg',
-  tinkercad: 'https://i0.wp.com/www.arduinofactory.fr/wp-content/uploads/2021/09/logo-tinkercad-256.png?fit=256%2C256&ssl=1',
-  replit: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-rRf0x0j8mjLShynqXpYt8OCslLaXJP2NtM6x91rq1A&s=10',
-  tynker: 'https://play-lh.googleusercontent.com/dYPLtQCdxnEroNlt73Su_0RpXm07mW7gqNy5URMq0fwkUWrr9j9GH6rc19Jk8LY2VW2N-f_Ir3jhBQiYAdWebA'
-};
-
 export const ToolBrandLogo: React.FC<{ toolId: string; size?: number }> = ({ toolId, size = 36 }) => {
-  const [hasError, setHasError] = useState(false);
-  const externalUrl = EXTERNAL_LOGO_URLS[toolId];
-
-  if (!hasError && externalUrl) {
-    return (
-      <div style={{ height: `${size}px`, display: 'flex', alignItems: 'center' }}>
-        <img
-          src={externalUrl}
-          alt={`${toolId} official logo`}
-          referrerPolicy="no-referrer"
-          onError={() => setHasError(true)}
-          style={{
-            maxHeight: `${size}px`,
-            maxWidth: '120px',
-            objectFit: 'contain',
-            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))'
-          }}
-        />
-      </div>
-    );
-  }
+  // Direct vector SVG logos for lightning fast loading and zero external cookie/network issues
 
   // Fallback SVG Badge
   switch (toolId) {
@@ -113,6 +85,7 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     category: 'Block Coding',
     icon: '🐱',
     color: '#f59e0b',
+    textColor: '#b45309',
     description: 'The world famous MIT visual programming language for stories, games, and animations.',
     url: 'https://scratch.mit.edu/create',
     badge: 'MIT Media Lab',
@@ -124,6 +97,7 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     category: 'CS Fundamentals',
     icon: '🟩',
     color: '#10b981',
+    textColor: '#047857',
     description: 'Hour of Code adventures, Dance Party, App Lab, and K-12 Computer Science courses.',
     url: 'https://studio.code.org',
     badge: 'Hour of Code',
@@ -135,6 +109,7 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     category: 'Hardware & Microcontrollers',
     icon: '🔌',
     color: '#0ea5e9',
+    textColor: '#0369a1',
     description: 'Official Microsoft block & JavaScript editor for pocket-sized micro:bit hardware.',
     url: 'https://makecode.microbit.org',
     badge: 'Microsoft STEM',
@@ -146,6 +121,7 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     category: '3D & Electronics',
     icon: '🧊',
     color: '#ec4899',
+    textColor: '#be185d',
     description: 'Simulate Arduino circuits, breadboards, sensors, and 3D printing design.',
     url: 'https://www.tinkercad.com/circuits',
     badge: 'Autodesk 3D',
@@ -157,6 +133,7 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     category: 'Text-Based Coding',
     icon: '⚡',
     color: '#a855f7',
+    textColor: '#6b21a8',
     description: 'Collaborative cloud IDE for writing Python, HTML, CSS, JavaScript, and Node.js.',
     url: 'https://replit.com',
     badge: 'Cloud IDE',
@@ -168,6 +145,7 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     category: 'Gamified Coding',
     icon: '🎮',
     color: '#f97316',
+    textColor: '#c2410c',
     description: 'Gamified block coding courses, Minecraft modding, and robotics challenges.',
     url: 'https://www.tynker.com',
     badge: 'Gamified CS',

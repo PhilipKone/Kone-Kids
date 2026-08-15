@@ -54,9 +54,7 @@ const BadgeTray: React.FC = () => {
                 padding: 'clamp(1.5rem, 4vw, 2rem) 1rem',
                 textAlign: 'center',
                 borderRadius: '24px',
-                background: badge.unlocked ? 'white' : 'rgba(255,255,255,0.4)',
-                filter: badge.unlocked ? 'none' : 'grayscale(1)',
-                opacity: badge.unlocked ? 1 : 0.6,
+                background: badge.unlocked ? '#ffffff' : '#f8fafc',
                 transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
                 border: badge.unlocked ? '3px solid var(--kids-blue)' : '2px dashed #cbd5e1',
                 display: 'flex',
@@ -72,7 +70,9 @@ const BadgeTray: React.FC = () => {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: '80px'
+                height: '80px',
+                filter: badge.unlocked ? 'none' : 'grayscale(1)',
+                opacity: badge.unlocked ? 1 : 0.75
               }}>
                 {badge.icon.startsWith('/') || badge.icon.includes('http') ? (
                   <img 
@@ -88,13 +88,13 @@ const BadgeTray: React.FC = () => {
                     }} 
                   />
                 ) : (
-                  <span style={{ filter: badge.unlocked ? 'drop-shadow(0 5px 10px rgba(0,0,0,0.1))' : 'grayscale(1)' }}>
+                  <span style={{ filter: badge.unlocked ? 'drop-shadow(0 5px 10px rgba(0,0,0,0.1))' : 'none' }}>
                     {badge.icon}
                   </span>
                 )}
               </div>
-              <h4 style={{ margin: '0 0 0.5rem', fontSize: '1.1rem', color: 'var(--kids-dark)', lineHeight: '1.2' }}>{badge.name}</h4>
-              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--kids-text-muted)', lineHeight: '1.3' }}>
+              <h3 style={{ margin: '0 0 0.5rem', fontSize: '1.1rem', color: '#0f172a', lineHeight: '1.2' }}>{badge.name}</h3>
+              <p style={{ margin: 0, fontSize: '0.85rem', color: '#334155', lineHeight: '1.3', fontWeight: 500 }}>
                 {badge.unlocked ? 'Mission Complete!' : badge.description}
               </p>
             </div>

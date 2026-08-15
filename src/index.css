@@ -121,7 +121,7 @@ p {
 /* Playful Hero Typography */
 .hero-tagline {
   font-size: 3.5rem;
-  color: var(--kids-orange);
+  color: #c2410c;
   transform: rotate(-3deg);
   display: inline-block;
   margin-bottom: 2rem;
@@ -135,7 +135,7 @@ p {
   left: 0;
   width: 100%;
   height: 6px;
-  background: var(--kids-orange);
+  background: #c2410c;
   border-radius: 10px;
   opacity: 0.3;
 }
@@ -148,8 +148,8 @@ p {
 }
 
 .kids-button {
-  background: var(--kids-orange);
-  color: white;
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: #ffffff;
   border: none;
   padding: 0.5rem 1.4rem;
   font-family: 'Baloo 2', cursive;

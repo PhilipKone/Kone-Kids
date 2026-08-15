@@ -203,7 +203,7 @@ function Home() {
           ) : (
             <Link to="/class-login" style={{ 
               fontFamily: "'Baloo 2', cursive",
-              color: 'var(--kids-orange)', 
+              color: '#c2410c', 
               textDecoration: 'none', 
               fontWeight: 800, 
               fontSize: '1rem',
@@ -231,9 +231,9 @@ function Home() {
                 key={lang}
                 onClick={() => i18n.changeLanguage(lang)}
                 style={{
-                  background: i18n.language === lang ? 'var(--kids-orange)' : 'transparent',
+                  background: i18n.language === lang ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : 'transparent',
                   border: 'none',
-                  color: 'white',
+                  color: i18n.language === lang ? 'white' : 'var(--nav-link)',
                   padding: '0.25rem 0.55rem',
                   borderRadius: '8px',
                   fontSize: '0.75rem',
@@ -405,8 +405,8 @@ function Home() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                background: 'rgba(168, 85, 247, 0.1)',
-                color: '#a855f7',
+                background: 'rgba(168, 85, 247, 0.12)',
+                color: '#6b21a8',
                 padding: '0.4rem 1rem',
                 borderRadius: '20px',
                 fontSize: '0.85rem',
@@ -463,9 +463,9 @@ function Home() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
                       <ToolBrandLogo toolId={t.id} size={36} />
                       <span style={{
-                        background: `${t.color}15`,
-                        color: t.color,
-                        border: `1px solid ${t.color}35`,
+                        background: `${t.color}18`,
+                        color: t.textColor || t.color,
+                        border: `1px solid ${t.color}45`,
                         fontSize: '0.72rem',
                         fontWeight: 800,
                         padding: '0.2rem 0.65rem',
@@ -606,8 +606,8 @@ function Home() {
                   position: 'relative'
                 }}>
                   <span style={{
-                    background: 'white',
-                    color: art.accentColor,
+                    background: 'rgba(15, 23, 42, 0.9)',
+                    color: '#ffffff',
                     padding: '0.35rem 0.85rem',
                     borderRadius: '12px',
                     fontSize: '0.75rem',
@@ -615,7 +615,7 @@ function Home() {
                     textTransform: 'uppercase',
                     letterSpacing: '0.02em',
                     alignSelf: 'flex-start',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.12)'
                   }}>
                     {getLocalized(art, 'category', i18n.language)}
                   </span>
@@ -678,8 +678,8 @@ function Home() {
                     </div>
 
                     <Link to={`/blog/${art.slug}`} style={{
-                      background: 'rgba(13, 148, 136, 0.06)',
-                      color: '#0d9488',
+                      background: 'rgba(15, 118, 110, 0.12)',
+                      color: '#0f766e',
                       padding: '0.4rem 0.85rem',
                       borderRadius: '12px',
                       fontSize: '0.8rem',
@@ -730,7 +730,7 @@ function Home() {
       
       {/* Footer */}
       <footer style={{ 
-        padding: 'clamp(2.5rem, 5vw, 4rem) 5% 2rem', 
+        padding: 'clamp(2.5rem, 5vw, 4rem) 5% 6.5rem', 
         background: 'var(--footer-bg)', 
         borderTop: '1px solid var(--footer-border)',
         position: 'relative',
@@ -776,9 +776,9 @@ function Home() {
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
                 <span style={{ 
-                  background: 'rgba(14, 165, 233, 0.1)', 
-                  color: 'var(--kids-blue)', 
-                  padding: '0.2rem 0.6rem', 
+                  background: 'rgba(14, 165, 233, 0.12)', 
+                  color: '#0369a1', 
+                  padding: '0.25rem 0.65rem', 
                   borderRadius: '20px', 
                   fontSize: '0.75rem', 
                   fontWeight: 800 
@@ -794,7 +794,7 @@ function Home() {
                 margin: 0, 
                 fontFamily: "'Baloo 2', cursive", 
                 fontSize: '1.05rem', 
-                color: 'var(--kids-orange)', 
+                color: '#c2410c', 
                 fontWeight: 800 
               }}>
                 Explore Hubs 🚀
@@ -814,7 +814,7 @@ function Home() {
                 margin: 0, 
                 fontFamily: "'Baloo 2', cursive", 
                 fontSize: '1.05rem', 
-                color: 'var(--kids-blue)', 
+                color: '#0369a1', 
                 fontWeight: 800 
               }}>
                 Kone Network 🌐
@@ -834,7 +834,7 @@ function Home() {
                 margin: 0, 
                 fontFamily: "'Baloo 2', cursive", 
                 fontSize: '1.05rem', 
-                color: 'var(--kids-purple)', 
+                color: '#6b21a8', 
                 fontWeight: 800 
               }}>
                 Join Our Community ✨
@@ -848,9 +848,9 @@ function Home() {
                   target="_blank" 
                   rel="noopener noreferrer" 
                   style={{ 
-                    background: 'rgba(37, 211, 102, 0.12)', 
-                    border: '1px solid rgba(37, 211, 102, 0.3)', 
-                    color: '#25d366', 
+                    background: 'rgba(37, 211, 102, 0.14)', 
+                    border: '1px solid rgba(21, 128, 61, 0.35)', 
+                    color: '#15803d', 
                     padding: '0.4rem 0.85rem', 
                     borderRadius: '20px', 
                     fontSize: '0.82rem', 
@@ -872,8 +872,8 @@ function Home() {
                   rel="noopener noreferrer" 
                   style={{ 
                     background: 'rgba(255, 0, 80, 0.1)', 
-                    border: '1px solid rgba(255, 0, 80, 0.25)', 
-                    color: '#ff0050', 
+                    border: '1px solid rgba(190, 18, 60, 0.35)', 
+                    color: '#be123c', 
                     padding: '0.4rem 0.85rem', 
                     borderRadius: '20px', 
                     fontSize: '0.82rem', 
@@ -895,8 +895,8 @@ function Home() {
                   rel="noopener noreferrer" 
                   style={{ 
                     background: 'rgba(10, 102, 194, 0.1)', 
-                    border: '1px solid rgba(10, 102, 194, 0.25)', 
-                    color: '#0a66c2', 
+                    border: '1px solid rgba(7, 89, 133, 0.35)', 
+                    color: '#075985', 
                     padding: '0.4rem 0.85rem', 
                     borderRadius: '20px', 
                     fontSize: '0.82rem', 
@@ -915,7 +915,7 @@ function Home() {
               </div>
               <div style={{ marginTop: '0.5rem' }}>
                 <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', display: 'block', fontWeight: 600 }}>Direct Line / WhatsApp:</span>
-                <span style={{ fontSize: '1rem', color: 'var(--kids-orange)', fontWeight: 800 }}>+233 55 199 3820</span>
+                <span style={{ fontSize: '1rem', color: '#c2410c', fontWeight: 800 }}>+233 55 199 3820</span>
               </div>
             </div>
           </div>

@@ -186,26 +186,21 @@ const CertificateModal: React.FC<CertificateModalProps> = ({
     if (!canvas) return;
     sounds.playSuccess();
     const dataUrl = canvas.toDataURL('image/png');
-    const windowContent = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Certificate - ${studentName}</title>
-          <style>
-            @page { size: landscape; margin: 0; }
-            body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #000; }
-            img { max-width: 100%; max-height: 100vh; object-fit: contain; }
-          </style>
-        </head>
-        <body onload="window.print(); window.close();">
-          <img src="${dataUrl}" />
-        </body>
-      </html>
-    `;
     const printWindow = window.open('', '_blank');
     if (printWindow) {
-      printWindow.document.write(windowContent);
-      printWindow.document.close();
+      printWindow.document.title = 'Certificate - ' + (studentName || 'Student');
+      const style = printWindow.document.createElement('style');
+      style.textContent = '@page { size: landscape; margin: 0; } body { margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; background: #000; } img { max-width: 100%; max-height: 100vh; object-fit: contain; }';
+      printWindow.document.head.appendChild(style);
+      const img = printWindow.document.createElement('img');
+      img.src = dataUrl;
+      img.alt = 'Certificate';
+      printWindow.document.body.appendChild(img);
+      img.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      };
     }
   };
 

@@ -246,8 +246,8 @@ export default function Blog() {
                 }}>
                   {/* Category Badge Tag */}
                   <span style={{
-                    background: 'white',
-                    color: art.accentColor,
+                    background: 'rgba(15, 23, 42, 0.9)',
+                    color: '#ffffff',
                     padding: '0.35rem 0.85rem',
                     borderRadius: '12px',
                     fontSize: '0.75rem',
@@ -255,7 +255,7 @@ export default function Blog() {
                     textTransform: 'uppercase',
                     letterSpacing: '0.02em',
                     alignSelf: 'flex-start',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.03)'
+                    boxShadow: '0 2px 6px rgba(0,0,0,0.12)'
                   }}>
                     {getLocalized(art, 'category', i18n.language)}
                   </span>
@@ -348,8 +348,8 @@ export default function Blog() {
                     </Link>
 
                     <Link to={`/blog/${art.slug}`} style={{
-                      background: 'rgba(13, 148, 136, 0.06)',
-                      color: '#0d9488',
+                      background: 'rgba(15, 118, 110, 0.12)',
+                      color: '#0f766e',
                       padding: '0.5rem 1rem',
                       borderRadius: '16px',
                       fontSize: '0.85rem',
