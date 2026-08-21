@@ -7,6 +7,8 @@ export interface MascotHandle {
   wave: (duration?: number) => void;
   blink: () => void;
   celebrate: (intensity?: 'low' | 'high') => void;
+  think: (duration?: number) => void;
+  encourage: (tip?: string) => void;
 }
 
 const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
@@ -245,6 +247,25 @@ const Mascot = forwardRef<MascotHandle, {}>((props, ref) => {
       setIsWaving(true)
       spawnParticles(intensity === 'high' ? 45 : 20, intensity)
       setTimeout(() => setIsWaving(false), intensity === 'high' ? 2500 : 1500)
+    },
+    think: (duration = 2500) => {
+      setMascotActive(duration)
+      setIsBlinking(true)
+      spawnParticles(10, 'low')
+      setTimeout(() => setIsBlinking(false), duration)
+    },
+    encourage: (tip?: string) => {
+      setMascotActive(4500)
+      setIsWaving(true)
+      const message = tip || "Keep going! Coders learn by experimenting!"
+      const translated = getTranslation(message, dialect)
+      setBubbleText(translated.text)
+      setShowBubble(true)
+      speakAction(translated.phonetic)
+      setTimeout(() => {
+        setIsWaving(false)
+        setShowBubble(false)
+      }, 4000)
     }
   }), [dialect, isActive, equippedItems])
 

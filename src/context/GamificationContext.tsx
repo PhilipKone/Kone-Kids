@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { updateAppBadge } from '../utils/pwa';
 import { Haptics, NotificationType } from '@capacitor/haptics';
+import { sounds } from '../utils/sounds';
 
 export interface Badge {
   id: string;
@@ -48,6 +49,8 @@ interface GamificationContextType {
   setDialect: (dialect: 'en' | 'twi' | 'ga' | 'ewe') => void;
   streak: number;
   lastActiveDate: string;
+  recentXpEvent: { amount: number; id: number } | null;
+  getEncouragingClue: (errorMessage?: string) => string;
 }
 
 const INITIAL_BADGES: Badge[] = [
@@ -231,6 +234,40 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     return 5 + Math.floor((xp - 2500) / 2000);
   }, [xp]);
 
+  // Emotional Design: Level Up Euphoric Fanfare
+  const prevLevelRef = useRef<number>(level);
+  useEffect(() => {
+    if (level > prevLevelRef.current) {
+      sounds.playLevelUpFanfare();
+      prevLevelRef.current = level;
+    }
+  }, [level]);
+
+  // Emotional Design: XP Micro-Animation Event Stream
+  const [recentXpEvent, setRecentXpEvent] = useState<{ amount: number; id: number } | null>(null);
+
+  // Emotional Design: Detective Clues (Transforms frustrating errors into empowering puzzles)
+  const getEncouragingClue = useCallback((errorMessage?: string): string => {
+    sounds.playDetectiveClue();
+    if (!errorMessage) {
+      return "🔍 Detective Clue: Robots follow exact steps! Check your sequence from top to bottom.";
+    }
+    const lower = errorMessage.toLowerCase();
+    if (lower.includes('syntax') || lower.includes('token') || lower.includes('unexpected')) {
+      return "🧩 Code Mystery: Look for missing brackets (), quotes \"\", or spelling clues!";
+    }
+    if (lower.includes('undefined') || lower.includes('null') || lower.includes('not defined')) {
+      return "🏷️ Variable Clue: Make sure you created and named your variable before using it!";
+    }
+    if (lower.includes('loop') || lower.includes('infinite') || lower.includes('range')) {
+      return "🔄 Loop Hint: Check if your repeat counter has a finish line!";
+    }
+    if (lower.includes('wall') || lower.includes('bound') || lower.includes('obstacle')) {
+      return "🤖 Navigator Clue: Your robot bumped an obstacle — try turning before moving forward!";
+    }
+    return `🔍 Detective Clue: ${errorMessage.slice(0, 80)} — Great coders test and solve step-by-step!`;
+  }, []);
+
   const [user, setUser] = useState<any>(null);
 
   // Authentication & Cloud Sync
@@ -405,9 +442,11 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
         localStorage.setItem('kone_kids_last_active', todayStr);
         localStorage.setItem('kone_kids_streak', newStreak.toString());
         
-        // Bonus rewards
+        // Bonus rewards & Emotional Design: Streak Flame sound
+        sounds.playStreakFlame();
         setCoins(curr => curr + 20);
         setXp(curr => curr + 10);
+        setRecentXpEvent({ amount: 10, id: Date.now() });
 
         if (newStreak >= 3) {
           unlockBadge('streak_hero');
@@ -450,6 +489,7 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
       const nextMissions = [...prev, missionId];
       setXp(curr => curr + baseXP);
       setCoins(curr => curr + baseXP); // 1:1 Mission XP to Coins
+      setRecentXpEvent({ amount: baseXP, id: Date.now() });
 
       // First mission ever completed
       if (nextMissions.length === 1) {
@@ -630,11 +670,11 @@ export const GamificationProvider: React.FC<{children: React.ReactNode}> = ({ ch
     badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
     coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
     sectionId, studentId, studentName, loginAsStudent, logoutStudent,
-    dialect, setDialect, streak, lastActiveDate
+    dialect, setDialect, streak, lastActiveDate, recentXpEvent, getEncouragingClue
   }), [badges, latestBadge, unlockBadge, hasVisited, markVisited, markBadgeViewed, xp, level, completedMissions, completeMission, user, hasCompletedOnboarding, completeOnboarding,
        coins, inventory, equippedItems, purchaseItem, equipItem, unlockedSeries, unlockSeries, addCoins,
        sectionId, studentId, studentName, loginAsStudent, logoutStudent,
-       dialect, setDialect, streak, lastActiveDate]);
+       dialect, setDialect, streak, lastActiveDate, recentXpEvent, getEncouragingClue]);
 
   return (
     <GamificationContext.Provider value={contextValue}>
