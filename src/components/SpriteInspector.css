@@ -13,6 +13,7 @@
   user-select: none;
 }
 
+[data-theme="dark"] .sprite-inspector,
 .dark .sprite-inspector {
   background: #1e293b;
   border-color: #334155;
@@ -39,6 +40,7 @@
   transition: border-color 0.2s ease;
 }
 
+[data-theme="dark"] .inspector-group,
 .dark .inspector-group {
   background: rgba(15, 23, 42, 0.6);
   border-color: #334155;
@@ -59,6 +61,7 @@
   gap: 0.2rem;
 }
 
+[data-theme="dark"] .inspector-label,
 .dark .inspector-label {
   color: #94a3b8;
 }
@@ -74,6 +77,7 @@
   font-family: inherit;
 }
 
+[data-theme="dark"] .inspector-input,
 .dark .inspector-input {
   color: #f8fafc;
 }

@@ -1045,6 +1045,12 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     }
   }, [onboardingStep, language, isMobile, mission, i18n.language]);
 
+  useEffect(() => {
+    if (workspace.current) {
+      workspace.current.setTheme(isDark ? KoneDark : KoneLight);
+    }
+  }, [isDark]);
+
   const getSharedUrl = () => {
     if (!workspace.current) return `${window.location.origin}/studio`;
     try {
