@@ -1,0 +1,102 @@
+{
+  "short_name": "Kone Kids",
+  "name": "Kone Kids | Coding, Robotics & AI",
+  "description": "Fun, hands-on STEM programs for the next generation of tech leaders.",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon-48x48.png",
+      "sizes": "48x48",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "logo512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#f97316",
+  "background_color": "#ffffff",
+  "id": "/?v=kids",
+  "categories": [
+    "education",
+    "games",
+    "utilities"
+  ],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "/",
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "screenshots": [
+    {
+      "src": "screenshots/robotics_maze_mobile.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Robotics Maze Challenge"
+    },
+    {
+      "src": "screenshots/ai_studio_mobile.png",
+      "sizes": "780x1688",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "AI Speech Studio"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Coding 4 Kids",
+      "url": "/coding",
+      "description": "Go to the Coding program page",
+      "icons": [
+        {
+          "src": "favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "Robotics 4 Kids",
+      "url": "/robotics",
+      "description": "Go to the Robotics program page",
+      "icons": [
+        {
+          "src": "favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    },
+    {
+      "name": "AI 4 Kids",
+      "url": "/ai",
+      "description": "Go to the AI program page",
+      "icons": [
+        {
+          "src": "favicon.svg",
+          "sizes": "any",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ]
+}
