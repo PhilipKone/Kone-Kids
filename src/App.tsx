@@ -305,27 +305,59 @@ function Home() {
         {/* Hero Section */}
         <header className="section-padding">
           <div className="container hero-grid">
-            {/* Mascot Section */}
+            {/* Mascot Showcase Section */}
             <div className="mascot-wrapper">
-              <Mascot />
+              <div className="mascot-hero-container">
+                {/* Speech Bubble */}
+                <div className="mascot-speech-bubble">
+                  <span>Hi! I'm Drop 💧 What will you build today?</span>
+                </div>
+
+                <Mascot />
+
+                {/* Quick-Launch STEM Chips */}
+                <div className="mascot-hero-chips">
+                  <Link 
+                    to="/coding" 
+                    className="mascot-chip" 
+                    style={{ '--chip-color': 'var(--kids-orange)' } as any}
+                  >
+                    <span>✨ Scratch 3.0 Games</span>
+                  </Link>
+                  <Link 
+                    to="/robotics" 
+                    className="mascot-chip" 
+                    style={{ '--chip-color': 'var(--kids-blue)' } as any}
+                  >
+                    <span>🤖 micro:bit &amp; Circuits</span>
+                  </Link>
+                  <Link 
+                    to="/ai" 
+                    className="mascot-chip" 
+                    style={{ '--chip-color': 'var(--kids-purple)' } as any}
+                  >
+                    <span>🧠 Smart AI Models</span>
+                  </Link>
+                </div>
+              </div>
             </div>
 
             {/* Tagline & Program List */}
             <div className="hero-content">
               <h1 style={{
                 fontFamily: "'Baloo 2', cursive",
-                fontSize: 'clamp(2rem, 6vw, 3rem)',
+                fontSize: 'clamp(2.2rem, 6vw, 3.2rem)',
                 fontWeight: 800,
                 color: 'var(--nav-text)',
                 margin: '0 0 0.75rem 0',
-                lineHeight: 1.25
+                lineHeight: 1.2
               }}>
                 {t('home.title', 'Welcome to Kone Kids!')}
               </h1>
               <p style={{
                 fontSize: 'clamp(0.95rem, 3vw, 1.15rem)',
                 color: 'var(--kids-text-muted)',
-                margin: '0 0 2rem 0',
+                margin: '0 0 1.75rem 0',
                 lineHeight: 1.6
               }}>
                 {t('home.subtitle', 'Embark on gamified coding adventures, earn coins, and build real smart hardware nodes.')}
@@ -333,7 +365,7 @@ function Home() {
               
               <div style={{ marginBottom: '2.5rem' }}>
                 <span className="hero-tagline">
-                  {t('home.tagline', 'Do it Right')}
+                  {t('home.tagline', 'Do it Right')} ✨
                 </span>
               </div>
               

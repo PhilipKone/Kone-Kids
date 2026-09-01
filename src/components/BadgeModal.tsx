@@ -250,16 +250,112 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
 
         {/* Badge Details Header */}
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.25rem' }}>
-          <div style={{ fontSize: '3rem' }}>{badge.icon}</div>
-          <div>
-            <h3 style={{ margin: 0, fontSize: '1.5rem', fontWeight: 800, fontFamily: '"Baloo 2", cursive', color: 'var(--kids-blue)' }}>{badge.name}</h3>
-            <p style={{ margin: 0, fontSize: '0.85rem', color: '#94a3b8' }}>
-              {badge.unlocked ? `🎉 Unlocked on ${badge.unlockedAt || new Date().toLocaleDateString()}` : '🔒 Locked - Explore missions to earn!'}
+          <div style={{ 
+            fontSize: '3rem', 
+            filter: badge.unlocked ? 'none' : 'grayscale(0.4)',
+            background: badge.unlocked ? 'rgba(14, 165, 233, 0.1)' : 'rgba(255,255,255,0.05)',
+            width: '72px',
+            height: '72px',
+            borderRadius: '20px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            border: badge.unlocked ? '2px solid var(--kids-blue)' : '2px dashed rgba(255,255,255,0.2)'
+          }}>
+            {badge.icon}
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, fontFamily: '"Baloo 2", cursive', color: 'white' }}>{badge.name}</h3>
+              <span style={{
+                background: badge.unlocked ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
+                color: badge.unlocked ? '#34d399' : '#fbbf24',
+                border: `1px solid ${badge.unlocked ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
+                padding: '2px 8px',
+                borderRadius: '12px',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '3px'
+              }}>
+                {badge.unlocked ? '✨ Unlocked' : '🔒 Quest Active'}
+              </span>
+            </div>
+            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#94a3b8' }}>
+              {badge.unlocked ? `Awarded on ${badge.unlockedAt || new Date().toLocaleDateString()}` : `Reward: +${badge.xpReward || 100} XP & Official Certificate`}
             </p>
           </div>
         </div>
 
         <p style={{ fontSize: '0.95rem', color: '#cbd5e1', lineHeight: '1.5', marginBottom: '1.5rem' }}>{badge.description}</p>
+
+        {/* LOCKED STATE: Interactive Quest Briefing & Direct Launcher */}
+        {!badge.unlocked && (
+          <div style={{ 
+            background: 'rgba(15, 23, 42, 0.6)', 
+            border: '1.5px solid rgba(255, 255, 255, 0.1)', 
+            borderRadius: '18px', 
+            padding: '1.25rem',
+            marginBottom: '1rem'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+              <span style={{ 
+                fontFamily: '"Baloo 2", cursive',
+                fontSize: '0.85rem', 
+                fontWeight: 800, 
+                color: '#fbbf24',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em'
+              }}>
+                🎯 Mission Objective
+              </span>
+              <span style={{
+                background: 'rgba(14, 165, 233, 0.15)',
+                color: '#38bdf8',
+                padding: '2px 8px',
+                borderRadius: '8px',
+                fontSize: '0.75rem',
+                fontWeight: 700
+              }}>
+                {badge.id.includes('robot') ? 'Robotics 4 Kids' : badge.id.includes('ai') || badge.id.includes('data') ? 'AI 4 Kids' : 'Coding 4 Kids'}
+              </span>
+            </div>
+
+            <p style={{ margin: '0 0 1.25rem', fontSize: '0.9rem', color: '#e2e8f0', lineHeight: '1.5' }}>
+              {badge.id === 'first_hello' ? 'Open the Kids Coding IDE and click "Run" to test your first interactive block script.' :
+               badge.id === 'explorer' ? 'Discover all 3 learning hubs: Coding 4 Kids, Robotics 4 Kids, and AI 4 Kids.' :
+               badge.id === 'ai_genius' ? 'Launch the AI Lab and train your first machine learning neural vision model.' :
+               badge.id === 'robot_commander' ? 'Simulate micro:bit circuits and ultrasonic obstacle sensors in Robotics 4 Kids.' :
+               badge.id === 'data_scientist' ? 'Filter, analyze, and chart live sensor data in the AI Data Lab.' :
+               badge.id === 'game_master' ? 'Build your own 2D interactive arcade game with motion physics and collision logic.' :
+               badge.id === 'app_builder' ? 'Design and assemble mobile interface components in the Mobile App workshop.' :
+               badge.id === 'future_hero' ? 'Join the official Kone Kids cohort to receive real-world hardware kits and mentorship.' :
+               `Launch the interactive simulator to complete the challenge and unlock this exclusive badge.`}
+            </p>
+
+            <a
+              href={badge.id.includes('robot') ? '/robotics' : badge.id.includes('ai') || badge.id.includes('data') ? '/ai' : badge.id === 'future_hero' ? '/?join=true' : '/coding'}
+              onClick={onClose}
+              className="kids-button pulse-neon"
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem',
+                fontSize: '0.95rem',
+                padding: '0.75rem',
+                textDecoration: 'none'
+              }}
+            >
+              <span>🚀 Start Quest Now</span>
+            </a>
+          </div>
+        )}
 
         {badge.unlocked && (
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.25rem' }}>

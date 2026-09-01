@@ -77,7 +77,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
         "sameAs": [
           "https://www.linkedin.com/in/philip-kone/",
           "https://www.koneacademy.io",
-          "https://konetech.koneacademy.io"
+          "https://tech.koneacademy.io"
         ]
       }
     }
