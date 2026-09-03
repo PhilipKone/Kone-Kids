@@ -212,7 +212,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   const [onboardingStep, setOnboardingStep] = useState<number>(-1);
   const [activeTab, setActiveTab] = useState<'blocks' | 'code'>('blocks');
-  const [activeMobileTab, setActiveMobileTab] = useState<'workspace' | 'simulator' | 'code'>('workspace');
+  const [activeMobileTab, setActiveMobileTab] = useState<'blocks' | 'costumes' | 'stage' | 'code'>('blocks');
   const [generatedCode, setGeneratedCode] = useState('');
   const [showCode, setShowCode] = useState(true);
   const [language, setLanguage] = useState<'javascript' | 'python'>('javascript');
@@ -232,6 +232,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const [isArenaFullscreen, setIsArenaFullscreen] = useState(false);
   const [blockCount, setBlockCount] = useState(0);
   const [lineCount, setLineCount] = useState(0);
+  const [isMissionExpanded, setIsMissionExpanded] = useState(false);
+  const [showMobileMore, setShowMobileMore] = useState(false);
 
   let currentTheme = 'light';
   let toggleThemeHandler = () => { };
@@ -267,7 +269,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       } else if (tabParam === 'sounds') {
         setEditorModeTab('sounds');
       } else if (tabParam === 'playground' || tabParam === 'simulator') {
-        setActiveMobileTab('simulator');
+        setActiveMobileTab('stage');
       } else if (tabParam === 'code') {
         setActiveMobileTab('code');
         setActiveTab('code');
@@ -395,7 +397,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   }, [isMobile, showCode]);
 
   useEffect(() => {
-    if (activeMobileTab === 'workspace' && workspace.current) {
+    if ((activeMobileTab === 'blocks' || (activeMobileTab as string) === 'workspace') && workspace.current) {
       setTimeout(() => {
         if (workspace.current) {
           Blockly.svgResize(workspace.current);
@@ -1481,7 +1483,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
     }
 
     if (isMobile) {
-      setActiveMobileTab('simulator');
+      setActiveMobileTab('stage');
     }
 
     setIsRunning(true);
@@ -1777,226 +1779,266 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   return (
     <div className="kids-ide-container engineering-lab-wrapper" style={{
       position: isStandalone ? 'fixed' : 'relative',
-      top: isStandalone ? 0 : 'auto',
-      left: isStandalone ? 0 : 'auto',
+      top: 0,
+      left: 0,
       width: isStandalone ? '100vw' : '100%',
-      maxWidth: isStandalone ? '100vw' : '1440px',
-      margin: isStandalone ? 0 : '0 auto',
-      height: isStandalone ? '100vh' : (isMobile ? 'auto' : 'calc(100vh - 120px)'),
-      minHeight: isStandalone ? '100vh' : (isMobile ? 'auto' : '750px'),
+      maxWidth: '100vw',
+      margin: 0,
+      height: '100vh',
+      minHeight: '100vh',
       zIndex: isStandalone ? 99999 : 40,
-      borderRadius: isStandalone ? 0 : '24px',
-      border: isStandalone ? 'none' : (isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1'),
+      borderRadius: 0,
+      border: 'none',
       overflow: 'hidden',
       background: isDark ? 'linear-gradient(135deg, #0b0f19 0%, #0f172a 100%)' : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
       color: isDark ? 'white' : '#0f172a',
       display: 'flex',
       flexDirection: 'column',
-      boxShadow: isStandalone ? 'none' : '0 20px 50px rgba(0, 0, 0, 0.3)',
+      boxShadow: 'none',
       fontFamily: "'Outfit', 'Inter', sans-serif"
     }}>
       {/* Header Bar */}
       <div style={{
-        padding: isMobile ? '2px 6px' : '0.6rem 1.2rem',
+        padding: isMobile ? '4px 8px' : '0.55rem 1.2rem',
         background: isDark ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(10px)',
         borderBottom: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        gap: '0.3rem',
-        overflowX: isMobile ? 'auto' : 'visible',
-        maxWidth: '100%'
+        gap: '0.4rem',
+        maxWidth: '100%',
+        position: 'relative'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexShrink: 0 }}>
+        {/* Left: Back / Map & Project / Mission Title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: 0 }}>
           <button
             onClick={() => navigate(hubPath)}
             className="kids-button"
             style={{
-              padding: isMobile ? '0.15rem 0.35rem' : '0.25rem 0.5rem',
-              fontSize: isMobile ? '0.68rem' : '0.75rem',
+              padding: isMobile ? '0.2rem 0.45rem' : '0.3rem 0.7rem',
+              fontSize: isMobile ? '0.72rem' : '0.8rem',
               background: isDark ? 'var(--kids-surface)' : '#ffffff',
-              border: isDark ? '1px solid var(--kids-border)' : '1px solid #cbd5e1',
+              border: isDark ? '1px solid var(--kids-border)' : '1.5px solid #cbd5e1',
               color: isDark ? 'white' : '#0f172a',
-              borderRadius: '7px'
+              borderRadius: '8px',
+              fontWeight: 800,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+              flexShrink: 0
             }}
+            title={`Return to ${hubPath.replace('/', '')} Mission Map`}
           >
-            ← Map
+            ← {mission ? (isMobile ? 'Map' : 'Mission Map') : 'Map'}
           </button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-            <input
-              type="text"
-              value={projectName}
-              onChange={(e) => setProjectName(e.target.value)}
-              placeholder="Untitled Project..."
-              style={{
-                background: 'transparent',
-                border: '1px solid transparent',
-                color: isDark ? 'white' : '#0f172a',
-                fontSize: isMobile ? '0.72rem' : '1rem',
+          {mission ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', overflow: 'hidden' }}>
+              <span style={{
+                fontSize: isMobile ? '0.78rem' : '0.98rem',
                 fontWeight: 900,
-                borderRadius: '6px',
-                padding: '1px 3px',
-                outline: 'none',
-                maxWidth: isMobile ? '80px' : '220px'
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#0ea5e9')}
-              onBlur={(e) => (e.target.style.borderColor = 'transparent')}
-            />
-            <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700, display: isMobile ? 'none' : 'inline-flex', alignItems: 'center', gap: '3px' }}>
-              ☁️ Auto-saved
-            </span>
-          </div>
+                color: 'var(--kids-orange)',
+                fontFamily: "'Baloo 2', cursive",
+                whiteSpace: 'nowrap',
+                textOverflow: 'ellipsis',
+                overflow: 'hidden',
+                maxWidth: isMobile ? '120px' : '260px'
+              }}>
+                🎯 {mission.name}
+              </span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+              <input
+                type="text"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
+                placeholder="Untitled Project..."
+                style={{
+                  background: 'transparent',
+                  border: '1px solid transparent',
+                  color: isDark ? 'white' : '#0f172a',
+                  fontSize: isMobile ? '0.78rem' : '0.95rem',
+                  fontWeight: 900,
+                  fontFamily: "'Baloo 2', cursive",
+                  borderRadius: '6px',
+                  padding: '1px 4px',
+                  outline: 'none',
+                  maxWidth: isMobile ? '100px' : '200px'
+                }}
+                onFocus={(e) => (e.target.style.borderColor = '#0ea5e9')}
+                onBlur={(e) => (e.target.style.borderColor = 'transparent')}
+              />
+              <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700, display: isMobile ? 'none' : 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                ☁️ Auto-saved
+              </span>
+            </div>
+          )}
         </div>
 
-        <div style={{ display: 'flex', gap: isMobile ? '0.25rem' : '0.75rem', alignItems: 'center' }}>
+        {/* Right: Language, JS/PY Switcher, Actions & Tools */}
+        <div style={{ display: 'flex', gap: isMobile ? '0.25rem' : '0.5rem', alignItems: 'center', flexShrink: 0 }}>
           {/* Dialect selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '10px', padding: isMobile ? '2px 4px' : '4px 8px' }}>
-            <span style={{ fontSize: '0.75rem', color: isDark ? 'rgba(255,255,255,0.6)' : 'rgba(0,0,0,0.6)', display: isMobile ? 'none' : 'inline' }}>🗣️ Voice:</span>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.2rem',
+            background: isDark ? 'rgba(255,255,255,0.06)' : '#f1f5f9',
+            borderRadius: '8px',
+            padding: isMobile ? '2px 4px' : '3px 6px',
+            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0'
+          }}>
+            <span style={{ fontSize: '0.72rem', color: isDark ? 'rgba(255,255,255,0.7)' : '#64748b', display: isMobile ? 'none' : 'inline' }}>🗣️</span>
             <select
               value={dialect}
               onChange={(e) => setDialect(e.target.value as any)}
               style={{
                 background: 'transparent',
                 border: 'none',
-                color: isDark ? 'white' : 'black',
-                fontSize: isMobile ? '0.7rem' : '0.85rem',
+                color: isDark ? 'white' : '#0f172a',
+                fontSize: isMobile ? '0.68rem' : '0.8rem',
                 fontWeight: 800,
                 outline: 'none',
                 cursor: 'pointer'
               }}
             >
-              <option value="en" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>English</option>
-              <option value="twi" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Twi</option>
-              <option value="ga" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Ga</option>
-              <option value="ewe" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : 'black' }}>Ewe</option>
+              <option value="en" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>English</option>
+              <option value="twi" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>Twi</option>
+              <option value="ga" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>Ga</option>
+              <option value="ewe" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>Ewe</option>
             </select>
           </div>
 
-          {/* Audio & Theme controls */}
-          <div style={{ display: 'flex', gap: '0.15rem', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '10px', padding: isMobile ? '2px 4px' : '4px 6px' }}>
-            <button
-              onClick={toggleThemeHandler}
-              title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: isDark ? '#fbbf24' : '#0284c7',
-                padding: '0.15rem',
-                outline: 'none',
-                fontSize: isMobile ? '0.8rem' : '0.95rem',
-                width: isMobile ? '24px' : 'auto',
-                height: isMobile ? '24px' : 'auto'
-              }}
-            >
-              {isDark ? '☀️' : '🌙'}
-            </button>
-            <button
-              onClick={handleToggleMusic}
-              title={musicOn ? 'Mute Music' : 'Play Background Music'}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: musicOn ? '#c084fc' : '#94a3b8',
-                padding: '0.25rem',
-                outline: 'none'
-              }}
-            >
-              <Music size={16} />
-            </button>
-            <button
-              onClick={handleToggleMute}
-              title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: !muted ? '#38bdf8' : '#94a3b8',
-                padding: '0.25rem',
-                outline: 'none'
-              }}
-            >
-              {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
-            </button>
+          {/* Desktop Only: Audio & Theme controls */}
+          {!isMobile && (
+            <div style={{ display: 'flex', gap: '0.15rem', alignItems: 'center', background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)', borderRadius: '10px', padding: '3px 6px' }}>
+              <button
+                type="button"
+                onClick={toggleThemeHandler}
+                title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: isDark ? '#fbbf24' : '#0284c7',
+                  padding: '0.15rem',
+                  outline: 'none',
+                  fontSize: '0.95rem'
+                }}
+              >
+                {isDark ? '☀️' : '🌙'}
+              </button>
+              <button
+                type="button"
+                onClick={handleToggleMusic}
+                title={musicOn ? 'Mute Music' : 'Play Background Music'}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: musicOn ? '#c084fc' : '#94a3b8',
+                  padding: '0.25rem',
+                  outline: 'none'
+                }}
+              >
+                <Music size={16} />
+              </button>
+              <button
+                type="button"
+                onClick={handleToggleMute}
+                title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: !muted ? '#38bdf8' : '#94a3b8',
+                  padding: '0.25rem',
+                  outline: 'none'
+                }}
+              >
+                {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </button>
 
-            <button
-              onClick={() => setShowTemplatesModal(true)}
-              title="Load Example Starter Projects"
-              style={{
-                background: 'rgba(168, 85, 247, 0.15)',
-                border: '1px solid rgba(168, 85, 247, 0.3)',
-                color: '#c084fc',
-                padding: isMobile ? '0.2rem 0.4rem' : '0.4rem 0.8rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: isMobile ? '0.72rem' : '0.8rem',
-                fontWeight: 800,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3px',
-                transition: 'all 0.2s',
-                minHeight: isMobile ? '28px' : '36px'
-              }}
-            >
-              <span>✨{!isMobile && ' Examples'}</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowTemplatesModal(true)}
+                title="Load Example Starter Projects"
+                style={{
+                  background: 'rgba(168, 85, 247, 0.15)',
+                  border: '1px solid rgba(168, 85, 247, 0.3)',
+                  color: '#c084fc',
+                  padding: '0.35rem 0.7rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  transition: 'all 0.2s',
+                  minHeight: '34px'
+                }}
+              >
+                <span>✨ Examples</span>
+              </button>
 
-            <button
-              onClick={() => setShowExtensionsModal(true)}
-              title="Explore Scratch, Code.org & STEM Extensions"
-              style={{
-                background: 'rgba(14, 165, 233, 0.15)',
-                border: '1px solid rgba(14, 165, 233, 0.3)',
-                color: '#38bdf8',
-                padding: isMobile ? '0.2rem 0.4rem' : '0.4rem 0.8rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: isMobile ? '0.72rem' : '0.8rem',
-                fontWeight: 800,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3px',
-                transition: 'all 0.2s',
-                minHeight: isMobile ? '28px' : '36px'
-              }}
-            >
-              <span>🚀{!isMobile && ' Extensions'}</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowExtensionsModal(true)}
+                title="Explore Scratch, Code.org & STEM Extensions"
+                style={{
+                  background: 'rgba(14, 165, 233, 0.15)',
+                  border: '1px solid rgba(14, 165, 233, 0.3)',
+                  color: '#38bdf8',
+                  padding: '0.35rem 0.7rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  transition: 'all 0.2s',
+                  minHeight: '34px'
+                }}
+              >
+                <span>🚀 Extensions</span>
+              </button>
 
-            <button
-              onClick={() => setShowShareModal(true)}
-              title="Save, Download & Share Project"
-              style={{
-                background: 'rgba(16, 185, 129, 0.15)',
-                border: '1px solid rgba(16, 185, 129, 0.3)',
-                color: '#34d399',
-                padding: isMobile ? '0.2rem 0.4rem' : '0.4rem 0.8rem',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                fontSize: isMobile ? '0.72rem' : '0.8rem',
-                fontWeight: 800,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '3px',
-                transition: 'all 0.2s',
-                minHeight: isMobile ? '28px' : '36px'
-              }}
-            >
-              <span>📤{!isMobile && ' Share'}</span>
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => setShowShareModal(true)}
+                title="Save, Download & Share Project"
+                style={{
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  color: '#34d399',
+                  padding: '0.35rem 0.7rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  fontSize: '0.78rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  transition: 'all 0.2s',
+                  minHeight: '34px'
+                }}
+              >
+                <span>📤 Share</span>
+              </button>
+            </div>
+          )}
 
           <input
             type="file"
@@ -2006,141 +2048,255 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             style={{ display: 'none' }}
           />
 
-          <div style={{ display: 'flex', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', padding: '3px', gap: '3px' }}>
+          {/* Language Switcher: JS vs Python */}
+          <div style={{
+            display: 'flex',
+            background: isDark ? 'rgba(255,255,255,0.08)' : '#e2e8f0',
+            borderRadius: '8px',
+            padding: '2px',
+            gap: '2px'
+          }}>
             <button
+              type="button"
               onClick={() => setLanguage('javascript')}
               style={{
                 background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent',
                 border: 'none',
-                color: 'white',
-                padding: isMobile ? '0.25rem 0.5rem' : '0.35rem 0.75rem',
+                color: language === 'javascript' ? '#ffffff' : (isDark ? 'rgba(255,255,255,0.6)' : '#64748b'),
+                padding: isMobile ? '0.2rem 0.4rem' : '0.3rem 0.65rem',
                 borderRadius: '6px',
                 cursor: 'pointer',
-                fontSize: isMobile ? '0.7rem' : '0.8rem',
+                fontSize: isMobile ? '0.68rem' : '0.75rem',
                 fontWeight: 800,
                 boxShadow: language === 'javascript' ? '0 2px 0 #9a3412' : 'none',
-                transition: 'all 0.2s',
-                minHeight: isMobile ? '30px' : '34px'
+                transition: 'all 0.15s ease'
               }}
             >
               JS
             </button>
             <button
+              type="button"
               onClick={() => setLanguage('python')}
               style={{
                 background: language === 'python' ? 'var(--kids-blue)' : 'transparent',
                 border: 'none',
-                color: 'white',
-                boxShadow: language === 'python' ? '0 4px 0 #0369a1' : 'none',
-                transition: 'all 0.2s',
-                transform: language === 'python' ? 'translateY(2px)' : 'none'
+                color: language === 'python' ? '#ffffff' : (isDark ? 'rgba(255,255,255,0.6)' : '#64748b'),
+                padding: isMobile ? '0.2rem 0.4rem' : '0.3rem 0.65rem',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontSize: isMobile ? '0.68rem' : '0.75rem',
+                fontWeight: 800,
+                boxShadow: language === 'python' ? '0 2px 0 #0369a1' : 'none',
+                transition: 'all 0.15s ease'
               }}
-            >PY</button>
+            >
+              PY
+            </button>
           </div>
 
-          <button
-            onClick={() => setShowCode(!showCode)}
-            className="kids-button"
-            style={{
-              background: 'var(--kids-surface)',
-              border: '2px solid var(--kids-border)',
-              color: 'white',
-              padding: '0.4rem',
-              borderRadius: '10px',
-              cursor: 'pointer',
-              width: isMobile ? '32px' : '40px',
-              height: isMobile ? '32px' : '40px',
-              boxShadow: isMobile ? '0 3px 0 var(--kids-border)' : '0 5px 0 var(--kids-border)'
-            }}
-          >
-            {showCode ? <EyeOff size={isMobile ? 16 : 20} /> : <Eye size={isMobile ? 16 : 20} />}
-          </button>
+          {/* Desktop: Eye Code Preview Drawer Toggle */}
+          {!isMobile && (
+            <button
+              type="button"
+              onClick={() => setShowCode(!showCode)}
+              style={{
+                background: showCode ? (isDark ? 'rgba(14, 165, 233, 0.2)' : 'rgba(14, 165, 233, 0.12)') : (isDark ? '#1e293b' : '#ffffff'),
+                border: showCode ? '1.5px solid #0ea5e9' : (isDark ? '1px solid #334155' : '1.5px solid #cbd5e1'),
+                color: showCode ? '#0ea5e9' : (isDark ? '#94a3b8' : '#475569'),
+                padding: '0.35rem',
+                borderRadius: '9px',
+                cursor: 'pointer',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                boxShadow: showCode ? '0 2px 0 #0284c7' : 'none',
+                transition: 'all 0.15s ease'
+              }}
+              title={showCode ? 'Hide Code Preview' : 'Show Code Preview'}
+            >
+              {showCode ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          )}
+
+          {/* Mobile: Tools Dropdown Trigger */}
+          {isMobile && (
+            <div style={{ position: 'relative' }}>
+              <button
+                type="button"
+                onClick={() => setShowMobileMore(!showMobileMore)}
+                style={{
+                  background: showMobileMore ? 'var(--kids-blue)' : (isDark ? 'rgba(255,255,255,0.08)' : '#f1f5f9'),
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  color: showMobileMore ? 'white' : (isDark ? 'white' : '#0f172a'),
+                  padding: '0.22rem 0.45rem',
+                  borderRadius: '7px',
+                  cursor: 'pointer',
+                  fontSize: '0.7rem',
+                  fontWeight: 800,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '2px'
+                }}
+              >
+                <span>⚙️ More</span>
+              </button>
+
+              {showMobileMore && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '6px',
+                  background: isDark ? '#1e293b' : '#ffffff',
+                  border: isDark ? '1px solid rgba(255,255,255,0.15)' : '1px solid #cbd5e1',
+                  borderRadius: '12px',
+                  padding: '0.5rem',
+                  boxShadow: '0 12px 28px rgba(0,0,0,0.25)',
+                  zIndex: 1000,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.35rem',
+                  minWidth: '170px'
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.3rem', borderBottom: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: isDark ? '#94a3b8' : '#64748b' }}>Quick Controls</span>
+                    <button onClick={toggleThemeHandler} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem' }}>{isDark ? '☀️' : '🌙'}</button>
+                    <button onClick={handleToggleMusic} style={{ background: 'none', border: 'none', cursor: 'pointer', color: musicOn ? '#c084fc' : '#94a3b8' }}><Music size={14} /></button>
+                    <button onClick={handleToggleMute} style={{ background: 'none', border: 'none', cursor: 'pointer', color: !muted ? '#38bdf8' : '#94a3b8' }}>{muted ? <VolumeX size={14} /> : <Volume2 size={14} />}</button>
+                  </div>
+
+                  <button
+                    onClick={() => { setShowTemplatesModal(true); setShowMobileMore(false); }}
+                    style={{ background: 'rgba(168, 85, 247, 0.1)', border: 'none', color: '#a855f7', padding: '0.35rem 0.5rem', borderRadius: '7px', fontWeight: 800, fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', textAlign: 'left' }}
+                  >
+                    <span>✨ Starter Examples</span>
+                  </button>
+
+                  <button
+                    onClick={() => { setShowExtensionsModal(true); setShowMobileMore(false); }}
+                    style={{ background: 'rgba(14, 165, 233, 0.1)', border: 'none', color: '#0ea5e9', padding: '0.35rem 0.5rem', borderRadius: '7px', fontWeight: 800, fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', textAlign: 'left' }}
+                  >
+                    <span>🚀 STEM Extensions</span>
+                  </button>
+
+                  <button
+                    onClick={() => { setShowShareModal(true); setShowMobileMore(false); }}
+                    style={{ background: 'rgba(16, 185, 129, 0.1)', border: 'none', color: '#10b981', padding: '0.35rem 0.5rem', borderRadius: '7px', fontWeight: 800, fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', textAlign: 'left' }}
+                  >
+                    <span>📤 Save &amp; Share</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Mobile-Friendly Section Tabs */}
+      {/* Unified Mobile Section Switcher */}
       {isMobile && (
         <div style={{
           display: 'flex',
           background: isDark ? '#151921' : '#e2e8f0',
-          borderRadius: '10px',
+          borderRadius: '12px',
           padding: '3px',
-          gap: '4px',
+          gap: '3px',
           marginBottom: '0.4rem',
           border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #cbd5e1',
           boxShadow: isDark ? 'inset 0 2px 4px rgba(0,0,0,0.3)' : 'inset 0 1px 2px rgba(0,0,0,0.05)'
         }}>
           <button
-            onClick={() => setActiveMobileTab('workspace')}
+            type="button"
+            onClick={() => { setActiveMobileTab('blocks'); setEditorModeTab('code'); }}
             style={{
               flex: 1,
-              background: activeMobileTab === 'workspace' ? 'var(--kids-orange)' : 'transparent',
+              background: activeMobileTab === 'blocks' ? 'var(--kids-orange)' : 'transparent',
               border: 'none',
-              color: activeMobileTab === 'workspace' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
-              padding: '0.32rem 0.4rem',
-              borderRadius: '7px',
+              color: activeMobileTab === 'blocks' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
+              padding: '0.35rem 0.2rem',
+              borderRadius: '8px',
               fontWeight: 800,
-              fontSize: '0.74rem',
+              fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.25rem',
-              boxShadow: activeMobileTab === 'workspace' ? '0 2px 0 #9a3412' : 'none',
-              transform: activeMobileTab === 'workspace' ? 'translateY(1px)' : 'none',
-              transition: 'all 0.15s ease',
+              gap: '0.2rem',
+              boxShadow: activeMobileTab === 'blocks' ? '0 2px 0 #9a3412' : 'none',
               cursor: 'pointer'
             }}
           >
-            <span>🧩 {t('tabs.blocks', 'Blocks')}</span>
+            <span>🧩 Blocks</span>
           </button>
+
           <button
-            onClick={() => setActiveMobileTab('simulator')}
+            type="button"
+            onClick={() => { setActiveMobileTab('costumes'); setEditorModeTab('costumes'); }}
             style={{
               flex: 1,
-              background: activeMobileTab === 'simulator' ? 'var(--kids-blue)' : 'transparent',
+              background: activeMobileTab === 'costumes' ? 'var(--kids-purple)' : 'transparent',
               border: 'none',
-              color: activeMobileTab === 'simulator' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
-              padding: '0.32rem 0.4rem',
-              borderRadius: '7px',
+              color: activeMobileTab === 'costumes' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
+              padding: '0.35rem 0.2rem',
+              borderRadius: '8px',
               fontWeight: 800,
-              fontSize: '0.74rem',
+              fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.25rem',
-              boxShadow: activeMobileTab === 'simulator' ? '0 2px 0 #0369a1' : 'none',
-              transform: activeMobileTab === 'simulator' ? 'translateY(1px)' : 'none',
-              transition: 'all 0.15s ease',
+              gap: '0.2rem',
+              boxShadow: activeMobileTab === 'costumes' ? '0 2px 0 #7e22ce' : 'none',
               cursor: 'pointer'
             }}
           >
-            <span>📺 {t('tabs.playground', 'Playground')}</span>
+            <span>🎨 Costumes</span>
           </button>
-          {showCode && (
-            <button
-              onClick={() => setActiveMobileTab('code')}
-              style={{
-                flex: 1,
-                background: activeMobileTab === 'code' ? 'var(--kids-purple)' : 'transparent',
-                border: 'none',
-                color: activeMobileTab === 'code' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
-                padding: '0.32rem 0.4rem',
-                borderRadius: '7px',
-                fontWeight: 800,
-                fontSize: '0.74rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.25rem',
-                boxShadow: activeMobileTab === 'code' ? '0 2px 0 #7e22ce' : 'none',
-                transform: activeMobileTab === 'code' ? 'translateY(1px)' : 'none',
-                transition: 'all 0.15s ease',
-                cursor: 'pointer'
-              }}
-            >
-              <span>💻 {t('tabs.code_preview', 'Code')}</span>
-            </button>
-          )}
+
+          <button
+            type="button"
+            onClick={() => setActiveMobileTab('stage')}
+            style={{
+              flex: 1,
+              background: activeMobileTab === 'stage' ? 'var(--kids-blue)' : 'transparent',
+              border: 'none',
+              color: activeMobileTab === 'stage' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
+              padding: '0.35rem 0.2rem',
+              borderRadius: '8px',
+              fontWeight: 800,
+              fontSize: '0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.2rem',
+              boxShadow: activeMobileTab === 'stage' ? '0 2px 0 #0369a1' : 'none',
+              cursor: 'pointer'
+            }}
+          >
+            <span>📺 Stage</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveMobileTab('code')}
+            style={{
+              flex: 1,
+              background: activeMobileTab === 'code' ? '#10b981' : 'transparent',
+              border: 'none',
+              color: activeMobileTab === 'code' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
+              padding: '0.35rem 0.2rem',
+              borderRadius: '8px',
+              fontWeight: 800,
+              fontSize: '0.75rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.2rem',
+              boxShadow: activeMobileTab === 'code' ? '0 2px 0 #047857' : 'none',
+              cursor: 'pointer'
+            }}
+          >
+            <span>💻 Code</span>
+          </button>
         </div>
       )}
 
@@ -2148,7 +2304,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         flex: 1,
         display: 'flex',
         gap: isMobile ? '0.5rem' : '1rem',
-        padding: isMobile ? '0.5rem' : '1rem',
+        padding: isMobile ? '0.4rem' : '0.8rem 1.2rem',
         flexDirection: isMobile ? 'column' : 'row',
         minHeight: 0,
         overflow: 'hidden'
@@ -2156,28 +2312,91 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         {/* Workspace */}
         <div style={{
           flex: 2,
-          display: (!isMobile || activeMobileTab === 'workspace') ? 'flex' : 'none',
+          display: (!isMobile || activeMobileTab === 'blocks' || activeMobileTab === 'costumes') ? 'flex' : 'none',
           flexDirection: 'column',
-          gap: '1rem'
+          gap: '0.6rem'
         }}>
           {mission && (
             <div style={{
-              background: 'rgba(14, 165, 233, 0.08)',
-              border: '1px solid rgba(14, 165, 233, 0.3)',
-              borderRadius: '16px',
-              padding: isMobile ? '0.75rem' : '1rem'
+              background: isDark ? 'rgba(14, 165, 233, 0.1)' : '#ffffff',
+              border: isDark ? '1.5px solid rgba(14, 165, 233, 0.3)' : '1.5px solid #bae6fd',
+              borderRadius: '14px',
+              padding: isMobile ? '0.5rem 0.75rem' : '0.6rem 1rem',
+              boxShadow: isDark ? 'none' : '0 4px 12px rgba(14, 165, 233, 0.08)',
+              transition: 'all 0.2s ease'
             }}>
-              <div style={{ display: 'flex', gap: isMobile ? '0.75rem' : '1rem', alignItems: 'flex-start', marginBottom: (mission.steps && !isMobile) ? '0.75rem' : '0' }}>
-                <div style={{ fontSize: isMobile ? '1.4rem' : '2rem', flexShrink: 0 }}>🎯</div>
-                <div>
-                  <h4 style={{ margin: 0, color: 'var(--kids-blue)', fontSize: isMobile ? '0.65rem' : '0.75rem', letterSpacing: '1px' }}>MISSION: {getTranslation(mission.name, dialect).text}</h4>
-                  <p style={{ margin: '0.15rem 0 0', color: 'white', fontWeight: 600, fontSize: isMobile ? '0.85rem' : '0.95rem' }}>{getTranslation(mission.objective, dialect).text}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', minWidth: 0 }}>
+                  <div style={{ fontSize: isMobile ? '1.2rem' : '1.4rem', flexShrink: 0 }}>🎯</div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                      <span style={{ 
+                        background: 'rgba(14, 165, 233, 0.15)', 
+                        color: 'var(--kids-blue)', 
+                        borderRadius: '6px', 
+                        padding: '1px 6px', 
+                        fontSize: '0.65rem', 
+                        fontWeight: 800, 
+                        letterSpacing: '0.5px' 
+                      }}>
+                        MISSION {mission.level || 1}
+                      </span>
+                      <strong style={{ color: isDark ? '#ffffff' : '#0f172a', fontSize: isMobile ? '0.82rem' : '0.92rem' }}>
+                        {getTranslation(mission.name, dialect).text}
+                      </strong>
+                    </div>
+                    <p style={{ margin: '2px 0 0', color: isDark ? '#cbd5e1' : '#475569', fontSize: isMobile ? '0.75rem' : '0.85rem', lineHeight: 1.3 }}>
+                      {getTranslation(mission.objective, dialect).text}
+                    </p>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                  {mission?.hints && mission.hints.length > 0 && !isMissionCompleted && (
+                    <button
+                      onClick={() => { mascotRef.current?.speak(mission.hints[hintIndex % mission.hints.length]); setHintIndex(h => h + 1); }}
+                      style={{ 
+                        background: isDark ? 'rgba(251,191,36,0.15)' : '#fef3c7', 
+                        border: '1px solid #f59e0b', 
+                        color: '#b45309', 
+                        padding: isMobile ? '0.2rem 0.45rem' : '0.25rem 0.6rem', 
+                        borderRadius: '8px', 
+                        cursor: 'pointer', 
+                        fontSize: isMobile ? '0.68rem' : '0.75rem', 
+                        fontWeight: 800,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '2px'
+                      }}
+                      title="Get a hint from the mascot"
+                    >
+                      💡 Hint ({hintIndex % (mission.hints.length) === 0 && hintIndex > 0 ? 'all used' : `${mission.hints.length - (hintIndex % mission.hints.length)}`})
+                    </button>
+                  )}
+                  {mission.steps && (
+                    <button
+                      onClick={() => setIsMissionExpanded(prev => !prev)}
+                      style={{
+                        background: isDark ? 'transparent' : '#f0f9ff',
+                        border: '1px solid #bae6fd',
+                        color: '#0284c7',
+                        padding: isMobile ? '0.2rem 0.45rem' : '0.25rem 0.6rem',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontSize: isMobile ? '0.68rem' : '0.75rem',
+                        fontWeight: 800
+                      }}
+                    >
+                      {isMissionExpanded ? 'Hide Steps ▴' : 'Steps ▾'}
+                    </button>
+                  )}
                 </div>
               </div>
-              {mission.steps && !isMobile && (
-                <div style={{ borderTop: '1px solid rgba(14, 165, 233, 0.2)', paddingTop: '0.6rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+
+              {mission.steps && isMissionExpanded && (
+                <div style={{ borderTop: '1px solid rgba(14, 165, 233, 0.2)', marginTop: '0.5rem', paddingTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
                   {mission.steps.map((step, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', fontSize: '0.82rem', color: 'rgba(255,255,255,0.7)' }}>
+                    <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', fontSize: isMobile ? '0.75rem' : '0.82rem', color: isDark ? 'rgba(255,255,255,0.85)' : '#334155' }}>
                       <span style={{ background: 'rgba(14,165,233,0.3)', color: 'var(--kids-blue)', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 800, flexShrink: 0 }}>{i + 1}</span>
                       <span>{getTranslation(step, dialect).text}</span>
                     </div>
@@ -2200,83 +2419,76 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             </div>
           )}
 
-          {/* Hint button */}
-          {mission?.hints && mission.hints.length > 0 && !isMissionCompleted && (
-            <button
-              onClick={() => { mascotRef.current?.speak(mission.hints[hintIndex % mission.hints.length]); setHintIndex(h => h + 1); }}
-              style={{ alignSelf: 'flex-start', background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.4)', color: '#fbbf24', padding: '0.35rem 0.8rem', borderRadius: '10px', cursor: 'pointer', fontSize: isMobile ? '0.75rem' : '0.82rem', fontWeight: 700 }}
-            >
-              💡 Hint ({hintIndex % (mission.hints.length) === 0 && hintIndex > 0 ? 'all used!' : `${mission.hints.length - (hintIndex % mission.hints.length)} left`})
-            </button>
+          {/* Desktop Only: Scratch 3.0 Workspace Mode Tabs (Code vs Costumes vs Sounds) */}
+          {!isMobile && (
+            <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '-2px', zIndex: 10 }}>
+              <button
+                type="button"
+                onClick={() => setEditorModeTab('code')}
+                style={{
+                  padding: '0.45rem 1.1rem',
+                  borderRadius: '14px 14px 0 0',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  borderBottom: editorModeTab === 'code' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                  background: editorModeTab === 'code' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                  color: editorModeTab === 'code' ? '#0ea5e9' : (isDark ? '#94a3b8' : '#64748b'),
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>🧩 Code</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEditorModeTab('costumes')}
+                style={{
+                  padding: '0.45rem 1.1rem',
+                  borderRadius: '14px 14px 0 0',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  borderBottom: editorModeTab === 'costumes' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                  background: editorModeTab === 'costumes' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                  color: editorModeTab === 'costumes' ? '#ec4899' : (isDark ? '#94a3b8' : '#64748b'),
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>🎨 Costumes</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEditorModeTab('sounds')}
+                style={{
+                  padding: '0.45rem 1.1rem',
+                  borderRadius: '14px 14px 0 0',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  borderBottom: editorModeTab === 'sounds' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                  background: editorModeTab === 'sounds' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                  color: editorModeTab === 'sounds' ? '#a855f7' : (isDark ? '#94a3b8' : '#64748b'),
+                  fontWeight: 800,
+                  fontSize: '0.85rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>🔊 Sounds</span>
+              </button>
+            </div>
           )}
-          {/* Scratch 3.0 Workspace Mode Tabs: Code vs Costumes vs Sounds */}
-          <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '-2px', zIndex: 10 }}>
-            <button
-              type="button"
-              onClick={() => setEditorModeTab('code')}
-              style={{
-                padding: '0.45rem 1.1rem',
-                borderRadius: '14px 14px 0 0',
-                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
-                borderBottom: editorModeTab === 'code' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
-                background: editorModeTab === 'code' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
-                color: editorModeTab === 'code' ? '#0ea5e9' : (isDark ? '#94a3b8' : '#64748b'),
-                fontWeight: 800,
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <span>🧩 Code</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setEditorModeTab('costumes')}
-              style={{
-                padding: '0.45rem 1.1rem',
-                borderRadius: '14px 14px 0 0',
-                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
-                borderBottom: editorModeTab === 'costumes' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
-                background: editorModeTab === 'costumes' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
-                color: editorModeTab === 'costumes' ? '#ec4899' : (isDark ? '#94a3b8' : '#64748b'),
-                fontWeight: 800,
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <span>🎨 Costumes</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setEditorModeTab('sounds')}
-              style={{
-                padding: '0.45rem 1.1rem',
-                borderRadius: '14px 14px 0 0',
-                border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
-                borderBottom: editorModeTab === 'sounds' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
-                background: editorModeTab === 'sounds' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
-                color: editorModeTab === 'sounds' ? '#a855f7' : (isDark ? '#94a3b8' : '#64748b'),
-                fontWeight: 800,
-                fontSize: '0.85rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <span>🔊 Sounds</span>
-            </button>
-          </div>
 
           <div style={{ position: 'relative', flex: 1, height: isMobile ? '450px' : '100%', minHeight: isMobile ? '400px' : '500px' }}>
             <div
@@ -2454,26 +2666,28 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           padding: '1rem'
         } : {
           flex: 1,
-          display: (!isMobile || activeMobileTab !== 'workspace') ? 'flex' : 'none',
+          display: (!isMobile || activeMobileTab === 'stage' || activeMobileTab === 'code') ? 'flex' : 'none',
           flexDirection: 'column',
           gap: '0',
-          minWidth: isMobile ? '100%' : '350px',
+          minWidth: isMobile ? '100%' : '340px',
           position: 'relative'
         }}>
           {/* Scratch 3.0 Stage Control Header Bar (Green Flag & Red Stop) */}
           <div className="stage-control-bar" style={{
-            display: (!isMobile || activeMobileTab === 'simulator') ? 'flex' : 'none',
+            display: (!isMobile || activeMobileTab === 'stage') ? 'flex' : 'none',
             alignItems: 'center',
             justifyContent: 'space-between',
             background: isDark ? '#1e293b' : '#ffffff',
-            padding: '0.5rem 0.85rem',
+            padding: '0.4rem 0.75rem',
             borderRadius: '16px 16px 0 0',
             border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0',
             borderBottom: 'none',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+            flexWrap: 'wrap',
+            gap: '0.35rem'
           }}>
-            {/* Left Controls: Green Flag & Red Stop */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            {/* Left Controls: Green Flag, Red Stop & Status */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
               <button
                 onClick={runCode}
                 disabled={isRunning}
@@ -2485,20 +2699,20 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '50%',
-                  width: '36px',
-                  height: '36px',
+                  width: '32px',
+                  height: '32px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: isRunning ? 'default' : 'pointer',
                   boxShadow: isRunning
-                    ? '0 0 12px rgba(34, 197, 94, 0.6), 0 3px 0 #15803d'
-                    : '0 3px 0 #15803d',
+                    ? '0 0 12px rgba(34, 197, 94, 0.6), 0 2px 0 #15803d'
+                    : '0 2px 0 #15803d',
                   transition: 'all 0.2s ease',
                   transform: isRunning ? 'scale(1.05)' : 'none'
                 }}
               >
-                <span style={{ fontSize: '1.2rem', lineHeight: 1 }}>🚩</span>
+                <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>🚩</span>
               </button>
 
               <button
@@ -2512,66 +2726,66 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '50%',
-                  width: '36px',
-                  height: '36px',
+                  width: '32px',
+                  height: '32px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: isRunning ? 'pointer' : 'default',
-                  boxShadow: isRunning ? '0 3px 0 #b91c1c' : 'none',
+                  boxShadow: isRunning ? '0 2px 0 #b91c1c' : 'none',
                   opacity: isRunning ? 1 : 0.4,
                   transition: 'all 0.2s ease'
                 }}
               >
-                <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>🛑</span>
+                <span style={{ fontSize: '1rem', lineHeight: 1 }}>🛑</span>
               </button>
 
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.4rem',
-                fontSize: '0.75rem',
+                gap: '0.35rem',
+                fontSize: '0.72rem',
                 fontWeight: 800,
                 color: isRunning ? '#22c55e' : (isDark ? '#94a3b8' : '#64748b'),
                 background: isDark ? 'rgba(15, 23, 42, 0.5)' : 'rgba(241, 245, 249, 0.8)',
-                padding: '0.25rem 0.6rem',
-                borderRadius: '20px'
+                padding: '0.2rem 0.5rem',
+                borderRadius: '16px'
               }}>
                 <span style={{
-                  width: '8px',
-                  height: '8px',
+                  width: '7px',
+                  height: '7px',
                   borderRadius: '50%',
                   background: isRunning ? '#22c55e' : '#94a3b8',
                   boxShadow: isRunning ? '0 0 8px #22c55e' : 'none'
                 }} />
-                <span>{isRunning ? 'RUNNING (60 FPS)' : 'READY'}</span>
+                <span>{isRunning ? 'RUNNING' : 'READY'}</span>
               </div>
 
               {/* Execution Speed Selector (Slow-Mo / Normal / Turbo) */}
               <div style={{
                 display: 'flex',
                 background: isDark ? 'rgba(15, 23, 42, 0.7)' : 'rgba(241, 245, 249, 0.9)',
-                borderRadius: '20px',
+                borderRadius: '16px',
                 padding: '2px',
                 border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1'
               }}>
                 <button
                   type="button"
-                  title="Slow-Mo Debugger Mode (1.8s per block step + voice callouts)"
+                  title="Slow-Mo Debugger Mode (1.8s per block step)"
                   onClick={() => { setExecSpeed('slowmo'); execSpeedRef.current = 'slowmo'; sounds.playClick(); }}
                   style={{
                     background: execSpeed === 'slowmo' ? '#f59e0b' : 'transparent',
                     color: execSpeed === 'slowmo' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
                     border: 'none',
-                    borderRadius: '16px',
-                    padding: '0.2rem 0.5rem',
-                    fontSize: '0.72rem',
+                    borderRadius: '12px',
+                    padding: '0.15rem 0.4rem',
+                    fontSize: '0.7rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  🐢 {!isMobile && 'Slow'}
+                  🐢
                 </button>
 
                 <button
@@ -2582,59 +2796,59 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     background: execSpeed === 'normal' ? '#0ea5e9' : 'transparent',
                     color: execSpeed === 'normal' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
                     border: 'none',
-                    borderRadius: '16px',
-                    padding: '0.2rem 0.5rem',
-                    fontSize: '0.72rem',
+                    borderRadius: '12px',
+                    padding: '0.15rem 0.4rem',
+                    fontSize: '0.7rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  ⚡ {!isMobile && 'Normal'}
+                  ⚡
                 </button>
 
                 <button
                   type="button"
-                  title="Turbo Speed (50ms step delay for fast math & physics)"
+                  title="Turbo Speed (50ms step delay for fast math)"
                   onClick={() => { setExecSpeed('turbo'); execSpeedRef.current = 'turbo'; sounds.playClick(); }}
                   style={{
                     background: execSpeed === 'turbo' ? '#ec4899' : 'transparent',
                     color: execSpeed === 'turbo' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
                     border: 'none',
-                    borderRadius: '16px',
-                    padding: '0.2rem 0.5rem',
-                    fontSize: '0.72rem',
+                    borderRadius: '12px',
+                    padding: '0.15rem 0.4rem',
+                    fontSize: '0.7rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  🚀 {!isMobile && 'Turbo'}
+                  🚀
                 </button>
               </div>
             </div>
 
             {/* Right Controls: Grid, Fullscreen & Shop */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
               <button
+                type="button"
                 onClick={() => {
                   setShowGrid(prev => !prev);
                   sounds.playClick();
                 }}
                 title="Toggle Stage X/Y Coordinate Grid Overlay"
                 style={{
-                  background: showGrid ? 'rgba(56, 189, 248, 0.25)' : 'rgba(56, 189, 248, 0.1)',
-                  border: showGrid ? '1.5px solid #38bdf8' : '1px solid rgba(56, 189, 248, 0.25)',
-                  color: '#38bdf8',
-                  borderRadius: '8px',
-                  padding: '0.35rem 0.65rem',
+                  background: showGrid ? 'rgba(56, 189, 248, 0.25)' : (isDark ? 'rgba(56, 189, 248, 0.1)' : '#f0f9ff'),
+                  border: showGrid ? '1.5px solid #38bdf8' : (isDark ? '1px solid rgba(56, 189, 248, 0.25)' : '1px solid #bae6fd'),
+                  color: '#0284c7',
+                  borderRadius: '7px',
+                  padding: '0.25rem 0.45rem',
                   cursor: 'pointer',
-                  fontSize: '0.75rem',
+                  fontSize: '0.72rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.3rem',
-                  boxShadow: showGrid ? '0 0 10px rgba(56, 189, 248, 0.4)' : 'none',
+                  gap: '0.2rem',
                   transition: 'all 0.15s ease'
                 }}
               >
@@ -2643,41 +2857,43 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               </button>
 
               <button
+                type="button"
                 onClick={() => setIsArenaFullscreen(prev => !prev)}
                 title="Toggle Fullscreen Theater Mode"
                 style={{
-                  background: 'rgba(14, 165, 233, 0.1)',
-                  border: '1px solid rgba(14, 165, 233, 0.25)',
-                  color: '#0ea5e9',
-                  borderRadius: '8px',
-                  padding: '0.35rem 0.65rem',
+                  background: isDark ? 'rgba(14, 165, 233, 0.1)' : '#f0f9ff',
+                  border: isDark ? '1px solid rgba(14, 165, 233, 0.25)' : '1px solid #bae6fd',
+                  color: '#0284c7',
+                  borderRadius: '7px',
+                  padding: '0.25rem 0.45rem',
                   cursor: 'pointer',
-                  fontSize: '0.75rem',
+                  fontSize: '0.72rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.3rem'
+                  gap: '0.2rem'
                 }}
               >
                 <span>⛶</span>
-                <span>{isArenaFullscreen ? 'Exit' : 'Fullscreen'}</span>
+                <span>{isArenaFullscreen ? 'Exit' : 'Theater'}</span>
               </button>
 
               <button
+                type="button"
                 onClick={() => setShowShop(true)}
                 style={{
-                  background: 'var(--kids-orange)',
+                  background: 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)',
                   color: 'white',
                   border: 'none',
-                  borderRadius: '8px',
-                  padding: '0.35rem 0.75rem',
-                  fontSize: '0.75rem',
+                  borderRadius: '7px',
+                  padding: '0.25rem 0.55rem',
+                  fontSize: '0.72rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   boxShadow: '0 2px 0 #9a3412',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.3rem'
+                  gap: '0.2rem'
                 }}
               >
                 <span>🛒</span>
@@ -2689,10 +2905,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           <div style={{
             background: isDark ? '#151921' : '#f8fafc',
             borderRadius: '0 0 20px 20px',
-            padding: '1.5rem',
+            padding: isMobile ? '0.75rem' : '1.25rem',
             border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0',
-            height: isArenaFullscreen ? '100%' : (isMobile ? '400px' : '350px'),
-            display: (!isMobile || activeMobileTab === 'simulator') ? 'flex' : 'none',
+            height: isArenaFullscreen ? '100%' : (isMobile ? '380px' : '340px'),
+            display: (!isMobile || activeMobileTab === 'stage') ? 'flex' : 'none',
             alignItems: 'center',
             justifyContent: 'center',
             position: 'relative',
@@ -2712,7 +2928,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           </div>
 
           {/* Scratch 3.0 Live Sprite Inspector Toolbar */}
-          {(!isMobile || activeMobileTab === 'simulator') && (
+          {(!isMobile || activeMobileTab === 'stage') && (
             <SpriteInspector
               sprites={sprites}
               selectedSpriteId={selectedSpriteId}
@@ -2780,15 +2996,30 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             <>
               {!isConnected ? (
                 <button
+                  type="button"
                   onClick={connectHardware}
                   className="kids-button"
-                  style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'var(--kids-surface)', border: isMobile ? '1px solid var(--kids-border)' : '2px solid var(--kids-border)', color: 'white', '--shadow-color': 'var(--kids-border)' } as any}
+                  style={{
+                    padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.1rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    fontSize: isMobile ? '0.72rem' : '0.9rem',
+                    minHeight: isMobile ? '32px' : '40px',
+                    background: isDark ? '#1e293b' : '#f1f5f9',
+                    border: isDark ? '1.5px solid #334155' : '1.5px solid #cbd5e1',
+                    color: isDark ? '#38bdf8' : '#0284c7',
+                    fontWeight: 800,
+                    borderRadius: '8px',
+                    boxShadow: isDark ? '0 2px 0 #0f172a' : '0 2px 0 #cbd5e1'
+                  }}
                 >
                   <span>🔌 Connect</span>
                 </button>
               ) : (
                 <div style={{ display: 'flex', gap: '0.3rem' }}>
                   <button
+                    type="button"
                     onClick={uploadToHardware}
                     disabled={uploading}
                     className="kids-button pulse-neon"
@@ -2797,6 +3028,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     <span>🚀 {uploading ? 'Uploading...' : 'Upload'}</span>
                   </button>
                   <button
+                    type="button"
                     onClick={disconnectHardware}
                     className="kids-button"
                     style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: isMobile ? '32px' : '44px', width: isMobile ? '32px' : '44px', background: '#ef4444', '--shadow-color': '#991b1b' } as any}
@@ -2810,6 +3042,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           )}
 
           <button
+            type="button"
             onClick={() => {
               const nextSpeed = execSpeed === 'normal' ? 'slowmo' : execSpeed === 'slowmo' ? 'turbo' : 'normal';
               setExecSpeed(nextSpeed);
@@ -2819,17 +3052,19 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             title={`Execution Speed: ${execSpeed === 'slowmo' ? 'Slow-Motion Debugger' : execSpeed === 'turbo' ? 'Turbo Mode' : 'Normal'}`}
             className="kids-button"
             style={{
-              padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 0.8rem',
+              padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 0.85rem',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.3rem',
+              gap: '0.35rem',
               fontSize: isMobile ? '0.72rem' : '0.9rem',
-              minHeight: isMobile ? '32px' : '44px',
-              background: execSpeed === 'slowmo' ? '#f59e0b' : execSpeed === 'turbo' ? '#ec4899' : 'var(--kids-surface)',
-              borderColor: execSpeed === 'slowmo' ? '#d97706' : execSpeed === 'turbo' ? '#be185d' : 'var(--kids-border)',
-              color: 'white',
-              '--shadow-color': execSpeed === 'slowmo' ? '#b45309' : execSpeed === 'turbo' ? '#9d174d' : 'var(--kids-border)'
-            } as any}
+              minHeight: isMobile ? '32px' : '40px',
+              background: execSpeed === 'slowmo' ? '#f59e0b' : execSpeed === 'turbo' ? '#ec4899' : (isDark ? '#1e293b' : '#f1f5f9'),
+              border: execSpeed === 'slowmo' ? '1.5px solid #d97706' : execSpeed === 'turbo' ? '1.5px solid #be185d' : (isDark ? '1.5px solid #334155' : '1.5px solid #cbd5e1'),
+              color: execSpeed === 'slowmo' || execSpeed === 'turbo' ? '#ffffff' : (isDark ? '#f8fafc' : '#0f172a'),
+              fontWeight: 800,
+              borderRadius: '8px',
+              boxShadow: execSpeed === 'slowmo' ? '0 2px 0 #b45309' : execSpeed === 'turbo' ? '0 2px 0 #9d174d' : (isDark ? '0 2px 0 #0f172a' : '0 2px 0 #cbd5e1')
+            }}
           >
             <span style={{ fontSize: '0.85rem' }}>{execSpeed === 'slowmo' ? '🐢' : execSpeed === 'turbo' ? '🚀' : '⚡'}</span>
             <span style={{ display: isMobile ? 'none' : 'inline' }}>
