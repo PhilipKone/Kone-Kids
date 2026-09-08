@@ -58,7 +58,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
   }
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1000 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 99999 }}>
       <div
         className="modal-content glass-card"
         onClick={(e) => e.stopPropagation()}

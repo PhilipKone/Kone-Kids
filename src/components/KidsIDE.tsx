@@ -2902,49 +2902,56 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             </div>
           </div>
 
-          <div style={{
-            background: isDark ? '#151921' : '#f8fafc',
-            borderRadius: '0 0 20px 20px',
-            padding: isMobile ? '0.75rem' : '1.25rem',
-            border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0',
-            height: isArenaFullscreen ? '100%' : (isMobile ? '380px' : '340px'),
-            display: (!isMobile || activeMobileTab === 'stage') ? 'flex' : 'none',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
-            {mission?.pathway === 'Robotics (Robotics 4 Kids)' ? (
-              <RoboticsSimulator ref={robotRef} missionId={missionId} />
-            ) : mission?.pathway === 'Game Dev' ? (
-              <GameSimulator ref={gameRef} backdrop={activeBackdrop} showGrid={showGrid} />
-            ) : mission?.pathway === 'Electronics (Robotics 4 Kids)' ? (
-              <ElectronicsSimulator ref={electronicsRef} />
-            ) : (mission?.pathway === 'Data Science (AI 4 Kids)' || mission?.pathway === 'ML (AI 4 Kids)' || mission?.pathway === 'AI (AI 4 Kids)') ? (
-              <AISimulator ref={aiRef} />
-            ) : (
-              <GameSimulator ref={gameRef} backdrop={activeBackdrop} showGrid={showGrid} />
-            )}
-          </div>
+          {(() => {
+            const isScratchMode = !mission || (!mission.pathway?.includes('Robotics') && !mission.pathway?.includes('Electronics') && !mission.pathway?.includes('AI') && !mission.pathway?.includes('Data Science') && !mission.pathway?.includes('ML'));
+            return (
+              <>
+                <div style={{
+                  background: isDark ? '#151921' : '#f8fafc',
+                  borderRadius: isScratchMode ? '0 0 20px 20px' : '20px',
+                  padding: isMobile ? '0.75rem' : '1.25rem',
+                  border: isDark ? '1px solid rgba(255,255,255,0.05)' : '1px solid #e2e8f0',
+                  height: isArenaFullscreen ? '100%' : (isMobile ? '400px' : (isScratchMode ? '340px' : '520px')),
+                  display: (!isMobile || activeMobileTab === 'stage') ? 'flex' : 'none',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  {mission?.pathway === 'Robotics (Robotics 4 Kids)' ? (
+                    <RoboticsSimulator ref={robotRef} missionId={missionId} />
+                  ) : mission?.pathway === 'Game Dev' ? (
+                    <GameSimulator ref={gameRef} backdrop={activeBackdrop} showGrid={showGrid} />
+                  ) : mission?.pathway === 'Electronics (Robotics 4 Kids)' ? (
+                    <ElectronicsSimulator ref={electronicsRef} />
+                  ) : (mission?.pathway === 'Data Science (AI 4 Kids)' || mission?.pathway === 'ML (AI 4 Kids)' || mission?.pathway === 'AI (AI 4 Kids)') ? (
+                    <AISimulator ref={aiRef} />
+                  ) : (
+                    <GameSimulator ref={gameRef} backdrop={activeBackdrop} showGrid={showGrid} />
+                  )}
+                </div>
 
-          {/* Scratch 3.0 Live Sprite Inspector Toolbar */}
-          {(!isMobile || activeMobileTab === 'stage') && (
-            <SpriteInspector
-              sprites={sprites}
-              selectedSpriteId={selectedSpriteId}
-              activeBackdrop={activeBackdrop}
-              onSelectSprite={(id) => {
-                setSelectedSpriteId(id);
-                const sp = sprites.find(s => s.id === id);
-                if (sp && gameRef.current?.updatePlayerProps) {
-                  gameRef.current.updatePlayerProps(sp);
-                }
-              }}
-              onUpdateSprite={handleUpdateSprite}
-              onAddSprite={handleAddSprite}
-              onChangeBackdrop={handleChangeBackdrop}
-            />
-          )}
+                {/* Scratch 3.0 Live Sprite Inspector Toolbar - Only in Scratch / Game mode */}
+                {(!isMobile || activeMobileTab === 'stage') && isScratchMode && (
+                  <SpriteInspector
+                    sprites={sprites}
+                    selectedSpriteId={selectedSpriteId}
+                    activeBackdrop={activeBackdrop}
+                    onSelectSprite={(id) => {
+                      setSelectedSpriteId(id);
+                      const sp = sprites.find(s => s.id === id);
+                      if (sp && gameRef.current?.updatePlayerProps) {
+                        gameRef.current.updatePlayerProps(sp);
+                      }
+                    }}
+                    onUpdateSprite={handleUpdateSprite}
+                    onAddSprite={handleAddSprite}
+                    onChangeBackdrop={handleChangeBackdrop}
+                  />
+                )}
+              </>
+            );
+          })()}
 
           {showCode && (
             <div className="code-preview-panel" style={{

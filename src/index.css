@@ -347,7 +347,7 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 99999;
   animation: fadeIn 0.3s ease-out;
 }
 
@@ -367,7 +367,7 @@ p {
 
 @media (max-width: 480px) {
   .modal-content {
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 3.5rem;
     border-width: 4px;
     width: 100%;
     height: 100%;

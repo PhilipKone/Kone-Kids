@@ -984,6 +984,8 @@ function AppContent() {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
   const isStandaloneStudio = location.pathname === '/studio' || location.pathname === '/editor' || location.pathname === '/playground';
   const isMissionPage = location.pathname.includes('/mission/') || isStandaloneStudio;
+  const isPortalPage = location.pathname === '/class-login' || location.pathname === '/teacher-dashboard';
+  const showMobileBottomNav = isMobile && !isMissionPage && !isPortalPage;
 
   React.useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -1037,16 +1039,18 @@ function AppContent() {
         }} 
       />
       
-      <div style={{ paddingBottom: (isMobile && !isMissionPage) ? '100px' : '0' }}>
+      <div style={{ paddingBottom: showMobileBottomNav ? '100px' : '0' }}>
         <React.Suspense fallback={
           <div style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            minHeight: '60vh',
+            height: '100vh',
+            width: '100vw',
+            background: 'var(--kids-bg)',
             gap: '8px'
           }}>
-            <span style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#f97316', animation:'dotPulse 1.2s ease-in-out infinite 0s', display:'block' }}></span>
+            <span style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#f97316', animation:'dotPulse 1.2s ease-in-out infinite', display:'block' }}></span>
             <span style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#0ea5e9', animation:'dotPulse 1.2s ease-in-out infinite 0.2s', display:'block' }}></span>
             <span style={{ width:'10px', height:'10px', borderRadius:'50%', background:'#a855f7', animation:'dotPulse 1.2s ease-in-out infinite 0.4s', display:'block' }}></span>
           </div>
@@ -1105,7 +1109,7 @@ function AppContent() {
         </React.Suspense>
       </div>
 
-      {isMobile && !isMissionPage && (
+      {showMobileBottomNav && (
         <div className="mobile-bottom-nav">
           <Link to="/" className={`nav-item ${location.pathname === '/' ? 'nav-item-active' : ''}`}>
             <HomeIcon size={24} className="nav-icon" />

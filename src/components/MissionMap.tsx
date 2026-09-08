@@ -299,56 +299,61 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
 
             <button 
               onClick={toggleTheme}
-              style={{ background: 'transparent', border: 'none', fontSize: '1.2rem', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', fontSize: isMobile ? '1rem' : '1.2rem', cursor: 'pointer', padding: '0 2px' }}
             >
               {theme === 'light' ? '🌙' : '☀️'}
             </button>
 
-            {/* Audio controls */}
-            <button
-              onClick={handleToggleMusic}
-              title={musicOn ? 'Mute Music' : 'Play Background Music'}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: musicOn ? '#c084fc' : '#94a3b8',
-                padding: '0.2rem',
-                outline: 'none'
-              }}
-            >
-              <Music size={18} />
-            </button>
-            <button
-              onClick={handleToggleMute}
-              title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: !muted ? '#38bdf8' : '#94a3b8',
-                padding: '0.2rem',
-                outline: 'none'
-              }}
-            >
-              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-            </button>
+            {/* Audio controls for desktop */}
+            {!isMobile && (
+              <>
+                <button
+                  onClick={handleToggleMusic}
+                  title={musicOn ? 'Mute Music' : 'Play Background Music'}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: musicOn ? '#c084fc' : '#94a3b8',
+                    padding: '0.2rem',
+                    outline: 'none'
+                  }}
+                >
+                  <Music size={18} />
+                </button>
+                <button
+                  onClick={handleToggleMute}
+                  title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: !muted ? '#38bdf8' : '#94a3b8',
+                    padding: '0.2rem',
+                    outline: 'none'
+                  }}
+                >
+                  {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                </button>
+              </>
+            )}
 
             <button 
               onClick={() => navigate('/')}
               style={{ 
                 background: '#ef4444', 
                 border: 'none', 
-                padding: '0.4rem 0.8rem',
-                borderRadius: '12px',
+                padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.8rem',
+                borderRadius: '12px', 
                 color: 'white',
                 fontWeight: 700,
+                fontSize: isMobile ? '0.75rem' : '0.85rem',
                 cursor: 'pointer'
               }}
             >
@@ -421,7 +426,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
                 PATHWAY_WORLDS[pathway][theme].icon
               )}
             </span>
-            {pathway}
+            {pathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}
           </div>
         ))}
 
@@ -474,7 +479,7 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.85rem' }}>
                 <span style={{ fontWeight: 700, color: 'var(--kids-text)' }}>
-                  {world.icon} {selectedPathway}
+                  {world.icon} {selectedPathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}
                 </span>
                 <span style={{ color: world.color, fontWeight: 700 }}>
                   {doneInPathway} / {totalInPathway} missions

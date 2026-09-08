@@ -67,7 +67,7 @@ const CoinStoreModal: React.FC<CoinStoreModalProps> = ({ isOpen, onClose }) => {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 1000,
+      zIndex: 99999,
       padding: '1rem'
     }}>
       <div style={{

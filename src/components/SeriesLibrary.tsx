@@ -73,7 +73,7 @@ const SeriesLibrary: React.FC<SeriesLibraryProps> = ({ onClose, initialSeriesId 
       bottom: 0,
       background: 'rgba(15, 23, 42, 0.9)',
       backdropFilter: 'blur(12px)',
-      zIndex: 1000,
+      zIndex: 99999,
       display: 'flex',
       flexDirection: 'column',
       padding: '2rem',
