@@ -93,13 +93,13 @@
     }
     </script>
     
-    <!-- Structured Data (Google Sitelinks & Brand Schema) -->
+    <!-- Structured Data (Google Sitelinks, Searchbox & Brand Schema) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Kone Kids",
-        "alternateName": ["Kone Kids Academy", "Kone Academy Kids"],
+        "alternateName": ["Kone Kids Academy", "Kone Academy Kids", "KoneKids"],
         "url": "https://kids.koneacademy.io/",
         "description": "Playful AI, Coding, and Robotics STEM Hub for Youth aged 5-17.",
         "publisher": {
@@ -108,31 +108,56 @@
           "url": "https://www.koneacademy.io/",
           "logo": "https://kids.koneacademy.io/logo512.png"
         },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://kids.koneacademy.io/blog?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        },
         "hasPart": [
           {
             "@type": "WebPage",
             "name": "Coding Lab",
-            "url": "https://kids.koneacademy.io/#/coding"
+            "description": "Visual block coding, scratch algorithms, and Python programming for kids.",
+            "url": "https://kids.koneacademy.io/coding"
           },
           {
             "@type": "WebPage",
             "name": "Robotics Lab",
-            "url": "https://kids.koneacademy.io/#/robotics"
+            "description": "Microcontroller circuits, telemetry, and rover programming sandbox.",
+            "url": "https://kids.koneacademy.io/robotics"
           },
           {
             "@type": "WebPage",
             "name": "AI Studio",
-            "url": "https://kids.koneacademy.io/#/ai"
+            "description": "Hands-on machine learning model training, vision classification, and neural logic.",
+            "url": "https://kids.koneacademy.io/ai"
           },
           {
             "@type": "WebPage",
-            "name": "Parent Hub",
-            "url": "https://kids.koneacademy.io/#/blog"
+            "name": "Parent Hub & STEM Insights",
+            "description": "Research-backed guides, EdTech articles, and parenting insights for youth tech education.",
+            "url": "https://kids.koneacademy.io/blog"
           },
           {
             "@type": "WebPage",
-            "name": "Founder Profile",
-            "url": "https://kids.koneacademy.io/#/author/philip-hotor"
+            "name": "Philip Hotor (Founder Profile)",
+            "description": "Biography, background, and research publications by Founder Philip Hotor.",
+            "url": "https://kids.koneacademy.io/author/philip-hotor"
+          },
+          {
+            "@type": "WebPage",
+            "name": "Student Class Login",
+            "description": "Student classroom portal for tracking missions, badges, and learning streaks.",
+            "url": "https://kids.koneacademy.io/class-login"
+          },
+          {
+            "@type": "WebPage",
+            "name": "Teacher & School Dashboard",
+            "description": "Classroom analytics, assignment manager, and student progress oversight for educators.",
+            "url": "https://kids.koneacademy.io/teacher-dashboard"
           }
         ]
       }
@@ -148,35 +173,49 @@
             "position": 1,
             "name": "Coding Lab",
             "description": "Master visual block logic, HTML/CSS, and Python missions.",
-            "url": "https://kids.koneacademy.io/#/coding"
+            "url": "https://kids.koneacademy.io/coding"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 2,
             "name": "Robotics Lab",
             "description": "Circuit building, microcontrollers, and sensor programming.",
-            "url": "https://kids.koneacademy.io/#/robotics"
+            "url": "https://kids.koneacademy.io/robotics"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 3,
             "name": "AI Studio",
             "description": "Train custom machine learning models and neural networks.",
-            "url": "https://kids.koneacademy.io/#/ai"
+            "url": "https://kids.koneacademy.io/ai"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 4,
             "name": "Parent Hub & Articles",
             "description": "STEM learning resources, guides, and EdTech insights for parents.",
-            "url": "https://kids.koneacademy.io/#/blog"
+            "url": "https://kids.koneacademy.io/blog"
           },
           {
             "@type": "SiteNavigationElement",
             "position": 5,
             "name": "Philip Hotor (Founder Profile)",
             "description": "Biography, background, and publications by Philip Hotor.",
-            "url": "https://kids.koneacademy.io/#/author/philip-hotor"
+            "url": "https://kids.koneacademy.io/author/philip-hotor"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 6,
+            "name": "Student Class Login",
+            "description": "Student portal to log into classes, track missions, and earn XP.",
+            "url": "https://kids.koneacademy.io/class-login"
+          },
+          {
+            "@type": "SiteNavigationElement",
+            "position": 7,
+            "name": "Teacher & School Dashboard",
+            "description": "Educator management tool for student progress and STEM curricula.",
+            "url": "https://kids.koneacademy.io/teacher-dashboard"
           }
         ]
       }

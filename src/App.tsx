@@ -155,6 +155,51 @@ function Home() {
               {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
             </button>
           </div>
+          {/* Primary Sitelink Navigation Links (Desktop) */}
+          <Link to="/coding" style={{ 
+            fontFamily: "'Baloo 2', cursive",
+            color: 'var(--nav-link)', 
+            textDecoration: 'none', 
+            fontWeight: 800, 
+            fontSize: '0.95rem',
+            transition: 'color 0.2s'
+          }} className="hover-orange nav-link-desktop">
+            Coding Lab
+          </Link>
+
+          <Link to="/robotics" style={{ 
+            fontFamily: "'Baloo 2', cursive",
+            color: 'var(--nav-link)', 
+            textDecoration: 'none', 
+            fontWeight: 800, 
+            fontSize: '0.95rem',
+            transition: 'color 0.2s'
+          }} className="hover-blue nav-link-desktop">
+            Robotics Lab
+          </Link>
+
+          <Link to="/ai" style={{ 
+            fontFamily: "'Baloo 2', cursive",
+            color: 'var(--nav-link)', 
+            textDecoration: 'none', 
+            fontWeight: 800, 
+            fontSize: '0.95rem',
+            transition: 'color 0.2s'
+          }} className="hover-purple nav-link-desktop">
+            AI Studio
+          </Link>
+
+          <Link to="/blog" style={{ 
+            fontFamily: "'Baloo 2', cursive",
+            color: 'var(--nav-link)', 
+            textDecoration: 'none', 
+            fontWeight: 800, 
+            fontSize: '0.95rem',
+            transition: 'color 0.2s'
+          }} className="hover-teal nav-link-desktop">
+            Parent Hub
+          </Link>
+
           {studentName ? (
             <div className="nav-link-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ 
@@ -206,23 +251,12 @@ function Home() {
               color: '#c2410c', 
               textDecoration: 'none', 
               fontWeight: 800, 
-              fontSize: '1rem',
+              fontSize: '0.95rem',
               transition: 'color 0.2s'
             }} className="hover-orange nav-link-desktop">
               Class Login 🎒
             </Link>
           )}
-          
-          <Link to="/blog" style={{ 
-            fontFamily: "'Baloo 2', cursive",
-            color: 'var(--nav-link)', 
-            textDecoration: 'none', 
-            fontWeight: 800, 
-            fontSize: '1rem',
-            transition: 'color 0.2s'
-          }} className="hover-teal nav-link-desktop">
-            Parent Hub
-          </Link>
           
           {/* Language selector toggle (Desktop) */}
           <div className="nav-link-desktop" style={{ display: 'flex', gap: '0.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '3px' }}>

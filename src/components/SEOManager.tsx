@@ -30,29 +30,82 @@ const DEFAULT_SEO: SEOConfig = {
 const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
   '/': DEFAULT_SEO,
   '/class-login': {
-    title: "Class Login | Enter the Mission Map - Kone Kids",
+    title: "Student Class Login | Mission Map - Kone Kids",
     description: "Log in to your student account at Kone Kids. Connect with your class, track your badges, and continue your programming missions.",
-    keywords: "student login, kids coding login, classroom tracker, student dashboard"
+    keywords: "student login, kids coding login, classroom tracker, student dashboard",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Class Login", "item": "https://kids.koneacademy.io/class-login" }
+      ]
+    }
+  },
+  '/teacher-dashboard': {
+    title: "Teacher & School Dashboard | Classroom Analytics - Kone Kids",
+    description: "Classroom analytics, assignment manager, and student progress oversight for STEM educators and schools.",
+    keywords: "teacher dashboard, classroom coding tracker, STEM school analytics, educator portal",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Teacher Dashboard", "item": "https://kids.koneacademy.io/teacher-dashboard" }
+      ]
+    }
   },
   '/blog': {
     title: "Parent Hub & STEM Insights | Kone Kids Blog",
-    description: "Resources, guides, and insights for parents raising tomorrow's tech innovators. Learn how to foster STEM literacy at home.",
-    keywords: "parent STEM guides, raise tech kids, EdTech insights, coding education parents"
+    description: "Research-backed guides, EdTech articles, and parenting insights for youth tech education. Learn how to foster STEM literacy at home.",
+    keywords: "parent STEM guides, raise tech kids, EdTech insights, coding education parents",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Parent Hub & Articles", "item": "https://kids.koneacademy.io/blog" }
+      ]
+    }
   },
   '/coding': {
-    title: "Coding Missions Map | Learn Scratch & Python - Kone Kids",
-    description: "Interactive learning pathway teaching block-based coding, HTML/CSS, and Python to young coders.",
-    keywords: "coding for kids, learn Scratch, Scratch games, kids Python course"
+    title: "Coding Lab - Visual Block & Python Missions | Kone Kids",
+    description: "Interactive learning pathway teaching block-based coding, visual algorithms, HTML/CSS, and Python to young coders.",
+    keywords: "coding for kids, learn Scratch, Scratch games, kids Python course, Blockly missions",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Coding Lab", "item": "https://kids.koneacademy.io/coding" }
+      ]
+    }
   },
   '/robotics': {
-    title: "Robotics Sandbox | Telemetry & Electronics - Kone Kids",
-    description: "Virtual and hands-on robotics labs teaching microcontrollers, circuit design, and Arduino coding.",
-    keywords: "robotics lab, kids Arduino, electronics for kids, virtual robots simulation"
+    title: "Robotics Lab - Hardware & Microcontroller Sandbox | Kone Kids",
+    description: "Virtual and hands-on robotics labs teaching microcontrollers, circuit design, telemetry, and Arduino coding.",
+    keywords: "robotics lab, kids Arduino, electronics for kids, virtual robots simulation, STEM hardware",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
+        { "@type": "ListItem", "position": 2, "name": "Robotics Lab", "item": "https://kids.koneacademy.io/robotics" }
+      ]
+    }
   },
   '/ai': {
-    title: "AI & Machine Learning Studio for Youth - Kone Kids",
+    title: "AI Studio - Youth Machine Learning & AI | Kone Kids",
     description: "Learn how artificial intelligence works by training custom models, classifying images, and coding neural networks.",
-    keywords: "AI for kids, train machine learning, kids neural network, AI foundation school"
+    keywords: "AI for kids, train machine learning, kids neural network, AI foundation school, prompt engineering",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
+        { "@type": "ListItem", "position": 2, "name": "AI Studio", "item": "https://kids.koneacademy.io/ai" }
+      ]
+    }
   },
   '/author/philip-hotor': {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
@@ -161,7 +214,7 @@ export const SEOManager: React.FC = () => {
             },
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": `https://kids.koneacademy.io/#/blog/${article.slug}`
+              "@id": `https://kids.koneacademy.io/blog/${article.slug}`
             }
           }
         };
