@@ -38,7 +38,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Class Login", "item": "https://kids.koneacademy.io/class-login" }
+        { "@type": "ListItem", "position": 2, "name": "Class Login", "item": "https://kids.koneacademy.io/class-login/" }
       ]
     }
   },
@@ -51,7 +51,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Teacher Dashboard", "item": "https://kids.koneacademy.io/teacher-dashboard" }
+        { "@type": "ListItem", "position": 2, "name": "Teacher Dashboard", "item": "https://kids.koneacademy.io/teacher-dashboard/" }
       ]
     }
   },
@@ -64,7 +64,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Parent Hub & Articles", "item": "https://kids.koneacademy.io/blog" }
+        { "@type": "ListItem", "position": 2, "name": "Parent Hub & Articles", "item": "https://kids.koneacademy.io/blog/" }
       ]
     }
   },
@@ -77,7 +77,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Coding Lab", "item": "https://kids.koneacademy.io/coding" }
+        { "@type": "ListItem", "position": 2, "name": "Coding Lab", "item": "https://kids.koneacademy.io/coding/" }
       ]
     }
   },
@@ -90,7 +90,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Robotics Lab", "item": "https://kids.koneacademy.io/robotics" }
+        { "@type": "ListItem", "position": 2, "name": "Robotics Lab", "item": "https://kids.koneacademy.io/robotics/" }
       ]
     }
   },
@@ -103,7 +103,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "AI Studio", "item": "https://kids.koneacademy.io/ai" }
+        { "@type": "ListItem", "position": 2, "name": "AI Studio", "item": "https://kids.koneacademy.io/ai/" }
       ]
     }
   },
@@ -247,9 +247,10 @@ export const SEOManager: React.FC = () => {
     updateMetaTag('og:type', isBlogArticle ? 'article' : 'website', true);
     updateMetaTag('og:site_name', 'Kone Kids Academy', true);
     updateMetaTag('og:locale', 'en_US', true);
+    const canonicalPath = location.pathname.endsWith('/') ? location.pathname : `${location.pathname}/`;
     updateMetaTag('og:title', activeSEO.title, true);
     updateMetaTag('og:description', activeSEO.description, true);
-    updateMetaTag('og:url', `https://kids.koneacademy.io${location.pathname}`, true);
+    updateMetaTag('og:url', `https://kids.koneacademy.io${canonicalPath}`, true);
     updateMetaTag('og:image', imgUrl, true);
     updateMetaTag('og:image:secure_url', imgUrl, true);
     updateMetaTag('og:image:type', 'image/png', true);
@@ -280,7 +281,7 @@ export const SEOManager: React.FC = () => {
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', `https://kids.koneacademy.io${location.pathname}`);
+    canonical.setAttribute('href', `https://kids.koneacademy.io${canonicalPath}`);
 
     // 3. Update Dynamic JSON-LD Schema
     const SCHEMA_SCRIPT_ID = 'seo-dynamic-jsonld';

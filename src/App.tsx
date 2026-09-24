@@ -1047,19 +1047,6 @@ function AppContent() {
     markVisited(window.location.pathname);
   }, [window.location.pathname, markVisited]);
 
-  // Dynamically update canonical URL
-  React.useEffect(() => {
-    let canonical = document.querySelector('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.setAttribute('rel', 'canonical');
-      document.head.appendChild(canonical);
-    }
-    const cleanPath = location.pathname.endsWith('/') && location.pathname !== '/'
-      ? location.pathname.slice(0, -1)
-      : location.pathname;
-    canonical.setAttribute('href', `https://kids.koneacademy.io${cleanPath}`);
-  }, [location.pathname]);
 
   return (
     <>

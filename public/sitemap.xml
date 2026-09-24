@@ -2,109 +2,109 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://kids.koneacademy.io/</loc>
-    <lastmod>2026-09-17</lastmod>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/coding</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/coding/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/robotics</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/robotics/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/ai</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/ai/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/author/philip-hotor</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/author/philip-hotor/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/class-login</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/class-login/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/teacher-dashboard</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/teacher-dashboard/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/mobile-app-development-kids</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/mobile-app-development-kids/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/beyond-the-chalkboard</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/beyond-the-chalkboard/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/consumers-to-creators</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/consumers-to-creators/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/science-of-show-and-solve</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/science-of-show-and-solve/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/girls-in-tech-ghana</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/girls-in-tech-ghana/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/demystifying-ai-five-ideas</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/demystifying-ai-five-ideas/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/robotics-agriculture-cocoa-farms</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/robotics-agriculture-cocoa-farms/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/coding-as-new-literacy</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/coding-as-new-literacy/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/unlocking-hardware-microbit</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/unlocking-hardware-microbit/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
   <url>
-    <loc>https://kids.koneacademy.io/blog/best-coding-platforms-kids</loc>
-    <lastmod>2026-09-17</lastmod>
+    <loc>https://kids.koneacademy.io/blog/best-coding-platforms-kids/</loc>
+    <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.80</priority>
   </url>
