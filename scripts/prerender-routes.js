@@ -35,6 +35,12 @@ const routes = [
     canonical: 'https://kids.koneacademy.io/ai/'
   },
   {
+    path: 'kits',
+    title: 'STEM & Robotics Kits for Kids | Hands-On Hardware - Kone Kids',
+    desc: 'Explore child-safe robotics kits, Arduino rovers, and smart IoT science kits with step-by-step video tutorials. Delivered across Ghana.',
+    canonical: 'https://kids.koneacademy.io/kits/'
+  },
+  {
     path: 'blog',
     title: 'Parent Hub & STEM Insights | Kone Kids Blog',
     desc: 'Research-backed guides, EdTech articles, and parenting insights for youth tech education. Learn how to foster STEM literacy at home.',

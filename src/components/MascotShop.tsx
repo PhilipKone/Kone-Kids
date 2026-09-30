@@ -313,6 +313,50 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
             })}
           </div>
         </div>
+
+        {/* Physical STEM Kits Cross-Promotion Banner */}
+        <div style={{
+          background: 'linear-gradient(90deg, #0f172a 0%, #1e1b4b 100%)',
+          padding: '0.85rem 1.5rem',
+          borderTop: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
+          flexShrink: 0
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <span style={{ fontSize: '1.4rem' }}>🤖</span>
+            <div>
+              <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#fde047' }}>
+                Want to build with real motors &amp; sensors?
+              </div>
+              <div style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>
+                Explore hands-on robotics rovers, snap circuits, and smart IoT kits delivered across Ghana.
+              </div>
+            </div>
+          </div>
+          <a
+            href="/kits"
+            onClick={() => onClose()}
+            style={{
+              background: '#f97316',
+              color: '#ffffff',
+              padding: '0.45rem 1rem',
+              borderRadius: '12px',
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              textDecoration: 'none',
+              boxShadow: '0 4px 10px rgba(249, 115, 22, 0.35)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem'
+            }}
+          >
+            Explore STEM Kits →
+          </a>
+        </div>
       </div>
       <CoinStoreModal isOpen={showCoinStore} onClose={() => setShowCoinStore(false)} />
     </div>

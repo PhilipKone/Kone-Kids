@@ -37,6 +37,7 @@ const ClassLogin = React.lazy(() => import('./components/ClassLogin'))
 const TeacherDashboard = React.lazy(() => import('./components/TeacherDashboard'))
 const ProfileView = React.lazy(() => import('./components/ProfileView'))
 const AuthorProfile = React.lazy(() => import('./components/AuthorProfile'))
+const StemKits = React.lazy(() => import('./components/StemKits'))
 
 
 function Home() {
@@ -198,6 +199,30 @@ function Home() {
             transition: 'color 0.2s'
           }} className="hover-teal nav-link-desktop">
             Parent Hub
+          </Link>
+
+          <Link to="/kits" style={{ 
+            fontFamily: "'Baloo 2', cursive",
+            color: 'var(--nav-link)', 
+            textDecoration: 'none', 
+            fontWeight: 800, 
+            fontSize: '0.95rem',
+            transition: 'color 0.2s',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.35rem'
+          }} className="hover-orange nav-link-desktop">
+            <span style={{ 
+              background: '#fef08a', 
+              color: '#854d0e', 
+              fontSize: '0.7rem', 
+              padding: '0.15rem 0.45rem', 
+              borderRadius: '6px', 
+              fontWeight: 800 
+            }}>
+              HARDWARE
+            </span>
+            STEM Kits
           </Link>
 
           {studentName ? (
@@ -1002,7 +1027,9 @@ function Home() {
             <div style={{ display: 'flex', gap: '1rem', fontWeight: 600 }}>
               <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Academy Home</a>
               <span>•</span>
-              <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Insights & Articles</Link>
+              <Link to="/kits" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>STEM Kits Store</Link>
+              <span>•</span>
+              <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Insights &amp; Articles</Link>
             </div>
           </div>
         </div>
@@ -1085,6 +1112,8 @@ function AppContent() {
             <Route path="/author/philip-kone" element={<AuthorProfile />} />
             <Route path="/author/philip-hotor" element={<AuthorProfile />} />
             <Route path="/author" element={<AuthorProfile />} />
+            <Route path="/kits" element={<StemKits />} />
+            <Route path="/stem-kits" element={<StemKits />} />
             <Route path="/coding" element={<MissionMap hub="coding" />} />
             <Route path="/robotics" element={<MissionMap hub="robotics" />} />
             <Route path="/ai" element={<MissionMap hub="ai" />} />

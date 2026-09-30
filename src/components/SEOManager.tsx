@@ -107,6 +107,70 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       ]
     }
   },
+  '/kits': {
+    title: "STEM & Robotics Kits for Kids | Hands-On Hardware - Kone Kids",
+    description: "Explore child-safe robotics kits, Arduino rovers, and smart IoT science kits with step-by-step video tutorials. Delivered across Ghana.",
+    keywords: "robotics kits for kids Ghana, STEM kits Accra, Arduino for kids, buy children coding kit, microbit robot kit",
+    schema: {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "name": "Kone Kids STEM & Robotics Kits",
+      "itemListElement": [
+        {
+          "@type": "Product",
+          "position": 1,
+          "name": "Kone Junior Inventor Snap Circuit Kit",
+          "description": "Snap-together visual circuitry, sound buzzers, and multi-color lights for early STEM thinkers.",
+          "offers": {
+            "@type": "Offer",
+            "price": "280.00",
+            "priceCurrency": "GHS",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kids.koneacademy.io/kits/"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 2,
+          "name": "Kone Explorer 2WD Autonomous Robotics Rover",
+          "description": "Assemble, wire, and code an autonomous obstacle-avoiding smart rover with ultrasonic eyes.",
+          "offers": {
+            "@type": "Offer",
+            "price": "460.00",
+            "priceCurrency": "GHS",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kids.koneacademy.io/kits/"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 3,
+          "name": "Kone IoT Smart Greenhouse & Farm Telemetry Kit",
+          "description": "Connect real soil probes, humidity sensors, and automatic water pumps to cloud Wi-Fi dashboards.",
+          "offers": {
+            "@type": "Offer",
+            "price": "520.00",
+            "priceCurrency": "GHS",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kids.koneacademy.io/kits/"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 4,
+          "name": "Kone AI Vision & Voice Companion Kit",
+          "description": "Train computer vision models to recognize gestures, faces, and voice commands on a moving robot head.",
+          "offers": {
+            "@type": "Offer",
+            "price": "680.00",
+            "priceCurrency": "GHS",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kids.koneacademy.io/kits/"
+          }
+        }
+      ]
+    }
+  },
   '/author/philip-hotor': {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
     description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
