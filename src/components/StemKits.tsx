@@ -96,21 +96,6 @@ export default function StemKits() {
   const [couponMessage, setCouponMessage] = useState<string>('');
   const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
 
-  // Flash deal countdown timer
-  const [timeLeft, setTimeLeft] = useState({ hours: 11, minutes: 45, seconds: 32 });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return { hours: 12, minutes: 0, seconds: 0 };
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
   // Save cart & wishlist
   useEffect(() => {
     try {
@@ -297,54 +282,13 @@ export default function StemKits() {
   return (
     <div style={{ minHeight: '100vh', background: '#0b1120', color: '#f8fafc', paddingBottom: '5rem' }}>
       
-      {/* 1. TOP FLASH SALE URGENCY TICKER */}
-      <div style={{
-        background: 'linear-gradient(90deg, #ea580c 0%, #dc2626 50%, #9333ea 100%)',
-        padding: '0.55rem 1rem',
-        fontSize: '0.85rem',
-        fontWeight: 800,
-        color: '#ffffff',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '0.75rem',
-        flexWrap: 'wrap',
-        boxShadow: '0 2px 10px rgba(220, 38, 38, 0.35)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 110
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Zap size={16} fill="#fde047" color="#fde047" />
-          <span>⚡ LIMITED-TIME FLASH SALE: Save up to 22% on STEM Hardware Kits!</span>
-        </div>
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '0.35rem',
-          background: 'rgba(0, 0, 0, 0.35)',
-          padding: '0.2rem 0.6rem',
-          borderRadius: '8px',
-          fontFamily: 'monospace',
-          fontSize: '0.82rem',
-          letterSpacing: '0.05em'
-        }}>
-          <Clock size={13} />
-          <span>Ends in: {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.minutes).padStart(2, '0')}m : {String(timeLeft.seconds).padStart(2, '0')}s</span>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', opacity: 0.95 }}>
-          <Truck size={14} />
-          <span>Free 24–48h Delivery in Greater Accra on orders GH₵ 500+</span>
-        </div>
-      </div>
-
-      {/* 2. TOP E-COMMERCE BAR */}
+      {/* 1. TOP HEADER & NAVIGATION */}
       <header style={{
         background: 'rgba(15, 23, 42, 0.95)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         position: 'sticky',
-        top: '38px',
+        top: 0,
         zIndex: 100,
         padding: '0.75rem 1.25rem'
       }}>
@@ -787,29 +731,38 @@ export default function StemKits() {
               return (
                 <div
                   key={kit.id}
+                  onClick={() => setQuickViewKit(kit)}
                   style={{
-                    background: '#0f172a',
-                    borderRadius: '20px',
+                    background: '#1e293b',
+                    borderRadius: '24px',
                     border: '1px solid rgba(255, 255, 255, 0.08)',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
-                    position: 'relative',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)'
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    e.currentTarget.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.35)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.25)';
                   }}
                 >
-                  {/* PRODUCT IMAGE CONTAINER with Overlays */}
+                  {/* Clean, Unobstructed Product Image */}
                   <div 
                     style={{
-                      position: 'relative',
                       width: '100%',
-                      height: '240px',
-                      background: '#1e293b',
+                      height: '220px',
+                      background: '#0f172a',
                       overflow: 'hidden',
-                      cursor: 'pointer'
+                      position: 'relative'
                     }}
-                    onClick={() => setQuickViewKit(kit)}
                   >
                     <img 
                       src={safeImgSrc}
@@ -821,318 +774,123 @@ export default function StemKits() {
                       }}
                       loading="lazy"
                     />
-
-                    {/* Discount Badge */}
-                    <div style={{
-                      position: 'absolute',
-                      top: '12px',
-                      left: '12px',
-                      background: 'linear-gradient(135deg, #ef4444 0%, #ea580c 100%)',
-                      color: '#ffffff',
-                      padding: '0.3rem 0.6rem',
-                      borderRadius: '8px',
-                      fontSize: '0.78rem',
-                      fontWeight: 900,
-                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.45)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.2rem'
-                    }}>
-                      <Percent size={12} />
-                      <span>SAVE {discountPercent}%</span>
-                    </div>
-
-                    {/* Top Right Action Buttons */}
-                    <div style={{
-                      position: 'absolute',
-                      top: '12px',
-                      right: '12px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.4rem',
-                      zIndex: 3
-                    }}>
-                      <button
-                        onClick={(e) => toggleWishlist(kit.id, e)}
-                        title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
-                        style={{
-                          background: 'rgba(15, 23, 42, 0.85)',
-                          backdropFilter: 'blur(6px)',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: '34px',
-                          height: '34px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: isWishlisted ? '#ef4444' : '#ffffff',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <Heart size={16} fill={isWishlisted ? '#ef4444' : 'none'} />
-                      </button>
-
-                      <button
-                        onClick={(e) => { e.stopPropagation(); setQuickViewKit(kit); }}
-                        title="Quick View Details"
-                        style={{
-                          background: 'rgba(15, 23, 42, 0.85)',
-                          backdropFilter: 'blur(6px)',
-                          border: 'none',
-                          borderRadius: '50%',
-                          width: '34px',
-                          height: '34px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#ffffff',
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <Eye size={16} />
-                      </button>
-                    </div>
-
-                    {/* Stock Urgency Tag Overlay */}
-                    <div style={{
-                      position: 'absolute',
-                      bottom: '10px',
-                      left: '12px',
-                      background: 'rgba(15, 23, 42, 0.85)',
-                      backdropFilter: 'blur(8px)',
-                      color: '#fbbf24',
-                      padding: '0.25rem 0.55rem',
-                      borderRadius: '6px',
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.3rem'
-                    }}>
-                      <Zap size={12} fill="#fbbf24" />
-                      <span>Only {kit.stockCount} left in Accra</span>
-                    </div>
                   </div>
 
-                  {/* PRODUCT DETAILS CARD BODY */}
+                  {/* Clean Product Details */}
                   <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <span style={{
-                        color: '#94a3b8',
+                        color: '#38bdf8',
                         fontSize: '0.75rem',
                         fontWeight: 800,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.05em'
+                        letterSpacing: '0.04em'
                       }}>
                         {kit.category} • {kit.ageRange}
                       </span>
-                      <span style={{
-                        background: 'rgba(14, 165, 233, 0.15)',
-                        color: '#38bdf8',
-                        padding: '0.15rem 0.45rem',
-                        borderRadius: '6px',
-                        fontSize: '0.72rem',
-                        fontWeight: 800
-                      }}>
-                        {kit.difficulty}
-                      </span>
+                      {kit.gesCurriculumCode && (
+                        <span style={{
+                          color: '#4ade80',
+                          fontSize: '0.72rem',
+                          fontWeight: 700
+                        }}>
+                          🇬🇭 {kit.gesCurriculumCode}
+                        </span>
+                      )}
                     </div>
 
                     <h3 
-                      onClick={() => setQuickViewKit(kit)}
                       style={{
-                        fontSize: '1.1rem',
+                        fontSize: '1.05rem',
                         fontWeight: 800,
-                        color: '#f8fafc',
+                        color: '#ffffff',
                         lineHeight: 1.35,
-                        marginBottom: '0.4rem',
-                        cursor: 'pointer',
+                        margin: '0 0 0.4rem 0',
                         fontFamily: "'Nunito', sans-serif"
                       }}
                     >
                       {kit.title}
                     </h3>
 
-                    {kit.gesCurriculumCode && (
-                      <div style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.35rem',
-                        background: 'rgba(34, 197, 94, 0.12)',
-                        border: '1px solid rgba(34, 197, 94, 0.25)',
-                        borderRadius: '6px',
-                        padding: '0.2rem 0.5rem',
-                        marginBottom: '0.5rem',
-                        fontSize: '0.72rem',
-                        color: '#4ade80',
-                        fontWeight: 800,
-                        alignSelf: 'flex-start'
-                      }}>
-                        <span>🇬🇭</span>
-                        <span>{kit.gesCurriculumCode}</span>
-                      </div>
-                    )}
-
-                    {/* Star Rating & Sold count */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', color: '#fbbf24' }}>
-                        {[...Array(5)].map((_, i) => (
-                          <Star key={i} size={14} fill="#fbbf24" stroke="none" />
-                        ))}
-                      </div>
-                      <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#f8fafc' }}>{kit.rating}</span>
-                      <span style={{ fontSize: '0.78rem', color: '#64748b' }}>({kit.reviewsCount})</span>
-                      <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginLeft: 'auto' }}>
-                        {kit.salesCount}+ ordered
-                      </span>
-                    </div>
-
                     <p style={{
-                      fontSize: '0.84rem',
+                      fontSize: '0.82rem',
                       color: '#94a3b8',
                       lineHeight: 1.45,
-                      marginBottom: '1rem',
+                      margin: 0,
+                      marginBottom: '1.25rem',
                       flex: 1
                     }}>
                       {kit.tagline}
                     </p>
 
-                    {/* Virtual Lab Pairing Box */}
+                    {/* Price & Clean Actions */}
                     <div style={{
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      border: '1px dashed rgba(255, 255, 255, 0.12)',
-                      borderRadius: '10px',
-                      padding: '0.6rem 0.75rem',
-                      marginBottom: '1rem',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
-                      fontSize: '0.78rem'
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                        <span style={{ fontSize: '1rem' }}>💻</span>
-                        <span style={{ color: '#cbd5e1', fontWeight: 700 }}>Matches {kit.labName}</span>
-                      </div>
-                      <Link 
-                        to={kit.labRoute}
-                        style={{ color: '#f97316', fontWeight: 800, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
-                      >
-                        Missions →
-                      </Link>
-                    </div>
-
-                    {/* Price Block */}
-                    <div style={{
-                      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                       paddingTop: '0.85rem',
-                      marginBottom: '1rem'
+                      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                      marginTop: 'auto',
+                      gap: '0.5rem'
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', flexWrap: 'wrap' }}>
-                        <span style={{
-                          fontSize: '1.45rem',
-                          fontWeight: 900,
-                          color: '#ffffff',
-                          letterSpacing: '-0.02em'
-                        }}>
+                      <div>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
                           {formatPrice(kit.priceGHS, kit.priceUSD)}
-                        </span>
-                        <span style={{
-                          fontSize: '0.9rem',
-                          color: '#64748b',
-                          textDecoration: 'line-through'
-                        }}>
-                          {formatPrice(kit.originalPriceGHS, kit.originalPriceUSD)}
-                        </span>
-                        <span style={{
-                          background: 'rgba(239, 68, 68, 0.15)',
-                          color: '#f87171',
-                          padding: '0.15rem 0.45rem',
-                          borderRadius: '6px',
-                          fontSize: '0.72rem',
-                          fontWeight: 800
-                        }}>
-                          Save {savingsAmount}
-                        </span>
+                        </div>
+                        {kit.originalPriceGHS > kit.priceGHS && (
+                          <div style={{ fontSize: '0.76rem', color: '#64748b', textDecoration: 'line-through' }}>
+                            {formatPrice(kit.originalPriceGHS, kit.originalPriceUSD)}
+                          </div>
+                        )}
                       </div>
-                      <div style={{ fontSize: '0.74rem', color: '#10b981', fontWeight: 700, marginTop: '0.25rem' }}>
-                        🚚 Free Accra &amp; Kumasi delivery on orders GH₵ 500+
-                      </div>
-                    </div>
 
-                    {/* Action Triggers: Add to Cart & WhatsApp */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                         <button
-                          onClick={() => addToCart(kit.id, 1)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addToCart(kit.id, 1);
+                          }}
+                          title="Add to Cart"
                           style={{
-                            flex: 1,
                             background: isRecentlyAdded ? '#10b981' : '#f97316',
                             color: '#ffffff',
                             border: 'none',
-                            borderRadius: '12px',
-                            padding: '0.65rem 0.85rem',
+                            borderRadius: '10px',
+                            padding: '0.55rem 0.85rem',
                             fontWeight: 800,
-                            fontSize: '0.88rem',
+                            fontSize: '0.82rem',
                             cursor: 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '0.4rem',
-                            boxShadow: isRecentlyAdded ? '0 4px 14px rgba(16, 185, 129, 0.4)' : '0 4px 14px rgba(249, 115, 22, 0.35)'
+                            gap: '0.35rem',
+                            transition: 'background 0.2s'
                           }}
                         >
-                          {isRecentlyAdded ? (
-                            <>
-                              <Check size={16} />
-                              <span>Added to Cart!</span>
-                            </>
-                          ) : (
-                            <>
-                              <ShoppingCart size={16} />
-                              <span>Add to Cart</span>
-                            </>
-                          )}
+                          {isRecentlyAdded ? <Check size={15} /> : <ShoppingCart size={15} />}
+                          <span>{isRecentlyAdded ? 'Added' : 'Add'}</span>
                         </button>
 
                         <button
-                          onClick={() => handleWhatsAppOrder(kit, 1)}
-                          title="Instant WhatsApp Order"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleWhatsAppOrder(kit, 1);
+                          }}
+                          title="Order via WhatsApp"
                           style={{
                             background: '#25d366',
                             color: '#ffffff',
                             border: 'none',
-                            borderRadius: '12px',
-                            padding: '0.65rem 0.85rem',
+                            borderRadius: '10px',
+                            padding: '0.55rem',
                             cursor: 'pointer',
                             display: 'inline-flex',
                             alignItems: 'center',
                             justifyContent: 'center'
                           }}
                         >
-                          <MessageCircle size={18} />
+                          <MessageCircle size={16} />
                         </button>
                       </div>
-
-                      <button
-                        onClick={() => setActiveModalKit(kit)}
-                        style={{
-                          background: 'transparent',
-                          border: 'none',
-                          color: '#94a3b8',
-                          fontSize: '0.78rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          padding: '0.3rem',
-                          textAlign: 'center',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '0.2rem'
-                        }}
-                      >
-                        <span>What's in the Box? ({kit.components.length} components)</span>
-                        <ChevronRight size={13} />
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -1740,16 +1498,6 @@ export default function StemKits() {
                 {quickViewKit.title}
               </h2>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', color: '#fbbf24' }}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} fill="#fbbf24" stroke="none" />
-                  ))}
-                </div>
-                <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>{quickViewKit.rating}</span>
-                <span style={{ color: '#64748b', fontSize: '0.85rem' }}>({quickViewKit.reviewsCount} reviews)</span>
-              </div>
-
               <div style={{
                 background: '#1e293b',
                 padding: '0.85rem 1rem',
@@ -1763,19 +1511,11 @@ export default function StemKits() {
                 <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#f97316' }}>
                   {formatPrice(quickViewKit.priceGHS, quickViewKit.priceUSD)}
                 </span>
-                <span style={{ color: '#64748b', textDecoration: 'line-through', fontSize: '1rem' }}>
-                  {formatPrice(quickViewKit.originalPriceGHS, quickViewKit.originalPriceUSD)}
-                </span>
-                <span style={{
-                  background: '#ef4444',
-                  color: '#ffffff',
-                  padding: '0.2rem 0.5rem',
-                  borderRadius: '6px',
-                  fontSize: '0.75rem',
-                  fontWeight: 900
-                }}>
-                  SAVE {calculateDiscountPercent(quickViewKit.originalPriceGHS, quickViewKit.priceGHS)}%
-                </span>
+                {quickViewKit.originalPriceGHS > quickViewKit.priceGHS && (
+                  <span style={{ color: '#64748b', textDecoration: 'line-through', fontSize: '1rem' }}>
+                    {formatPrice(quickViewKit.originalPriceGHS, quickViewKit.originalPriceUSD)}
+                  </span>
+                )}
               </div>
 
               <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.55, marginBottom: '1rem' }}>
