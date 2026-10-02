@@ -1113,7 +1113,9 @@ function AppContent() {
             <Route path="/author/philip-hotor" element={<AuthorProfile />} />
             <Route path="/author" element={<AuthorProfile />} />
             <Route path="/kits" element={<StemKits />} />
+            <Route path="/kits/:kitSlug" element={<StemKits />} />
             <Route path="/stem-kits" element={<StemKits />} />
+            <Route path="/stem-kits/:kitSlug" element={<StemKits />} />
             <Route path="/coding" element={<MissionMap hub="coding" />} />
             <Route path="/robotics" element={<MissionMap hub="robotics" />} />
             <Route path="/ai" element={<MissionMap hub="ai" />} />

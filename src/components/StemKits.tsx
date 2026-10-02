@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { 
   ArrowLeft, 
   Sparkles, 
@@ -24,7 +24,9 @@ import {
   Trash2,
   Check,
   Percent,
-  FileText
+  FileText,
+  Share2,
+  Copy
 } from 'lucide-react';
 import { STEM_KITS, StemKit, SCHOOL_PACK_OFFERING } from '../data/stemKits';
 import { useIsMobile } from '../hooks/useMediaQuery';
@@ -115,6 +117,93 @@ export default function StemKits() {
   const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
   const [couponMessage, setCouponMessage] = useState<string>('');
   const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
+
+  // Deep-link routing & direct item sharing
+  const { kitSlug } = useParams<{ kitSlug?: string }>();
+  const location = useLocation();
+  const [copiedKitId, setCopiedKitId] = useState<string | null>(null);
+  const [shareToast, setShareToast] = useState<{ visible: boolean; message: string }>({ visible: false, message: '' });
+
+  // Deep-link auto-opener: /kits/:kitSlug or ?kit=:kitSlug
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const targetSlug = kitSlug || searchParams.get('kit');
+    if (targetSlug) {
+      const found = STEM_KITS.find(k => k.slug === targetSlug || k.id === targetSlug);
+      if (found) {
+        setQuickViewKit(found);
+      } else if (targetSlug === 'school-pack' || targetSlug === 'school-stem-pack') {
+        setSchoolQuoteOpen(true);
+      }
+    }
+  }, [kitSlug, location.search]);
+
+  const openKitModal = (kit: StemKit) => {
+    setQuickViewKit(kit);
+    try {
+      window.history.pushState(null, '', `/kits/${kit.slug}`);
+    } catch {}
+  };
+
+  const closeKitModal = () => {
+    setQuickViewKit(null);
+    try {
+      window.history.pushState(null, '', '/kits');
+    } catch {}
+  };
+
+  const handleShareKit = async (kit: StemKit, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const shareUrl = `https://kids.koneacademy.io/kits/${kit.slug}`;
+    const shareTitle = `${kit.title} | Kone Kids`;
+    const shareText = `Check out the ${kit.title} (${kit.category} • ${kit.ageRange}) on Kone Kids! Includes complete hands-on experiments and video guides:`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl
+        });
+        return;
+      } catch (err: any) {
+        if (err?.name === 'AbortError') return;
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedKitId(kit.id);
+      setShareToast({ visible: true, message: `📋 Direct link copied: kids.koneacademy.io/kits/${kit.slug}` });
+      setTimeout(() => {
+        setCopiedKitId(null);
+        setShareToast({ visible: false, message: '' });
+      }, 3500);
+    } catch {
+      const input = document.createElement('input');
+      input.value = shareUrl;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      setCopiedKitId(kit.id);
+      setShareToast({ visible: true, message: `📋 Direct link copied!` });
+      setTimeout(() => {
+        setCopiedKitId(null);
+        setShareToast({ visible: false, message: '' });
+      }, 3500);
+    }
+  };
+
+  const handleWhatsAppShareKit = (kit: StemKit, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    const shareUrl = `https://kids.koneacademy.io/kits/${kit.slug}`;
+    const priceText = formatPrice(kit.priceGHS, kit.priceUSD);
+    const text = encodeURIComponent(
+      `Check out the *${kit.title}* (${priceText}, ${kit.ageRange}) on Kone Kids! 🚀\n\n${kit.tagline}\n\n👉 View details & order here: ${shareUrl}`
+    );
+    window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  };
 
   // Save cart & wishlist
   useEffect(() => {
@@ -1048,7 +1137,8 @@ export default function StemKits() {
               return (
                 <div
                   key={kit.id}
-                  onClick={() => setQuickViewKit(kit)}
+                  id={`kit-${kit.slug}`}
+                  onClick={() => openKitModal(kit)}
                   style={{
                     background: '#ffffff',
                     borderRadius: '24px',
@@ -1165,38 +1255,63 @@ export default function StemKits() {
                         )}
                       </div>
 
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setQuickViewKit(kit);
-                        }}
-                        style={{
-                          padding: '0.4rem 0.85rem',
-                          fontSize: '0.82rem',
-                          fontWeight: 800,
-                          borderRadius: '10px',
-                          border: 'none',
-                          background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
-                          color: '#ffffff',
-                          cursor: 'pointer',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.3rem',
-                          boxShadow: '0 2px 6px rgba(234, 88, 12, 0.25)',
-                          transition: 'all 0.15s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.transform = 'translateY(-1px)';
-                          e.currentTarget.style.boxShadow = '0 4px 10px rgba(234, 88, 12, 0.35)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.transform = 'translateY(0)';
-                          e.currentTarget.style.boxShadow = '0 2px 6px rgba(234, 88, 12, 0.25)';
-                        }}
-                      >
-                        <span>Explore</span>
-                        <ChevronRight size={14} />
-                      </button>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <button
+                          onClick={(e) => handleShareKit(kit, e)}
+                          title="Share direct link with specific kit thumbnail preview"
+                          aria-label={`Share ${kit.title}`}
+                          style={{
+                            padding: '0.42rem 0.6rem',
+                            fontSize: '0.78rem',
+                            fontWeight: 700,
+                            borderRadius: '10px',
+                            border: '1px solid #e2e8f0',
+                            background: copiedKitId === kit.id ? '#ecfdf5' : '#f8fafc',
+                            color: copiedKitId === kit.id ? '#16a34a' : '#64748b',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            transition: 'all 0.15s ease'
+                          }}
+                        >
+                          {copiedKitId === kit.id ? <Check size={14} /> : <Share2 size={14} />}
+                          <span>{copiedKitId === kit.id ? 'Copied' : 'Share'}</span>
+                        </button>
+
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openKitModal(kit);
+                          }}
+                          style={{
+                            padding: '0.4rem 0.85rem',
+                            fontSize: '0.82rem',
+                            fontWeight: 800,
+                            borderRadius: '10px',
+                            border: 'none',
+                            background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                            color: '#ffffff',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.3rem',
+                            boxShadow: '0 2px 6px rgba(234, 88, 12, 0.25)',
+                            transition: 'all 0.15s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-1px)';
+                            e.currentTarget.style.boxShadow = '0 4px 10px rgba(234, 88, 12, 0.35)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.boxShadow = '0 2px 6px rgba(234, 88, 12, 0.25)';
+                          }}
+                        >
+                          <span>Explore</span>
+                          <ChevronRight size={14} />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1785,7 +1900,7 @@ export default function StemKits() {
             boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12)'
           }}>
             <button
-              onClick={() => setQuickViewKit(null)}
+              onClick={() => closeKitModal()}
               style={{
                 position: 'absolute',
                 top: '1rem',
@@ -1908,7 +2023,7 @@ export default function StemKits() {
                 </div>
               )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#475569', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#475569', marginBottom: '1.25rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <CheckCircle2 size={16} color="#16a34a" />
                   <span><strong>100% Solderless:</strong> {quickViewKit.requiresSoldering ? 'Soldering required' : 'No soldering needed, plug-and-play'}</span>
@@ -1923,11 +2038,75 @@ export default function StemKits() {
                 </div>
               </div>
 
+              {/* Direct Share Bar with Item Thumbnail Link */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0.55rem 0.85rem',
+                background: '#f8fafc',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0',
+                marginBottom: '1.25rem',
+                fontSize: '0.78rem',
+                gap: '0.5rem',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0, flex: 1 }}>
+                  <Share2 size={14} color="#0284c7" />
+                  <span style={{ color: '#334155', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    kids.koneacademy.io/kits/{quickViewKit.slug}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <button
+                    onClick={() => handleShareKit(quickViewKit)}
+                    title="Copy direct product link"
+                    style={{
+                      border: 'none',
+                      background: copiedKitId === quickViewKit.id ? '#10b981' : '#0284c7',
+                      color: '#ffffff',
+                      padding: '0.3rem 0.65rem',
+                      borderRadius: '8px',
+                      fontWeight: 800,
+                      fontSize: '0.72rem',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem'
+                    }}
+                  >
+                    {copiedKitId === quickViewKit.id ? <Check size={12} /> : <Copy size={12} />}
+                    <span>{copiedKitId === quickViewKit.id ? 'Copied!' : 'Copy Link'}</span>
+                  </button>
+                  <button
+                    onClick={() => handleWhatsAppShareKit(quickViewKit)}
+                    title="Share directly to WhatsApp"
+                    style={{
+                      border: '1px solid #bbf7d0',
+                      background: '#f0fdf4',
+                      color: '#15803d',
+                      padding: '0.3rem 0.65rem',
+                      borderRadius: '8px',
+                      fontWeight: 800,
+                      fontSize: '0.72rem',
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.3rem'
+                    }}
+                  >
+                    <WhatsAppIcon size={13} color="#15803d" />
+                    <span>WhatsApp</span>
+                  </button>
+                </div>
+              </div>
+
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: 'auto', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => {
                     addToCart(quickViewKit.id, 1);
-                    setQuickViewKit(null);
+                    closeKitModal();
                     setIsCartOpen(true);
                   }}
                   style={{
@@ -2473,6 +2652,31 @@ export default function StemKits() {
         <WhatsAppIcon size={isMobile ? 22 : 20} />
         {!isMobile && <span>Need Help? Chat on WhatsApp</span>}
       </a>
+
+      {/* Floating Share & Copy Toast */}
+      {shareToast.visible && (
+        <div style={{
+          position: 'fixed',
+          bottom: '2rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          background: '#0f172a',
+          color: '#ffffff',
+          padding: '0.75rem 1.4rem',
+          borderRadius: '999px',
+          boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
+          fontSize: '0.86rem',
+          fontWeight: 800,
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.6rem',
+          border: '1px solid #334155',
+          animation: 'fadeIn 0.2s ease-out'
+        }}>
+          <span>{shareToast.message}</span>
+        </div>
+      )}
 
     </div>
   );

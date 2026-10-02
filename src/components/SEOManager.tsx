@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { blogArticles } from '../data/blogArticles';
+import { STEM_KITS, SCHOOL_PACK_OFFERING } from '../data/stemKits';
 
 interface SEOConfig {
   title: string;
@@ -208,7 +209,14 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
           }
         }
       ]
-    }
+    },
+    image: "https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg"
+  },
+  '/stem-kits': {
+    title: "STEM & Science Sets for Kids | Ghana GES Curriculum & Robotics - Kone Kids",
+    description: "Hands-on Ghana GES / NaCCA Science Sets (Basic 4.1 to 6.3) and child-safe robotics rovers with online mission guides. Fast doorstep delivery across Accra and Ghana.",
+    keywords: "Ghana science sets, GES science kit Basic 4 5 6, NaCCA STEM kits, robotics kits for kids Ghana, STEM kits Accra, buy children coding kit, microbit robot kit",
+    image: "https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg"
   },
   '/author/philip-hotor': {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
@@ -273,11 +281,67 @@ export const SEOManager: React.FC = () => {
     let activeSEO = DEFAULT_SEO;
     const path = location.pathname;
 
-    // Check direct static matches
+    // Handle direct static matches
     if (ROUTE_SEO_MAP[path]) {
       activeSEO = ROUTE_SEO_MAP[path];
-    } 
-    // Handle dynamic blog routes: /blog/:id
+    }
+    // Handle dynamic kit routes: /kits/:slug or /stem-kits/:slug
+    else if (path.startsWith('/kits/') || path.startsWith('/stem-kits/')) {
+      const kitSlug = path.replace(/^\/(kits|stem-kits)\//, '').replace(/\/$/, '');
+      const kit = STEM_KITS.find(k => k.slug === kitSlug || k.id === kitSlug);
+      if (kit) {
+        const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.koneacademy.io${kit.image}`;
+        activeSEO = {
+          title: `${kit.title} | Kone Kids STEM Hardware`,
+          description: `${kit.tagline} Designed for ${kit.ageRange}. Hands-on STEM hardware with video guides and syllabus alignment. Available in Ghana.`,
+          keywords: `${kit.title}, ${kit.category} kit, STEM kits Ghana, ${kit.ageRange}, kids robotics, coding hardware`,
+          image: fullImg,
+          schema: {
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": kit.title,
+            "image": [fullImg],
+            "description": kit.tagline || kit.overview,
+            "brand": {
+              "@type": "Brand",
+              "name": "Kone Kids"
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": kit.priceGHS.toFixed(2),
+              "priceCurrency": "GHS",
+              "availability": "https://schema.org/InStock",
+              "url": `https://kids.koneacademy.io/kits/${kit.slug}/`
+            }
+          }
+        };
+      } else if (kitSlug === 'school-stem-pack' || kitSlug === 'school-pack') {
+        const schoolImg = `https://kids.koneacademy.io${SCHOOL_PACK_OFFERING.image}`;
+        activeSEO = {
+          title: `${SCHOOL_PACK_OFFERING.title} | Kone Kids`,
+          description: SCHOOL_PACK_OFFERING.subtitle,
+          keywords: "school STEM kits, classroom lab pack, robotics club Ghana",
+          image: schoolImg
+        };
+      }
+    }
+    // Handle query param deep link: /kits?kit=...
+    else if ((path === '/kits' || path === '/kits/' || path === '/stem-kits' || path === '/stem-kits/') && location.search) {
+      const searchParams = new URLSearchParams(location.search);
+      const qKit = searchParams.get('kit');
+      if (qKit) {
+        const kit = STEM_KITS.find(k => k.slug === qKit || k.id === qKit);
+        if (kit) {
+          const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.koneacademy.io${kit.image}`;
+          activeSEO = {
+            title: `${kit.title} | Kone Kids STEM Hardware`,
+            description: `${kit.tagline} Designed for ${kit.ageRange}. Available across Ghana with doorstep delivery.`,
+            keywords: `${kit.title}, ${kit.category} kit, STEM kits Ghana`,
+            image: fullImg
+          };
+        }
+      }
+    }
     else if (path.startsWith('/blog/')) {
       const articleId = params.id;
       const article = blogArticles.find(art => art.slug === articleId);

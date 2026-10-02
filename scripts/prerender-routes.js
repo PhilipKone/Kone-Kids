@@ -11,6 +11,17 @@ if (!fs.existsSync(templatePath)) {
 
 const template = fs.readFileSync(templatePath, 'utf8');
 
+// Load STEM Kits & School Pack from data source
+let STEM_KITS = [];
+let SCHOOL_PACK_OFFERING = null;
+try {
+  const kitsData = require('../src/data/stemKits.ts');
+  STEM_KITS = kitsData.STEM_KITS || [];
+  SCHOOL_PACK_OFFERING = kitsData.SCHOOL_PACK_OFFERING || null;
+} catch (e) {
+  console.warn("Could not load stemKits.ts directly, attempting fallback:", e.message);
+}
+
 const routes = [
   {
     path: 'coding',
@@ -33,8 +44,16 @@ const routes = [
   {
     path: 'kits',
     title: 'STEM & Robotics Kits for Kids | Hands-On Hardware - Kone Kids',
-    desc: 'Explore child-safe robotics kits, Arduino rovers, and smart IoT science kits with step-by-step video tutorials. Delivered across Ghana.',
-    canonical: 'https://kids.koneacademy.io/kits/'
+    desc: 'Explore child-safe robotics kits, Arduino rovers, and Ghana GES science kits with step-by-step video tutorials. Doorstep delivery across Ghana.',
+    canonical: 'https://kids.koneacademy.io/kits/',
+    image: 'https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg'
+  },
+  {
+    path: 'stem-kits',
+    title: 'STEM & Robotics Kits for Kids | Hands-On Hardware - Kone Kids',
+    desc: 'Explore child-safe robotics kits, Arduino rovers, and Ghana GES science kits with step-by-step video tutorials. Doorstep delivery across Ghana.',
+    canonical: 'https://kids.koneacademy.io/kits/',
+    image: 'https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg'
   },
   {
     path: 'blog',
@@ -46,7 +65,8 @@ const routes = [
     path: 'author/philip-hotor',
     title: 'Philip Hotor | Founder & Head of Engineering - Kone Academy',
     desc: 'Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.',
-    canonical: 'https://kids.koneacademy.io/author/philip-hotor/'
+    canonical: 'https://kids.koneacademy.io/author/philip-hotor/',
+    image: 'https://kids.koneacademy.io/author-philip.jpg'
   },
   {
     path: 'class-login',
@@ -122,7 +142,60 @@ const routes = [
   }
 ];
 
-console.log("Generating static HTML files for clean GitHub Pages 200 OK sitelinks...");
+// Dynamically generate static routes for EVERY individual STEM Kit & Science Set
+for (const kit of STEM_KITS) {
+  const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.koneacademy.io${kit.image}`;
+  const kitTitle = `${kit.title} | Kone Kids STEM Hardware`;
+  const kitDesc = `${kit.tagline} Designed for ${kit.ageRange}. Includes hands-on hardware components, syllabus alignments, and step-by-step video tutorials. Doorstep delivery across Ghana.`;
+  const canonical = `https://kids.koneacademy.io/kits/${kit.slug}/`;
+
+  // 1. Primary slug route: /kits/<slug>
+  routes.push({
+    path: `kits/${kit.slug}`,
+    title: kitTitle,
+    desc: kitDesc,
+    canonical,
+    image: fullImg,
+    isProduct: true,
+    kit
+  });
+
+  // 2. Secondary alias route by id if different from slug: /kits/<id>
+  if (kit.id && kit.id !== kit.slug) {
+    routes.push({
+      path: `kits/${kit.id}`,
+      title: kitTitle,
+      desc: kitDesc,
+      canonical,
+      image: fullImg,
+      isProduct: true,
+      kit
+    });
+  }
+}
+
+// School STEM Lab Pack routes
+if (SCHOOL_PACK_OFFERING) {
+  const schoolImg = `https://kids.koneacademy.io${SCHOOL_PACK_OFFERING.image}`;
+  routes.push({
+    path: 'kits/school-stem-pack',
+    title: `${SCHOOL_PACK_OFFERING.title} | Kone Kids`,
+    desc: SCHOOL_PACK_OFFERING.subtitle,
+    canonical: 'https://kids.koneacademy.io/kits/school-stem-pack/',
+    image: schoolImg,
+    isProduct: true
+  });
+  routes.push({
+    path: 'kits/school-pack',
+    title: `${SCHOOL_PACK_OFFERING.title} | Kone Kids`,
+    desc: SCHOOL_PACK_OFFERING.subtitle,
+    canonical: 'https://kids.koneacademy.io/kits/school-pack/',
+    image: schoolImg,
+    isProduct: true
+  });
+}
+
+console.log(`Generating static HTML files for ${routes.length} sitelinks & social share cards...`);
 
 for (const r of routes) {
   let html = template;
@@ -134,17 +207,54 @@ for (const r of routes) {
   html = html.replace(/<link rel="canonical" href=".*?" \/>/i, `<link rel="canonical" href="${r.canonical}" />`);
 
   // Replace Meta Description
-  html = html.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${r.desc}" />`);
+  const cleanDesc = r.desc.replace(/"/g, '&quot;');
+  html = html.replace(/<meta name="description" content=".*?" \/>/i, `<meta name="description" content="${cleanDesc}" />`);
 
   // Replace OpenGraph Title, Description, Url
-  html = html.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${r.title}" />`);
-  html = html.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${r.desc}" />`);
+  const cleanTitle = r.title.replace(/"/g, '&quot;');
+  html = html.replace(/<meta property="og:title" content=".*?" \/>/i, `<meta property="og:title" content="${cleanTitle}" />`);
+  html = html.replace(/<meta property="og:description" content=".*?" \/>/i, `<meta property="og:description" content="${cleanDesc}" />`);
   html = html.replace(/<meta property="og:url" content=".*?" \/>/i, `<meta property="og:url" content="${r.canonical}" />`);
 
+  // Specific Item Thumbnail / OG Image & Twitter Image
+  if (r.image) {
+    const fullImg = r.image.startsWith('http') ? r.image : `https://kids.koneacademy.io${r.image}`;
+    html = html.replace(/<meta property="og:image" content=".*?" \/>/i, `<meta property="og:image" content="${fullImg}" />`);
+    html = html.replace(/<meta property="og:image:secure_url" content=".*?" \/>/i, `<meta property="og:image:secure_url" content="${fullImg}" />`);
+    html = html.replace(/<meta property="og:image:alt" content=".*?" \/>/i, `<meta property="og:image:alt" content="${cleanTitle}" />`);
+    html = html.replace(/<meta name="twitter:image" content=".*?" \/>/i, `<meta name="twitter:image" content="${fullImg}" />`);
+  }
+
   // Replace Twitter Title, Description, Url
-  html = html.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${r.title}" />`);
-  html = html.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${r.desc}" />`);
+  html = html.replace(/<meta name="twitter:title" content=".*?" \/>/i, `<meta name="twitter:title" content="${cleanTitle}" />`);
+  html = html.replace(/<meta name="twitter:description" content=".*?" \/>/i, `<meta name="twitter:description" content="${cleanDesc}" />`);
   html = html.replace(/<meta name="twitter:url" content=".*?" \/>/i, `<meta name="twitter:url" content="${r.canonical}" />`);
+
+  // Product schema & OG Type
+  if (r.isProduct) {
+    html = html.replace(/<meta property="og:type" content=".*?" \/>/i, `<meta property="og:type" content="product" />`);
+    if (r.kit) {
+      const productSchema = {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": r.kit.title,
+        "image": [r.image],
+        "description": r.kit.tagline || r.desc,
+        "brand": {
+          "@type": "Brand",
+          "name": "Kone Kids"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": r.kit.priceGHS ? r.kit.priceGHS.toFixed(2) : "0.00",
+          "priceCurrency": "GHS",
+          "availability": "https://schema.org/InStock",
+          "url": r.canonical
+        }
+      };
+      html = html.replace('</head>', `<script type="application/ld+json">${JSON.stringify(productSchema)}</script>\n</head>`);
+    }
+  }
 
   const targetDir = path.join(distDir, r.path);
   if (!fs.existsSync(targetDir)) {
@@ -153,7 +263,6 @@ for (const r of routes) {
 
   const targetFile = path.join(targetDir, 'index.html');
   fs.writeFileSync(targetFile, html, 'utf8');
-  console.log(`  ✓ Generated: dist/${r.path}/index.html`);
 }
 
-console.log("\nAll static clean routes successfully generated for Kone Kids!");
+console.log(`\n✓ Successfully prerendered ${routes.length} static routes with specific item OG thumbnails!`);
