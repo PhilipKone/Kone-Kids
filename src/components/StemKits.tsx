@@ -38,7 +38,16 @@ const SAFE_KIT_IMAGES: Record<string, string> = {
   'kone-explorer-rover': '/images/kits/explorer-robotics-rover.jpg',
   'kone-iot-smart-farm': '/images/kits/iot-smart-farm.jpg',
   'kone-ai-vision-companion': '/images/kits/ai-companion-kit.jpg',
-  'school-pack': '/images/kits/school-stem-pack.jpg'
+  'school-pack': '/images/kits/school-stem-pack.jpg',
+  'science-set-4-1': '/images/kits/science-set-4-1.jpg',
+  'science-set-4-2': '/images/kits/science-set-4-2.jpg',
+  'science-set-4-3': '/images/kits/science-set-4-3.jpg',
+  'science-set-5-1': '/images/kits/science-set-5-1.jpg',
+  'science-set-5-2': '/images/kits/science-set-5-2.jpg',
+  'science-set-5-3': '/images/kits/science-set-5-3.jpg',
+  'science-set-6-1': '/images/kits/science-set-6-1.jpg',
+  'science-set-6-2': '/images/kits/science-set-6-2.jpg',
+  'science-set-6-3': '/images/kits/science-set-6-3.jpg'
 };
 
 const getSafeKitImage = (kitId?: string): string => {
@@ -197,7 +206,7 @@ export default function StemKits() {
   const finalCartTotalUSD = cartSubtotalUSD - discountAmountUSD;
 
   // Filter & Sort
-  const categories = ['All', 'Junior', 'Robotics', 'IoT', 'AI'];
+  const categories = ['All', 'GES Science Sets', 'Basic 4', 'Basic 5', 'Basic 6', 'Robotics', 'IoT', 'AI', 'Junior'];
   const ageFilters = [
     { label: 'All Ages', value: 'All' },
     { label: 'Ages 5–8', value: '5-8' },
@@ -207,11 +216,17 @@ export default function StemKits() {
 
   const filteredKits = useMemo(() => {
     return STEM_KITS.filter(kit => {
-      const matchesCategory = selectedCategory === 'All' || kit.category === selectedCategory;
+      const matchesCategory = selectedCategory === 'All' 
+        || kit.category === selectedCategory
+        || (selectedCategory === 'GES Science Sets' && (kit.category === 'Basic 4' || kit.category === 'Basic 5' || kit.category === 'Basic 6'));
       const matchesSearch = searchQuery.trim() === '' || 
         kit.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         kit.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
         kit.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (kit.gesCurriculumCode && kit.gesCurriculumCode.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (kit.gradeLevel && kit.gradeLevel.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (kit.term && kit.term.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (kit.experiments && kit.experiments.some(e => e.toLowerCase().includes(searchQuery.toLowerCase()))) ||
         kit.skills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
 
       let matchesAge = true;
@@ -632,7 +647,11 @@ export default function StemKits() {
           {/* Category Pills */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
             {categories.map(cat => {
-              const count = cat === 'All' ? STEM_KITS.length : STEM_KITS.filter(k => k.category === cat).length;
+              const count = cat === 'All' 
+                ? STEM_KITS.length 
+                : cat === 'GES Science Sets'
+                ? STEM_KITS.filter(k => k.category === 'Basic 4' || k.category === 'Basic 5' || k.category === 'Basic 6').length
+                : STEM_KITS.filter(k => k.category === cat).length;
               const isActive = selectedCategory === cat;
               return (
                 <button
@@ -652,7 +671,9 @@ export default function StemKits() {
                     gap: '0.35rem'
                   }}
                 >
-                  <span>{cat === 'All' ? 'All Kits' : `${cat} Kits`}</span>
+                  <span>
+                    {cat === 'All' ? 'All Kits' : cat === 'GES Science Sets' ? '🔬 GES Science Sets' : cat.startsWith('Basic') ? `${cat} (NaCCA)` : `${cat} Kits`}
+                  </span>
                   <span style={{
                     background: isActive ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
                     padding: '0.1rem 0.35rem',
@@ -931,6 +952,26 @@ export default function StemKits() {
                     >
                       {kit.title}
                     </h3>
+
+                    {kit.gesCurriculumCode && (
+                      <div style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        background: 'rgba(34, 197, 94, 0.12)',
+                        border: '1px solid rgba(34, 197, 94, 0.25)',
+                        borderRadius: '6px',
+                        padding: '0.2rem 0.5rem',
+                        marginBottom: '0.5rem',
+                        fontSize: '0.72rem',
+                        color: '#4ade80',
+                        fontWeight: 800,
+                        alignSelf: 'flex-start'
+                      }}>
+                        <span>🇬🇭</span>
+                        <span>{kit.gesCurriculumCode}</span>
+                      </div>
+                    )}
 
                     {/* Star Rating & Sold count */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
@@ -1740,6 +1781,44 @@ export default function StemKits() {
               <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.55, marginBottom: '1rem' }}>
                 {quickViewKit.overview}
               </p>
+
+              {quickViewKit.gesCurriculumCode && (
+                <div style={{
+                  background: 'rgba(34, 197, 94, 0.12)',
+                  border: '1px solid rgba(34, 197, 94, 0.25)',
+                  borderRadius: '10px',
+                  padding: '0.6rem 0.85rem',
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontSize: '0.82rem',
+                  color: '#4ade80',
+                  fontWeight: 800
+                }}>
+                  <span>🇬🇭</span>
+                  <span>Ghana NaCCA / GES Standard: {quickViewKit.gesCurriculumCode}</span>
+                </div>
+              )}
+
+              {quickViewKit.experiments && quickViewKit.experiments.length > 0 && (
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.04)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '12px',
+                  padding: '0.85rem',
+                  marginBottom: '1.25rem'
+                }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#38bdf8', marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    📦 Core Curriculum Experiments on Physical Box:
+                  </div>
+                  <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.55 }}>
+                    {quickViewKit.experiments.map((exp, idx) => (
+                      <li key={idx} style={{ marginBottom: '0.2rem' }}>{exp}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
