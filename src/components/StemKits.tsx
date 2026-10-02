@@ -8,7 +8,6 @@ import {
   Truck, 
   ShieldCheck, 
   BookOpen, 
-  MessageCircle, 
   ShoppingBag, 
   ShoppingCart,
   ChevronRight, 
@@ -56,6 +55,24 @@ const getSafeKitImage = (kitId?: string): string => {
   }
   return '/images/kits/junior-circuit-kit.jpg';
 };
+
+const WhatsAppIcon: React.FC<{ size?: number; className?: string; color?: string }> = ({ 
+  size = 20, 
+  color = 'currentColor',
+  className = '' 
+}) => (
+  <svg 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill={color}
+    xmlns="http://www.w3.org/2000/svg"
+    className={className}
+    style={{ flexShrink: 0, display: 'inline-block', verticalAlign: 'middle' }}
+  >
+    <path d="M17.472 14.382c-.301-.15-1.782-.879-2.057-.98-.276-.1-.476-.15-.677.15-.2.301-.776.98-.952 1.18-.175.201-.35.226-.651.075-.301-.15-1.272-.469-2.423-1.496-.895-.798-1.5-1.784-1.675-2.085-.176-.301-.019-.464.132-.614.136-.135.301-.351.451-.527.151-.175.201-.3.301-.501.101-.201.05-.376-.025-.526-.075-.151-.677-1.632-.927-2.235-.244-.587-.492-.507-.677-.517-.175-.008-.376-.01-.576-.01-.201 0-.526.075-.802.376-.276.301-1.053 1.029-1.053 2.509 0 1.48 1.078 2.909 1.229 3.11.15.2 2.121 3.238 5.138 4.542.718.311 1.279.496 1.716.635.72.23 1.375.197 1.894.12.578-.087 1.782-.728 2.032-1.431.251-.703.251-1.306.176-1.431-.075-.125-.276-.2-.577-.35zm2.229-8.799C17.65 3.532 14.954 2.25 12.051 2.25 6.671 2.25 2.28 6.641 2.28 12.021c0 1.721.449 3.399 1.302 4.881L2.25 21.75l4.981-1.307c1.428.78 3.037 1.192 4.814 1.192h.005c5.378 0 9.77-4.391 9.773-9.774.001-2.607-1.01-5.06-2.85-6.9zM12.051 20.02c-1.483 0-2.936-.399-4.202-1.15l-.301-.179-3.127.82.834-3.048-.196-.312c-.824-1.312-1.259-2.842-1.259-4.13 0-4.484 3.65-8.134 8.138-8.134 2.172 0 4.214.846 5.75 2.383 1.536 1.536 2.381 3.578 2.38 5.75-.003 4.485-3.653 8.135-8.139 8.135z" />
+  </svg>
+);
 
 export default function StemKits() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -426,6 +443,30 @@ export default function StemKits() {
                 $ (USD)
               </button>
             </div>
+
+            <a
+              href="https://wa.me/233551993820?text=Hello%20Kone%20Kids!%20I%20have%20an%20inquiry%20about%20your%20STEM%20kits."
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                color: '#4ade80',
+                textDecoration: 'none',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                padding: '0.4rem 0.75rem',
+                borderRadius: '10px',
+                background: 'rgba(37, 211, 102, 0.12)',
+                border: '1px solid rgba(37, 211, 102, 0.25)',
+                transition: 'all 0.2s'
+              }}
+              title="Chat with STEM Lab Coordinator on WhatsApp"
+            >
+              <WhatsAppIcon size={16} />
+              <span>055 199 3820</span>
+            </a>
 
             <button
               onClick={() => setIsCartOpen(true)}
@@ -844,53 +885,25 @@ export default function StemKits() {
                         )}
                       </div>
 
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            addToCart(kit.id, 1);
-                          }}
-                          title="Add to Cart"
-                          style={{
-                            background: isRecentlyAdded ? '#10b981' : '#f97316',
-                            color: '#ffffff',
-                            border: 'none',
-                            borderRadius: '10px',
-                            padding: '0.55rem 0.85rem',
-                            fontWeight: 800,
-                            fontSize: '0.82rem',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.35rem',
-                            transition: 'background 0.2s'
-                          }}
-                        >
-                          {isRecentlyAdded ? <Check size={15} /> : <ShoppingCart size={15} />}
-                          <span>{isRecentlyAdded ? 'Added' : 'Add'}</span>
-                        </button>
-
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleWhatsAppOrder(kit, 1);
-                          }}
-                          title="Order via WhatsApp"
-                          style={{
-                            background: '#25d366',
-                            color: '#ffffff',
-                            border: 'none',
-                            borderRadius: '10px',
-                            padding: '0.55rem',
-                            cursor: 'pointer',
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                          }}
-                        >
-                          <MessageCircle size={16} />
-                        </button>
-                      </div>
+                      <button
+                        className="kids-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setQuickViewKit(kit);
+                        }}
+                        style={{
+                          padding: '0.45rem 1.1rem',
+                          fontSize: '0.85rem',
+                          minHeight: '38px',
+                          '--shadow-height': '4px',
+                          '--shadow-color': '#9a3412',
+                          borderRadius: '12px',
+                          gap: '0.35rem'
+                        } as any}
+                      >
+                        <span>Explore Kit</span>
+                        <ChevronRight size={15} />
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -975,7 +988,7 @@ export default function StemKits() {
                   boxShadow: '0 4px 15px rgba(37, 211, 102, 0.35)'
                 }}
               >
-                <MessageCircle size={18} />
+                <WhatsAppIcon size={20} />
                 <span>Request School Lab Quotation</span>
               </button>
 
@@ -1377,7 +1390,7 @@ export default function StemKits() {
                       boxShadow: '0 4px 12px rgba(37, 211, 102, 0.35)'
                     }}
                   >
-                    <MessageCircle size={18} />
+                    <WhatsAppIcon size={20} />
                     <span>Instant WhatsApp Checkout</span>
                   </button>
 
@@ -1609,17 +1622,18 @@ export default function StemKits() {
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '12px',
-                    padding: '0.85rem 1.25rem',
+                    padding: '0.85rem 1.4rem',
                     fontWeight: 800,
                     fontSize: '0.95rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '0.4rem'
+                    gap: '0.5rem',
+                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.35)'
                   }}
                 >
-                  <MessageCircle size={18} />
-                  <span>WhatsApp</span>
+                  <WhatsAppIcon size={20} />
+                  <span>Order on WhatsApp</span>
                 </button>
               </div>
             </div>
@@ -1748,10 +1762,16 @@ export default function StemKits() {
                   padding: '0.85rem 1.25rem',
                   fontWeight: 800,
                   fontSize: '0.92rem',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.45rem',
+                  boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)'
                 }}
               >
-                Order on WhatsApp
+                <WhatsAppIcon size={18} />
+                <span>Order on WhatsApp</span>
               </button>
             </div>
           </div>
@@ -1828,7 +1848,7 @@ export default function StemKits() {
                     gap: '0.4rem'
                   }}
                 >
-                  <MessageCircle size={18} />
+                  <WhatsAppIcon size={20} />
                   <span>Speed up on WhatsApp (+233 55 199 3820)</span>
                 </button>
               </div>
@@ -2050,7 +2070,7 @@ export default function StemKits() {
                   boxShadow: '0 4px 15px rgba(37, 211, 102, 0.35)'
                 }}
               >
-                <MessageCircle size={18} />
+                <WhatsAppIcon size={20} />
                 <span>Chat with Lab Director on WhatsApp</span>
               </button>
             </div>
