@@ -299,29 +299,36 @@ export default function StemKits() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0b1120', color: '#f8fafc', paddingBottom: '5rem' }}>
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%)',
+      color: '#0f172a',
+      paddingBottom: '5rem',
+      fontFamily: "'Nunito', sans-serif"
+    }}>
       
       {/* 1. TOP HEADER & NAVIGATION */}
       <header style={{
-        background: 'rgba(15, 23, 42, 0.96)',
+        background: 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        borderBottom: '1px solid #e2e8f0',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        padding: isMobile ? '0.55rem 0.85rem' : '0.75rem 1.25rem'
+        padding: isMobile ? '0.55rem 0.85rem' : '0.75rem 1.25rem',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)'
       }}>
         {isMobile ? (
           <div>
-            {/* Mobile Row 1: Back + Title on Left, Compact Controls on Right */}
+            {/* Mobile Row 1: Back + Brand on Left, Cart on Right */}
             <div style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '0.5rem'
+              gap: '0.75rem'
             }}>
-              {/* Left: Back button & clean title */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+              {/* Left: Back button & clean title with mascot */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', minWidth: 0 }}>
                 <Link 
                   to="/" 
                   aria-label="Back to Learning Hub"
@@ -329,163 +336,87 @@ export default function StemKits() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    width: '34px',
-                    height: '34px',
-                    borderRadius: '9px',
-                    background: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#cbd5e1',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    background: '#f1f5f9',
+                    border: '1px solid #e2e8f0',
+                    color: '#334155',
                     textDecoration: 'none',
                     flexShrink: 0
                   }}
                 >
-                  <ArrowLeft size={17} />
+                  <ArrowLeft size={18} />
                 </Link>
 
-                <div style={{ minWidth: 0 }}>
-                  <div style={{
-                    fontFamily: "'Baloo 2', 'Nunito', sans-serif",
-                    fontSize: '0.98rem',
-                    fontWeight: 900,
-                    color: '#ffffff',
-                    lineHeight: 1.15,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.3rem',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    <span>STEM Store</span>
-                    <span style={{
-                      fontSize: '0.62rem',
-                      padding: '0.08rem 0.35rem',
-                      borderRadius: '4px',
-                      background: 'rgba(249, 115, 22, 0.25)',
-                      color: '#fb923c',
-                      border: '1px solid rgba(249, 115, 22, 0.4)',
-                      fontWeight: 800
-                    }}>GH</span>
-                  </div>
-                  <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    Kone Kids Hardware
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Compact Segmented Switcher, WhatsApp Icon, Cart Icon */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
-                {/* Sleek Segmented Currency */}
-                <div style={{
-                  display: 'inline-flex',
-                  background: '#1e293b',
-                  padding: '2px',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.08)'
-                }}>
-                  <button
-                    onClick={() => setCurrency('GHS')}
-                    style={{
-                      padding: '0.25rem 0.42rem',
-                      borderRadius: '6px',
-                      border: 'none',
-                      background: currency === 'GHS' ? '#f97316' : 'transparent',
-                      color: currency === 'GHS' ? '#ffffff' : '#94a3b8',
-                      fontSize: '0.72rem',
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0 }}>
+                  <img src="/mascot.svg" alt="Drop" width="22" height="22" style={{ height: '22px', width: 'auto', flexShrink: 0 }} />
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{
+                      fontFamily: "'Baloo 2', cursive",
+                      fontSize: '1.05rem',
                       fontWeight: 800,
-                      cursor: 'pointer',
-                      lineHeight: 1
-                    }}
-                  >
-                    GH₵
-                  </button>
-                  <button
-                    onClick={() => setCurrency('USD')}
-                    style={{
-                      padding: '0.25rem 0.42rem',
-                      borderRadius: '6px',
-                      border: 'none',
-                      background: currency === 'USD' ? '#f97316' : 'transparent',
-                      color: currency === 'USD' ? '#ffffff' : '#94a3b8',
-                      fontSize: '0.72rem',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      lineHeight: 1
-                    }}
-                  >
-                    $
-                  </button>
-                </div>
-
-                {/* Authentic WhatsApp Icon Button */}
-                <a
-                  href="https://wa.me/233551993820?text=Hello%20Kone%20Kids!%20I%20have%20an%20inquiry%20about%20your%20STEM%20kits."
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Chat on WhatsApp"
-                  style={{
-                    width: '34px',
-                    height: '34px',
-                    borderRadius: '9px',
-                    background: 'rgba(37, 211, 102, 0.15)',
-                    border: '1px solid rgba(37, 211, 102, 0.35)',
-                    color: '#25D366',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textDecoration: 'none'
-                  }}
-                  title="Chat with STEM Coordinator on WhatsApp"
-                >
-                  <WhatsAppIcon size={17} />
-                </a>
-
-                {/* Cart Icon Button with floating Badge */}
-                <button
-                  onClick={() => setIsCartOpen(true)}
-                  aria-label="Open Cart"
-                  style={{
-                    position: 'relative',
-                    width: '34px',
-                    height: '34px',
-                    borderRadius: '9px',
-                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                    border: 'none',
-                    color: '#ffffff',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.35)'
-                  }}
-                >
-                  <ShoppingCart size={17} />
-                  {totalCartItems > 0 && (
-                    <span style={{
-                      position: 'absolute',
-                      top: '-4px',
-                      right: '-4px',
-                      minWidth: '16px',
-                      height: '16px',
-                      borderRadius: '999px',
-                      background: '#ef4444',
-                      color: '#ffffff',
-                      fontSize: '0.65rem',
-                      fontWeight: 900,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '0 2px',
-                      border: '2px solid #0f172a'
+                      color: '#1e3a8a',
+                      lineHeight: 1.15,
+                      whiteSpace: 'nowrap'
                     }}>
-                      {totalCartItems}
-                    </span>
-                  )}
-                </button>
+                      STEM Store
+                    </div>
+                    <div style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      Kone Kids Hardware
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              {/* Right: Cart Button */}
+              <button
+                onClick={() => setIsCartOpen(true)}
+                aria-label="Open Cart"
+                style={{
+                  position: 'relative',
+                  height: '36px',
+                  padding: '0 0.85rem',
+                  borderRadius: '10px',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  border: 'none',
+                  color: '#ffffff',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  cursor: 'pointer',
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  boxShadow: '0 2px 8px rgba(16, 185, 129, 0.25)',
+                  flexShrink: 0
+                }}
+              >
+                <ShoppingCart size={16} />
+                <span>Cart</span>
+                {totalCartItems > 0 && (
+                  <span style={{
+                    minWidth: '18px',
+                    height: '18px',
+                    borderRadius: '999px',
+                    background: '#ef4444',
+                    color: '#ffffff',
+                    fontSize: '0.68rem',
+                    fontWeight: 900,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0 3px',
+                    border: '1.5px solid #ffffff'
+                  }}>
+                    {totalCartItems}
+                  </span>
+                )}
+              </button>
             </div>
 
             {/* Mobile Row 2: Compact Search Bar */}
             <div style={{ marginTop: '0.5rem', position: 'relative' }}>
-              <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+              <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
               <input 
                 type="text"
                 placeholder="Search kits, rovers, GES science sets..."
@@ -494,13 +425,14 @@ export default function StemKits() {
                 style={{
                   width: '100%',
                   padding: '0.42rem 1.8rem 0.42rem 2.1rem',
-                  background: '#1e293b',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
-                  borderRadius: '9px',
-                  color: '#ffffff',
+                  background: '#ffffff',
+                  border: '1.5px solid #e2e8f0',
+                  borderRadius: '10px',
+                  color: '#0f172a',
                   fontSize: '0.82rem',
                   outline: 'none',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.02)'
                 }}
               />
               {searchQuery && (
@@ -513,7 +445,7 @@ export default function StemKits() {
                     transform: 'translateY(-50%)',
                     background: 'none',
                     border: 'none',
-                    color: '#94a3b8',
+                    color: '#64748b',
                     cursor: 'pointer',
                     fontSize: '0.9rem',
                     padding: '2px'
@@ -541,13 +473,14 @@ export default function StemKits() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  color: '#94a3b8',
+                  color: '#475569',
                   textDecoration: 'none',
                   fontSize: '0.85rem',
                   fontWeight: 700,
                   padding: '0.4rem 0.75rem',
                   borderRadius: '10px',
-                  background: 'rgba(255,255,255,0.05)',
+                  background: '#f1f5f9',
+                  border: '1px solid #e2e8f0',
                   transition: 'all 0.2s'
                 }}
               >
@@ -557,18 +490,20 @@ export default function StemKits() {
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{
-                  background: 'linear-gradient(135deg, #f97316 0%, #e11d48 100%)',
-                  color: '#ffffff',
-                  padding: '0.35rem 0.65rem',
+                  background: 'rgba(249, 115, 22, 0.1)',
+                  color: '#ea580c',
+                  border: '1px solid rgba(249, 115, 22, 0.25)',
+                  padding: '0.35rem 0.75rem',
                   borderRadius: '10px',
                   fontWeight: 900,
                   fontSize: '0.85rem',
                   letterSpacing: '0.02em',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.35rem'
+                  gap: '0.4rem',
+                  fontFamily: "'Baloo 2', cursive"
                 }}>
-                  <Cpu size={16} />
+                  <img src="/mascot.svg" alt="Drop" width="18" height="18" style={{ height: '18px', width: 'auto' }} />
                   <span>KONE STEM STORE</span>
                 </div>
               </div>
@@ -580,22 +515,22 @@ export default function StemKits() {
               maxWidth: '520px',
               position: 'relative'
             }}>
-              <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+              <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
               <input 
                 type="text"
-                placeholder="Search rovers, sensors, snap circuits, microcontrollers..."
+                placeholder="Search rovers, sensors, snap circuits, GES sets..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
                   width: '100%',
-                  padding: '0.6rem 2.2rem 0.6rem 2.5rem',
-                  background: '#1e293b',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  padding: '0.55rem 2.2rem 0.55rem 2.5rem',
+                  background: '#ffffff',
+                  border: '1.5px solid #e2e8f0',
                   borderRadius: '12px',
-                  color: '#ffffff',
+                  color: '#0f172a',
                   fontSize: '0.88rem',
                   outline: 'none',
-                  boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)'
+                  boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.02)'
                 }}
               />
               {searchQuery && (
@@ -608,7 +543,7 @@ export default function StemKits() {
                     transform: 'translateY(-50%)',
                     background: 'none',
                     border: 'none',
-                    color: '#94a3b8',
+                    color: '#64748b',
                     cursor: 'pointer',
                     fontSize: '0.9rem'
                   }}
@@ -622,10 +557,10 @@ export default function StemKits() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
               <div style={{
                 display: 'inline-flex',
-                background: '#1e293b',
+                background: '#f1f5f9',
                 padding: '0.2rem',
                 borderRadius: '10px',
-                border: '1px solid rgba(255,255,255,0.08)'
+                border: '1px solid #e2e8f0'
               }}>
                 <button
                   onClick={() => setCurrency('GHS')}
@@ -633,8 +568,8 @@ export default function StemKits() {
                     padding: '0.35rem 0.65rem',
                     borderRadius: '8px',
                     border: 'none',
-                    background: currency === 'GHS' ? '#f97316' : 'transparent',
-                    color: '#ffffff',
+                    background: currency === 'GHS' ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : 'transparent',
+                    color: currency === 'GHS' ? '#ffffff' : '#64748b',
                     fontSize: '0.8rem',
                     fontWeight: 800,
                     cursor: 'pointer'
@@ -648,8 +583,8 @@ export default function StemKits() {
                     padding: '0.35rem 0.65rem',
                     borderRadius: '8px',
                     border: 'none',
-                    background: currency === 'USD' ? '#f97316' : 'transparent',
-                    color: '#ffffff',
+                    background: currency === 'USD' ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : 'transparent',
+                    color: currency === 'USD' ? '#ffffff' : '#64748b',
                     fontSize: '0.8rem',
                     fontWeight: 800,
                     cursor: 'pointer'
@@ -667,14 +602,14 @@ export default function StemKits() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  color: '#4ade80',
+                  color: '#16a34a',
                   textDecoration: 'none',
                   fontSize: '0.82rem',
                   fontWeight: 800,
                   padding: '0.4rem 0.75rem',
                   borderRadius: '10px',
                   background: 'rgba(37, 211, 102, 0.12)',
-                  border: '1px solid rgba(37, 211, 102, 0.25)',
+                  border: '1px solid rgba(37, 211, 102, 0.3)',
                   transition: 'all 0.2s'
                 }}
                 title="Chat with STEM Lab Coordinator on WhatsApp"
@@ -698,7 +633,7 @@ export default function StemKits() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.25)'
                 }}
               >
                 <ShoppingCart size={18} />
@@ -711,7 +646,8 @@ export default function StemKits() {
                     padding: '0.15rem 0.45rem',
                     fontSize: '0.75rem',
                     fontWeight: 900,
-                    marginLeft: '0.15rem'
+                    marginLeft: '0.15rem',
+                    border: '2px solid #ffffff'
                   }}>
                     {totalCartItems}
                   </span>
@@ -722,107 +658,129 @@ export default function StemKits() {
         )}
       </header>
 
-      {/* 3. HERO STOREFRONT BANNER & TRUST STRIP */}
+      {/* 3. HERO STOREFRONT HEADER */}
       <section style={{
         maxWidth: '1280px',
-        margin: isMobile ? '0.75rem auto' : '1.5rem auto',
+        margin: isMobile ? '1rem auto 0.75rem' : '2rem auto 1.5rem',
         padding: isMobile ? '0 0.85rem' : '0 1.25rem'
       }}>
         <div style={{
-          background: 'radial-gradient(ellipse at top right, rgba(249, 115, 22, 0.22) 0%, rgba(30, 27, 75, 0.95) 100%), #0f172a',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: isMobile ? '16px' : '24px',
-          padding: isMobile ? '1.25rem 1rem' : '2.5rem 2rem',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)'
+          display: 'flex',
+          flexDirection: 'column',
+          gap: isMobile ? '0.5rem' : '0.85rem'
         }}>
-          <div style={{ maxWidth: '780px', position: 'relative', zIndex: 2 }}>
+          {/* Friendly Tag Badge */}
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            background: 'rgba(14, 165, 233, 0.1)',
+            border: '1px solid rgba(14, 165, 233, 0.25)',
+            color: '#0284c7',
+            padding: '0.35rem 0.85rem',
+            borderRadius: '999px',
+            fontSize: '0.82rem',
+            fontWeight: 800,
+            width: 'fit-content'
+          }}>
+            <img src="/mascot.svg" alt="Drop" width="18" height="18" style={{ height: '18px', width: 'auto' }} />
+            <span>DROP'S STEM HARDWARE LAB</span>
+          </div>
+
+          <h1 style={{
+            fontFamily: "'Baloo 2', cursive",
+            fontSize: isMobile ? '1.75rem' : 'clamp(2.2rem, 4vw, 3.2rem)',
+            fontWeight: 800,
+            lineHeight: 1.15,
+            margin: 0,
+            color: '#1e3a8a'
+          }}>
+            Real STEM Hardware &amp; <span style={{ color: '#ea580c' }}>Science Sets</span>
+          </h1>
+
+          <p style={{
+            fontSize: isMobile ? '0.92rem' : '1.1rem',
+            color: '#475569',
+            lineHeight: 1.55,
+            margin: 0,
+            maxWidth: '680px'
+          }}>
+            Child-safe electronics, smart robotics rovers, and official Ghana GES curriculum science sets delivered to homes and schools across Ghana.
+          </p>
+
+          {/* Clean Trust Badges Strip in Soft Light Badges */}
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: isMobile ? '0.45rem' : '0.75rem',
+            marginTop: isMobile ? '0.4rem' : '0.6rem'
+          }}>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.35rem',
-              background: 'rgba(249, 115, 22, 0.2)',
-              border: '1px solid rgba(249, 115, 22, 0.4)',
-              color: '#fdba74',
-              padding: isMobile ? '0.25rem 0.65rem' : '0.35rem 0.85rem',
-              borderRadius: '999px',
-              fontSize: isMobile ? '0.72rem' : '0.8rem',
-              fontWeight: 800,
-              marginBottom: isMobile ? '0.6rem' : '1rem'
+              gap: '0.4rem',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '10px',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#334155',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
             }}>
-              <Sparkles size={13} />
-              OFFICIAL HANDS-ON STEM HARDWARE
+              <Truck size={15} style={{ color: '#0ea5e9' }} />
+              <span>Fast Ghana Dispatch (24–48h)</span>
             </div>
 
-            <h1 style={{
-              fontSize: isMobile ? '1.4rem' : 'clamp(2rem, 4vw, 3.2rem)',
-              fontWeight: 900,
-              lineHeight: 1.2,
-              marginBottom: isMobile ? '0.6rem' : '1rem',
-              letterSpacing: '-0.02em',
-              fontFamily: "'Baloo 2', 'Nunito', sans-serif"
-            }}>
-              Real Hardware Kits That Bring <span style={{ color: '#f97316' }}>Coding &amp; Robotics to Life</span>
-            </h1>
-
-            <p style={{
-              fontSize: isMobile ? '0.85rem' : '1.05rem',
-              color: '#cbd5e1',
-              lineHeight: 1.5,
-              marginBottom: isMobile ? '1rem' : '1.75rem',
-              maxWidth: '680px'
-            }}>
-              Child-safe, solderless electronics and smart rovers delivered across Ghana. Every kit connects directly to our online interactive coding missions with step-by-step video builds.
-            </p>
-
-            {/* Trust Badges Strip */}
             <div style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: isMobile ? '0.6rem' : '1rem',
-              borderTop: '1px solid rgba(255,255,255,0.1)',
-              paddingTop: isMobile ? '0.85rem' : '1.25rem'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '10px',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#334155',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ background: 'rgba(56, 189, 248, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#38bdf8', flexShrink: 0 }}>
-                  <Truck size={16} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>Fast Dispatch</div>
-                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>Accra &amp; Kumasi</div>
-                </div>
-              </div>
+              <ShieldCheck size={15} style={{ color: '#10b981' }} />
+              <span>14-Day Free Parts Guarantee</span>
+            </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ background: 'rgba(52, 211, 153, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#34d399', flexShrink: 0 }}>
-                  <ShieldCheck size={16} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>14-Day Guarantee</div>
-                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>Free parts replacement</div>
-                </div>
-              </div>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '10px',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#334155',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+            }}>
+              <BookOpen size={15} style={{ color: '#f59e0b' }} />
+              <span>Video Missions &amp; Guides</span>
+            </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ background: 'rgba(251, 191, 36, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#fbbf24', flexShrink: 0 }}>
-                  <BookOpen size={16} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>Video Missions</div>
-                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>Illustrated guide</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ background: 'rgba(168, 85, 247, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#a855f7', flexShrink: 0 }}>
-                  <Zap size={16} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>MoMo &amp; Cards</div>
-                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>MTN, Telecel, Visa</div>
-                </div>
-              </div>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '10px',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              color: '#334155',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.02)'
+            }}>
+              <Zap size={15} style={{ color: '#8b5cf6' }} />
+              <span>MoMo &amp; Cards (MTN, Telecel, Visa)</span>
             </div>
           </div>
         </div>
@@ -835,13 +793,14 @@ export default function StemKits() {
         padding: isMobile ? '0 0.85rem' : '0 1.25rem'
       }}>
         <div style={{
-          background: '#0f172a',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: isMobile ? '12px' : '16px',
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
+          borderRadius: isMobile ? '14px' : '18px',
           padding: isMobile ? '0.75rem' : '1rem',
           display: 'flex',
           flexDirection: 'column',
-          gap: '0.75rem'
+          gap: '0.75rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.03)'
         }}>
           {/* Category Pills: Horizontal swipeable rail on mobile */}
           <div style={{
@@ -869,27 +828,31 @@ export default function StemKits() {
                   onClick={() => setSelectedCategory(cat)}
                   style={{
                     flexShrink: 0,
-                    padding: isMobile ? '0.35rem 0.75rem' : '0.45rem 0.9rem',
-                    borderRadius: '9px',
-                    border: isActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
-                    background: isActive ? '#f97316' : '#1e293b',
-                    color: '#ffffff',
+                    padding: isMobile ? '0.38rem 0.8rem' : '0.45rem 0.95rem',
+                    borderRadius: '10px',
+                    border: isActive ? 'none' : '1px solid #e2e8f0',
+                    background: isActive ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : '#f8fafc',
+                    color: isActive ? '#ffffff' : '#475569',
                     fontSize: isMobile ? '0.78rem' : '0.84rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.35rem'
+                    gap: '0.35rem',
+                    boxShadow: isActive ? '0 2px 8px rgba(234, 88, 12, 0.3)' : 'none',
+                    transition: 'all 0.15s ease'
                   }}
                 >
                   <span>
                     {cat === 'All' ? 'All Kits' : cat === 'GES Science Sets' ? '🔬 GES Science Sets' : cat.startsWith('Basic') ? `${cat} (NaCCA)` : `${cat} Kits`}
                   </span>
                   <span style={{
-                    background: isActive ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
-                    padding: '0.1rem 0.35rem',
+                    background: isActive ? 'rgba(0,0,0,0.2)' : '#e2e8f0',
+                    color: isActive ? '#ffffff' : '#64748b',
+                    padding: '0.1rem 0.4rem',
                     borderRadius: '999px',
-                    fontSize: '0.72rem'
+                    fontSize: '0.72rem',
+                    fontWeight: 800
                   }}>
                     {count}
                   </span>
@@ -906,18 +869,18 @@ export default function StemKits() {
             gap: '0.5rem',
             flexWrap: 'wrap',
             paddingTop: '0.5rem',
-            borderTop: '1px solid rgba(255,255,255,0.06)'
+            borderTop: '1px solid #f1f5f9'
           }}>
             <div style={{
               display: 'flex',
               alignItems: 'center',
               gap: '0.3rem',
               fontSize: '0.78rem',
-              color: '#94a3b8',
+              color: '#64748b',
               overflowX: isMobile ? 'auto' : 'visible',
               whiteSpace: 'nowrap'
             }}>
-              <span>Age:</span>
+              <span style={{ fontWeight: 700 }}>Age:</span>
               {ageFilters.map(af => (
                 <button
                   key={af.value}
@@ -926,9 +889,9 @@ export default function StemKits() {
                     padding: '0.25rem 0.55rem',
                     borderRadius: '6px',
                     border: 'none',
-                    background: ageFilter === af.value ? 'rgba(14, 165, 233, 0.25)' : 'transparent',
-                    color: ageFilter === af.value ? '#38bdf8' : '#94a3b8',
-                    fontWeight: 700,
+                    background: ageFilter === af.value ? 'rgba(14, 165, 233, 0.15)' : 'transparent',
+                    color: ageFilter === af.value ? '#0284c7' : '#64748b',
+                    fontWeight: 800,
                     fontSize: '0.76rem',
                     cursor: 'pointer',
                     flexShrink: 0
@@ -939,29 +902,73 @@ export default function StemKits() {
               ))}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
-              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Sort:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                style={{
-                  background: '#1e293b',
-                  color: '#ffffff',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: '6px',
-                  padding: '0.25rem 0.55rem',
-                  fontSize: '0.78rem',
-                  fontWeight: 700,
-                  outline: 'none',
-                  cursor: 'pointer'
-                }}
-              >
-                <option value="featured">Featured</option>
-                <option value="sales">Most Popular</option>
-                <option value="rating">Highest Rated</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-              </select>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
+              {/* Segmented Currency Switcher */}
+              <div style={{
+                display: 'inline-flex',
+                background: '#f1f5f9',
+                padding: '2px',
+                borderRadius: '8px',
+                border: '1px solid #e2e8f0'
+              }}>
+                <button
+                  onClick={() => setCurrency('GHS')}
+                  style={{
+                    padding: '0.2rem 0.5rem',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: currency === 'GHS' ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : 'transparent',
+                    color: currency === 'GHS' ? '#ffffff' : '#64748b',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    lineHeight: 1.2
+                  }}
+                >
+                  GH₵
+                </button>
+                <button
+                  onClick={() => setCurrency('USD')}
+                  style={{
+                    padding: '0.2rem 0.5rem',
+                    borderRadius: '6px',
+                    border: 'none',
+                    background: currency === 'USD' ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : 'transparent',
+                    color: currency === 'USD' ? '#ffffff' : '#64748b',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    lineHeight: 1.2
+                  }}
+                >
+                  USD ($)
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <span style={{ fontSize: '0.78rem', color: '#64748b', fontWeight: 700 }}>Sort:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  style={{
+                    background: '#f8fafc',
+                    color: '#0f172a',
+                    border: '1px solid #e2e8f0',
+                    borderRadius: '6px',
+                    padding: '0.25rem 0.55rem',
+                    fontSize: '0.78rem',
+                    fontWeight: 700,
+                    outline: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="featured">Featured</option>
+                  <option value="sales">Most Popular</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -975,19 +982,20 @@ export default function StemKits() {
       }}>
         {filteredKits.length === 0 ? (
           <div style={{
-            background: '#1e293b',
+            background: '#ffffff',
             borderRadius: '20px',
+            border: '1px solid #e2e8f0',
             padding: '3rem 2rem',
             textAlign: 'center',
-            color: '#94a3b8'
+            color: '#64748b'
           }}>
-            <p style={{ fontSize: '1.2rem', fontWeight: 800, color: '#f8fafc' }}>No STEM kits found matching your search</p>
+            <p style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a' }}>No STEM kits found matching your search</p>
             <p style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>Try clearing the search query or adjusting your age filters.</p>
             <button
               onClick={() => { setSearchQuery(''); setSelectedCategory('All'); setAgeFilter('All'); }}
               style={{
                 marginTop: '1.25rem',
-                background: '#f97316',
+                background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '10px',
@@ -1017,25 +1025,25 @@ export default function StemKits() {
                   key={kit.id}
                   onClick={() => setQuickViewKit(kit)}
                   style={{
-                    background: '#1e293b',
+                    background: '#ffffff',
                     borderRadius: '24px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    border: '1px solid #e2e8f0',
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
                     cursor: 'pointer',
                     transition: 'all 0.2s ease',
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.25)'
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                    e.currentTarget.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.35)';
+                    e.currentTarget.style.borderColor = '#cbd5e1';
+                    e.currentTarget.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.08)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.08)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.25)';
+                    e.currentTarget.style.borderColor = '#e2e8f0';
+                    e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.04)';
                   }}
                 >
                   {/* Clean, Unobstructed Product Image */}
@@ -1043,9 +1051,10 @@ export default function StemKits() {
                     style={{
                       width: '100%',
                       height: '220px',
-                      background: '#0f172a',
+                      background: '#f8fafc',
                       overflow: 'hidden',
-                      position: 'relative'
+                      position: 'relative',
+                      borderBottom: '1px solid #f1f5f9'
                     }}
                   >
                     <img 
@@ -1064,7 +1073,7 @@ export default function StemKits() {
                   <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem', gap: '0.5rem', flexWrap: 'wrap' }}>
                       <span style={{
-                        color: '#38bdf8',
+                        color: '#0284c7',
                         fontSize: '0.75rem',
                         fontWeight: 800,
                         textTransform: 'uppercase',
@@ -1074,9 +1083,12 @@ export default function StemKits() {
                       </span>
                       {kit.gesCurriculumCode && (
                         <span style={{
-                          color: '#4ade80',
+                          background: 'rgba(34, 197, 94, 0.1)',
+                          color: '#16a34a',
                           fontSize: '0.72rem',
-                          fontWeight: 700
+                          fontWeight: 800,
+                          padding: '0.15rem 0.5rem',
+                          borderRadius: '6px'
                         }}>
                           🇬🇭 {kit.gesCurriculumCode}
                         </span>
@@ -1087,7 +1099,7 @@ export default function StemKits() {
                       style={{
                         fontSize: '1.05rem',
                         fontWeight: 800,
-                        color: '#ffffff',
+                        color: '#0f172a',
                         lineHeight: 1.35,
                         margin: '0 0 0.4rem 0',
                         fontFamily: "'Nunito', sans-serif"
@@ -1098,7 +1110,7 @@ export default function StemKits() {
 
                     <p style={{
                       fontSize: '0.82rem',
-                      color: '#94a3b8',
+                      color: '#64748b',
                       lineHeight: 1.45,
                       margin: 0,
                       marginBottom: '1.25rem',
@@ -1113,39 +1125,52 @@ export default function StemKits() {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       paddingTop: '0.85rem',
-                      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                      borderTop: '1px solid #f1f5f9',
                       marginTop: 'auto',
                       gap: '0.5rem'
                     }}>
                       <div>
-                        <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
+                        <div style={{ fontSize: '1.25rem', fontWeight: 900, color: '#0f172a' }}>
                           {formatPrice(kit.priceGHS, kit.priceUSD)}
                         </div>
                         {kit.originalPriceGHS > kit.priceGHS && (
-                          <div style={{ fontSize: '0.76rem', color: '#64748b', textDecoration: 'line-through' }}>
+                          <div style={{ fontSize: '0.76rem', color: '#94a3b8', textDecoration: 'line-through' }}>
                             {formatPrice(kit.originalPriceGHS, kit.originalPriceUSD)}
                           </div>
                         )}
                       </div>
 
                       <button
-                        className="kids-button"
                         onClick={(e) => {
                           e.stopPropagation();
                           setQuickViewKit(kit);
                         }}
                         style={{
-                          padding: '0.45rem 1.1rem',
-                          fontSize: '0.85rem',
-                          minHeight: '38px',
-                          '--shadow-height': '4px',
-                          '--shadow-color': '#9a3412',
-                          borderRadius: '12px',
-                          gap: '0.35rem'
-                        } as any}
+                          padding: '0.4rem 0.85rem',
+                          fontSize: '0.82rem',
+                          fontWeight: 800,
+                          borderRadius: '10px',
+                          border: 'none',
+                          background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
+                          color: '#ffffff',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          boxShadow: '0 2px 6px rgba(234, 88, 12, 0.25)',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-1px)';
+                          e.currentTarget.style.boxShadow = '0 4px 10px rgba(234, 88, 12, 0.35)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 2px 6px rgba(234, 88, 12, 0.25)';
+                        }}
                       >
-                        <span>Explore Kit</span>
-                        <ChevronRight size={15} />
+                        <span>Explore</span>
+                        <ChevronRight size={14} />
                       </button>
                     </div>
                   </div>
@@ -1160,26 +1185,26 @@ export default function StemKits() {
       <section style={{
         maxWidth: '1280px',
         margin: '3.5rem auto 2rem',
-        padding: '0 1.25rem'
+        padding: isMobile ? '0 0.85rem' : '0 1.25rem'
       }}>
         <div style={{
-          background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)',
-          border: '1px solid rgba(139, 92, 246, 0.3)',
+          background: '#ffffff',
+          border: '1px solid #e2e8f0',
           borderRadius: '24px',
-          padding: '2.5rem',
+          padding: isMobile ? '1.5rem' : '2.5rem',
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '2.5rem',
           alignItems: 'center',
-          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.5)'
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)'
         }}>
           <div>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              background: 'rgba(168, 85, 247, 0.2)',
-              color: '#d8b4fe',
+              background: 'rgba(99, 102, 241, 0.1)',
+              color: '#4f46e5',
               padding: '0.35rem 0.8rem',
               borderRadius: '999px',
               fontSize: '0.8rem',
@@ -1193,21 +1218,22 @@ export default function StemKits() {
             <h2 style={{
               fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
               fontWeight: 900,
-              color: '#ffffff',
+              color: '#1e3a8a',
+              fontFamily: "'Baloo 2', cursive",
               lineHeight: 1.2,
               marginBottom: '1rem'
             }}>
               {SCHOOL_PACK_OFFERING.title}
             </h2>
 
-            <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+            <p style={{ color: '#475569', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
               {SCHOOL_PACK_OFFERING.subtitle}
             </p>
 
             <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {SCHOOL_PACK_OFFERING.features.map((feat, idx) => (
-                <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
-                  <CheckCircle2 size={18} color="#10b981" style={{ flexShrink: 0 }} />
+                <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#334155' }}>
+                  <CheckCircle2 size={18} color="#16a34a" style={{ flexShrink: 0 }} />
                   <span>{feat}</span>
                 </li>
               ))}
@@ -1217,33 +1243,33 @@ export default function StemKits() {
               <button
                 onClick={handleSchoolQuoteWhatsApp}
                 style={{
-                  background: '#25d366',
+                  background: '#16a34a',
                   color: '#ffffff',
                   border: 'none',
-                  borderRadius: '14px',
-                  padding: '0.85rem 1.75rem',
-                  fontSize: '0.95rem',
+                  borderRadius: '12px',
+                  padding: '0.8rem 1.6rem',
+                  fontSize: '0.92rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.35)'
+                  boxShadow: '0 3px 12px rgba(22, 163, 74, 0.25)'
                 }}
               >
-                <WhatsAppIcon size={20} />
+                <WhatsAppIcon size={18} />
                 <span>Request School Lab Quotation</span>
               </button>
 
               <button
                 onClick={() => setSchoolQuoteOpen(true)}
                 style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  color: '#ffffff',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '14px',
-                  padding: '0.85rem 1.5rem',
-                  fontSize: '0.95rem',
+                  background: '#f8fafc',
+                  color: '#334155',
+                  border: '1px solid #cbd5e1',
+                  borderRadius: '12px',
+                  padding: '0.8rem 1.4rem',
+                  fontSize: '0.92rem',
                   fontWeight: 800,
                   cursor: 'pointer'
                 }}
@@ -1257,8 +1283,8 @@ export default function StemKits() {
             position: 'relative',
             borderRadius: '20px',
             overflow: 'hidden',
-            border: '2px solid rgba(139, 92, 246, 0.4)',
-            boxShadow: '0 12px 30px rgba(0,0,0,0.4)',
+            border: '1px solid #e2e8f0',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
             maxHeight: '440px'
           }}>
             <img 
@@ -1271,7 +1297,7 @@ export default function StemKits() {
               bottom: 0,
               left: 0,
               right: 0,
-              background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent)',
+              background: 'linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent)',
               padding: '1.5rem 1.25rem 1rem'
             }}>
               <div style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.95rem' }}>10x–20x Complete Student Sets</div>
@@ -1285,15 +1311,15 @@ export default function StemKits() {
       <section style={{
         maxWidth: '900px',
         margin: '4rem auto 2rem',
-        padding: '0 1.25rem'
+        padding: isMobile ? '0 0.85rem' : '0 1.25rem'
       }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.4rem',
-            background: 'rgba(249, 115, 22, 0.15)',
-            color: '#fb923c',
+            background: 'rgba(234, 88, 12, 0.1)',
+            color: '#ea580c',
             padding: '0.3rem 0.8rem',
             borderRadius: '999px',
             fontSize: '0.8rem',
@@ -1303,10 +1329,10 @@ export default function StemKits() {
             <HelpCircle size={14} />
             BUYER ASSURANCE &amp; QUESTIONS
           </div>
-          <h2 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#f8fafc' }}>
+          <h2 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#1e3a8a', fontFamily: "'Baloo 2', cursive" }}>
             Frequently Asked Questions
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '0.4rem' }}>
+          <p style={{ color: '#64748b', fontSize: '0.9rem', marginTop: '0.4rem' }}>
             Everything parents and schools need to know about deliveries, safety, and online mission pairing.
           </p>
         </div>
@@ -1337,23 +1363,24 @@ export default function StemKits() {
             <div 
               key={idx}
               style={{
-                background: '#1e293b',
+                background: '#ffffff',
                 borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                overflow: 'hidden'
+                border: '1px solid #e2e8f0',
+                overflow: 'hidden',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.02)'
               }}
             >
               <button
                 onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
                 style={{
                   width: '100%',
-                  padding: '1.2rem',
+                  padding: '1.15rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   background: 'transparent',
                   border: 'none',
-                  color: '#f8fafc',
+                  color: '#0f172a',
                   fontSize: '0.98rem',
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -1361,12 +1388,12 @@ export default function StemKits() {
                 }}
               >
                 <span>{item.q}</span>
-                <span style={{ fontSize: '1.2rem', color: '#f97316', transform: openFaq === idx ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>
+                <span style={{ fontSize: '1.2rem', color: '#ea580c', fontWeight: 900, transform: openFaq === idx ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>
                   +
                 </span>
               </button>
               {openFaq === idx && (
-                <div style={{ padding: '0 1.2rem 1.2rem', color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                <div style={{ padding: '0 1.15rem 1.15rem', color: '#475569', fontSize: '0.9rem', lineHeight: 1.6, borderTop: '1px solid #f1f5f9', paddingTop: '0.85rem' }}>
                   {item.a}
                 </div>
               )}
@@ -1380,8 +1407,8 @@ export default function StemKits() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.75)',
-          backdropFilter: 'blur(8px)',
+          background: 'rgba(15, 23, 42, 0.45)',
+          backdropFilter: 'blur(6px)',
           zIndex: 200,
           display: 'flex',
           justifyContent: 'flex-end',
@@ -1391,34 +1418,40 @@ export default function StemKits() {
             width: '100%',
             maxWidth: '440px',
             height: '100%',
-            background: '#0f172a',
-            borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
+            background: '#ffffff',
+            borderLeft: '1px solid #e2e8f0',
             display: 'flex',
             flexDirection: 'column',
-            boxShadow: '-8px 0 30px rgba(0, 0, 0, 0.6)'
+            boxShadow: '-8px 0 30px rgba(0, 0, 0, 0.08)'
           }}>
             <div style={{
               padding: '1.25rem',
-              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+              borderBottom: '1px solid #f1f5f9',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <ShoppingCart size={20} color="#f97316" />
-                <span style={{ fontWeight: 900, fontSize: '1.1rem', color: '#ffffff' }}>
+                <ShoppingCart size={20} color="#ea580c" />
+                <span style={{ fontWeight: 900, fontSize: '1.1rem', color: '#0f172a', fontFamily: "'Baloo 2', cursive" }}>
                   Your STEM Cart ({totalCartItems})
                 </span>
               </div>
               <button 
                 onClick={() => setIsCartOpen(false)}
                 style={{
-                  background: 'none',
+                  background: '#f1f5f9',
                   border: 'none',
-                  color: '#94a3b8',
-                  fontSize: '1.4rem',
+                  color: '#475569',
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%',
+                  fontSize: '1.2rem',
                   cursor: 'pointer',
-                  padding: '0.2rem'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'background 0.15s ease'
                 }}
               >
                 ×
@@ -1431,12 +1464,12 @@ export default function StemKits() {
               padding: '1.25rem',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '0.85rem'
             }}>
               {cart.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#94a3b8' }}>
-                  <ShoppingCart size={48} style={{ opacity: 0.3, marginBottom: '1rem' }} />
-                  <p style={{ fontWeight: 800, fontSize: '1.05rem', color: '#f8fafc' }}>Your cart is empty</p>
+                <div style={{ textAlign: 'center', padding: '3.5rem 1rem', color: '#64748b' }}>
+                  <ShoppingCart size={48} style={{ opacity: 0.25, marginBottom: '1rem', color: '#94a3b8' }} />
+                  <p style={{ fontWeight: 800, fontSize: '1.05rem', color: '#0f172a' }}>Your cart is empty</p>
                   <p style={{ fontSize: '0.85rem', marginTop: '0.4rem' }}>Explore our robotics rovers, snap circuits, and smart farm kits.</p>
                 </div>
               ) : (
@@ -1450,13 +1483,13 @@ export default function StemKits() {
                     <div 
                       key={item.kitId}
                       style={{
-                        background: '#1e293b',
+                        background: '#f8fafc',
                         borderRadius: '14px',
                         padding: '0.85rem',
                         display: 'flex',
                         gap: '0.85rem',
                         alignItems: 'center',
-                        border: '1px solid rgba(255, 255, 255, 0.06)'
+                        border: '1px solid #e2e8f0'
                       }}
                     >
                       <img 
@@ -1466,26 +1499,28 @@ export default function StemKits() {
                           width: '64px',
                           height: '64px',
                           borderRadius: '10px',
-                          objectFit: 'cover'
+                          objectFit: 'cover',
+                          background: '#ffffff',
+                          border: '1px solid #e2e8f0'
                         }}
                       />
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 800, fontSize: '0.88rem', color: '#ffffff', lineHeight: 1.25 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 800, fontSize: '0.88rem', color: '#0f172a', lineHeight: 1.25, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {kit.title}
                         </div>
-                        <div style={{ fontSize: '0.8rem', color: '#f97316', fontWeight: 900, marginTop: '0.25rem' }}>
+                        <div style={{ fontSize: '0.82rem', color: '#ea580c', fontWeight: 900, marginTop: '0.2rem' }}>
                           {itemPriceText}
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.4rem' }}>
                           <button
                             onClick={() => updateCartQty(item.kitId, -1)}
                             style={{
-                              background: 'rgba(255,255,255,0.08)',
-                              border: 'none',
+                              background: '#ffffff',
+                              border: '1px solid #cbd5e1',
                               borderRadius: '6px',
                               width: '24px',
                               height: '24px',
-                              color: '#ffffff',
+                              color: '#334155',
                               cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
@@ -1494,18 +1529,18 @@ export default function StemKits() {
                           >
                             <Minus size={12} />
                           </button>
-                          <span style={{ fontSize: '0.85rem', fontWeight: 800, minWidth: '18px', textAlign: 'center' }}>
+                          <span style={{ fontSize: '0.85rem', fontWeight: 800, minWidth: '18px', textAlign: 'center', color: '#0f172a' }}>
                             {item.quantity}
                           </span>
                           <button
                             onClick={() => updateCartQty(item.kitId, 1)}
                             style={{
-                              background: 'rgba(255,255,255,0.08)',
-                              border: 'none',
+                              background: '#ffffff',
+                              border: '1px solid #cbd5e1',
                               borderRadius: '6px',
                               width: '24px',
                               height: '24px',
-                              color: '#ffffff',
+                              color: '#334155',
                               cursor: 'pointer',
                               display: 'flex',
                               alignItems: 'center',
@@ -1521,10 +1556,13 @@ export default function StemKits() {
                         style={{
                           background: 'none',
                           border: 'none',
-                          color: '#ef4444',
+                          color: '#94a3b8',
                           cursor: 'pointer',
-                          padding: '0.4rem'
+                          padding: '0.4rem',
+                          transition: 'color 0.15s'
                         }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#ef4444'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#94a3b8'}
                         title="Remove Item"
                       >
                         <Trash2 size={16} />
@@ -1538,10 +1576,10 @@ export default function StemKits() {
             {cart.length > 0 && (
               <div style={{
                 padding: '1.25rem',
-                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                background: '#090d16'
+                borderTop: '1px solid #e2e8f0',
+                background: '#f8fafc'
               }}>
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.85rem' }}>
                   <input 
                     type="text"
                     placeholder="Coupon (try STEMKIDS10)"
@@ -1549,11 +1587,11 @@ export default function StemKits() {
                     onChange={(e) => setCouponCode(e.target.value)}
                     style={{
                       flex: 1,
-                      background: '#1e293b',
-                      border: '1px solid rgba(255,255,255,0.1)',
+                      background: '#ffffff',
+                      border: '1.5px solid #e2e8f0',
                       borderRadius: '8px',
                       padding: '0.45rem 0.75rem',
-                      color: '#ffffff',
+                      color: '#0f172a',
                       fontSize: '0.82rem',
                       outline: 'none',
                       textTransform: 'uppercase'
@@ -1562,7 +1600,7 @@ export default function StemKits() {
                   <button
                     onClick={applyCoupon}
                     style={{
-                      background: '#334155',
+                      background: '#0f172a',
                       color: '#ffffff',
                       border: 'none',
                       borderRadius: '8px',
@@ -1576,25 +1614,25 @@ export default function StemKits() {
                   </button>
                 </div>
                 {couponMessage && (
-                  <div style={{ fontSize: '0.78rem', color: appliedDiscount > 0 ? '#10b981' : '#f87171', marginBottom: '0.75rem' }}>
+                  <div style={{ fontSize: '0.78rem', color: appliedDiscount > 0 ? '#16a34a' : '#ef4444', marginBottom: '0.75rem', fontWeight: 700 }}>
                     {couponMessage}
                   </div>
                 )}
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#64748b', marginBottom: '1rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Subtotal:</span>
-                    <span style={{ color: '#ffffff', fontWeight: 800 }}>{formatPrice(cartSubtotalGHS, cartSubtotalUSD)}</span>
+                    <span style={{ color: '#0f172a', fontWeight: 800 }}>{formatPrice(cartSubtotalGHS, cartSubtotalUSD)}</span>
                   </div>
                   {appliedDiscount > 0 && (
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10b981' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#16a34a', fontWeight: 700 }}>
                       <span>Discount ({appliedDiscount * 100}%):</span>
                       <span>-{formatPrice(discountAmountGHS, discountAmountUSD)}</span>
                     </div>
                   )}
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span>Greater Accra Delivery:</span>
-                    <span style={{ color: '#10b981', fontWeight: 800 }}>
+                    <span style={{ color: '#16a34a', fontWeight: 800 }}>
                       {finalCartTotalGHS >= 500 ? 'FREE' : formatPrice(25, 3)}
                     </span>
                   </div>
@@ -1603,13 +1641,13 @@ export default function StemKits() {
                     justifyContent: 'space-between',
                     fontSize: '1.15rem',
                     fontWeight: 900,
-                    color: '#ffffff',
-                    borderTop: '1px solid rgba(255,255,255,0.1)',
+                    color: '#0f172a',
+                    borderTop: '1px solid #e2e8f0',
                     paddingTop: '0.5rem',
                     marginTop: '0.2rem'
                   }}>
                     <span>Total:</span>
-                    <span style={{ color: '#f97316' }}>{formatPrice(finalCartTotalGHS, finalCartTotalUSD)}</span>
+                    <span style={{ color: '#ea580c' }}>{formatPrice(finalCartTotalGHS, finalCartTotalUSD)}</span>
                   </div>
                 </div>
 
@@ -1618,7 +1656,7 @@ export default function StemKits() {
                     onClick={handleWhatsAppCartCheckout}
                     style={{
                       width: '100%',
-                      background: '#25d366',
+                      background: '#16a34a',
                       color: '#ffffff',
                       border: 'none',
                       borderRadius: '12px',
@@ -1630,10 +1668,10 @@ export default function StemKits() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '0.5rem',
-                      boxShadow: '0 4px 12px rgba(37, 211, 102, 0.35)'
+                      boxShadow: '0 3px 10px rgba(22, 163, 74, 0.25)'
                     }}
                   >
-                    <WhatsAppIcon size={20} />
+                    <WhatsAppIcon size={18} />
                     <span>Instant WhatsApp Checkout</span>
                   </button>
 
@@ -1644,7 +1682,7 @@ export default function StemKits() {
                     }}
                     style={{
                       width: '100%',
-                      background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                      background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
                       color: '#ffffff',
                       border: 'none',
                       borderRadius: '12px',
@@ -1655,7 +1693,8 @@ export default function StemKits() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.5rem'
+                      gap: '0.5rem',
+                      boxShadow: '0 3px 10px rgba(234, 88, 12, 0.25)'
                     }}
                   >
                     <ShoppingBag size={18} />
@@ -1673,8 +1712,8 @@ export default function StemKits() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(10px)',
+          background: 'rgba(15, 23, 42, 0.55)',
+          backdropFilter: 'blur(8px)',
           zIndex: 300,
           display: 'flex',
           alignItems: 'center',
@@ -1683,8 +1722,8 @@ export default function StemKits() {
           animation: 'fadeIn 0.2s ease-out'
         }}>
           <div style={{
-            background: '#0f172a',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
             borderRadius: '24px',
             maxWidth: '900px',
             width: '100%',
@@ -1694,7 +1733,8 @@ export default function StemKits() {
             gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: isMobile ? '1.25rem' : '1.75rem',
             padding: isMobile ? '1.25rem' : '2rem',
-            position: 'relative'
+            position: 'relative',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12)'
           }}>
             <button
               onClick={() => setQuickViewKit(null)}
@@ -1702,9 +1742,9 @@ export default function StemKits() {
                 position: 'absolute',
                 top: '1rem',
                 right: '1rem',
-                background: 'rgba(255,255,255,0.08)',
+                background: '#f1f5f9',
                 border: 'none',
-                color: '#ffffff',
+                color: '#475569',
                 borderRadius: '50%',
                 width: '36px',
                 height: '36px',
@@ -1722,9 +1762,12 @@ export default function StemKits() {
             <div style={{
               borderRadius: '16px',
               overflow: 'hidden',
-              background: '#1e293b',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              height: isMobile ? '240px' : '360px'
+              background: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              height: isMobile ? '240px' : '360px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}>
               <img 
                 src={getSafeKitImage(quickViewKit.id)} 
@@ -1736,8 +1779,8 @@ export default function StemKits() {
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
                 <span style={{
-                  background: 'rgba(249, 115, 22, 0.2)',
-                  color: '#fb923c',
+                  background: 'rgba(234, 88, 12, 0.1)',
+                  color: '#ea580c',
                   padding: '0.2rem 0.6rem',
                   borderRadius: '6px',
                   fontSize: '0.75rem',
@@ -1745,17 +1788,18 @@ export default function StemKits() {
                 }}>
                   {quickViewKit.badge}
                 </span>
-                <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700 }}>
+                <span style={{ color: '#64748b', fontSize: '0.8rem', fontWeight: 700 }}>
                   {quickViewKit.ageRange}
                 </span>
               </div>
 
-              <h2 style={{ fontSize: '1.45rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.25, marginBottom: '0.5rem' }}>
+              <h2 style={{ fontSize: '1.45rem', fontWeight: 900, color: '#1e3a8a', fontFamily: "'Baloo 2', cursive", lineHeight: 1.25, marginBottom: '0.5rem' }}>
                 {quickViewKit.title}
               </h2>
 
               <div style={{
-                background: '#1e293b',
+                background: '#f8fafc',
+                border: '1px solid #e2e8f0',
                 padding: '0.85rem 1rem',
                 borderRadius: '12px',
                 marginBottom: '1rem',
@@ -1764,24 +1808,24 @@ export default function StemKits() {
                 gap: '0.75rem',
                 flexWrap: 'wrap'
               }}>
-                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#f97316' }}>
+                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ea580c' }}>
                   {formatPrice(quickViewKit.priceGHS, quickViewKit.priceUSD)}
                 </span>
                 {quickViewKit.originalPriceGHS > quickViewKit.priceGHS && (
-                  <span style={{ color: '#64748b', textDecoration: 'line-through', fontSize: '1rem' }}>
+                  <span style={{ color: '#94a3b8', textDecoration: 'line-through', fontSize: '1rem' }}>
                     {formatPrice(quickViewKit.originalPriceGHS, quickViewKit.originalPriceUSD)}
                   </span>
                 )}
               </div>
 
-              <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.55, marginBottom: '1rem' }}>
+              <p style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.55, marginBottom: '1rem' }}>
                 {quickViewKit.overview}
               </p>
 
               {quickViewKit.gesCurriculumCode && (
                 <div style={{
-                  background: 'rgba(34, 197, 94, 0.12)',
-                  border: '1px solid rgba(34, 197, 94, 0.25)',
+                  background: 'rgba(22, 163, 74, 0.08)',
+                  border: '1px solid rgba(22, 163, 74, 0.2)',
                   borderRadius: '10px',
                   padding: '0.6rem 0.85rem',
                   marginBottom: '1rem',
@@ -1789,7 +1833,7 @@ export default function StemKits() {
                   alignItems: 'center',
                   gap: '0.5rem',
                   fontSize: '0.82rem',
-                  color: '#4ade80',
+                  color: '#16a34a',
                   fontWeight: 800
                 }}>
                   <span>🇬🇭</span>
@@ -1799,16 +1843,16 @@ export default function StemKits() {
 
               {quickViewKit.experiments && quickViewKit.experiments.length > 0 && (
                 <div style={{
-                  background: 'rgba(255, 255, 255, 0.04)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
                   borderRadius: '12px',
                   padding: '0.85rem',
                   marginBottom: '1.25rem'
                 }}>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#38bdf8', marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0284c7', marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                     📦 Core Curriculum Experiments on Physical Box:
                   </div>
-                  <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem', color: '#e2e8f0', lineHeight: 1.55 }}>
+                  <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem', color: '#334155', lineHeight: 1.55 }}>
                     {quickViewKit.experiments.map((exp, idx) => (
                       <li key={idx} style={{ marginBottom: '0.2rem' }}>{exp}</li>
                     ))}
@@ -1816,22 +1860,22 @@ export default function StemKits() {
                 </div>
               )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#475569', marginBottom: '1.5rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <CheckCircle2 size={16} color="#10b981" />
+                  <CheckCircle2 size={16} color="#16a34a" />
                   <span><strong>100% Solderless:</strong> {quickViewKit.requiresSoldering ? 'Soldering required' : 'No soldering needed, plug-and-play'}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <CheckCircle2 size={16} color="#10b981" />
+                  <CheckCircle2 size={16} color="#16a34a" />
                   <span><strong>Power:</strong> {quickViewKit.batteryInfo}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <CheckCircle2 size={16} color="#10b981" />
+                  <CheckCircle2 size={16} color="#16a34a" />
                   <span><strong>Online missions:</strong> Included with video tutorials</span>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '0.75rem', marginTop: 'auto' }}>
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: 'auto', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => {
                     addToCart(quickViewKit.id, 1);
@@ -1840,18 +1884,20 @@ export default function StemKits() {
                   }}
                   style={{
                     flex: 1,
-                    background: '#f97316',
+                    background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '12px',
                     padding: '0.85rem',
                     fontWeight: 800,
-                    fontSize: '0.95rem',
+                    fontSize: '0.92rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '0.5rem'
+                    gap: '0.5rem',
+                    boxShadow: '0 3px 10px rgba(234, 88, 12, 0.25)',
+                    minWidth: '150px'
                   }}
                 >
                   <ShoppingCart size={18} />
@@ -1861,21 +1907,23 @@ export default function StemKits() {
                 <button
                   onClick={() => handleWhatsAppOrder(quickViewKit, 1)}
                   style={{
-                    background: '#25d366',
+                    background: '#16a34a',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '12px',
                     padding: '0.85rem 1.4rem',
                     fontWeight: 800,
-                    fontSize: '0.95rem',
+                    fontSize: '0.92rem',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.5rem',
-                    boxShadow: '0 4px 14px rgba(37, 211, 102, 0.35)'
+                    boxShadow: '0 3px 10px rgba(22, 163, 74, 0.25)',
+                    minWidth: '170px',
+                    justifyContent: 'center'
                   }}
                 >
-                  <WhatsAppIcon size={20} />
+                  <WhatsAppIcon size={18} />
                   <span>Order on WhatsApp</span>
                 </button>
               </div>
@@ -1889,8 +1937,8 @@ export default function StemKits() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(10px)',
+          background: 'rgba(15, 23, 42, 0.55)',
+          backdropFilter: 'blur(8px)',
           zIndex: 300,
           display: 'flex',
           alignItems: 'center',
@@ -1899,15 +1947,16 @@ export default function StemKits() {
           animation: 'fadeIn 0.2s ease-out'
         }}>
           <div style={{
-            background: '#0f172a',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
             borderRadius: '24px',
             maxWidth: '680px',
             width: '100%',
             maxHeight: '85vh',
             overflowY: 'auto',
-            padding: '2rem',
-            position: 'relative'
+            padding: isMobile ? '1.5rem' : '2rem',
+            position: 'relative',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12)'
           }}>
             <button
               onClick={() => setActiveModalKit(null)}
@@ -1915,14 +1964,17 @@ export default function StemKits() {
                 position: 'absolute',
                 top: '1.25rem',
                 right: '1.25rem',
-                background: 'rgba(255,255,255,0.08)',
+                background: '#f1f5f9',
                 border: 'none',
-                color: '#ffffff',
+                color: '#475569',
                 borderRadius: '50%',
                 width: '34px',
                 height: '34px',
                 cursor: 'pointer',
-                fontSize: '1.2rem'
+                fontSize: '1.2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               ×
@@ -1932,13 +1984,13 @@ export default function StemKits() {
               <img 
                 src={getSafeKitImage(activeModalKit.id)} 
                 alt={activeModalKit.title} 
-                style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover' }}
+                style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover', background: '#f8fafc', border: '1px solid #e2e8f0' }}
               />
               <div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#1e3a8a', fontFamily: "'Baloo 2', cursive", margin: 0 }}>
                   What's in the Box?
                 </h3>
-                <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{activeModalKit.title}</p>
+                <p style={{ color: '#64748b', fontSize: '0.85rem', margin: '0.2rem 0 0 0' }}>{activeModalKit.title}</p>
               </div>
             </div>
 
@@ -1947,22 +1999,22 @@ export default function StemKits() {
                 <div 
                   key={idx}
                   style={{
-                    background: '#1e293b',
+                    background: '#f8fafc',
                     padding: '0.8rem 1rem',
                     borderRadius: '12px',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    border: '1px solid rgba(255, 255, 255, 0.05)'
+                    border: '1px solid #e2e8f0'
                   }}
                 >
                   <div>
-                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#f8fafc' }}>{comp.name}</div>
-                    <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{comp.detail}</div>
+                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>{comp.name}</div>
+                    <div style={{ fontSize: '0.78rem', color: '#64748b' }}>{comp.detail}</div>
                   </div>
                   <span style={{
-                    background: 'rgba(14, 165, 233, 0.15)',
-                    color: '#38bdf8',
+                    background: 'rgba(14, 165, 233, 0.12)',
+                    color: '#0284c7',
                     padding: '0.2rem 0.5rem',
                     borderRadius: '6px',
                     fontSize: '0.78rem',
@@ -1974,7 +2026,7 @@ export default function StemKits() {
               ))}
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
                 onClick={() => {
                   addToCart(activeModalKit.id, 1);
@@ -1983,14 +2035,15 @@ export default function StemKits() {
                 }}
                 style={{
                   flex: 1,
-                  background: '#f97316',
+                  background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '12px',
-                  padding: '0.85rem',
+                  padding: '0.8rem',
                   fontWeight: 800,
                   fontSize: '0.92rem',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  minWidth: '150px'
                 }}
               >
                 Add This Kit to Cart
@@ -1998,11 +2051,11 @@ export default function StemKits() {
               <button
                 onClick={() => handleWhatsAppOrder(activeModalKit, 1)}
                 style={{
-                  background: '#25d366',
+                  background: '#16a34a',
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '12px',
-                  padding: '0.85rem 1.25rem',
+                  padding: '0.8rem 1.25rem',
                   fontWeight: 800,
                   fontSize: '0.92rem',
                   cursor: 'pointer',
@@ -2010,7 +2063,8 @@ export default function StemKits() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.45rem',
-                  boxShadow: '0 4px 12px rgba(37, 211, 102, 0.3)'
+                  boxShadow: '0 3px 10px rgba(22, 163, 74, 0.25)',
+                  minWidth: '160px'
                 }}
               >
                 <WhatsAppIcon size={18} />
@@ -2026,8 +2080,8 @@ export default function StemKits() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(10px)',
+          background: 'rgba(15, 23, 42, 0.55)',
+          backdropFilter: 'blur(8px)',
           zIndex: 300,
           display: 'flex',
           alignItems: 'center',
@@ -2035,13 +2089,14 @@ export default function StemKits() {
           padding: '1rem'
         }}>
           <div style={{
-            background: '#0f172a',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
             borderRadius: '24px',
             maxWidth: '540px',
             width: '100%',
-            padding: '2rem',
-            position: 'relative'
+            padding: isMobile ? '1.5rem' : '2rem',
+            position: 'relative',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12)'
           }}>
             <button
               onClick={() => { setOrderModalKit(null); setOrderSubmitted(false); }}
@@ -2049,14 +2104,17 @@ export default function StemKits() {
                 position: 'absolute',
                 top: '1.25rem',
                 right: '1.25rem',
-                background: 'rgba(255,255,255,0.08)',
+                background: '#f1f5f9',
                 border: 'none',
-                color: '#ffffff',
+                color: '#475569',
                 borderRadius: '50%',
                 width: '34px',
                 height: '34px',
                 cursor: 'pointer',
-                fontSize: '1.2rem'
+                fontSize: '1.2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               ×
@@ -2065,10 +2123,10 @@ export default function StemKits() {
             {orderSubmitted ? (
               <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🎉</div>
-                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#10b981', marginBottom: '0.5rem' }}>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#16a34a', fontFamily: "'Baloo 2', cursive", marginBottom: '0.5rem' }}>
                   Order Request Received!
                 </h3>
-                <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+                <p style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
                   Thank you, <strong>{orderForm.parentName}</strong>. Our admissions &amp; fulfillment desk will call/WhatsApp you at <strong>{orderForm.phone}</strong> to confirm delivery in <strong>{orderForm.city}</strong>.
                 </p>
                 <button
@@ -2078,7 +2136,7 @@ export default function StemKits() {
                     setOrderSubmitted(false);
                   }}
                   style={{
-                    background: '#25d366',
+                    background: '#16a34a',
                     color: '#ffffff',
                     border: 'none',
                     borderRadius: '12px',
@@ -2088,25 +2146,26 @@ export default function StemKits() {
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '0.4rem'
+                    gap: '0.4rem',
+                    boxShadow: '0 3px 10px rgba(22, 163, 74, 0.25)'
                   }}
                 >
-                  <WhatsAppIcon size={20} />
+                  <WhatsAppIcon size={18} />
                   <span>Speed up on WhatsApp (+233 55 199 3820)</span>
                 </button>
               </div>
             ) : (
               <div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.25rem' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#1e3a8a', fontFamily: "'Baloo 2', cursive", marginBottom: '0.25rem' }}>
                   Delivery &amp; Checkout
                 </h3>
-                <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+                <p style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
                   Complete details for doorstep courier dispatch across Ghana.
                 </p>
 
                 <form onSubmit={(e) => { e.preventDefault(); setOrderSubmitted(true); }} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Parent / Guardian Name</label>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem' }}>Parent / Guardian Name</label>
                     <input 
                       type="text" 
                       required
@@ -2116,17 +2175,18 @@ export default function StemKits() {
                       style={{
                         width: '100%',
                         padding: '0.65rem 0.85rem',
-                        background: '#1e293b',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        background: '#f8fafc',
+                        border: '1.5px solid #e2e8f0',
                         borderRadius: '10px',
-                        color: '#ffffff',
-                        fontSize: '0.88rem'
+                        color: '#0f172a',
+                        fontSize: '0.88rem',
+                        boxSizing: 'border-box'
                       }}
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Phone Number (WhatsApp Active)</label>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem' }}>Phone Number (WhatsApp Active)</label>
                     <input 
                       type="tel" 
                       required
@@ -2136,29 +2196,31 @@ export default function StemKits() {
                       style={{
                         width: '100%',
                         padding: '0.65rem 0.85rem',
-                        background: '#1e293b',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        background: '#f8fafc',
+                        border: '1.5px solid #e2e8f0',
                         borderRadius: '10px',
-                        color: '#ffffff',
-                        fontSize: '0.88rem'
+                        color: '#0f172a',
+                        fontSize: '0.88rem',
+                        boxSizing: 'border-box'
                       }}
                     />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>City / Town</label>
+                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem' }}>City / Town</label>
                       <select
                         value={orderForm.city}
                         onChange={(e) => setOrderForm({ ...orderForm, city: e.target.value })}
                         style={{
                           width: '100%',
                           padding: '0.65rem 0.85rem',
-                          background: '#1e293b',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          background: '#f8fafc',
+                          border: '1.5px solid #e2e8f0',
                           borderRadius: '10px',
-                          color: '#ffffff',
-                          fontSize: '0.88rem'
+                          color: '#0f172a',
+                          fontSize: '0.88rem',
+                          boxSizing: 'border-box'
                         }}
                       >
                         <option value="Accra">Greater Accra</option>
@@ -2172,18 +2234,19 @@ export default function StemKits() {
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Payment</label>
+                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem' }}>Payment</label>
                       <select
                         value={orderForm.paymentMethod}
                         onChange={(e) => setOrderForm({ ...orderForm, paymentMethod: e.target.value })}
                         style={{
                           width: '100%',
                           padding: '0.65rem 0.85rem',
-                          background: '#1e293b',
-                          border: '1px solid rgba(255,255,255,0.1)',
+                          background: '#f8fafc',
+                          border: '1.5px solid #e2e8f0',
                           borderRadius: '10px',
-                          color: '#ffffff',
-                          fontSize: '0.88rem'
+                          color: '#0f172a',
+                          fontSize: '0.88rem',
+                          boxSizing: 'border-box'
                         }}
                       >
                         <option value="momo">MTN / Telecel MoMo</option>
@@ -2194,7 +2257,7 @@ export default function StemKits() {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Delivery Address / Landmark</label>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#334155', marginBottom: '0.3rem' }}>Delivery Address / Landmark</label>
                     <input 
                       type="text" 
                       required
@@ -2204,11 +2267,12 @@ export default function StemKits() {
                       style={{
                         width: '100%',
                         padding: '0.65rem 0.85rem',
-                        background: '#1e293b',
-                        border: '1px solid rgba(255,255,255,0.1)',
+                        background: '#f8fafc',
+                        border: '1.5px solid #e2e8f0',
                         borderRadius: '10px',
-                        color: '#ffffff',
-                        fontSize: '0.88rem'
+                        color: '#0f172a',
+                        fontSize: '0.88rem',
+                        boxSizing: 'border-box'
                       }}
                     />
                   </div>
@@ -2217,7 +2281,7 @@ export default function StemKits() {
                     type="submit"
                     style={{
                       marginTop: '0.5rem',
-                      background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                      background: 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)',
                       color: '#ffffff',
                       border: 'none',
                       borderRadius: '12px',
@@ -2225,7 +2289,7 @@ export default function StemKits() {
                       fontSize: '0.95rem',
                       fontWeight: 800,
                       cursor: 'pointer',
-                      boxShadow: '0 4px 15px rgba(249, 115, 22, 0.4)'
+                      boxShadow: '0 3px 10px rgba(234, 88, 12, 0.25)'
                     }}
                   >
                     Confirm &amp; Place Order
@@ -2242,8 +2306,8 @@ export default function StemKits() {
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(10px)',
+          background: 'rgba(15, 23, 42, 0.55)',
+          backdropFilter: 'blur(8px)',
           zIndex: 300,
           display: 'flex',
           alignItems: 'center',
@@ -2251,13 +2315,14 @@ export default function StemKits() {
           padding: '1rem'
         }}>
           <div style={{
-            background: '#0f172a',
-            border: '1px solid rgba(139, 92, 246, 0.3)',
+            background: '#ffffff',
+            border: '1px solid #e2e8f0',
             borderRadius: '24px',
             maxWidth: '540px',
             width: '100%',
-            padding: '2rem',
-            position: 'relative'
+            padding: isMobile ? '1.5rem' : '2rem',
+            position: 'relative',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.12)'
           }}>
             <button
               onClick={() => setSchoolQuoteOpen(false)}
@@ -2265,30 +2330,33 @@ export default function StemKits() {
                 position: 'absolute',
                 top: '1.25rem',
                 right: '1.25rem',
-                background: 'rgba(255,255,255,0.08)',
+                background: '#f1f5f9',
                 border: 'none',
-                color: '#ffffff',
+                color: '#475569',
                 borderRadius: '50%',
                 width: '34px',
                 height: '34px',
                 cursor: 'pointer',
-                fontSize: '1.2rem'
+                fontSize: '1.2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
             >
               ×
             </button>
 
-            <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.25rem' }}>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#1e3a8a', fontFamily: "'Baloo 2', cursive", marginBottom: '0.25rem' }}>
               School &amp; Club STEM Lab Quote
             </h3>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+            <p style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
               Equip 10 to 100+ students with hardware kits, curriculum manuals, and teacher workshops.
             </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              <div style={{ background: '#1e293b', padding: '1rem', borderRadius: '12px' }}>
-                <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#d8b4fe' }}>Direct Admissions &amp; Lab Desk:</div>
-                <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
+              <div style={{ background: '#f8fafc', padding: '1.15rem', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
+                <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#4f46e5' }}>Direct Admissions &amp; Lab Desk:</div>
+                <div style={{ fontSize: '0.85rem', color: '#334155', marginTop: '0.35rem', lineHeight: 1.6 }}>
                   📞 Phone/WhatsApp: <strong>+233 55 199 3820</strong><br />
                   ✉️ Email: <strong>admissions@koneacademy.io</strong><br />
                   📍 Lab Center: Accra, Ghana
@@ -2298,7 +2366,7 @@ export default function StemKits() {
               <button
                 onClick={handleSchoolQuoteWhatsApp}
                 style={{
-                  background: '#25d366',
+                  background: '#16a34a',
                   color: '#ffffff',
                   border: 'none',
                   borderRadius: '12px',
@@ -2310,16 +2378,53 @@ export default function StemKits() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '0.5rem',
-                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.35)'
+                  boxShadow: '0 3px 10px rgba(22, 163, 74, 0.25)'
                 }}
               >
-                <WhatsAppIcon size={20} />
+                <WhatsAppIcon size={18} />
                 <span>Chat with Lab Director on WhatsApp</span>
               </button>
             </div>
           </div>
         </div>
       )}
+
+      {/* 13. FLOATING WHATSAPP HELP BUTTON */}
+      <a
+        href="https://wa.me/233551993820?text=Hello%20Kone%20Kids!%20I%20have%20an%20inquiry%20about%20your%20STEM%20kits."
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat with STEM Coordinator on WhatsApp"
+        style={{
+          position: 'fixed',
+          bottom: isMobile ? '1.25rem' : '2rem',
+          right: isMobile ? '1.25rem' : '2rem',
+          zIndex: 90,
+          background: '#25d366',
+          color: '#ffffff',
+          borderRadius: '999px',
+          padding: isMobile ? '0.75rem' : '0.75rem 1.25rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.5rem',
+          fontWeight: 800,
+          fontSize: '0.88rem',
+          textDecoration: 'none',
+          boxShadow: '0 6px 20px rgba(37, 211, 102, 0.4)',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px) scale(1.03)';
+          e.currentTarget.style.boxShadow = '0 8px 24px rgba(37, 211, 102, 0.5)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0) scale(1)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(37, 211, 102, 0.4)';
+        }}
+      >
+        <WhatsAppIcon size={isMobile ? 22 : 20} />
+        {!isMobile && <span>Need Help? Chat on WhatsApp</span>}
+      </a>
 
     </div>
   );
