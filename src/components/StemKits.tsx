@@ -23,7 +23,8 @@ import {
   Clock,
   Trash2,
   Check,
-  Percent
+  Percent,
+  FileText
 } from 'lucide-react';
 import { STEM_KITS, StemKit, SCHOOL_PACK_OFFERING } from '../data/stemKits';
 import { useIsMobile } from '../hooks/useMediaQuery';
@@ -782,6 +783,30 @@ export default function StemKits() {
               <Zap size={15} style={{ color: '#8b5cf6' }} />
               <span>MoMo &amp; Cards (MTN, Telecel, Visa)</span>
             </div>
+
+            <a
+              href="/stem-flyer.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                background: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '10px',
+                fontSize: '0.8rem',
+                fontWeight: 800,
+                color: '#1d4ed8',
+                textDecoration: 'none',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <FileText size={15} style={{ color: '#2563eb' }} />
+              <span>Printable STEM Flyer (A4)</span>
+            </a>
           </div>
         </div>
       </section>
@@ -1276,6 +1301,29 @@ export default function StemKits() {
               >
                 School Inquiry Form
               </button>
+
+              <a
+                href="/stem-flyer.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  background: '#eff6ff',
+                  color: '#1d4ed8',
+                  border: '1px solid #bfdbfe',
+                  borderRadius: '12px',
+                  padding: '0.8rem 1.4rem',
+                  fontSize: '0.92rem',
+                  fontWeight: 800,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  cursor: 'pointer'
+                }}
+              >
+                <FileText size={18} />
+                <span>Download Print Flyer (PDF)</span>
+              </a>
             </div>
           </div>
 
