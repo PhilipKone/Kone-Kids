@@ -15,7 +15,13 @@ export interface StemKit {
   ageMax: number;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   priceGHS: number;
+  originalPriceGHS: number;
   priceUSD: number;
+  originalPriceUSD: number;
+  rating: number;
+  reviewsCount: number;
+  salesCount: number;
+  stockCount: number;
   badge: string;
   accentColor: string;
   gradient: string;
@@ -46,11 +52,17 @@ export const STEM_KITS: StemKit[] = [
     ageMax: 8,
     difficulty: 'Beginner',
     priceGHS: 280,
+    originalPriceGHS: 350,
     priceUSD: 24,
-    badge: 'Best for Beginners',
+    originalPriceUSD: 30,
+    rating: 4.9,
+    reviewsCount: 58,
+    salesCount: 194,
+    stockCount: 8,
+    badge: 'BESTSELLER • AGES 5–8',
     accentColor: '#f97316',
     gradient: 'linear-gradient(135deg, #f97316 0%, #fbbf24 100%)',
-    image: '/programs/coding.webp',
+    image: '/images/kits/junior-circuit-kit.jpg',
     labRoute: '/coding',
     labName: 'Coding Lab (Sequences & Logic)',
     overview: 'The ideal launchpad into the world of hardware. With large, colorful, magnetic snap modules, young kids safely learn polarity, closed loops, and boolean logic without dangerous wires, heat, or tools.',
@@ -93,11 +105,17 @@ export const STEM_KITS: StemKit[] = [
     ageMax: 14,
     difficulty: 'Intermediate',
     priceGHS: 460,
+    originalPriceGHS: 580,
     priceUSD: 39,
-    badge: 'Bestseller • Robotics Lab Official',
+    originalPriceUSD: 49,
+    rating: 5.0,
+    reviewsCount: 142,
+    salesCount: 438,
+    stockCount: 5,
+    badge: '🔥 #1 BESTSELLER IN GHANA',
     accentColor: '#0ea5e9',
     gradient: 'linear-gradient(135deg, #0284c7 0%, #06b6d4 100%)',
-    image: '/programs/robotics.webp',
+    image: '/images/kits/explorer-robotics-rover.jpg',
     labRoute: '/robotics',
     labName: 'Robotics Lab (Microcontrollers & Motors)',
     overview: 'The centerpiece of the Kone Kids Robotics Lab! Students bolt together an acrylic mobile chassis, connect dual DC gear motors, wire an ultrasonic bat-sensor for distance detection, and upload autonomous obstacle-avoidance code.',
@@ -142,11 +160,17 @@ export const STEM_KITS: StemKit[] = [
     ageMax: 16,
     difficulty: 'Intermediate',
     priceGHS: 520,
+    originalPriceGHS: 650,
     priceUSD: 44,
-    badge: 'Agritech Innovation Award',
+    originalPriceUSD: 55,
+    rating: 4.8,
+    reviewsCount: 49,
+    salesCount: 126,
+    stockCount: 9,
+    badge: 'AGRITECH INNOVATION AWARD',
     accentColor: '#16a34a',
     gradient: 'linear-gradient(135deg, #16a34a 0%, #10b981 100%)',
-    image: '/programs/robotics.webp',
+    image: '/images/kits/iot-smart-farm.jpg',
     labRoute: '/robotics',
     labName: 'Robotics & Environmental Telemetry',
     overview: 'Inspired by real West African agricultural innovation! Students build an automated climate station that measures real soil moisture and air humidity, displaying data on an OLED screen and automatically activating a water pump when plants get thirsty.',
@@ -191,11 +215,17 @@ export const STEM_KITS: StemKit[] = [
     ageMax: 17,
     difficulty: 'Advanced',
     priceGHS: 680,
+    originalPriceGHS: 850,
     priceUSD: 58,
-    badge: 'Flagship AI Studio Hardware',
+    originalPriceUSD: 72,
+    rating: 4.9,
+    reviewsCount: 36,
+    salesCount: 88,
+    stockCount: 3,
+    badge: 'FLAGSHIP AI STUDIO HARDWARE',
     accentColor: '#8b5cf6',
     gradient: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
-    image: '/programs/ai.webp',
+    image: '/images/kits/ai-companion-kit.jpg',
     labRoute: '/ai',
     labName: 'AI Studio (Machine Learning & Neural Logic)',
     overview: 'Physical Artificial Intelligence made tangible! Students connect an onboard camera module to a dual-servo pan-tilt robot eye, train edge machine learning models in the browser, and watch their robot mechanically track human faces, identify colors, and respond to voice prompts.',
@@ -234,6 +264,7 @@ export const SCHOOL_PACK_OFFERING = {
   title: 'Kone Academy School & Club STEM Lab Pack',
   subtitle: 'Equip an entire classroom or coding club with classroom-ready hardware kits, multi-seat teacher dashboards, and curriculum lesson plans.',
   minQuantity: 10,
+  image: '/images/kits/school-stem-pack.jpg',
   features: [
     '10x or 20x STEM Kits of your choice (Rover, IoT, or Junior)',
     '1x Teacher Master Station with replacement spare parts kit',

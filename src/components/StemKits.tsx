@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, 
@@ -8,28 +8,112 @@ import {
   Truck, 
   ShieldCheck, 
   BookOpen, 
-  ExternalLink, 
   MessageCircle, 
   ShoppingBag, 
+  ShoppingCart,
   ChevronRight, 
-  X, 
   HelpCircle, 
   Plus, 
   Minus,
-  Award,
   Zap,
-  Layers,
-  School
+  School,
+  Search,
+  Star,
+  Heart,
+  Eye,
+  Clock,
+  Trash2,
+  Check,
+  Percent
 } from 'lucide-react';
 import { STEM_KITS, StemKit, SCHOOL_PACK_OFFERING } from '../data/stemKits';
 
+interface CartItem {
+  kitId: string;
+  quantity: number;
+}
+
+const SAFE_KIT_IMAGES: Record<string, string> = {
+  'kone-junior-inventor': '/images/kits/junior-circuit-kit.jpg',
+  'kone-explorer-rover': '/images/kits/explorer-robotics-rover.jpg',
+  'kone-iot-smart-farm': '/images/kits/iot-smart-farm.jpg',
+  'kone-ai-vision-companion': '/images/kits/ai-companion-kit.jpg',
+  'school-pack': '/images/kits/school-stem-pack.jpg'
+};
+
+const getSafeKitImage = (kitId?: string): string => {
+  if (kitId && SAFE_KIT_IMAGES[kitId]) {
+    return SAFE_KIT_IMAGES[kitId];
+  }
+  return '/images/kits/junior-circuit-kit.jpg';
+};
+
 export default function StemKits() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [ageFilter, setAgeFilter] = useState<string>('All');
   const [currency, setCurrency] = useState<'GHS' | 'USD'>('GHS');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating' | 'sales'>('featured');
+  
+  // Modals & Drawers
   const [activeModalKit, setActiveModalKit] = useState<StemKit | null>(null);
+  const [quickViewKit, setQuickViewKit] = useState<StemKit | null>(null);
   const [orderModalKit, setOrderModalKit] = useState<StemKit | null>(null);
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [schoolQuoteOpen, setSchoolQuoteOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  // E-commerce interactivity
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [wishlist, setWishlist] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('kone_kids_wishlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [couponCode, setCouponCode] = useState<string>('');
+  const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
+  const [couponMessage, setCouponMessage] = useState<string>('');
+  const [recentlyAddedId, setRecentlyAddedId] = useState<string | null>(null);
+
+  // Flash deal countdown timer
+  const [timeLeft, setTimeLeft] = useState({ hours: 11, minutes: 45, seconds: 32 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
+        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        return { hours: 12, minutes: 0, seconds: 0 };
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Save cart & wishlist
+  useEffect(() => {
+    try {
+      localStorage.setItem('kone_kids_cart', JSON.stringify(cart));
+    } catch {}
+  }, [cart]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('kone_kids_wishlist', JSON.stringify(wishlist));
+    } catch {}
+  }, [wishlist]);
 
   // Order form state
   const [orderForm, setOrderForm] = useState({
@@ -37,30 +121,153 @@ export default function StemKits() {
     phone: '',
     city: 'Accra',
     deliveryAddress: '',
-    quantity: 1,
     paymentMethod: 'momo'
   });
   const [orderSubmitted, setOrderSubmitted] = useState(false);
 
-  const categories = ['All', 'Junior', 'Robotics', 'IoT', 'AI'];
-
-  const filteredKits = selectedCategory === 'All'
-    ? STEM_KITS
-    : STEM_KITS.filter(kit => kit.category === selectedCategory);
-
-  const formatPrice = (kit: StemKit, qty: number = 1) => {
-    if (currency === 'GHS') {
-      return `GH₵ ${(kit.priceGHS * qty).toLocaleString()}`;
-    }
-    return `$${(kit.priceUSD * qty).toLocaleString()}`;
+  // Cart operations
+  const addToCart = (kitId: string, qty: number = 1) => {
+    setCart(prev => {
+      const existing = prev.find(item => item.kitId === kitId);
+      if (existing) {
+        return prev.map(item => item.kitId === kitId ? { ...item, quantity: item.quantity + qty } : item);
+      }
+      return [...prev, { kitId, quantity: qty }];
+    });
+    setRecentlyAddedId(kitId);
+    setTimeout(() => setRecentlyAddedId(null), 2500);
   };
 
+  const updateCartQty = (kitId: string, delta: number) => {
+    setCart(prev => {
+      return prev.map(item => {
+        if (item.kitId === kitId) {
+          const newQty = item.quantity + delta;
+          return newQty > 0 ? { ...item, quantity: newQty } : null;
+        }
+        return item;
+      }).filter(Boolean) as CartItem[];
+    });
+  };
+
+  const removeFromCart = (kitId: string) => {
+    setCart(prev => prev.filter(item => item.kitId !== kitId));
+  };
+
+  const toggleWishlist = (kitId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setWishlist(prev => 
+      prev.includes(kitId) ? prev.filter(id => id !== kitId) : [...prev, kitId]
+    );
+  };
+
+  const applyCoupon = () => {
+    const code = couponCode.trim().toUpperCase();
+    if (code === 'STEMKIDS10' || code === 'KIDBOT15') {
+      const rate = code === 'KIDBOT15' ? 0.15 : 0.10;
+      setAppliedDiscount(rate);
+      setCouponMessage(`🎉 Coupon applied! ${rate * 100}% discount active.`);
+    } else {
+      setAppliedDiscount(0);
+      setCouponMessage('❌ Invalid coupon code. Try "STEMKIDS10" for 10% off.');
+    }
+  };
+
+  // Cart calculations
+  const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const cartSubtotalGHS = useMemo(() => {
+    return cart.reduce((sum, item) => {
+      const kit = STEM_KITS.find(k => k.id === item.kitId);
+      return sum + (kit ? kit.priceGHS * item.quantity : 0);
+    }, 0);
+  }, [cart]);
+
+  const cartSubtotalUSD = useMemo(() => {
+    return cart.reduce((sum, item) => {
+      const kit = STEM_KITS.find(k => k.id === item.kitId);
+      return sum + (kit ? kit.priceUSD * item.quantity : 0);
+    }, 0);
+  }, [cart]);
+
+  const discountAmountGHS = cartSubtotalGHS * appliedDiscount;
+  const discountAmountUSD = cartSubtotalUSD * appliedDiscount;
+
+  const finalCartTotalGHS = cartSubtotalGHS - discountAmountGHS;
+  const finalCartTotalUSD = cartSubtotalUSD - discountAmountUSD;
+
+  // Filter & Sort
+  const categories = ['All', 'Junior', 'Robotics', 'IoT', 'AI'];
+  const ageFilters = [
+    { label: 'All Ages', value: 'All' },
+    { label: 'Ages 5–8', value: '5-8' },
+    { label: 'Ages 8–12', value: '8-12' },
+    { label: 'Ages 12–16+', value: '12-16' }
+  ];
+
+  const filteredKits = useMemo(() => {
+    return STEM_KITS.filter(kit => {
+      const matchesCategory = selectedCategory === 'All' || kit.category === selectedCategory;
+      const matchesSearch = searchQuery.trim() === '' || 
+        kit.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        kit.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        kit.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        kit.skills.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      let matchesAge = true;
+      if (ageFilter === '5-8') matchesAge = kit.ageMin <= 8 && kit.ageMax >= 5;
+      if (ageFilter === '8-12') matchesAge = kit.ageMin <= 12 && kit.ageMax >= 8;
+      if (ageFilter === '12-16') matchesAge = kit.ageMax >= 12;
+
+      return matchesCategory && matchesSearch && matchesAge;
+    }).sort((a, b) => {
+      if (sortBy === 'price-asc') return (currency === 'GHS' ? a.priceGHS - b.priceGHS : a.priceUSD - b.priceUSD);
+      if (sortBy === 'price-desc') return (currency === 'GHS' ? b.priceGHS - a.priceGHS : b.priceUSD - a.priceUSD);
+      if (sortBy === 'rating') return b.rating - a.rating;
+      if (sortBy === 'sales') return b.salesCount - a.salesCount;
+      return 0; // featured default
+    });
+  }, [selectedCategory, searchQuery, ageFilter, sortBy, currency]);
+
+  // Price formatting
+  const formatPrice = (amountGHS: number, amountUSD: number) => {
+    if (currency === 'GHS') {
+      return `GH₵ ${amountGHS.toLocaleString()}`;
+    }
+    return `$${amountUSD.toLocaleString()}`;
+  };
+
+  const calculateDiscountPercent = (orig: number, current: number) => {
+    return Math.round(((orig - current) / orig) * 100);
+  };
+
+  // WhatsApp Single Item Order
   const handleWhatsAppOrder = (kit: StemKit, qty: number = 1, address: string = '') => {
-    const priceText = formatPrice(kit, qty);
+    const priceText = formatPrice(kit.priceGHS * qty, kit.priceUSD * qty);
     const msg = encodeURIComponent(
-      `Hello Kone Kids! 👋\n\nI want to order the *${kit.title}* (${priceText}, Qty: ${qty}).` +
+      `Hello Kone Kids Store! 🤖\n\nI want to order the *${kit.title}* (${priceText}, Qty: ${qty}).` +
       (address ? `\n📍 Delivery Address: ${address}` : '') +
-      `\n\nPlease send payment details (Mobile Money/Card) and confirm dispatch time. Thank you!`
+      `\n\nPlease send Mobile Money / Card payment details and dispatch timeline. Thank you!`
+    );
+    window.open(`https://wa.me/233551993820?text=${msg}`, '_blank');
+  };
+
+  // WhatsApp Full Cart Order
+  const handleWhatsAppCartCheckout = () => {
+    if (cart.length === 0) return;
+    const itemsList = cart.map(item => {
+      const kit = STEM_KITS.find(k => k.id === item.kitId);
+      if (!kit) return '';
+      const itemPrice = currency === 'GHS' ? `GH₵ ${kit.priceGHS * item.quantity}` : `$${kit.priceUSD * item.quantity}`;
+      return `• ${kit.title} (x${item.quantity}) - ${itemPrice}`;
+    }).filter(Boolean).join('\n');
+
+    const totalText = currency === 'GHS' ? `GH₵ ${finalCartTotalGHS.toLocaleString()}` : `$${finalCartTotalUSD.toLocaleString()}`;
+
+    const msg = encodeURIComponent(
+      `Hello Kone Kids Store! 🛍️\n\nI would like to place an order for my cart:\n\n${itemsList}\n\n*Total: ${totalText}*` +
+      (appliedDiscount > 0 ? ` (Includes ${appliedDiscount * 100}% promo discount)` : '') +
+      `\n\n📍 Delivery Destination: Accra / Kumasi\n\nPlease confirm Mobile Money payment details and courier dispatch schedule!`
     );
     window.open(`https://wa.me/233551993820?text=${msg}`, '_blank');
   };
@@ -72,216 +279,174 @@ export default function StemKits() {
     window.open(`https://wa.me/233551993820?text=${msg}`, '_blank');
   };
 
-  const handleOrderSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setOrderSubmitted(true);
-    setTimeout(() => {
-      if (orderModalKit) {
-        handleWhatsAppOrder(orderModalKit, orderForm.quantity, `${orderForm.deliveryAddress}, ${orderForm.city} (Tel: ${orderForm.phone}, Name: ${orderForm.parentName})`);
-      }
-    }, 1200);
-  };
-
-  const faqs = [
-    {
-      q: 'Does my child need previous coding or electronics experience?',
-      a: 'Not at all! Every kit begins with visual zero-barrier missions. Our Junior Inventor kit uses solderless magnetic snap blocks, and our Robotics and IoT kits come with step-by-step animated diagrams and block-based programming tutorials that anyone can follow.'
-    },
-    {
-      q: 'Is there any soldering, high voltage, or dangerous heat involved?',
-      a: '100% NO. All Kone Kids kits are strictly low-voltage (3V–5V USB/AA power) and engineered for child safety. Every component connects using solderless breadboards, secure dupont jumpers, or snap-connectors. No soldering iron, bare AC mains, or toxic materials are ever used.'
-    },
-    {
-      q: 'How does the physical kit connect with the Kone Kids online platform?',
-      a: 'Each physical kit directly matches the virtual missions on kids.koneacademy.io. For instance, after students test a virtual obstacle-avoiding rover in the Robotics Lab, they use their physical rover kit to run the exact same logic with real motors and ultrasonic sensors!'
-    },
-    {
-      q: 'How fast is delivery across Ghana?',
-      a: 'Deliveries within Greater Accra (Accra, Tema, Kasoa) arrive within 24 hours. Deliveries across other regions (Kumasi, Takoradi, Cape Coast, Tamale, Sunyani, Ho) arrive in 24 to 48 hours via registered courier parcel service.'
-    },
-    {
-      q: 'What computers or tablets are needed?',
-      a: 'Any standard laptop, desktop computer, or Chromebook with a USB port and Google Chrome browser works right out of the box. No heavy software installations are required.'
-    }
-  ];
-
   return (
-    <div className="kids-stem-kits-page" style={{
-      background: 'linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%)',
-      minHeight: '100vh',
-      color: '#0f172a',
-      padding: '2rem 5% 6rem'
-    }}>
-      {/* Top Breadcrumb */}
-      <div style={{ maxWidth: '1240px', margin: '0 auto 2.5rem' }}>
-        <Link to="/" style={{
+    <div style={{ minHeight: '100vh', background: '#0b1120', color: '#f8fafc', paddingBottom: '5rem' }}>
+      
+      {/* 1. TOP FLASH SALE URGENCY TICKER */}
+      <div style={{
+        background: 'linear-gradient(90deg, #ea580c 0%, #dc2626 50%, #9333ea 100%)',
+        padding: '0.55rem 1rem',
+        fontSize: '0.85rem',
+        fontWeight: 800,
+        color: '#ffffff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.75rem',
+        flexWrap: 'wrap',
+        boxShadow: '0 2px 10px rgba(220, 38, 38, 0.35)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 110
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <Zap size={16} fill="#fde047" color="#fde047" />
+          <span>⚡ LIMITED-TIME FLASH SALE: Save up to 22% on STEM Hardware Kits!</span>
+        </div>
+        <div style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '0.5rem',
-          color: '#64748b',
-          textDecoration: 'none',
-          fontSize: '0.95rem',
-          fontWeight: 700,
-          transition: 'color 0.2s',
-          marginBottom: '1.5rem'
+          gap: '0.35rem',
+          background: 'rgba(0, 0, 0, 0.35)',
+          padding: '0.2rem 0.6rem',
+          borderRadius: '8px',
+          fontFamily: 'monospace',
+          fontSize: '0.82rem',
+          letterSpacing: '0.05em'
         }}>
-          <ArrowLeft size={18} /> Back to Learning Hub
-        </Link>
-
-        {/* Hero Section */}
-        <div style={{
-          background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)',
-          borderRadius: '32px',
-          padding: 'clamp(2rem, 5vw, 3.5rem)',
-          color: '#ffffff',
-          position: 'relative',
-          overflow: 'hidden',
-          boxShadow: '0 20px 40px -15px rgba(49, 46, 129, 0.35)',
-          border: '1px solid rgba(255, 255, 255, 0.15)'
-        }}>
-          {/* Subtle background glow */}
-          <div style={{
-            position: 'absolute',
-            top: '-50px',
-            right: '-50px',
-            width: '320px',
-            height: '320px',
-            background: 'radial-gradient(circle, rgba(249, 115, 22, 0.4) 0%, rgba(249, 115, 22, 0) 70%)',
-            borderRadius: '50%',
-            pointerEvents: 'none'
-          }} />
-
-          <div style={{ maxWidth: '780px', position: 'relative', zIndex: 1 }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              background: 'rgba(255, 255, 255, 0.15)',
-              backdropFilter: 'blur(8px)',
-              padding: '0.4rem 1rem',
-              borderRadius: '20px',
-              fontSize: '0.85rem',
-              fontWeight: 800,
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: '1.25rem',
-              color: '#fde047'
-            }}>
-              <Cpu size={16} /> Physical STEM &amp; Robotics Hardware
-            </div>
-
-            <h1 style={{
-              fontFamily: "'Baloo 2', cursive",
-              fontSize: 'clamp(2.4rem, 5.5vw, 3.8rem)',
-              fontWeight: 800,
-              margin: '0 0 1rem 0',
-              lineHeight: 1.15,
-              letterSpacing: '-0.02em'
-            }}>
-              Turn Screen Time Into <span style={{ color: '#fb923c' }}>Physical Engineering</span>
-            </h1>
-
-            <p style={{
-              fontSize: 'clamp(1rem, 2vw, 1.2rem)',
-              lineHeight: 1.6,
-              color: '#e0e7ff',
-              margin: '0 0 2rem 0',
-              fontWeight: 500
-            }}>
-              Real microcontrollers, robotics chassis, and IoT smart sensors designed for young creators. 
-              Delivered across Ghana with step-by-step video tutorials and direct tie-ins to our virtual labs.
-            </p>
-
-            {/* Trust highlights */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '1rem',
-              paddingTop: '1rem',
-              borderTop: '1px solid rgba(255, 255, 255, 0.15)'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <Truck size={20} color="#38bdf8" />
-                <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Ghana Delivery (24-48h)</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <ShieldCheck size={20} color="#4ade80" />
-                <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>100% Solderless &amp; Safe</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <BookOpen size={20} color="#fde047" />
-                <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>Matches Lab Missions</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <Zap size={20} color="#fb923c" />
-                <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>MoMo &amp; Card Checkout</span>
-              </div>
-            </div>
-          </div>
+          <Clock size={13} />
+          <span>Ends in: {String(timeLeft.hours).padStart(2, '0')}h : {String(timeLeft.minutes).padStart(2, '0')}m : {String(timeLeft.seconds).padStart(2, '0')}s</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', opacity: 0.95 }}>
+          <Truck size={14} />
+          <span>Free 24–48h Delivery in Greater Accra on orders GH₵ 500+</span>
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
-        {/* Controls Bar: Category Filters & Currency Toggle */}
+      {/* 2. TOP E-COMMERCE BAR */}
+      <header style={{
+        background: 'rgba(15, 23, 42, 0.95)',
+        backdropFilter: 'blur(12px)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        position: 'sticky',
+        top: '38px',
+        zIndex: 100,
+        padding: '0.75rem 1.25rem'
+      }}>
         <div style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
           display: 'flex',
-          justifyContent: 'space-between',
           alignItems: 'center',
-          flexWrap: 'wrap',
+          justifyContent: 'space-between',
           gap: '1rem',
-          margin: '2rem 0 2.5rem',
-          background: '#ffffff',
-          padding: '1rem 1.5rem',
-          borderRadius: '20px',
-          boxShadow: '0 4px 20px -2px rgba(0,0,0,0.06)'
+          flexWrap: 'wrap'
         }}>
-          {/* Category Tabs */}
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                style={{
-                  padding: '0.55rem 1.25rem',
-                  borderRadius: '14px',
-                  border: 'none',
-                  background: selectedCategory === cat ? '#4338ca' : '#f1f5f9',
-                  color: selectedCategory === cat ? '#ffffff' : '#475569',
-                  fontWeight: 700,
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  outline: 'none'
-                }}
-              >
-                {cat === 'All' ? 'All STEM Kits' : `${cat} Kits`}
-              </button>
-            ))}
+          {/* Logo & Back Link */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <Link 
+              to="/" 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                color: '#94a3b8',
+                textDecoration: 'none',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                padding: '0.4rem 0.75rem',
+                borderRadius: '10px',
+                background: 'rgba(255,255,255,0.05)',
+                transition: 'all 0.2s'
+              }}
+            >
+              <ArrowLeft size={16} />
+              <span>Learning Hub</span>
+            </Link>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #f97316 0%, #e11d48 100%)',
+                color: '#ffffff',
+                padding: '0.35rem 0.65rem',
+                borderRadius: '10px',
+                fontWeight: 900,
+                fontSize: '0.85rem',
+                letterSpacing: '0.02em',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem'
+              }}>
+                <Cpu size={16} />
+                <span>KONE STEM STORE</span>
+              </div>
+            </div>
           </div>
 
-          {/* Currency Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#64748b' }}>Currency:</span>
+          {/* Search Bar */}
+          <div style={{
+            flex: '1 1 320px',
+            maxWidth: '520px',
+            position: 'relative'
+          }}>
+            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+            <input 
+              type="text"
+              placeholder="Search rovers, sensors, snap circuits, microcontrollers..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.6rem 2.2rem 0.6rem 2.5rem',
+                background: '#1e293b',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '12px',
+                color: '#ffffff',
+                fontSize: '0.88rem',
+                outline: 'none',
+                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)'
+              }}
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: '#94a3b8',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem'
+                }}
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          {/* Right Controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <div style={{
               display: 'inline-flex',
-              background: '#f1f5f9',
-              borderRadius: '12px',
-              padding: '0.2rem'
+              background: '#1e293b',
+              padding: '0.2rem',
+              borderRadius: '10px',
+              border: '1px solid rgba(255,255,255,0.08)'
             }}>
               <button
                 onClick={() => setCurrency('GHS')}
                 style={{
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: '10px',
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '8px',
                   border: 'none',
-                  background: currency === 'GHS' ? '#ffffff' : 'transparent',
-                  color: currency === 'GHS' ? '#4338ca' : '#64748b',
+                  background: currency === 'GHS' ? '#f97316' : 'transparent',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  boxShadow: currency === 'GHS' ? '0 2px 5px rgba(0,0,0,0.08)' : 'none',
-                  transition: 'all 0.15s'
+                  cursor: 'pointer'
                 }}
               >
                 GH₵ (GHS)
@@ -289,941 +454,1791 @@ export default function StemKits() {
               <button
                 onClick={() => setCurrency('USD')}
                 style={{
-                  padding: '0.35rem 0.85rem',
-                  borderRadius: '10px',
+                  padding: '0.35rem 0.65rem',
+                  borderRadius: '8px',
                   border: 'none',
-                  background: currency === 'USD' ? '#ffffff' : 'transparent',
-                  color: currency === 'USD' ? '#4338ca' : '#64748b',
+                  background: currency === 'USD' ? '#f97316' : 'transparent',
+                  color: '#ffffff',
+                  fontSize: '0.8rem',
                   fontWeight: 800,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer',
-                  boxShadow: currency === 'USD' ? '0 2px 5px rgba(0,0,0,0.08)' : 'none',
-                  transition: 'all 0.15s'
+                  cursor: 'pointer'
                 }}
               >
                 $ (USD)
               </button>
             </div>
-          </div>
-        </div>
 
-        {/* Kits Product Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '2rem',
-          marginBottom: '4rem'
-        }}>
-          {filteredKits.map(kit => (
-            <div
-              key={kit.id}
+            <button
+              onClick={() => setIsCartOpen(true)}
               style={{
-                background: '#ffffff',
-                borderRadius: '24px',
-                overflow: 'hidden',
-                boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.08)',
-                border: '1px solid #e2e8f0',
-                display: 'flex',
-                flexDirection: 'column',
-                transition: 'transform 0.25s, box-shadow 0.25s',
-                position: 'relative'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-6px)';
-                e.currentTarget.style.boxShadow = '0 20px 35px -8px rgba(0, 0, 0, 0.12)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 10px 25px -5px rgba(0, 0, 0, 0.08)';
+                position: 'relative',
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '12px',
+                padding: '0.5rem 1rem',
+                fontSize: '0.88rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
               }}
             >
-              {/* Card Header Gradient Banner */}
-              <div style={{
-                background: kit.gradient,
-                padding: '1.75rem',
-                color: '#ffffff',
-                position: 'relative'
-              }}>
-                <div style={{
-                  display: 'inline-block',
-                  background: 'rgba(0, 0, 0, 0.25)',
-                  backdropFilter: 'blur(6px)',
-                  padding: '0.3rem 0.8rem',
-                  borderRadius: '12px',
+              <ShoppingCart size={18} />
+              <span>Cart</span>
+              {totalCartItems > 0 && (
+                <span style={{
+                  background: '#ef4444',
+                  color: '#ffffff',
+                  borderRadius: '999px',
+                  padding: '0.15rem 0.45rem',
                   fontSize: '0.75rem',
-                  fontWeight: 800,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.05em',
-                  marginBottom: '0.75rem'
+                  fontWeight: 900,
+                  marginLeft: '0.15rem'
                 }}>
-                  {kit.badge}
-                </div>
+                  {totalCartItems}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+      </header>
 
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <h3 style={{
-                    fontFamily: "'Baloo 2', cursive",
-                    fontSize: '1.45rem',
-                    fontWeight: 800,
-                    margin: 0,
-                    lineHeight: 1.2
-                  }}>
-                    {kit.title}
-                  </h3>
-                </div>
+      {/* 3. HERO STOREFRONT BANNER & TRUST STRIP */}
+      <section style={{
+        maxWidth: '1280px',
+        margin: '1.5rem auto',
+        padding: '0 1.25rem'
+      }}>
+        <div style={{
+          background: 'radial-gradient(ellipse at top right, rgba(249, 115, 22, 0.22) 0%, rgba(30, 27, 75, 0.95) 100%), #0f172a',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '24px',
+          padding: '2.5rem 2rem',
+          position: 'relative',
+          overflow: 'hidden',
+          boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)'
+        }}>
+          <div style={{ maxWidth: '780px', position: 'relative', zIndex: 2 }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              background: 'rgba(249, 115, 22, 0.2)',
+              border: '1px solid rgba(249, 115, 22, 0.4)',
+              color: '#fdba74',
+              padding: '0.35rem 0.85rem',
+              borderRadius: '999px',
+              fontSize: '0.8rem',
+              fontWeight: 800,
+              marginBottom: '1rem'
+            }}>
+              <Sparkles size={14} />
+              OFFICIAL HANDS-ON STEM HARDWARE
+            </div>
 
-                <div style={{
-                  display: 'flex',
-                  gap: '0.5rem',
-                  marginTop: '0.75rem',
-                  fontSize: '0.8rem',
-                  fontWeight: 700
-                }}>
-                  <span style={{ background: 'rgba(255,255,255,0.25)', padding: '0.2rem 0.6rem', borderRadius: '8px' }}>
-                    {kit.ageRange}
-                  </span>
-                  <span style={{ background: 'rgba(255,255,255,0.25)', padding: '0.2rem 0.6rem', borderRadius: '8px' }}>
-                    {kit.difficulty}
-                  </span>
+            <h1 style={{
+              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              fontWeight: 900,
+              lineHeight: 1.15,
+              marginBottom: '1rem',
+              letterSpacing: '-0.02em',
+              fontFamily: "'Baloo 2', 'Nunito', sans-serif"
+            }}>
+              Real Hardware Kits That Bring <span style={{ color: '#f97316' }}>Coding &amp; Robotics to Life</span>
+            </h1>
+
+            <p style={{
+              fontSize: '1.05rem',
+              color: '#cbd5e1',
+              lineHeight: 1.6,
+              marginBottom: '1.75rem',
+              maxWidth: '680px'
+            }}>
+              Child-safe, solderless electronics and smart rovers delivered across Ghana. Every kit connects directly to our online interactive coding missions with step-by-step video builds.
+            </p>
+
+            {/* Trust Badges Strip */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: '1rem',
+              borderTop: '1px solid rgba(255,255,255,0.1)',
+              paddingTop: '1.25rem'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ background: 'rgba(56, 189, 248, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#38bdf8' }}>
+                  <Truck size={18} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Fast Ghana Dispatch</div>
+                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>24–48h Accra &amp; Kumasi</div>
                 </div>
               </div>
 
-              {/* Card Body */}
-              <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <p style={{
-                  fontSize: '0.92rem',
-                  color: '#475569',
-                  lineHeight: 1.5,
-                  margin: '0 0 1.25rem 0',
-                  fontWeight: 500
-                }}>
-                  {kit.tagline}
-                </p>
-
-                {/* Key Skills Learnt */}
-                <div style={{ marginBottom: '1.25rem' }}>
-                  <div style={{ fontSize: '0.78rem', fontWeight: 800, textTransform: 'uppercase', color: '#94a3b8', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-                    Core Concepts Mastered:
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                    {kit.skills.slice(0, 3).map((skill, idx) => (
-                      <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: '#334155' }}>
-                        <CheckCircle2 size={16} color={kit.accentColor} style={{ flexShrink: 0 }} />
-                        <span>{skill}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ background: 'rgba(52, 211, 153, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#34d399' }}>
+                  <ShieldCheck size={18} />
                 </div>
-
-                {/* Virtual Lab Pairing Badge */}
-                <div style={{
-                  marginTop: 'auto',
-                  padding: '0.75rem 1rem',
-                  background: '#f8fafc',
-                  border: '1px dashed #cbd5e1',
-                  borderRadius: '14px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  gap: '0.5rem',
-                  marginBottom: '1.5rem'
-                }}>
-                  <div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
-                      Virtual Lab Pairing
-                    </div>
-                    <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#1e293b' }}>
-                      {kit.labName}
-                    </div>
-                  </div>
-                  <Link 
-                    to={kit.labRoute} 
-                    style={{ 
-                      color: kit.accentColor, 
-                      display: 'inline-flex', 
-                      alignItems: 'center', 
-                      gap: '0.2rem',
-                      textDecoration: 'none',
-                      fontSize: '0.82rem',
-                      fontWeight: 800
-                    }}
-                  >
-                    View Missions <ExternalLink size={13} />
-                  </Link>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>14-Day Guarantee</div>
+                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Free parts replacement</div>
                 </div>
+              </div>
 
-                {/* Pricing & Actions */}
-                <div style={{
-                  borderTop: '1px solid #f1f5f9',
-                  paddingTop: '1.25rem',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1rem'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                    <div>
-                      <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600, display: 'block' }}>Kit Price</span>
-                      <span style={{
-                        fontFamily: "'Baloo 2', cursive",
-                        fontSize: '1.75rem',
-                        fontWeight: 800,
-                        color: '#0f172a'
-                      }}>
-                        {formatPrice(kit)}
-                      </span>
-                    </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ background: 'rgba(251, 191, 36, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#fbbf24' }}>
+                  <BookOpen size={18} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Video Missions</div>
+                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Illustrated build guide</div>
+                </div>
+              </div>
 
-                    <button
-                      onClick={() => setActiveModalKit(kit)}
-                      style={{
-                        background: 'none',
-                        border: 'none',
-                        color: '#4338ca',
-                        fontSize: '0.85rem',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        padding: '0.4rem 0.6rem',
-                        borderRadius: '8px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.3rem'
-                      }}
-                    >
-                      What's in the Box? <ChevronRight size={16} />
-                    </button>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-                    <button
-                      onClick={() => handleWhatsAppOrder(kit)}
-                      style={{
-                        background: '#25D366',
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '14px',
-                        padding: '0.75rem 0.5rem',
-                        fontSize: '0.88rem',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.4rem',
-                        boxShadow: '0 4px 12px rgba(37, 211, 102, 0.25)'
-                      }}
-                    >
-                      <MessageCircle size={17} /> WhatsApp
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setOrderModalKit(kit);
-                        setOrderSubmitted(false);
-                      }}
-                      style={{
-                        background: kit.accentColor,
-                        color: '#ffffff',
-                        border: 'none',
-                        borderRadius: '14px',
-                        padding: '0.75rem 0.5rem',
-                        fontSize: '0.88rem',
-                        fontWeight: 800,
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: '0.4rem',
-                        boxShadow: `0 4px 12px ${kit.accentColor}40`
-                      }}
-                    >
-                      <ShoppingBag size={17} /> Order Kit
-                    </button>
-                  </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ background: 'rgba(168, 85, 247, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#a855f7' }}>
+                  <Zap size={18} />
+                </div>
+                <div>
+                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>MoMo &amp; Cards</div>
+                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>MTN, Telecel &amp; Visa</div>
                 </div>
               </div>
             </div>
-          ))}
+          </div>
         </div>
+      </section>
 
-        {/* School & Club Bulk Orders Section */}
+      {/* 4. FILTER, CATEGORY & SORT BAR */}
+      <section style={{
+        maxWidth: '1280px',
+        margin: '0 auto 1.5rem',
+        padding: '0 1.25rem'
+      }}>
         <div style={{
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-          borderRadius: '32px',
-          padding: 'clamp(2rem, 5vw, 3rem)',
-          color: '#ffffff',
-          marginBottom: '4rem',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          background: '#0f172a',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          borderRadius: '16px',
+          padding: '1rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1rem',
+          flexWrap: 'wrap'
+        }}>
+          {/* Category Pills */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {categories.map(cat => {
+              const count = cat === 'All' ? STEM_KITS.length : STEM_KITS.filter(k => k.category === cat).length;
+              const isActive = selectedCategory === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  style={{
+                    padding: '0.45rem 0.9rem',
+                    borderRadius: '10px',
+                    border: isActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                    background: isActive ? '#f97316' : '#1e293b',
+                    color: '#ffffff',
+                    fontSize: '0.84rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem'
+                  }}
+                >
+                  <span>{cat === 'All' ? 'All Kits' : `${cat} Kits`}</span>
+                  <span style={{
+                    background: isActive ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
+                    padding: '0.1rem 0.35rem',
+                    borderRadius: '999px',
+                    fontSize: '0.75rem'
+                  }}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Age Filters & Sort Dropdown */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', color: '#94a3b8' }}>
+              <span>Age:</span>
+              {ageFilters.map(af => (
+                <button
+                  key={af.value}
+                  onClick={() => setAgeFilter(af.value)}
+                  style={{
+                    padding: '0.3rem 0.6rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: ageFilter === af.value ? 'rgba(14, 165, 233, 0.25)' : 'transparent',
+                    color: ageFilter === af.value ? '#38bdf8' : '#94a3b8',
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {af.label}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Sort:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                style={{
+                  background: '#1e293b',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '8px',
+                  padding: '0.35rem 0.75rem',
+                  fontSize: '0.82rem',
+                  fontWeight: 700,
+                  outline: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                <option value="featured">Featured (Best Deals)</option>
+                <option value="sales">Most Popular</option>
+                <option value="rating">Highest Rated</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. PRODUCT CARDS GRID (Visual E-Commerce Design) */}
+      <main style={{
+        maxWidth: '1280px',
+        margin: '0 auto',
+        padding: '0 1.25rem'
+      }}>
+        {filteredKits.length === 0 ? (
+          <div style={{
+            background: '#1e293b',
+            borderRadius: '20px',
+            padding: '3rem 2rem',
+            textAlign: 'center',
+            color: '#94a3b8'
+          }}>
+            <p style={{ fontSize: '1.2rem', fontWeight: 800, color: '#f8fafc' }}>No STEM kits found matching your search</p>
+            <p style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>Try clearing the search query or adjusting your age filters.</p>
+            <button
+              onClick={() => { setSearchQuery(''); setSelectedCategory('All'); setAgeFilter('All'); }}
+              style={{
+                marginTop: '1.25rem',
+                background: '#f97316',
+                color: '#ffffff',
+                border: 'none',
+                borderRadius: '10px',
+                padding: '0.5rem 1.2rem',
+                fontWeight: 800,
+                cursor: 'pointer'
+              }}
+            >
+              Reset Filters
+            </button>
+          </div>
+        ) : (
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '1.5rem'
+          }}>
+            {filteredKits.map(kit => {
+              const isWishlisted = wishlist.includes(kit.id);
+              const isRecentlyAdded = recentlyAddedId === kit.id;
+              const discountPercent = calculateDiscountPercent(kit.originalPriceGHS, kit.priceGHS);
+              const savingsAmount = formatPrice(kit.originalPriceGHS - kit.priceGHS, kit.originalPriceUSD - kit.priceUSD);
+              const safeImgSrc = getSafeKitImage(kit.id);
+
+              return (
+                <div
+                  key={kit.id}
+                  style={{
+                    background: '#0f172a',
+                    borderRadius: '20px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'transform 0.25s, box-shadow 0.25s, border-color 0.25s',
+                    position: 'relative',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25)'
+                  }}
+                >
+                  {/* PRODUCT IMAGE CONTAINER with Overlays */}
+                  <div 
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '240px',
+                      background: '#1e293b',
+                      overflow: 'hidden',
+                      cursor: 'pointer'
+                    }}
+                    onClick={() => setQuickViewKit(kit)}
+                  >
+                    <img 
+                      src={safeImgSrc}
+                      alt={kit.title}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover'
+                      }}
+                      loading="lazy"
+                    />
+
+                    {/* Discount Badge */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      left: '12px',
+                      background: 'linear-gradient(135deg, #ef4444 0%, #ea580c 100%)',
+                      color: '#ffffff',
+                      padding: '0.3rem 0.6rem',
+                      borderRadius: '8px',
+                      fontSize: '0.78rem',
+                      fontWeight: 900,
+                      boxShadow: '0 2px 8px rgba(239, 68, 68, 0.45)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.2rem'
+                    }}>
+                      <Percent size={12} />
+                      <span>SAVE {discountPercent}%</span>
+                    </div>
+
+                    {/* Top Right Action Buttons */}
+                    <div style={{
+                      position: 'absolute',
+                      top: '12px',
+                      right: '12px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '0.4rem',
+                      zIndex: 3
+                    }}>
+                      <button
+                        onClick={(e) => toggleWishlist(kit.id, e)}
+                        title={isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                        style={{
+                          background: 'rgba(15, 23, 42, 0.85)',
+                          backdropFilter: 'blur(6px)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '34px',
+                          height: '34px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: isWishlisted ? '#ef4444' : '#ffffff',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <Heart size={16} fill={isWishlisted ? '#ef4444' : 'none'} />
+                      </button>
+
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setQuickViewKit(kit); }}
+                        title="Quick View Details"
+                        style={{
+                          background: 'rgba(15, 23, 42, 0.85)',
+                          backdropFilter: 'blur(6px)',
+                          border: 'none',
+                          borderRadius: '50%',
+                          width: '34px',
+                          height: '34px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#ffffff',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <Eye size={16} />
+                      </button>
+                    </div>
+
+                    {/* Stock Urgency Tag Overlay */}
+                    <div style={{
+                      position: 'absolute',
+                      bottom: '10px',
+                      left: '12px',
+                      background: 'rgba(15, 23, 42, 0.85)',
+                      backdropFilter: 'blur(8px)',
+                      color: '#fbbf24',
+                      padding: '0.25rem 0.55rem',
+                      borderRadius: '6px',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.3rem'
+                    }}>
+                      <Zap size={12} fill="#fbbf24" />
+                      <span>Only {kit.stockCount} left in Accra</span>
+                    </div>
+                  </div>
+
+                  {/* PRODUCT DETAILS CARD BODY */}
+                  <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                      <span style={{
+                        color: '#94a3b8',
+                        fontSize: '0.75rem',
+                        fontWeight: 800,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}>
+                        {kit.category} • {kit.ageRange}
+                      </span>
+                      <span style={{
+                        background: 'rgba(14, 165, 233, 0.15)',
+                        color: '#38bdf8',
+                        padding: '0.15rem 0.45rem',
+                        borderRadius: '6px',
+                        fontSize: '0.72rem',
+                        fontWeight: 800
+                      }}>
+                        {kit.difficulty}
+                      </span>
+                    </div>
+
+                    <h3 
+                      onClick={() => setQuickViewKit(kit)}
+                      style={{
+                        fontSize: '1.1rem',
+                        fontWeight: 800,
+                        color: '#f8fafc',
+                        lineHeight: 1.35,
+                        marginBottom: '0.4rem',
+                        cursor: 'pointer',
+                        fontFamily: "'Nunito', sans-serif"
+                      }}
+                    >
+                      {kit.title}
+                    </h3>
+
+                    {/* Star Rating & Sold count */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', color: '#fbbf24' }}>
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} size={14} fill="#fbbf24" stroke="none" />
+                        ))}
+                      </div>
+                      <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#f8fafc' }}>{kit.rating}</span>
+                      <span style={{ fontSize: '0.78rem', color: '#64748b' }}>({kit.reviewsCount})</span>
+                      <span style={{ fontSize: '0.75rem', color: '#10b981', fontWeight: 700, marginLeft: 'auto' }}>
+                        {kit.salesCount}+ ordered
+                      </span>
+                    </div>
+
+                    <p style={{
+                      fontSize: '0.84rem',
+                      color: '#94a3b8',
+                      lineHeight: 1.45,
+                      marginBottom: '1rem',
+                      flex: 1
+                    }}>
+                      {kit.tagline}
+                    </p>
+
+                    {/* Virtual Lab Pairing Box */}
+                    <div style={{
+                      background: 'rgba(255, 255, 255, 0.03)',
+                      border: '1px dashed rgba(255, 255, 255, 0.12)',
+                      borderRadius: '10px',
+                      padding: '0.6rem 0.75rem',
+                      marginBottom: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.78rem'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <span style={{ fontSize: '1rem' }}>💻</span>
+                        <span style={{ color: '#cbd5e1', fontWeight: 700 }}>Matches {kit.labName}</span>
+                      </div>
+                      <Link 
+                        to={kit.labRoute}
+                        style={{ color: '#f97316', fontWeight: 800, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '0.2rem' }}
+                      >
+                        Missions →
+                      </Link>
+                    </div>
+
+                    {/* Price Block */}
+                    <div style={{
+                      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                      paddingTop: '0.85rem',
+                      marginBottom: '1rem'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.6rem', flexWrap: 'wrap' }}>
+                        <span style={{
+                          fontSize: '1.45rem',
+                          fontWeight: 900,
+                          color: '#ffffff',
+                          letterSpacing: '-0.02em'
+                        }}>
+                          {formatPrice(kit.priceGHS, kit.priceUSD)}
+                        </span>
+                        <span style={{
+                          fontSize: '0.9rem',
+                          color: '#64748b',
+                          textDecoration: 'line-through'
+                        }}>
+                          {formatPrice(kit.originalPriceGHS, kit.originalPriceUSD)}
+                        </span>
+                        <span style={{
+                          background: 'rgba(239, 68, 68, 0.15)',
+                          color: '#f87171',
+                          padding: '0.15rem 0.45rem',
+                          borderRadius: '6px',
+                          fontSize: '0.72rem',
+                          fontWeight: 800
+                        }}>
+                          Save {savingsAmount}
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '0.74rem', color: '#10b981', fontWeight: 700, marginTop: '0.25rem' }}>
+                        🚚 Free Accra &amp; Kumasi delivery on orders GH₵ 500+
+                      </div>
+                    </div>
+
+                    {/* Action Triggers: Add to Cart & WhatsApp */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          onClick={() => addToCart(kit.id, 1)}
+                          style={{
+                            flex: 1,
+                            background: isRecentlyAdded ? '#10b981' : '#f97316',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '12px',
+                            padding: '0.65rem 0.85rem',
+                            fontWeight: 800,
+                            fontSize: '0.88rem',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.4rem',
+                            boxShadow: isRecentlyAdded ? '0 4px 14px rgba(16, 185, 129, 0.4)' : '0 4px 14px rgba(249, 115, 22, 0.35)'
+                          }}
+                        >
+                          {isRecentlyAdded ? (
+                            <>
+                              <Check size={16} />
+                              <span>Added to Cart!</span>
+                            </>
+                          ) : (
+                            <>
+                              <ShoppingCart size={16} />
+                              <span>Add to Cart</span>
+                            </>
+                          )}
+                        </button>
+
+                        <button
+                          onClick={() => handleWhatsAppOrder(kit, 1)}
+                          title="Instant WhatsApp Order"
+                          style={{
+                            background: '#25d366',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '12px',
+                            padding: '0.65rem 0.85rem',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        >
+                          <MessageCircle size={18} />
+                        </button>
+                      </div>
+
+                      <button
+                        onClick={() => setActiveModalKit(kit)}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          color: '#94a3b8',
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          padding: '0.3rem',
+                          textAlign: 'center',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '0.2rem'
+                        }}
+                      >
+                        <span>What's in the Box? ({kit.components.length} components)</span>
+                        <ChevronRight size={13} />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </main>
+
+      {/* 6. SCHOOL STEM LAB MEGA-PACK HERO SECTION */}
+      <section style={{
+        maxWidth: '1280px',
+        margin: '3.5rem auto 2rem',
+        padding: '0 1.25rem'
+      }}>
+        <div style={{
+          background: 'linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)',
+          border: '1px solid rgba(139, 92, 246, 0.3)',
+          borderRadius: '24px',
+          padding: '2.5rem',
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '2.5rem',
-          alignItems: 'center'
+          alignItems: 'center',
+          boxShadow: '0 16px 40px rgba(0, 0, 0, 0.5)'
         }}>
           <div>
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              background: 'rgba(56, 189, 248, 0.15)',
-              color: '#38bdf8',
-              padding: '0.35rem 0.9rem',
-              borderRadius: '20px',
+              background: 'rgba(168, 85, 247, 0.2)',
+              color: '#d8b4fe',
+              padding: '0.35rem 0.8rem',
+              borderRadius: '999px',
               fontSize: '0.8rem',
               fontWeight: 800,
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
               marginBottom: '1rem'
             }}>
-              <School size={16} /> For Schools, PTAs &amp; STEM Clubs
+              <School size={16} />
+              CLASSROOM &amp; CLUB EQUIPMENT
             </div>
 
             <h2 style={{
-              fontFamily: "'Baloo 2', cursive",
-              fontSize: 'clamp(1.8rem, 3.5vw, 2.6rem)',
-              fontWeight: 800,
-              margin: '0 0 1rem 0',
-              lineHeight: 1.2
+              fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)',
+              fontWeight: 900,
+              color: '#ffffff',
+              lineHeight: 1.2,
+              marginBottom: '1rem'
             }}>
-              Equipping a STEM Lab or After-School Coding Club?
+              {SCHOOL_PACK_OFFERING.title}
             </h2>
 
-            <p style={{
-              fontSize: '1rem',
-              color: '#cbd5e1',
-              lineHeight: 1.6,
-              margin: '0 0 1.5rem 0'
-            }}>
-              Get volume pricing on 10+ kits paired with printed teacher curriculum guides, multi-seat teacher dashboard analytics, and certified instructor onboarding workshops across Ghana.
+            <p style={{ color: '#cbd5e1', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+              {SCHOOL_PACK_OFFERING.subtitle}
             </p>
 
-            <button
-              onClick={handleSchoolQuoteWhatsApp}
+            <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {SCHOOL_PACK_OFFERING.features.map((feat, idx) => (
+                <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
+                  <CheckCircle2 size={18} color="#10b981" style={{ flexShrink: 0 }} />
+                  <span>{feat}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={handleSchoolQuoteWhatsApp}
+                style={{
+                  background: '#25d366',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '14px',
+                  padding: '0.85rem 1.75rem',
+                  fontSize: '0.95rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.35)'
+                }}
+              >
+                <MessageCircle size={18} />
+                <span>Request School Lab Quotation</span>
+              </button>
+
+              <button
+                onClick={() => setSchoolQuoteOpen(true)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  borderRadius: '14px',
+                  padding: '0.85rem 1.5rem',
+                  fontSize: '0.95rem',
+                  fontWeight: 800,
+                  cursor: 'pointer'
+                }}
+              >
+                School Inquiry Form
+              </button>
+            </div>
+          </div>
+
+          <div style={{
+            position: 'relative',
+            borderRadius: '20px',
+            overflow: 'hidden',
+            border: '2px solid rgba(139, 92, 246, 0.4)',
+            boxShadow: '0 12px 30px rgba(0,0,0,0.4)',
+            maxHeight: '440px'
+          }}>
+            <img 
+              src={getSafeKitImage('school-pack')} 
+              alt={SCHOOL_PACK_OFFERING.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+            <div style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              background: 'linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent)',
+              padding: '1.5rem 1.25rem 1rem'
+            }}>
+              <div style={{ color: '#ffffff', fontWeight: 800, fontSize: '0.95rem' }}>10x–20x Complete Student Sets</div>
+              <div style={{ color: '#cbd5e1', fontSize: '0.8rem' }}>Storage organizer bins, spare motors &amp; teacher curriculum guides included</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. PARENT & SCHOOL FAQ ACCORDION */}
+      <section style={{
+        maxWidth: '900px',
+        margin: '4rem auto 2rem',
+        padding: '0 1.25rem'
+      }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            background: 'rgba(249, 115, 22, 0.15)',
+            color: '#fb923c',
+            padding: '0.3rem 0.8rem',
+            borderRadius: '999px',
+            fontSize: '0.8rem',
+            fontWeight: 800,
+            marginBottom: '0.75rem'
+          }}>
+            <HelpCircle size={14} />
+            BUYER ASSURANCE &amp; QUESTIONS
+          </div>
+          <h2 style={{ fontSize: '1.85rem', fontWeight: 900, color: '#f8fafc' }}>
+            Frequently Asked Questions
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '0.9rem', marginTop: '0.4rem' }}>
+            Everything parents and schools need to know about deliveries, safety, and online mission pairing.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+          {[
+            {
+              q: "How does delivery work across Ghana?",
+              a: "We deliver directly to your doorstep or school address within Greater Accra in 24–48 hours. Orders to Kumasi, Takoradi, Cape Coast, and Tamale are dispatched via VIP/OA Express parcels or DHL with tracked SMS notification. Orders over GH₵ 500 qualify for free delivery!"
+            },
+            {
+              q: "Does my child need soldering equipment or dangerous tools?",
+              a: "Absolutely not! All Kone Kids kits are 100% solderless, child-safe, and low-voltage (3V–5V DC). Components connect using tactile magnetic snap blocks or Dupont ribbon jumper wires with zero exposed mains power."
+            },
+            {
+              q: "What if a part breaks or is missing from the box?",
+              a: "We offer a 14-Day Hassle-Free Replacement Guarantee on all hardware. Simply send a photo of the damaged wire, motor, or sensor to our WhatsApp support line (+233 55 199 3820), and our team will courier a free replacement part immediately."
+            },
+            {
+              q: "Can children without programming experience use these kits?",
+              a: "Yes! Every kit comes with a full-color printed comic/manual and access to our online video tutorials. Beginners start with visual drag-and-drop Blockly missions on our virtual learning hub before advancing to real micro-controller code."
+            },
+            {
+              q: "What payment methods are supported?",
+              a: "We accept MTN Mobile Money, Telecel Cash, AT Money, Visa, Mastercard, and Bank Transfer. Cash on delivery is also available for confirmed residential addresses within Accra."
+            }
+          ].map((item, idx) => (
+            <div 
+              key={idx}
               style={{
-                background: 'linear-gradient(90deg, #38bdf8 0%, #0284c7 100%)',
-                color: '#ffffff',
-                border: 'none',
+                background: '#1e293b',
                 borderRadius: '16px',
-                padding: '0.9rem 1.8rem',
-                fontSize: '1rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                boxShadow: '0 10px 20px -5px rgba(56, 189, 248, 0.35)'
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                overflow: 'hidden'
               }}
             >
-              <MessageCircle size={20} /> Request School Lab Quote &amp; Demo
-            </button>
-          </div>
-
-          <div style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            borderRadius: '24px',
-            padding: '1.75rem'
-          }}>
-            <h4 style={{
-              fontFamily: "'Baloo 2', cursive",
-              fontSize: '1.2rem',
-              fontWeight: 800,
-              margin: '0 0 1rem 0',
-              color: '#f8fafc'
-            }}>
-              What's Included in the School Lab Pack:
-            </h4>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {SCHOOL_PACK_OFFERING.features.map((feat, idx) => (
-                <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem', fontSize: '0.9rem', color: '#e2e8f0' }}>
-                  <CheckCircle2 size={18} color="#38bdf8" style={{ flexShrink: 0, marginTop: '2px' }} />
-                  <span>{feat}</span>
+              <button
+                onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                style={{
+                  width: '100%',
+                  padding: '1.2rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#f8fafc',
+                  fontSize: '0.98rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  textAlign: 'left'
+                }}
+              >
+                <span>{item.q}</span>
+                <span style={{ fontSize: '1.2rem', color: '#f97316', transform: openFaq === idx ? 'rotate(45deg)' : 'none', transition: 'transform 0.2s' }}>
+                  +
+                </span>
+              </button>
+              {openFaq === idx && (
+                <div style={{ padding: '0 1.2rem 1.2rem', color: '#94a3b8', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                  {item.a}
                 </div>
-              ))}
+              )}
             </div>
-          </div>
+          ))}
         </div>
+      </section>
 
-        {/* Parent FAQs Accordion */}
-        <div style={{
-          background: '#ffffff',
-          borderRadius: '32px',
-          padding: 'clamp(2rem, 5vw, 3.5rem)',
-          boxShadow: '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
-          border: '1px solid #e2e8f0'
-        }}>
-          <div style={{ textAlign: 'center', maxWidth: '650px', margin: '0 auto 2.5rem' }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              background: '#f1f5f9',
-              color: '#64748b',
-              padding: '0.35rem 0.9rem',
-              borderRadius: '20px',
-              fontSize: '0.8rem',
-              fontWeight: 800,
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              marginBottom: '0.75rem'
-            }}>
-              <HelpCircle size={15} /> Frequently Asked Questions
-            </div>
-            <h2 style={{
-              fontFamily: "'Baloo 2', cursive",
-              fontSize: 'clamp(1.8rem, 3vw, 2.4rem)',
-              fontWeight: 800,
-              margin: 0,
-              color: '#0f172a'
-            }}>
-              Everything Parents Need to Know
-            </h2>
-          </div>
-
-          <div style={{ maxWidth: '820px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {faqs.map((faq, idx) => {
-              const isOpen = openFaq === idx;
-              return (
-                <div
-                  key={idx}
-                  style={{
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '18px',
-                    overflow: 'hidden',
-                    transition: 'border-color 0.2s'
-                  }}
-                >
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    style={{
-                      width: '100%',
-                      background: isOpen ? '#f8fafc' : '#ffffff',
-                      border: 'none',
-                      padding: '1.25rem 1.5rem',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      cursor: 'pointer',
-                      textAlign: 'left',
-                      outline: 'none'
-                    }}
-                  >
-                    <span style={{
-                      fontFamily: "'Baloo 2', cursive",
-                      fontSize: '1.1rem',
-                      fontWeight: 800,
-                      color: isOpen ? '#4338ca' : '#1e293b'
-                    }}>
-                      {faq.q}
-                    </span>
-                    {isOpen ? <Minus size={18} color="#4338ca" /> : <Plus size={18} color="#64748b" />}
-                  </button>
-
-                  {isOpen && (
-                    <div style={{
-                      padding: '0 1.5rem 1.25rem',
-                      background: '#f8fafc',
-                      color: '#475569',
-                      fontSize: '0.95rem',
-                      lineHeight: 1.6
-                    }}>
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* "What's in the Box" Component Modal */}
-      {activeModalKit && (
+      {/* 8. SLIDE-OUT CART DRAWER */}
+      {isCartOpen && (
         <div style={{
           position: 'fixed',
           inset: 0,
-          background: 'rgba(15, 23, 42, 0.75)',
+          background: 'rgba(0, 0, 0, 0.75)',
           backdropFilter: 'blur(8px)',
+          zIndex: 200,
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1.5rem',
-          zIndex: 3000
+          justifyContent: 'flex-end',
+          animation: 'fadeIn 0.2s ease-out'
         }}>
           <div style={{
-            background: '#ffffff',
-            borderRadius: '28px',
-            width: '850px',
-            maxWidth: '100%',
-            maxHeight: '90vh',
+            width: '100%',
+            maxWidth: '440px',
+            height: '100%',
+            background: '#0f172a',
+            borderLeft: '1px solid rgba(255, 255, 255, 0.1)',
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
-            animation: 'fadeInScale 0.25s ease-out'
+            boxShadow: '-8px 0 30px rgba(0, 0, 0, 0.6)'
           }}>
-            {/* Modal Header */}
             <div style={{
-              background: activeModalKit.gradient,
-              padding: '1.75rem 2rem',
-              color: '#ffffff',
+              padding: '1.25rem',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start'
+              alignItems: 'center',
+              justifyContent: 'space-between'
             }}>
-              <div>
-                <span style={{
-                  background: 'rgba(0,0,0,0.25)',
-                  padding: '0.25rem 0.75rem',
-                  borderRadius: '10px',
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  textTransform: 'uppercase'
-                }}>
-                  {activeModalKit.category} Track • {activeModalKit.ageRange}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <ShoppingCart size={20} color="#f97316" />
+                <span style={{ fontWeight: 900, fontSize: '1.1rem', color: '#ffffff' }}>
+                  Your STEM Cart ({totalCartItems})
                 </span>
-                <h3 style={{
-                  fontFamily: "'Baloo 2', cursive",
-                  fontSize: '1.65rem',
-                  fontWeight: 800,
-                  margin: '0.5rem 0 0 0'
-                }}>
-                  {activeModalKit.title}
-                </h3>
               </div>
-              <button
-                onClick={() => setActiveModalKit(null)}
+              <button 
+                onClick={() => setIsCartOpen(false)}
                 style={{
-                  background: 'rgba(255,255,255,0.2)',
+                  background: 'none',
                   border: 'none',
-                  borderRadius: '50%',
-                  width: '36px',
-                  height: '36px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#ffffff',
-                  cursor: 'pointer'
+                  color: '#94a3b8',
+                  fontSize: '1.4rem',
+                  cursor: 'pointer',
+                  padding: '0.2rem'
                 }}
               >
-                <X size={20} />
+                ×
               </button>
             </div>
 
-            {/* Modal Body */}
-            <div style={{ padding: '2rem', overflowY: 'auto', flex: 1 }}>
-              <p style={{ fontSize: '1rem', color: '#475569', lineHeight: 1.6, margin: '0 0 1.75rem 0' }}>
-                {activeModalKit.overview}
-              </p>
-
-              {/* Hardware Components Table */}
-              <h4 style={{
-                fontFamily: "'Baloo 2', cursive",
-                fontSize: '1.25rem',
-                fontWeight: 800,
-                color: '#1e293b',
-                margin: '0 0 0.75rem 0'
-              }}>
-                Hardware Components Included ({activeModalKit.components.length} Items):
-              </h4>
-              <div style={{
-                border: '1px solid #e2e8f0',
-                borderRadius: '16px',
-                overflow: 'hidden',
-                marginBottom: '1.75rem'
-              }}>
-                {activeModalKit.components.map((comp, idx) => (
-                  <div
-                    key={idx}
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      padding: '0.85rem 1.25rem',
-                      background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
-                      borderBottom: idx === activeModalKit.components.length - 1 ? 'none' : '1px solid #f1f5f9',
-                      fontSize: '0.9rem'
-                    }}
-                  >
-                    <div>
-                      <div style={{ fontWeight: 700, color: '#1e293b' }}>{comp.name}</div>
-                      <div style={{ fontSize: '0.8rem', color: '#64748b' }}>{comp.detail}</div>
-                    </div>
-                    <span style={{
-                      fontWeight: 800,
-                      background: '#ede9fe',
-                      color: '#6b21a8',
-                      padding: '0.2rem 0.6rem',
-                      borderRadius: '8px',
-                      fontSize: '0.8rem',
-                      flexShrink: 0
-                    }}>
-                      {comp.qty}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Lab Curriculum Missions */}
-              <h4 style={{
-                fontFamily: "'Baloo 2', cursive",
-                fontSize: '1.25rem',
-                fontWeight: 800,
-                color: '#1e293b',
-                margin: '0 0 0.75rem 0'
-              }}>
-                Hands-On Missions Supported:
-              </h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', marginBottom: '1.75rem' }}>
-                {activeModalKit.curriculumMatches.map((cur, idx) => (
-                  <div key={idx} style={{
-                    padding: '0.85rem 1rem',
-                    background: '#f1f5f9',
-                    borderRadius: '12px',
-                    fontSize: '0.88rem'
-                  }}>
-                    <div style={{ fontWeight: 800, color: '#334155', marginBottom: '0.2rem' }}>
-                      {cur.missionTitle}
-                    </div>
-                    <div style={{ color: '#64748b' }}>
-                      {cur.description}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Safety & Battery Notes */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                gap: '1rem',
-                padding: '1rem',
-                background: '#fefce8',
-                border: '1px solid #fef08a',
-                borderRadius: '14px',
-                fontSize: '0.85rem',
-                color: '#854d0e'
-              }}>
-                <div>
-                  <strong>Safety:</strong> {activeModalKit.requiresSoldering ? 'Adult supervision recommended' : '100% Solderless & Low Voltage'}
-                </div>
-                <div>
-                  <strong>Power:</strong> {activeModalKit.batteryInfo}
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
             <div style={{
-              padding: '1.25rem 2rem',
-              background: '#f8fafc',
-              borderTop: '1px solid #e2e8f0',
+              flex: 1,
+              overflowY: 'auto',
+              padding: '1.25rem',
               display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
+              flexDirection: 'column',
+              gap: '1rem'
             }}>
-              <div>
-                <span style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>Total Price</span>
-                <div style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.6rem', fontWeight: 800, color: '#0f172a' }}>
-                  {formatPrice(activeModalKit)}
+              {cart.length === 0 ? (
+                <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#94a3b8' }}>
+                  <ShoppingCart size={48} style={{ opacity: 0.3, marginBottom: '1rem' }} />
+                  <p style={{ fontWeight: 800, fontSize: '1.05rem', color: '#f8fafc' }}>Your cart is empty</p>
+                  <p style={{ fontSize: '0.85rem', marginTop: '0.4rem' }}>Explore our robotics rovers, snap circuits, and smart farm kits.</p>
                 </div>
-              </div>
+              ) : (
+                cart.map(item => {
+                  const kit = STEM_KITS.find(k => k.id === item.kitId);
+                  if (!kit) return null;
+                  const itemPriceText = formatPrice(kit.priceGHS * item.quantity, kit.priceUSD * item.quantity);
+                  const safeImgSrc = getSafeKitImage(kit.id);
 
-              <div style={{ display: 'flex', gap: '0.75rem' }}>
-                <button
-                  onClick={() => handleWhatsAppOrder(activeModalKit)}
-                  style={{
-                    background: '#25D366',
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '14px',
-                    padding: '0.75rem 1.25rem',
-                    fontSize: '0.9rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem'
-                  }}
-                >
-                  <MessageCircle size={18} /> WhatsApp Order
-                </button>
-                <button
-                  onClick={() => {
-                    setOrderModalKit(activeModalKit);
-                    setActiveModalKit(null);
-                    setOrderSubmitted(false);
-                  }}
-                  style={{
-                    background: activeModalKit.accentColor,
-                    color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '14px',
-                    padding: '0.75rem 1.5rem',
-                    fontSize: '0.9rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem'
-                  }}
-                >
-                  <ShoppingBag size={18} /> Proceed to Order
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Direct Order Modal (Ghana Delivery & MoMo Checkout) */}
-      {orderModalKit && (
-        <div style={{
-          position: 'fixed',
-          inset: 0,
-          background: 'rgba(15, 23, 42, 0.75)',
-          backdropFilter: 'blur(8px)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '1.5rem',
-          zIndex: 3500
-        }}>
-          <div style={{
-            background: '#ffffff',
-            borderRadius: '28px',
-            width: '560px',
-            maxWidth: '100%',
-            overflow: 'hidden',
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.35)',
-            animation: 'fadeInScale 0.25s ease-out'
-          }}>
-            <div style={{
-              background: orderModalKit.gradient,
-              padding: '1.5rem 1.75rem',
-              color: '#ffffff',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', opacity: 0.9 }}>
-                  Direct Delivery Checkout
-                </span>
-                <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', fontWeight: 800, margin: '0.25rem 0 0 0' }}>
-                  {orderModalKit.title}
-                </h3>
-              </div>
-              <button
-                onClick={() => setOrderModalKit(null)}
-                style={{
-                  background: 'rgba(255,255,255,0.2)',
-                  border: 'none',
-                  borderRadius: '50%',
-                  width: '32px',
-                  height: '32px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#ffffff',
-                  cursor: 'pointer'
-                }}
-              >
-                <X size={18} />
-              </button>
-            </div>
-
-            {orderSubmitted ? (
-              <div style={{ padding: '3rem 2rem', textAlign: 'center' }}>
-                <div style={{
-                  width: '64px',
-                  height: '64px',
-                  background: '#dcfce7',
-                  color: '#16a34a',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 1.5rem'
-                }}>
-                  <CheckCircle2 size={36} />
-                </div>
-                <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.6rem', fontWeight: 800, margin: '0 0 0.5rem 0', color: '#166534' }}>
-                  Opening WhatsApp to Confirm!
-                </h3>
-                <p style={{ color: '#4b5563', fontSize: '0.95rem', margin: '0 0 1.5rem 0' }}>
-                  Your delivery details have been pre-filled. Confirming directly on WhatsApp guarantees instant parcel dispatch tracking.
-                </p>
-                <button
-                  onClick={() => setOrderModalKit(null)}
-                  style={{
-                    background: '#f1f5f9',
-                    border: 'none',
-                    borderRadius: '12px',
-                    padding: '0.65rem 1.5rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                >
-                  Close
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleOrderSubmit} style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem' }}>
-                    Parent / Guardian Full Name:
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Ama Mensah"
-                    value={orderForm.parentName}
-                    onChange={(e) => setOrderForm({ ...orderForm, parentName: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      borderRadius: '12px',
-                      border: '1px solid #cbd5e1',
-                      fontSize: '0.95rem',
-                      outline: 'none',
-                      boxSizing: 'border-box'
-                    }}
-                  />
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem' }}>
-                      Phone / WhatsApp:
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="055 123 4567"
-                      value={orderForm.phone}
-                      onChange={(e) => setOrderForm({ ...orderForm, phone: e.target.value })}
+                  return (
+                    <div 
+                      key={item.kitId}
                       style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        borderRadius: '12px',
-                        border: '1px solid #cbd5e1',
-                        fontSize: '0.95rem',
-                        outline: 'none',
-                        boxSizing: 'border-box'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem' }}>
-                      Delivery City / Region:
-                    </label>
-                    <select
-                      value={orderForm.city}
-                      onChange={(e) => setOrderForm({ ...orderForm, city: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 1rem',
-                        borderRadius: '12px',
-                        border: '1px solid #cbd5e1',
-                        fontSize: '0.95rem',
-                        outline: 'none',
-                        background: '#ffffff',
-                        boxSizing: 'border-box'
+                        background: '#1e293b',
+                        borderRadius: '14px',
+                        padding: '0.85rem',
+                        display: 'flex',
+                        gap: '0.85rem',
+                        alignItems: 'center',
+                        border: '1px solid rgba(255, 255, 255, 0.06)'
                       }}
                     >
-                      <option value="Accra">Greater Accra (24h)</option>
-                      <option value="Tema">Tema / Ashaiman (24h)</option>
-                      <option value="Kumasi">Kumasi (24-48h)</option>
-                      <option value="Takoradi">Takoradi / Sekondi (48h)</option>
-                      <option value="Cape Coast">Cape Coast (48h)</option>
-                      <option value="Other">Other Regions (Courier 48h)</option>
-                    </select>
-                  </div>
-                </div>
+                      <img 
+                        src={safeImgSrc} 
+                        alt={kit.title}
+                        style={{
+                          width: '64px',
+                          height: '64px',
+                          borderRadius: '10px',
+                          objectFit: 'cover'
+                        }}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 800, fontSize: '0.88rem', color: '#ffffff', lineHeight: 1.25 }}>
+                          {kit.title}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: '#f97316', fontWeight: 900, marginTop: '0.25rem' }}>
+                          {itemPriceText}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.5rem' }}>
+                          <button
+                            onClick={() => updateCartQty(item.kitId, -1)}
+                            style={{
+                              background: 'rgba(255,255,255,0.08)',
+                              border: 'none',
+                              borderRadius: '6px',
+                              width: '24px',
+                              height: '24px',
+                              color: '#ffffff',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            <Minus size={12} />
+                          </button>
+                          <span style={{ fontSize: '0.85rem', fontWeight: 800, minWidth: '18px', textAlign: 'center' }}>
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => updateCartQty(item.kitId, 1)}
+                            style={{
+                              background: 'rgba(255,255,255,0.08)',
+                              border: 'none',
+                              borderRadius: '6px',
+                              width: '24px',
+                              height: '24px',
+                              color: '#ffffff',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}
+                          >
+                            <Plus size={12} />
+                          </button>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeFromCart(item.kitId)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          padding: '0.4rem'
+                        }}
+                        title="Remove Item"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  );
+                })
+              )}
+            </div>
 
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, color: '#334155', marginBottom: '0.35rem' }}>
-                    Delivery Landmark / Street Address:
-                  </label>
-                  <input
+            {cart.length > 0 && (
+              <div style={{
+                padding: '1.25rem',
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                background: '#090d16'
+              }}>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+                  <input 
                     type="text"
-                    required
-                    placeholder="e.g. East Legon, Near American House"
-                    value={orderForm.deliveryAddress}
-                    onChange={(e) => setOrderForm({ ...orderForm, deliveryAddress: e.target.value })}
+                    placeholder="Coupon (try STEMKIDS10)"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value)}
                     style={{
-                      width: '100%',
-                      padding: '0.75rem 1rem',
-                      borderRadius: '12px',
-                      border: '1px solid #cbd5e1',
-                      fontSize: '0.95rem',
+                      flex: 1,
+                      background: '#1e293b',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      borderRadius: '8px',
+                      padding: '0.45rem 0.75rem',
+                      color: '#ffffff',
+                      fontSize: '0.82rem',
                       outline: 'none',
-                      boxSizing: 'border-box'
+                      textTransform: 'uppercase'
                     }}
                   />
+                  <button
+                    onClick={applyCoupon}
+                    style={{
+                      background: '#334155',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '0.45rem 0.85rem',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Apply
+                  </button>
                 </div>
-
-                {/* Quantity and Total */}
-                <div style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  background: '#f8fafc',
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: '14px',
-                  border: '1px solid #e2e8f0'
-                }}>
-                  <div>
-                    <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Quantity</span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
-                      <button
-                        type="button"
-                        onClick={() => setOrderForm({ ...orderForm, quantity: Math.max(1, orderForm.quantity - 1) })}
-                        style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#ffffff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >
-                        -
-                      </button>
-                      <span style={{ fontWeight: 800, fontSize: '1rem', minWidth: '20px', textAlign: 'center' }}>
-                        {orderForm.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => setOrderForm({ ...orderForm, quantity: orderForm.quantity + 1 })}
-                        style={{ width: '28px', height: '28px', borderRadius: '6px', border: '1px solid #cbd5e1', background: '#ffffff', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                      >
-                        +
-                      </button>
-                    </div>
+                {couponMessage && (
+                  <div style={{ fontSize: '0.78rem', color: appliedDiscount > 0 ? '#10b981' : '#f87171', marginBottom: '0.75rem' }}>
+                    {couponMessage}
                   </div>
+                )}
 
-                  <div style={{ textAlign: 'right' }}>
-                    <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Total Payable</span>
-                    <div style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.5rem', fontWeight: 800, color: '#4338ca' }}>
-                      {formatPrice(orderModalKit, orderForm.quantity)}
-                    </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#94a3b8', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Subtotal:</span>
+                    <span style={{ color: '#ffffff', fontWeight: 800 }}>{formatPrice(cartSubtotalGHS, cartSubtotalUSD)}</span>
                   </div>
-                </div>
-
-                <button
-                  type="submit"
-                  style={{
-                    background: 'linear-gradient(90deg, #4338ca 0%, #6366f1 100%)',
+                  {appliedDiscount > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#10b981' }}>
+                      <span>Discount ({appliedDiscount * 100}%):</span>
+                      <span>-{formatPrice(discountAmountGHS, discountAmountUSD)}</span>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>Greater Accra Delivery:</span>
+                    <span style={{ color: '#10b981', fontWeight: 800 }}>
+                      {finalCartTotalGHS >= 500 ? 'FREE' : formatPrice(25, 3)}
+                    </span>
+                  </div>
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    fontSize: '1.15rem',
+                    fontWeight: 900,
                     color: '#ffffff',
-                    border: 'none',
-                    borderRadius: '16px',
-                    padding: '0.95rem',
-                    fontSize: '1.05rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    boxShadow: '0 8px 20px -4px rgba(67, 56, 202, 0.4)',
-                    marginTop: '0.5rem'
-                  }}
-                >
-                  Confirm Order &amp; Dispatch Details
-                </button>
-              </form>
+                    borderTop: '1px solid rgba(255,255,255,0.1)',
+                    paddingTop: '0.5rem',
+                    marginTop: '0.2rem'
+                  }}>
+                    <span>Total:</span>
+                    <span style={{ color: '#f97316' }}>{formatPrice(finalCartTotalGHS, finalCartTotalUSD)}</span>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                  <button
+                    onClick={handleWhatsAppCartCheckout}
+                    style={{
+                      width: '100%',
+                      background: '#25d366',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '12px',
+                      padding: '0.75rem',
+                      fontWeight: 800,
+                      fontSize: '0.92rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem',
+                      boxShadow: '0 4px 12px rgba(37, 211, 102, 0.35)'
+                    }}
+                  >
+                    <MessageCircle size={18} />
+                    <span>Instant WhatsApp Checkout</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setIsCartOpen(false);
+                      setOrderModalKit(STEM_KITS[0]);
+                    }}
+                    style={{
+                      width: '100%',
+                      background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '12px',
+                      padding: '0.75rem',
+                      fontWeight: 800,
+                      fontSize: '0.92rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '0.5rem'
+                    }}
+                  >
+                    <ShoppingBag size={18} />
+                    <span>MoMo &amp; Card Checkout Form</span>
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
       )}
+
+      {/* 9. QUICK VIEW & DETAILED PRODUCT MODAL */}
+      {quickViewKit && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 300,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem',
+          animation: 'fadeIn 0.2s ease-out'
+        }}>
+          <div style={{
+            background: '#0f172a',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '24px',
+            maxWidth: '900px',
+            width: '100%',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: '1.75rem',
+            padding: '2rem',
+            position: 'relative'
+          }}>
+            <button
+              onClick={() => setQuickViewKit(null)}
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                right: '1rem',
+                background: 'rgba(255,255,255,0.08)',
+                border: 'none',
+                color: '#ffffff',
+                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '1.2rem',
+                zIndex: 10
+              }}
+            >
+              ×
+            </button>
+
+            <div style={{
+              borderRadius: '16px',
+              overflow: 'hidden',
+              background: '#1e293b',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              height: '360px'
+            }}>
+              <img 
+                src={getSafeKitImage(quickViewKit.id)} 
+                alt={quickViewKit.title} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <span style={{
+                  background: 'rgba(249, 115, 22, 0.2)',
+                  color: '#fb923c',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '6px',
+                  fontSize: '0.75rem',
+                  fontWeight: 900
+                }}>
+                  {quickViewKit.badge}
+                </span>
+                <span style={{ color: '#94a3b8', fontSize: '0.8rem', fontWeight: 700 }}>
+                  {quickViewKit.ageRange}
+                </span>
+              </div>
+
+              <h2 style={{ fontSize: '1.45rem', fontWeight: 900, color: '#ffffff', lineHeight: 1.25, marginBottom: '0.5rem' }}>
+                {quickViewKit.title}
+              </h2>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', color: '#fbbf24' }}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={16} fill="#fbbf24" stroke="none" />
+                  ))}
+                </div>
+                <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>{quickViewKit.rating}</span>
+                <span style={{ color: '#64748b', fontSize: '0.85rem' }}>({quickViewKit.reviewsCount} reviews)</span>
+              </div>
+
+              <div style={{
+                background: '#1e293b',
+                padding: '0.85rem 1rem',
+                borderRadius: '12px',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'baseline',
+                gap: '0.75rem',
+                flexWrap: 'wrap'
+              }}>
+                <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#f97316' }}>
+                  {formatPrice(quickViewKit.priceGHS, quickViewKit.priceUSD)}
+                </span>
+                <span style={{ color: '#64748b', textDecoration: 'line-through', fontSize: '1rem' }}>
+                  {formatPrice(quickViewKit.originalPriceGHS, quickViewKit.originalPriceUSD)}
+                </span>
+                <span style={{
+                  background: '#ef4444',
+                  color: '#ffffff',
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '6px',
+                  fontSize: '0.75rem',
+                  fontWeight: 900
+                }}>
+                  SAVE {calculateDiscountPercent(quickViewKit.originalPriceGHS, quickViewKit.priceGHS)}%
+                </span>
+              </div>
+
+              <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.55, marginBottom: '1rem' }}>
+                {quickViewKit.overview}
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '1.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <CheckCircle2 size={16} color="#10b981" />
+                  <span><strong>100% Solderless:</strong> {quickViewKit.requiresSoldering ? 'Soldering required' : 'No soldering needed, plug-and-play'}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <CheckCircle2 size={16} color="#10b981" />
+                  <span><strong>Power:</strong> {quickViewKit.batteryInfo}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <CheckCircle2 size={16} color="#10b981" />
+                  <span><strong>Online missions:</strong> Included with video tutorials</span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: 'auto' }}>
+                <button
+                  onClick={() => {
+                    addToCart(quickViewKit.id, 1);
+                    setQuickViewKit(null);
+                    setIsCartOpen(true);
+                  }}
+                  style={{
+                    flex: 1,
+                    background: '#f97316',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '0.85rem',
+                    fontWeight: 800,
+                    fontSize: '0.95rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.5rem'
+                  }}
+                >
+                  <ShoppingCart size={18} />
+                  <span>Add to Cart</span>
+                </button>
+
+                <button
+                  onClick={() => handleWhatsAppOrder(quickViewKit, 1)}
+                  style={{
+                    background: '#25d366',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '0.85rem 1.25rem',
+                    fontWeight: 800,
+                    fontSize: '0.95rem',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                  }}
+                >
+                  <MessageCircle size={18} />
+                  <span>WhatsApp</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 10. "WHAT'S IN THE BOX" MODAL */}
+      {activeModalKit && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 300,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem',
+          animation: 'fadeIn 0.2s ease-out'
+        }}>
+          <div style={{
+            background: '#0f172a',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '24px',
+            maxWidth: '680px',
+            width: '100%',
+            maxHeight: '85vh',
+            overflowY: 'auto',
+            padding: '2rem',
+            position: 'relative'
+          }}>
+            <button
+              onClick={() => setActiveModalKit(null)}
+              style={{
+                position: 'absolute',
+                top: '1.25rem',
+                right: '1.25rem',
+                background: 'rgba(255,255,255,0.08)',
+                border: 'none',
+                color: '#ffffff',
+                borderRadius: '50%',
+                width: '34px',
+                height: '34px',
+                cursor: 'pointer',
+                fontSize: '1.2rem'
+              }}
+            >
+              ×
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem' }}>
+              <img 
+                src={getSafeKitImage(activeModalKit.id)} 
+                alt={activeModalKit.title} 
+                style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover' }}
+              />
+              <div>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 900, color: '#ffffff' }}>
+                  What's in the Box?
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem' }}>{activeModalKit.title}</p>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1.5rem' }}>
+              {activeModalKit.components.map((comp, idx) => (
+                <div 
+                  key={idx}
+                  style={{
+                    background: '#1e293b',
+                    padding: '0.8rem 1rem',
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    border: '1px solid rgba(255, 255, 255, 0.05)'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#f8fafc' }}>{comp.name}</div>
+                    <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>{comp.detail}</div>
+                  </div>
+                  <span style={{
+                    background: 'rgba(14, 165, 233, 0.15)',
+                    color: '#38bdf8',
+                    padding: '0.2rem 0.5rem',
+                    borderRadius: '6px',
+                    fontSize: '0.78rem',
+                    fontWeight: 800
+                  }}>
+                    {comp.qty}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button
+                onClick={() => {
+                  addToCart(activeModalKit.id, 1);
+                  setActiveModalKit(null);
+                  setIsCartOpen(true);
+                }}
+                style={{
+                  flex: 1,
+                  background: '#f97316',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '0.85rem',
+                  fontWeight: 800,
+                  fontSize: '0.92rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Add This Kit to Cart
+              </button>
+              <button
+                onClick={() => handleWhatsAppOrder(activeModalKit, 1)}
+                style={{
+                  background: '#25d366',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '0.85rem 1.25rem',
+                  fontWeight: 800,
+                  fontSize: '0.92rem',
+                  cursor: 'pointer'
+                }}
+              >
+                Order on WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 11. MOMO / CARD ORDER MODAL */}
+      {orderModalKit && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 300,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: '#0f172a',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            borderRadius: '24px',
+            maxWidth: '540px',
+            width: '100%',
+            padding: '2rem',
+            position: 'relative'
+          }}>
+            <button
+              onClick={() => { setOrderModalKit(null); setOrderSubmitted(false); }}
+              style={{
+                position: 'absolute',
+                top: '1.25rem',
+                right: '1.25rem',
+                background: 'rgba(255,255,255,0.08)',
+                border: 'none',
+                color: '#ffffff',
+                borderRadius: '50%',
+                width: '34px',
+                height: '34px',
+                cursor: 'pointer',
+                fontSize: '1.2rem'
+              }}
+            >
+              ×
+            </button>
+
+            {orderSubmitted ? (
+              <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🎉</div>
+                <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#10b981', marginBottom: '0.5rem' }}>
+                  Order Request Received!
+                </h3>
+                <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.5, marginBottom: '1.5rem' }}>
+                  Thank you, <strong>{orderForm.parentName}</strong>. Our admissions &amp; fulfillment desk will call/WhatsApp you at <strong>{orderForm.phone}</strong> to confirm delivery in <strong>{orderForm.city}</strong>.
+                </p>
+                <button
+                  onClick={() => {
+                    handleWhatsAppOrder(orderModalKit, 1, `${orderForm.city}, ${orderForm.deliveryAddress}`);
+                    setOrderModalKit(null);
+                    setOrderSubmitted(false);
+                  }}
+                  style={{
+                    background: '#25d366',
+                    color: '#ffffff',
+                    border: 'none',
+                    borderRadius: '12px',
+                    padding: '0.75rem 1.5rem',
+                    fontWeight: 800,
+                    fontSize: '0.92rem',
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem'
+                  }}
+                >
+                  <MessageCircle size={18} />
+                  <span>Speed up on WhatsApp (+233 55 199 3820)</span>
+                </button>
+              </div>
+            ) : (
+              <div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.25rem' }}>
+                  Delivery &amp; Checkout
+                </h3>
+                <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+                  Complete details for doorstep courier dispatch across Ghana.
+                </p>
+
+                <form onSubmit={(e) => { e.preventDefault(); setOrderSubmitted(true); }} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Parent / Guardian Name</label>
+                    <input 
+                      type="text" 
+                      required
+                      placeholder="e.g. Kwesi Mensah"
+                      value={orderForm.parentName}
+                      onChange={(e) => setOrderForm({ ...orderForm, parentName: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: '#1e293b',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '10px',
+                        color: '#ffffff',
+                        fontSize: '0.88rem'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Phone Number (WhatsApp Active)</label>
+                    <input 
+                      type="tel" 
+                      required
+                      placeholder="e.g. 055 199 3820"
+                      value={orderForm.phone}
+                      onChange={(e) => setOrderForm({ ...orderForm, phone: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: '#1e293b',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '10px',
+                        color: '#ffffff',
+                        fontSize: '0.88rem'
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>City / Town</label>
+                      <select
+                        value={orderForm.city}
+                        onChange={(e) => setOrderForm({ ...orderForm, city: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.85rem',
+                          background: '#1e293b',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '10px',
+                          color: '#ffffff',
+                          fontSize: '0.88rem'
+                        }}
+                      >
+                        <option value="Accra">Greater Accra</option>
+                        <option value="Kumasi">Kumasi</option>
+                        <option value="Takoradi">Takoradi</option>
+                        <option value="Tema">Tema</option>
+                        <option value="Cape Coast">Cape Coast</option>
+                        <option value="Tamale">Tamale</option>
+                        <option value="Other">Other Ghana Region</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Payment</label>
+                      <select
+                        value={orderForm.paymentMethod}
+                        onChange={(e) => setOrderForm({ ...orderForm, paymentMethod: e.target.value })}
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.85rem',
+                          background: '#1e293b',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          borderRadius: '10px',
+                          color: '#ffffff',
+                          fontSize: '0.88rem'
+                        }}
+                      >
+                        <option value="momo">MTN / Telecel MoMo</option>
+                        <option value="card">Visa / Mastercard</option>
+                        <option value="cod">Cash on Delivery (Accra)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '0.3rem' }}>Delivery Address / Landmark</label>
+                    <input 
+                      type="text" 
+                      required
+                      placeholder="e.g. East Legon, near American House"
+                      value={orderForm.deliveryAddress}
+                      onChange={(e) => setOrderForm({ ...orderForm, deliveryAddress: e.target.value })}
+                      style={{
+                        width: '100%',
+                        padding: '0.65rem 0.85rem',
+                        background: '#1e293b',
+                        border: '1px solid rgba(255,255,255,0.1)',
+                        borderRadius: '10px',
+                        color: '#ffffff',
+                        fontSize: '0.88rem'
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      marginTop: '0.5rem',
+                      background: 'linear-gradient(135deg, #f97316 0%, #ea580c 100%)',
+                      color: '#ffffff',
+                      border: 'none',
+                      borderRadius: '12px',
+                      padding: '0.8rem',
+                      fontSize: '0.95rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 15px rgba(249, 115, 22, 0.4)'
+                    }}
+                  >
+                    Confirm &amp; Place Order
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 12. SCHOOL LAB INQUIRY MODAL */}
+      {schoolQuoteOpen && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          background: 'rgba(0, 0, 0, 0.85)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 300,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}>
+          <div style={{
+            background: '#0f172a',
+            border: '1px solid rgba(139, 92, 246, 0.3)',
+            borderRadius: '24px',
+            maxWidth: '540px',
+            width: '100%',
+            padding: '2rem',
+            position: 'relative'
+          }}>
+            <button
+              onClick={() => setSchoolQuoteOpen(false)}
+              style={{
+                position: 'absolute',
+                top: '1.25rem',
+                right: '1.25rem',
+                background: 'rgba(255,255,255,0.08)',
+                border: 'none',
+                color: '#ffffff',
+                borderRadius: '50%',
+                width: '34px',
+                height: '34px',
+                cursor: 'pointer',
+                fontSize: '1.2rem'
+              }}
+            >
+              ×
+            </button>
+
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#ffffff', marginBottom: '0.25rem' }}>
+              School &amp; Club STEM Lab Quote
+            </h3>
+            <p style={{ color: '#94a3b8', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+              Equip 10 to 100+ students with hardware kits, curriculum manuals, and teacher workshops.
+            </p>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div style={{ background: '#1e293b', padding: '1rem', borderRadius: '12px' }}>
+                <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#d8b4fe' }}>Direct Admissions &amp; Lab Desk:</div>
+                <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '0.25rem' }}>
+                  📞 Phone/WhatsApp: <strong>+233 55 199 3820</strong><br />
+                  ✉️ Email: <strong>admissions@koneacademy.io</strong><br />
+                  📍 Lab Center: Accra, Ghana
+                </div>
+              </div>
+
+              <button
+                onClick={handleSchoolQuoteWhatsApp}
+                style={{
+                  background: '#25d366',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '0.85rem',
+                  fontWeight: 800,
+                  fontSize: '0.95rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  boxShadow: '0 4px 15px rgba(37, 211, 102, 0.35)'
+                }}
+              >
+                <MessageCircle size={18} />
+                <span>Chat with Lab Director on WhatsApp</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
