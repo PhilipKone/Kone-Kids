@@ -86,7 +86,7 @@
       }
     }
 
-    /* 1. TOP BRAND BAR */
+    /* 1. TOP BRAND HEADER */
     .top-header {
       display: flex;
       align-items: center;
@@ -126,7 +126,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      gap: 4px;
+      gap: 3px;
     }
     .badge-item {
       font-size: 10.5px;
@@ -140,6 +140,9 @@
       color: #16a34a;
       font-size: 10px;
       font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
     }
 
     /* 2. HERO CALLOUT */
@@ -189,7 +192,7 @@
       text-transform: uppercase;
     }
 
-    /* 3. THREE CORE PROGRAM TRACKS */
+    /* 3. THREE CORE PROGRAM TRACKS WITH PROFESSIONAL SVG ICONS */
     .pillars-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -199,19 +202,25 @@
     .pillar-card {
       background: rgba(255, 255, 255, 0.97);
       border-radius: 12px;
-      padding: 10px 14px;
+      padding: 11px 14px;
       text-align: center;
       box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .pillar-icon-box {
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .pillar-title {
       font-family: 'Baloo 2', cursive;
       font-size: 16px;
       font-weight: 900;
       color: #1e3a8a;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
+      line-height: 1.2;
     }
     .pillar-desc {
       font-size: 10.5px;
@@ -230,7 +239,7 @@
       align-items: center;
       justify-content: space-between;
       margin-bottom: 8px;
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.75);
       backdrop-filter: blur(8px);
       padding: 6px 14px;
       border-radius: 9px;
@@ -333,7 +342,7 @@
       font-weight: 900;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       margin-bottom: 6px;
       white-space: nowrap;
     }
@@ -358,17 +367,13 @@
       color: #0f172a;
       font-weight: 800;
     }
-    .dual-list li .check-icon {
+    .check-icon {
       position: absolute;
       left: 0;
-      top: 0;
-      color: #16a34a;
-      font-weight: 900;
-      font-size: 11px;
-      line-height: 1.3;
+      top: 1px;
     }
 
-    /* 6. SLEEK CALL TO ACTION BANNER */
+    /* 6. SLEEK CALL TO ACTION BANNER (NO REPETITION, PROFESSIONAL SVGS) */
     .cta-banner {
       background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
       border: 1.5px solid rgba(255, 255, 255, 0.25);
@@ -384,10 +389,10 @@
     .cta-left {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 4px;
     }
     .cta-eyebrow {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 900;
       color: #fed7aa;
       text-transform: uppercase;
@@ -401,27 +406,22 @@
       line-height: 1;
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin: 2px 0;
     }
-    .cta-wa-tag {
-      color: #4ade80;
-      font-size: 13px;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 800;
+    .cta-icons-group {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-    }
-    .cta-wa-tag svg {
-      width: 16px;
-      height: 16px;
-      fill: #4ade80;
+      gap: 6px;
     }
     .cta-contact-sub {
       font-size: 11px;
       color: #cbd5e1;
       font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 2px;
     }
     .cta-contact-sub strong {
       color: #ffffff;
@@ -444,18 +444,20 @@
     }
     .cta-qr-text {
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 900;
       color: #fed7aa;
       line-height: 1.25;
       text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
     .cta-qr-text span {
       display: block;
       color: #ffffff;
-      font-size: 8.5px;
-      font-weight: 600;
+      font-size: 9px;
+      font-weight: 700;
       text-transform: none;
       margin-top: 2px;
+      letter-spacing: 0;
     }
   </style>
 </head>
@@ -490,13 +492,13 @@
       <polygon points="9,4.5 9.4,5.7 10.6,5.7 9.7,6.4 10,7.6 9,6.8 8,7.6 8.3,6.4 7.4,5.7 8.6,5.7" fill="#000000"/>
     </svg>
    NaCCA &amp; GES Aligned</div>
-        <div class="badge-sub">✔ 100% Solderless • Child-Safe (3V–5V)</div>
+        <div class="badge-sub">100% Solderless • Child-Safe (3V–5V)</div>
       </div>
     </div>
 
     <!-- 2. HIGH-IMPACT HERO BANNER -->
     <div class="hero-banner">
-      <div class="hero-eyebrow">🚀 Empowering Tomorrow's Young Innovators</div>
+      <div class="hero-eyebrow">EMPOWERING TOMORROW'S YOUNG INNOVATORS</div>
       <div class="hero-heading">PRACTICAL <span class="orange">CODING</span> • <span class="orange">ROBOTICS</span> • <span class="orange">AI</span></div>
       <div class="hero-text">
         Build real electronic circuits, program autonomous obstacle rovers, and train smart AI computer vision models.
@@ -506,27 +508,59 @@
       </div>
     </div>
 
-    <!-- 3. THREE CORE TECHNOLOGY TRACKS -->
+    <!-- 3. THREE CORE TECHNOLOGY TRACKS (WITH PRO SVG ICONS) -->
     <div class="pillars-grid">
       <div class="pillar-card">
-        <div class="pillar-title">💻 Coding &amp; Logic</div>
+        <div class="pillar-icon-box">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+      <line x1="8" y1="21" x2="16" y2="21"/>
+      <line x1="12" y1="17" x2="12" y2="21"/>
+      <polyline points="7 9 10 11.5 7 14"/>
+      <line x1="12" y1="14" x2="16" y2="14"/>
+    </svg>
+  </div>
+        <div class="pillar-title">Coding &amp; Logic</div>
         <div class="pillar-desc">Scratch to Python • Games, computational logic &amp; apps.</div>
       </div>
       <div class="pillar-card">
-        <div class="pillar-title">🤖 Robotics &amp; Rovers</div>
+        <div class="pillar-icon-box">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="11" width="18" height="10" rx="2"/>
+      <circle cx="12" cy="5" r="2"/>
+      <path d="M12 7v4"/>
+      <line x1="8" y1="15" x2="8" y2="15.01"/>
+      <line x1="16" y1="15" x2="16" y2="15.01"/>
+      <path d="M9 18h6"/>
+    </svg>
+  </div>
+        <div class="pillar-title">Robotics &amp; Rovers</div>
         <div class="pillar-desc">Motors, radar sensors &amp; autonomous solderless rovers.</div>
       </div>
       <div class="pillar-card">
-        <div class="pillar-title">🧠 AI &amp; Smart Tech</div>
+        <div class="pillar-icon-box">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1d4ed8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2a4 4 0 0 0-4 4c0 .74.2 1.43.55 2.03A4 4 0 0 0 5 12c0 1.28.6 2.42 1.54 3.16A4 4 0 0 0 9 21a4 4 0 0 0 3-1.35A4 4 0 0 0 15 21a4 4 0 0 0 2.46-5.84A4 4 0 0 0 19 12a4 4 0 0 0-3.55-3.97A4 4 0 0 0 16 6a4 4 0 0 0-4-4z"/>
+      <path d="M12 6v14"/>
+    </svg>
+  </div>
+        <div class="pillar-title">AI &amp; Smart Tech</div>
         <div class="pillar-desc">Computer vision, face recognition &amp; smart IoT agriculture.</div>
       </div>
     </div>
 
-    <!-- 4. REAL HARDWARE KITS SHOWCASE (SUPPLY & IN-CLASS LABS) -->
+    <!-- 4. HARDWARE KITS SHOWCASE (REMOVED 'REAL' AS REQUESTED) -->
     <div class="kits-section">
       <div class="kits-header-bar">
         <div class="kits-heading">
-          <span>📦 OUR REAL HARDWARE KITS (SUPPLY &amp; TRAINING)</span>
+          
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+      <line x1="12" y1="22.08" x2="12" y2="12"/>
+    </svg>
+  
+          <span>OUR HARDWARE KITS (SUPPLY &amp; TRAINING)</span>
         </div>
         <div class="kits-status-badge">Pre-Tested • Child-Safe DC Voltage</div>
       </div>
@@ -594,49 +628,117 @@
       </div>
     </div>
 
-    <!-- 5. DUAL BUSINESS VALUE: TEACHING + HARDWARE SUPPLY -->
+    <!-- 5. DUAL AUDIENCE PROPOSITION (PRO SVG ICONS & CLEAN BULLETS) -->
     <div class="dual-grid">
       <!-- For Parents -->
       <div class="dual-box">
         <div class="dual-title parent">
-          👨‍👩‍👧 For Parents &amp; Students (Online &amp; In-Home)
+          
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  
+          <span>For Parents &amp; Students (Online &amp; In-Home)</span>
         </div>
         <ul class="dual-list">
-          <li><span class="check-icon">✔</span><strong>Live Interactive Online Classes:</strong> Join from anywhere worldwide via live video coaching.</li>
-          <li><span class="check-icon">✔</span><strong>Private 1-on-1 In-Home Lessons:</strong> Dedicated vetted instructor visits your home in Accra.</li>
-          <li><span class="check-icon">✔</span><strong>Weekend Practical STEM Clubs:</strong> Saturday &amp; Sunday cohorts in Accra.</li>
-          <li><span class="check-icon">✔</span><strong>Direct Hardware Kit Delivery:</strong> Buy kits for home practice with video guides &amp; certificates.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Live Interactive Online Classes:</strong> Join from anywhere worldwide via live video coaching.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Private 1-on-1 In-Home Lessons:</strong> Dedicated vetted instructor visits your home in Accra.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Weekend Practical STEM Clubs:</strong> Saturday &amp; Sunday cohorts in Accra.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Direct Hardware Kit Delivery:</strong> Buy kits for home practice with video guides &amp; certificates.</li>
         </ul>
       </div>
 
       <!-- For Schools -->
       <div class="dual-box school-box">
         <div class="dual-title school">
-          🏫 For Schools &amp; Clubs (Lab Supply)
+          
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e3a8a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"/>
+      <path d="M18 22V5l-6-3-6 3v17"/>
+      <path d="M4 10h16"/>
+      <path d="M4 14h16"/>
+      <path d="M4 18h16"/>
+    </svg>
+  
+          <span>For Schools &amp; Clubs (Lab Supply)</span>
         </div>
         <ul class="dual-list">
-          <li><span class="check-icon">✔</span><strong>Bulk Hardware Lab Packs:</strong> 10x to 50x student sets with organized classroom storage bins.</li>
-          <li><span class="check-icon">✔</span><strong>Complete GES/NaCCA Curriculum:</strong> Detailed teacher lesson plans &amp; student workbooks.</li>
-          <li><span class="check-icon">✔</span><strong>Teacher Training &amp; Workshops:</strong> We equip your existing teaching staff to run STEM labs.</li>
-          <li><span class="check-icon">✔</span><strong>Turnkey STEM Club Setup:</strong> Launch an active, competition-ready Robotics &amp; AI club.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Bulk Hardware Lab Packs:</strong> 10x to 50x student sets with organized classroom storage bins.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Complete GES/NaCCA Curriculum:</strong> Detailed teacher lesson plans &amp; student workbooks.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Teacher Training &amp; Workshops:</strong> We equip your existing teaching staff to run STEM labs.</li>
+          <li>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="check-icon">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  <strong>Turnkey STEM Club Setup:</strong> Launch an active, competition-ready Robotics &amp; AI club.</li>
         </ul>
       </div>
     </div>
 
-    <!-- 6. HIGH-CONVERSION CTA BANNER WITH WHATSAPP QR CODE -->
+    <!-- 6. HIGH-CONVERSION CTA BANNER WITH SVG ICONS & UPDATED EMAIL -->
     <div class="cta-banner">
       <div class="cta-left">
-        <div class="cta-eyebrow">CALL OR WHATSAPP FOR INQUIRIES &amp; ORDERS:</div>
+        <div class="cta-eyebrow">INQUIRIES, ORDERS &amp; ENROLLMENT:</div>
         <div class="cta-phone-row">
-          055 199 3820
-          <span class="cta-wa-tag">
-            <svg viewBox="0 0 24 24"><path d="M12.031 2C6.496 2 2 6.496 2 12.031c0 1.975.57 3.82 1.558 5.378L2.05 22.05l4.802-1.464a9.98 9.98 0 0 0 5.179 1.445h.004c5.535 0 10.031-4.496 10.031-10.031 0-2.68-1.043-5.198-2.938-7.094A9.974 9.974 0 0 0 12.031 2zm5.836 14.195c-.244.686-1.22 1.258-1.69 1.332-.47.074-.925.105-3.033-.768-2.316-.96-3.793-3.32-3.908-3.475-.116-.156-.938-1.248-.938-2.38 0-1.133.593-1.69.805-1.923.212-.233.462-.292.616-.292.153 0 .307.003.44.009.141.008.33-.053.515.39.191.462.651 1.587.708 1.703.057.116.095.253.019.405-.076.152-.114.248-.228.38-.114.133-.24.298-.343.4-.114.114-.233.238-.1.467.133.228.59 1.006 1.282 1.622.888.791 1.637 1.036 1.87 1.15.233.115.37.096.507-.058.137-.153.59-.686.747-.922.157-.236.314-.198.53-.117.216.08 1.37.646 1.606.764.236.117.393.176.45.274.058.098.058.57-.186 1.256z"/></svg>
-            Call / WhatsApp
-          </span>
+          <div class="cta-icons-group">
+            
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="#ffffff">
+      <path d="M6.62 10.79a15.053 15.053 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+    </svg>
+  
+            
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#25d366" style="filter: drop-shadow(0 2px 5px rgba(37, 211, 102, 0.45));">
+      <path d="M12.031 2C6.496 2 2 6.496 2 12.031c0 1.975.57 3.82 1.558 5.378L2.05 22.05l4.802-1.464a9.98 9.98 0 0 0 5.179 1.445h.004c5.535 0 10.031-4.496 10.031-10.031 0-2.68-1.043-5.198-2.938-7.094A9.974 9.974 0 0 0 12.031 2zm5.836 14.195c-.244.686-1.22 1.258-1.69 1.332-.47.074-.925.105-3.033-.768-2.316-.96-3.793-3.32-3.908-3.475-.116-.156-.938-1.248-.938-2.38 0-1.133.593-1.69.805-1.923.212-.233.462-.292.616-.292.153 0 .307.003.44.009.141.008.33-.053.515.39.191.462.651 1.587.708 1.703.057.116.095.253.019.405-.076.152-.114.248-.228.38-.114.133-.24.298-.343.4-.114.114-.233.238-.1.467.133.228.59 1.006 1.282 1.622.888.791 1.637 1.036 1.87 1.15.233.115.37.096.507-.058.137-.153.59-.686.747-.922.157-.236.314-.198.53-.117.216.08 1.37.646 1.606.764.236.117.393.176.45.274.058.098.058.57-.186 1.256z"/>
+    </svg>
+  
+          </div>
+          <span>055 199 3820</span>
         </div>
         <div class="cta-contact-sub">
-          🌐 <strong>kids.koneacademy.io</strong> &nbsp;•&nbsp; ✉️ <strong>admissions@koneacademy.io</strong><br>
-          📍 Fast Delivery Across Ghana &nbsp;•&nbsp; Live Online Worldwide
+          <span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="2" y1="12" x2="22" y2="12"/>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+    </svg>
+   <strong>kids.koneacademy.io</strong></span>
+          <span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;">
+      <rect width="20" height="16" x="2" y="4" rx="2"/>
+      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+    </svg>
+   <strong>philipkone45@gmail.com</strong></span>
         </div>
       </div>
 
@@ -644,7 +746,7 @@
         <img src="data:image/png;base64,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" alt="Scan to chat on WhatsApp" class="cta-qr-img" />
         <div class="cta-qr-text">
           SCAN WITH PHONE
-          <span>Chat on WhatsApp<br>+233 55 199 3820</span>
+          <span>Instant WhatsApp Chat</span>
         </div>
       </div>
     </div>
