@@ -330,10 +330,10 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
             <span style={{ fontSize: '1.4rem' }}>🤖</span>
             <div>
               <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#fde047' }}>
-                Want to build with real motors &amp; sensors?
+                Build with real circuits, motors &amp; Science Sets!
               </div>
               <div style={{ fontSize: '0.75rem', color: '#cbd5e1' }}>
-                Explore hands-on robotics rovers, snap circuits, and smart IoT kits delivered across Ghana.
+                Ghana GES Science Sets (Basic 4–6), robotics rovers &amp; smart IoT kits with video missions.
               </div>
             </div>
           </div>

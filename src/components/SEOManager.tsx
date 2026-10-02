@@ -108,17 +108,56 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
     }
   },
   '/kits': {
-    title: "STEM & Robotics Kits for Kids | Hands-On Hardware - Kone Kids",
-    description: "Explore child-safe robotics kits, Arduino rovers, and smart IoT science kits with step-by-step video tutorials. Delivered across Ghana.",
-    keywords: "robotics kits for kids Ghana, STEM kits Accra, Arduino for kids, buy children coding kit, microbit robot kit",
+    title: "STEM & Science Sets for Kids | Ghana GES Curriculum & Robotics - Kone Kids",
+    description: "Hands-on Ghana GES / NaCCA Science Sets (Basic 4.1 to 6.3) and child-safe robotics rovers with online mission guides. Fast doorstep delivery across Accra and Ghana.",
+    keywords: "Ghana science sets, GES science kit Basic 4 5 6, NaCCA STEM kits, robotics kits for kids Ghana, STEM kits Accra, buy children coding kit, microbit robot kit",
     schema: {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      "name": "Kone Kids STEM & Robotics Kits",
+      "name": "Kone Kids STEM Hardware & Ghana GES Science Sets",
       "itemListElement": [
         {
           "@type": "Product",
           "position": 1,
+          "name": "Science Set 4.1: Plants & Food Production (Ghana GES)",
+          "description": "Ghana NaCCA B4.1 aligned hands-on experiments for plant parts, photosynthesis, and food production.",
+          "offers": {
+            "@type": "Offer",
+            "price": "125.00",
+            "priceCurrency": "GHS",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kids.koneacademy.io/kits/"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 2,
+          "name": "Science Set 5.1: Cells, Water & Matter (Ghana GES)",
+          "description": "Ghana NaCCA B5.1 aligned hands-on experiments for animal cells, water purification, and states of matter.",
+          "offers": {
+            "@type": "Offer",
+            "price": "135.00",
+            "priceCurrency": "GHS",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kids.koneacademy.io/kits/"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 3,
+          "name": "Science Set 6.1: Human Body & Ecosystems (Ghana GES)",
+          "description": "Ghana NaCCA B6.1 aligned hands-on experiments for human systems, nutrition, and food chains.",
+          "offers": {
+            "@type": "Offer",
+            "price": "145.00",
+            "priceCurrency": "GHS",
+            "availability": "https://schema.org/InStock",
+            "url": "https://kids.koneacademy.io/kits/"
+          }
+        },
+        {
+          "@type": "Product",
+          "position": 4,
           "name": "Kone Junior Inventor Snap Circuit Kit",
           "description": "Snap-together visual circuitry, sound buzzers, and multi-color lights for early STEM thinkers.",
           "offers": {
@@ -131,7 +170,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
         },
         {
           "@type": "Product",
-          "position": 2,
+          "position": 5,
           "name": "Kone Explorer 2WD Autonomous Robotics Rover",
           "description": "Assemble, wire, and code an autonomous obstacle-avoiding smart rover with ultrasonic eyes.",
           "offers": {
@@ -144,7 +183,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
         },
         {
           "@type": "Product",
-          "position": 3,
+          "position": 6,
           "name": "Kone IoT Smart Greenhouse & Farm Telemetry Kit",
           "description": "Connect real soil probes, humidity sensors, and automatic water pumps to cloud Wi-Fi dashboards.",
           "offers": {
@@ -157,7 +196,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
         },
         {
           "@type": "Product",
-          "position": 4,
+          "position": 7,
           "name": "Kone AI Vision & Voice Companion Kit",
           "description": "Train computer vision models to recognize gestures, faces, and voice commands on a moving robot head.",
           "offers": {

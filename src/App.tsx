@@ -1045,7 +1045,7 @@ function AppContent() {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
   const isStandaloneStudio = location.pathname === '/studio' || location.pathname === '/editor' || location.pathname === '/playground';
   const isMissionPage = location.pathname.includes('/mission/') || isStandaloneStudio;
-  const isPortalPage = location.pathname === '/class-login' || location.pathname === '/teacher-dashboard';
+  const isPortalPage = location.pathname === '/class-login' || location.pathname === '/teacher-dashboard' || location.pathname.startsWith('/kits') || location.pathname.startsWith('/stem-kits');
   const showMobileBottomNav = isMobile && !isMissionPage && !isPortalPage;
 
   React.useEffect(() => {
