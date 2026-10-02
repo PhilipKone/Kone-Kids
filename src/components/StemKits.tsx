@@ -26,6 +26,7 @@ import {
   Percent
 } from 'lucide-react';
 import { STEM_KITS, StemKit, SCHOOL_PACK_OFFERING } from '../data/stemKits';
+import { useIsMobile } from '../hooks/useMediaQuery';
 
 interface CartItem {
   kitId: string;
@@ -75,6 +76,7 @@ const WhatsAppIcon: React.FC<{ size?: number; className?: string; color?: string
 );
 
 export default function StemKits() {
+  const isMobile = useIsMobile();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [ageFilter, setAgeFilter] = useState<string>('All');
   const [currency, setCurrency] = useState<'GHS' | 'USD'>('GHS');
@@ -301,222 +303,436 @@ export default function StemKits() {
       
       {/* 1. TOP HEADER & NAVIGATION */}
       <header style={{
-        background: 'rgba(15, 23, 42, 0.95)',
+        background: 'rgba(15, 23, 42, 0.96)',
         backdropFilter: 'blur(12px)',
         borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        padding: '0.75rem 1.25rem'
+        padding: isMobile ? '0.55rem 0.85rem' : '0.75rem 1.25rem'
       }}>
-        <div style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem',
-          flexWrap: 'wrap'
-        }}>
-          {/* Logo & Back Link */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <Link 
-              to="/" 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                color: '#94a3b8',
-                textDecoration: 'none',
-                fontSize: '0.85rem',
-                fontWeight: 700,
-                padding: '0.4rem 0.75rem',
-                borderRadius: '10px',
-                background: 'rgba(255,255,255,0.05)',
-                transition: 'all 0.2s'
-              }}
-            >
-              <ArrowLeft size={16} />
-              <span>Learning Hub</span>
-            </Link>
+        {isMobile ? (
+          <div>
+            {/* Mobile Row 1: Back + Title on Left, Compact Controls on Right */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '0.5rem'
+            }}>
+              {/* Left: Back button & clean title */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', minWidth: 0 }}>
+                <Link 
+                  to="/" 
+                  aria-label="Back to Learning Hub"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '9px',
+                    background: 'rgba(255, 255, 255, 0.06)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    color: '#cbd5e1',
+                    textDecoration: 'none',
+                    flexShrink: 0
+                  }}
+                >
+                  <ArrowLeft size={17} />
+                </Link>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{
-                background: 'linear-gradient(135deg, #f97316 0%, #e11d48 100%)',
-                color: '#ffffff',
-                padding: '0.35rem 0.65rem',
-                borderRadius: '10px',
-                fontWeight: 900,
-                fontSize: '0.85rem',
-                letterSpacing: '0.02em',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem'
-              }}>
-                <Cpu size={16} />
-                <span>KONE STEM STORE</span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{
+                    fontFamily: "'Baloo 2', 'Nunito', sans-serif",
+                    fontSize: '0.98rem',
+                    fontWeight: 900,
+                    color: '#ffffff',
+                    lineHeight: 1.15,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.3rem',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    <span>STEM Store</span>
+                    <span style={{
+                      fontSize: '0.62rem',
+                      padding: '0.08rem 0.35rem',
+                      borderRadius: '4px',
+                      background: 'rgba(249, 115, 22, 0.25)',
+                      color: '#fb923c',
+                      border: '1px solid rgba(249, 115, 22, 0.4)',
+                      fontWeight: 800
+                    }}>GH</span>
+                  </div>
+                  <div style={{ fontSize: '0.68rem', color: '#94a3b8', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    Kone Kids Hardware
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Compact Segmented Switcher, WhatsApp Icon, Cart Icon */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
+                {/* Sleek Segmented Currency */}
+                <div style={{
+                  display: 'inline-flex',
+                  background: '#1e293b',
+                  padding: '2px',
+                  borderRadius: '8px',
+                  border: '1px solid rgba(255,255,255,0.08)'
+                }}>
+                  <button
+                    onClick={() => setCurrency('GHS')}
+                    style={{
+                      padding: '0.25rem 0.42rem',
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: currency === 'GHS' ? '#f97316' : 'transparent',
+                      color: currency === 'GHS' ? '#ffffff' : '#94a3b8',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      lineHeight: 1
+                    }}
+                  >
+                    GH₵
+                  </button>
+                  <button
+                    onClick={() => setCurrency('USD')}
+                    style={{
+                      padding: '0.25rem 0.42rem',
+                      borderRadius: '6px',
+                      border: 'none',
+                      background: currency === 'USD' ? '#f97316' : 'transparent',
+                      color: currency === 'USD' ? '#ffffff' : '#94a3b8',
+                      fontSize: '0.72rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      lineHeight: 1
+                    }}
+                  >
+                    $
+                  </button>
+                </div>
+
+                {/* Authentic WhatsApp Icon Button */}
+                <a
+                  href="https://wa.me/233551993820?text=Hello%20Kone%20Kids!%20I%20have%20an%20inquiry%20about%20your%20STEM%20kits."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Chat on WhatsApp"
+                  style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '9px',
+                    background: 'rgba(37, 211, 102, 0.15)',
+                    border: '1px solid rgba(37, 211, 102, 0.35)',
+                    color: '#25D366',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textDecoration: 'none'
+                  }}
+                  title="Chat with STEM Coordinator on WhatsApp"
+                >
+                  <WhatsAppIcon size={17} />
+                </a>
+
+                {/* Cart Icon Button with floating Badge */}
+                <button
+                  onClick={() => setIsCartOpen(true)}
+                  aria-label="Open Cart"
+                  style={{
+                    position: 'relative',
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '9px',
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    border: 'none',
+                    color: '#ffffff',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(16, 185, 129, 0.35)'
+                  }}
+                >
+                  <ShoppingCart size={17} />
+                  {totalCartItems > 0 && (
+                    <span style={{
+                      position: 'absolute',
+                      top: '-4px',
+                      right: '-4px',
+                      minWidth: '16px',
+                      height: '16px',
+                      borderRadius: '999px',
+                      background: '#ef4444',
+                      color: '#ffffff',
+                      fontSize: '0.65rem',
+                      fontWeight: 900,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      padding: '0 2px',
+                      border: '2px solid #0f172a'
+                    }}>
+                      {totalCartItems}
+                    </span>
+                  )}
+                </button>
               </div>
             </div>
-          </div>
 
-          {/* Search Bar */}
+            {/* Mobile Row 2: Compact Search Bar */}
+            <div style={{ marginTop: '0.5rem', position: 'relative' }}>
+              <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+              <input 
+                type="text"
+                placeholder="Search kits, rovers, GES science sets..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.42rem 1.8rem 0.42rem 2.1rem',
+                  background: '#1e293b',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '9px',
+                  color: '#ffffff',
+                  fontSize: '0.82rem',
+                  outline: 'none',
+                  boxSizing: 'border-box'
+                }}
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: '8px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    padding: '2px'
+                  }}
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          </div>
+        ) : (
           <div style={{
-            flex: '1 1 320px',
-            maxWidth: '520px',
-            position: 'relative'
+            maxWidth: '1280px',
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1rem'
           }}>
-            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
-            <input 
-              type="text"
-              placeholder="Search rovers, sensors, snap circuits, microcontrollers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              style={{
-                width: '100%',
-                padding: '0.6rem 2.2rem 0.6rem 2.5rem',
-                background: '#1e293b',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '12px',
-                color: '#ffffff',
-                fontSize: '0.88rem',
-                outline: 'none',
-                boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)'
-              }}
-            />
-            {searchQuery && (
-              <button 
-                onClick={() => setSearchQuery('')}
+            {/* Logo & Back Link */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Link 
+                to="/" 
                 style={{
-                  position: 'absolute',
-                  right: '10px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  background: 'none',
-                  border: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
                   color: '#94a3b8',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem'
+                  textDecoration: 'none',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  padding: '0.4rem 0.75rem',
+                  borderRadius: '10px',
+                  background: 'rgba(255,255,255,0.05)',
+                  transition: 'all 0.2s'
                 }}
               >
-                ×
-              </button>
-            )}
-          </div>
+                <ArrowLeft size={16} />
+                <span>Learning Hub</span>
+              </Link>
 
-          {/* Right Controls */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div style={{
-              display: 'inline-flex',
-              background: '#1e293b',
-              padding: '0.2rem',
-              borderRadius: '10px',
-              border: '1px solid rgba(255,255,255,0.08)'
-            }}>
-              <button
-                onClick={() => setCurrency('GHS')}
-                style={{
-                  padding: '0.35rem 0.65rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: currency === 'GHS' ? '#f97316' : 'transparent',
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{
+                  background: 'linear-gradient(135deg, #f97316 0%, #e11d48 100%)',
                   color: '#ffffff',
-                  fontSize: '0.8rem',
-                  fontWeight: 800,
-                  cursor: 'pointer'
-                }}
-              >
-                GH₵ (GHS)
-              </button>
-              <button
-                onClick={() => setCurrency('USD')}
-                style={{
                   padding: '0.35rem 0.65rem',
-                  borderRadius: '8px',
-                  border: 'none',
-                  background: currency === 'USD' ? '#f97316' : 'transparent',
-                  color: '#ffffff',
-                  fontSize: '0.8rem',
-                  fontWeight: 800,
-                  cursor: 'pointer'
-                }}
-              >
-                $ (USD)
-              </button>
+                  borderRadius: '10px',
+                  fontWeight: 900,
+                  fontSize: '0.85rem',
+                  letterSpacing: '0.02em',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem'
+                }}>
+                  <Cpu size={16} />
+                  <span>KONE STEM STORE</span>
+                </div>
+              </div>
             </div>
 
-            <a
-              href="https://wa.me/233551993820?text=Hello%20Kone%20Kids!%20I%20have%20an%20inquiry%20about%20your%20STEM%20kits."
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                color: '#4ade80',
-                textDecoration: 'none',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                padding: '0.4rem 0.75rem',
-                borderRadius: '10px',
-                background: 'rgba(37, 211, 102, 0.12)',
-                border: '1px solid rgba(37, 211, 102, 0.25)',
-                transition: 'all 0.2s'
-              }}
-              title="Chat with STEM Lab Coordinator on WhatsApp"
-            >
-              <WhatsAppIcon size={16} />
-              <span>055 199 3820</span>
-            </a>
-
-            <button
-              onClick={() => setIsCartOpen(true)}
-              style={{
-                position: 'relative',
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                color: '#ffffff',
-                border: 'none',
-                borderRadius: '12px',
-                padding: '0.5rem 1rem',
-                fontSize: '0.88rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
-              }}
-            >
-              <ShoppingCart size={18} />
-              <span>Cart</span>
-              {totalCartItems > 0 && (
-                <span style={{
-                  background: '#ef4444',
+            {/* Search Bar */}
+            <div style={{
+              flex: '1 1 320px',
+              maxWidth: '520px',
+              position: 'relative'
+            }}>
+              <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#64748b' }} />
+              <input 
+                type="text"
+                placeholder="Search rovers, sensors, snap circuits, microcontrollers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.6rem 2.2rem 0.6rem 2.5rem',
+                  background: '#1e293b',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '12px',
                   color: '#ffffff',
-                  borderRadius: '999px',
-                  padding: '0.15rem 0.45rem',
-                  fontSize: '0.75rem',
-                  fontWeight: 900,
-                  marginLeft: '0.15rem'
-                }}>
-                  {totalCartItems}
-                </span>
+                  fontSize: '0.88rem',
+                  outline: 'none',
+                  boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.3)'
+                }}
+              />
+              {searchQuery && (
+                <button 
+                  onClick={() => setSearchQuery('')}
+                  style={{
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
+                    color: '#94a3b8',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  ×
+                </button>
               )}
-            </button>
+            </div>
+
+            {/* Right Controls */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <div style={{
+                display: 'inline-flex',
+                background: '#1e293b',
+                padding: '0.2rem',
+                borderRadius: '10px',
+                border: '1px solid rgba(255,255,255,0.08)'
+              }}>
+                <button
+                  onClick={() => setCurrency('GHS')}
+                  style={{
+                    padding: '0.35rem 0.65rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: currency === 'GHS' ? '#f97316' : 'transparent',
+                    color: '#ffffff',
+                    fontSize: '0.8rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  GH₵ (GHS)
+                </button>
+                <button
+                  onClick={() => setCurrency('USD')}
+                  style={{
+                    padding: '0.35rem 0.65rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: currency === 'USD' ? '#f97316' : 'transparent',
+                    color: '#ffffff',
+                    fontSize: '0.8rem',
+                    fontWeight: 800,
+                    cursor: 'pointer'
+                  }}
+                >
+                  $ (USD)
+                </button>
+              </div>
+
+              <a
+                href="https://wa.me/233551993820?text=Hello%20Kone%20Kids!%20I%20have%20an%20inquiry%20about%20your%20STEM%20kits."
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  color: '#4ade80',
+                  textDecoration: 'none',
+                  fontSize: '0.82rem',
+                  fontWeight: 800,
+                  padding: '0.4rem 0.75rem',
+                  borderRadius: '10px',
+                  background: 'rgba(37, 211, 102, 0.12)',
+                  border: '1px solid rgba(37, 211, 102, 0.25)',
+                  transition: 'all 0.2s'
+                }}
+                title="Chat with STEM Lab Coordinator on WhatsApp"
+              >
+                <WhatsAppIcon size={16} />
+                <span>055 199 3820</span>
+              </a>
+
+              <button
+                onClick={() => setIsCartOpen(true)}
+                style={{
+                  position: 'relative',
+                  background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                  color: '#ffffff',
+                  border: 'none',
+                  borderRadius: '12px',
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.88rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)'
+                }}
+              >
+                <ShoppingCart size={18} />
+                <span>Cart</span>
+                {totalCartItems > 0 && (
+                  <span style={{
+                    background: '#ef4444',
+                    color: '#ffffff',
+                    borderRadius: '999px',
+                    padding: '0.15rem 0.45rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 900,
+                    marginLeft: '0.15rem'
+                  }}>
+                    {totalCartItems}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </header>
 
       {/* 3. HERO STOREFRONT BANNER & TRUST STRIP */}
       <section style={{
         maxWidth: '1280px',
-        margin: '1.5rem auto',
-        padding: '0 1.25rem'
+        margin: isMobile ? '0.75rem auto' : '1.5rem auto',
+        padding: isMobile ? '0 0.85rem' : '0 1.25rem'
       }}>
         <div style={{
           background: 'radial-gradient(ellipse at top right, rgba(249, 115, 22, 0.22) 0%, rgba(30, 27, 75, 0.95) 100%), #0f172a',
           border: '1px solid rgba(255, 255, 255, 0.1)',
-          borderRadius: '24px',
-          padding: '2.5rem 2rem',
+          borderRadius: isMobile ? '16px' : '24px',
+          padding: isMobile ? '1.25rem 1rem' : '2.5rem 2rem',
           position: 'relative',
           overflow: 'hidden',
           boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)'
@@ -525,25 +741,25 @@ export default function StemKits() {
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.4rem',
+              gap: '0.35rem',
               background: 'rgba(249, 115, 22, 0.2)',
               border: '1px solid rgba(249, 115, 22, 0.4)',
               color: '#fdba74',
-              padding: '0.35rem 0.85rem',
+              padding: isMobile ? '0.25rem 0.65rem' : '0.35rem 0.85rem',
               borderRadius: '999px',
-              fontSize: '0.8rem',
+              fontSize: isMobile ? '0.72rem' : '0.8rem',
               fontWeight: 800,
-              marginBottom: '1rem'
+              marginBottom: isMobile ? '0.6rem' : '1rem'
             }}>
-              <Sparkles size={14} />
+              <Sparkles size={13} />
               OFFICIAL HANDS-ON STEM HARDWARE
             </div>
 
             <h1 style={{
-              fontSize: 'clamp(2rem, 4vw, 3.2rem)',
+              fontSize: isMobile ? '1.4rem' : 'clamp(2rem, 4vw, 3.2rem)',
               fontWeight: 900,
-              lineHeight: 1.15,
-              marginBottom: '1rem',
+              lineHeight: 1.2,
+              marginBottom: isMobile ? '0.6rem' : '1rem',
               letterSpacing: '-0.02em',
               fontFamily: "'Baloo 2', 'Nunito', sans-serif"
             }}>
@@ -551,10 +767,10 @@ export default function StemKits() {
             </h1>
 
             <p style={{
-              fontSize: '1.05rem',
+              fontSize: isMobile ? '0.85rem' : '1.05rem',
               color: '#cbd5e1',
-              lineHeight: 1.6,
-              marginBottom: '1.75rem',
+              lineHeight: 1.5,
+              marginBottom: isMobile ? '1rem' : '1.75rem',
               maxWidth: '680px'
             }}>
               Child-safe, solderless electronics and smart rovers delivered across Ghana. Every kit connects directly to our online interactive coding missions with step-by-step video builds.
@@ -563,48 +779,48 @@ export default function StemKits() {
             {/* Trust Badges Strip */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: '1rem',
+              gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(auto-fit, minmax(180px, 1fr))',
+              gap: isMobile ? '0.6rem' : '1rem',
               borderTop: '1px solid rgba(255,255,255,0.1)',
-              paddingTop: '1.25rem'
+              paddingTop: isMobile ? '0.85rem' : '1.25rem'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{ background: 'rgba(56, 189, 248, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#38bdf8' }}>
-                  <Truck size={18} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ background: 'rgba(56, 189, 248, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#38bdf8', flexShrink: 0 }}>
+                  <Truck size={16} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Fast Ghana Dispatch</div>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>24–48h Accra &amp; Kumasi</div>
+                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>Fast Dispatch</div>
+                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>Accra &amp; Kumasi</div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{ background: 'rgba(52, 211, 153, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#34d399' }}>
-                  <ShieldCheck size={18} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ background: 'rgba(52, 211, 153, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#34d399', flexShrink: 0 }}>
+                  <ShieldCheck size={16} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>14-Day Guarantee</div>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Free parts replacement</div>
+                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>14-Day Guarantee</div>
+                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>Free parts replacement</div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{ background: 'rgba(251, 191, 36, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#fbbf24' }}>
-                  <BookOpen size={18} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ background: 'rgba(251, 191, 36, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#fbbf24', flexShrink: 0 }}>
+                  <BookOpen size={16} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>Video Missions</div>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Illustrated build guide</div>
+                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>Video Missions</div>
+                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>Illustrated guide</div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                <div style={{ background: 'rgba(168, 85, 247, 0.15)', padding: '0.5rem', borderRadius: '10px', color: '#a855f7' }}>
-                  <Zap size={18} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <div style={{ background: 'rgba(168, 85, 247, 0.15)', padding: isMobile ? '0.35rem' : '0.5rem', borderRadius: '8px', color: '#a855f7', flexShrink: 0 }}>
+                  <Zap size={16} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.88rem' }}>MoMo &amp; Cards</div>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>MTN, Telecel &amp; Visa</div>
+                  <div style={{ fontWeight: 800, fontSize: isMobile ? '0.78rem' : '0.88rem' }}>MoMo &amp; Cards</div>
+                  <div style={{ fontSize: isMobile ? '0.68rem' : '0.75rem', color: '#94a3b8' }}>MTN, Telecel, Visa</div>
                 </div>
               </div>
             </div>
@@ -615,22 +831,31 @@ export default function StemKits() {
       {/* 4. FILTER, CATEGORY & SORT BAR */}
       <section style={{
         maxWidth: '1280px',
-        margin: '0 auto 1.5rem',
-        padding: '0 1.25rem'
+        margin: isMobile ? '0 auto 1rem' : '0 auto 1.5rem',
+        padding: isMobile ? '0 0.85rem' : '0 1.25rem'
       }}>
         <div style={{
           background: '#0f172a',
           border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '16px',
-          padding: '1rem',
+          borderRadius: isMobile ? '12px' : '16px',
+          padding: isMobile ? '0.75rem' : '1rem',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem',
-          flexWrap: 'wrap'
+          flexDirection: 'column',
+          gap: '0.75rem'
         }}>
-          {/* Category Pills */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {/* Category Pills: Horizontal swipeable rail on mobile */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            overflowX: 'auto',
+            flexWrap: isMobile ? 'nowrap' : 'wrap',
+            whiteSpace: 'nowrap',
+            paddingBottom: isMobile ? '4px' : '0',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}>
             {categories.map(cat => {
               const count = cat === 'All' 
                 ? STEM_KITS.length 
@@ -643,12 +868,13 @@ export default function StemKits() {
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
                   style={{
-                    padding: '0.45rem 0.9rem',
-                    borderRadius: '10px',
+                    flexShrink: 0,
+                    padding: isMobile ? '0.35rem 0.75rem' : '0.45rem 0.9rem',
+                    borderRadius: '9px',
                     border: isActive ? 'none' : '1px solid rgba(255,255,255,0.1)',
                     background: isActive ? '#f97316' : '#1e293b',
                     color: '#ffffff',
-                    fontSize: '0.84rem',
+                    fontSize: isMobile ? '0.78rem' : '0.84rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     display: 'inline-flex',
@@ -663,7 +889,7 @@ export default function StemKits() {
                     background: isActive ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.1)',
                     padding: '0.1rem 0.35rem',
                     borderRadius: '999px',
-                    fontSize: '0.75rem'
+                    fontSize: '0.72rem'
                   }}>
                     {count}
                   </span>
@@ -673,22 +899,39 @@ export default function StemKits() {
           </div>
 
           {/* Age Filters & Sort Dropdown */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.8rem', color: '#94a3b8' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '0.5rem',
+            flexWrap: 'wrap',
+            paddingTop: '0.5rem',
+            borderTop: '1px solid rgba(255,255,255,0.06)'
+          }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              fontSize: '0.78rem',
+              color: '#94a3b8',
+              overflowX: isMobile ? 'auto' : 'visible',
+              whiteSpace: 'nowrap'
+            }}>
               <span>Age:</span>
               {ageFilters.map(af => (
                 <button
                   key={af.value}
                   onClick={() => setAgeFilter(af.value)}
                   style={{
-                    padding: '0.3rem 0.6rem',
-                    borderRadius: '8px',
+                    padding: '0.25rem 0.55rem',
+                    borderRadius: '6px',
                     border: 'none',
                     background: ageFilter === af.value ? 'rgba(14, 165, 233, 0.25)' : 'transparent',
                     color: ageFilter === af.value ? '#38bdf8' : '#94a3b8',
                     fontWeight: 700,
-                    fontSize: '0.8rem',
-                    cursor: 'pointer'
+                    fontSize: '0.76rem',
+                    cursor: 'pointer',
+                    flexShrink: 0
                   }}
                 >
                   {af.label}
@@ -696,8 +939,8 @@ export default function StemKits() {
               ))}
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Sort:</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexShrink: 0 }}>
+              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>Sort:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
@@ -705,15 +948,15 @@ export default function StemKits() {
                   background: '#1e293b',
                   color: '#ffffff',
                   border: '1px solid rgba(255, 255, 255, 0.12)',
-                  borderRadius: '8px',
-                  padding: '0.35rem 0.75rem',
-                  fontSize: '0.82rem',
+                  borderRadius: '6px',
+                  padding: '0.25rem 0.55rem',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
                   outline: 'none',
                   cursor: 'pointer'
                 }}
               >
-                <option value="featured">Featured (Best Deals)</option>
+                <option value="featured">Featured</option>
                 <option value="sales">Most Popular</option>
                 <option value="rating">Highest Rated</option>
                 <option value="price-asc">Price: Low to High</option>
@@ -728,7 +971,7 @@ export default function StemKits() {
       <main style={{
         maxWidth: '1280px',
         margin: '0 auto',
-        padding: '0 1.25rem'
+        padding: isMobile ? '0 0.85rem' : '0 1.25rem'
       }}>
         {filteredKits.length === 0 ? (
           <div style={{
@@ -1448,9 +1691,9 @@ export default function StemKits() {
             maxHeight: '90vh',
             overflowY: 'auto',
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '1.75rem',
-            padding: '2rem',
+            gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: isMobile ? '1.25rem' : '1.75rem',
+            padding: isMobile ? '1.25rem' : '2rem',
             position: 'relative'
           }}>
             <button
@@ -1481,7 +1724,7 @@ export default function StemKits() {
               overflow: 'hidden',
               background: '#1e293b',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              height: '360px'
+              height: isMobile ? '240px' : '360px'
             }}>
               <img 
                 src={getSafeKitImage(quickViewKit.id)} 
