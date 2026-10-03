@@ -270,7 +270,7 @@ export const AuthorProfile: React.FC = () => {
 
               {/* Contact Email */}
               <a 
-                href="mailto:contact@koneacademy.io"
+                href="mailto:philipkone45@gmail.com"
                 style={{
                   background: 'rgba(249, 115, 22, 0.08)',
                   color: '#f97316',
