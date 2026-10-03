@@ -1,0 +1,16 @@
+# Kone Kids
+
+> Playful Coding, Robotics, and AI STEM Academy for Youth Aged 5–17.
+
+Kone Kids empowers the next generation of engineers through hands-on gamified coding missions, visual Blockly algorithms, Lego robotics, and child-safe AI experimentation.
+
+## Core Capabilities & Tracks
+
+- [Coding Lab](https://kids.koneacademy.io/#/coding) - Scratch, Blockly visual logic, Python for beginners, and game creation.
+- [Robotics Lab](https://kids.koneacademy.io/#/robotics) - Sensor kits, motor kinematics, and hands-on hardware builds.
+- [AI Studio](https://kids.koneacademy.io/#/ai) - Playful machine learning models, voice recognizers, and interactive neural games.
+- [Parent Hub & Blog](https://kids.koneacademy.io/#/blog) - Curriculum guides, digital safety, and youth tech education insights.
+
+## Parent Ecosystem
+
+- [Kone Academy Main Hub](https://www.koneacademy.io/) - Multidisciplinary innovation and technology collective.
