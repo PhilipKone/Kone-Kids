@@ -19,60 +19,89 @@ export interface ExtensionTool {
 
 export const ToolBrandLogo: React.FC<{ toolId: string; size?: number }> = ({ toolId, size = 36 }) => {
   // Direct vector SVG logos for lightning fast loading and zero external cookie/network issues
-
-  // Fallback SVG Badge
   switch (toolId) {
     case 'scratch':
       return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
           <rect width="24" height="24" rx="6" fill="#f59e0b" />
-          <path d="M12 4C7.58 4 4 7.58 4 12s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill="white" opacity="0.9" />
-          <path d="M12 8a4 4 0 100 8 4 4 0 000-8z" fill="#f59e0b" />
-          <path d="M15 11h-2V9a1 1 0 10-2 0v2H9a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2z" fill="white" />
+          {/* Official Scratch 'S' Emblem from MIT Scratch Foundation */}
+          <g transform="translate(3.5, 3.5) scale(0.71)">
+            <path
+              fill="white"
+              d="M11.406 11.312c-.78-.123-1.198-.654-.99-2.295l.023-.198c.175-1.426.321-1.743.996-1.706.198.013.426.14.654.33.211.247.68.568.945 1.204.19.466.254.77.281 1.098l.042.402v-.002a.68.68 0 0 0 1.342-.007c.008-.044.176-4.365.176-4.436 0-.38-.302-.69-.68-.696a.685.685 0 0 0-.682.688c0 .009-.001.605-.014 1.206-.536-.592-1.223-1.123-1.994-1.17-2.058-.11-2.283 1.811-2.419 2.918l-.02.196c-.278 2.189.441 3.569 2.13 3.837 1.838.293 3.063.72 3.074 1.868.007.446-.224.903-.627 1.254a2.163 2.163 0 0 1-1.749.507 3.233 3.233 0 0 1-.539-.141c-.24-.136-.847-.51-1.154-.942-.26-.364-.35-.937-.378-1.3.004-.163.005-.27.005-.283a.69.69 0 0 0-.669-.703.689.689 0 0 0-.696.682c0 .013-.017 1.367-.066 2.183-.07 1.313 0 2.426 0 2.474.028.382.35.67.727.644a.681.681 0 0 0 .635-.733c0-.006-.033-.545-.029-1.29a5.21 5.21 0 0 0 1.938.773 3.451 3.451 0 0 0 2.856-.82c.713-.619 1.122-1.464 1.11-2.32-.024-2.555-2.865-3.004-4.228-3.222M14.174 0a5.51 5.51 0 0 0-2.724.723h-.112c-2.637 0-4.937 1.392-6.15 3.728-.728 1.393-.9 2.75-.999 3.579-.012.089-.018.17-.028.262-.12.974-.123 1.904-.01 2.772a5.824 5.824 0 0 0-.625 2.529v.016a58.919 58.919 0 0 1-.057 1.95 29.72 29.72 0 0 0-.008 2.94l.013.209C3.698 21.676 6.159 24 9.083 24a5.516 5.516 0 0 0 3.463-1.21 8.357 8.357 0 0 0 5.195-2.08c1.826-1.587 2.859-3.845 2.83-6.19-.013-1.362-.346-2.638-.978-3.763.117-1.273.221-4.996.221-5.03 0-3.103-2.484-5.67-5.539-5.727zm.056 2.675c1.642.03 2.978 1.412 2.978 3.081 0 .038-.145 4.497-.215 4.883a3.152 3.152 0 0 1-.203.69c.756.89 1.165 2 1.175 3.256.021 1.555-.681 3.076-1.926 4.16a5.763 5.763 0 0 1-3.8 1.444 5.986 5.986 0 0 1-.718-.048 3.386 3.386 0 0 1-.172.215 2.97 2.97 0 0 1-2.264 1.038c-1.573 0-2.897-1.255-3.013-2.856l-.008-.122a27.366 27.366 0 0 1 .005-2.662c.039-.679.06-1.831.062-2.08a3.124 3.124 0 0 1 .783-2.025c-.237-.835-.312-1.836-.167-3.02l.024-.212c.083-.695.208-1.72.72-2.7.765-1.473 2.168-2.318 3.848-2.318a4.568 4.568 0 0 1 .824.07c.546-.5 1.27-.81 2.067-.794Z"
+            />
+          </g>
         </svg>
       );
     case 'codeorg':
       return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-          <rect width="24" height="24" rx="6" fill="#10b981" />
-          <rect x="5" y="5" width="6" height="6" rx="1.5" fill="white" />
-          <rect x="13" y="5" width="6" height="6" rx="1.5" fill="white" />
-          <rect x="5" y="13" width="6" height="6" rx="1.5" fill="white" />
-          <rect x="13" y="13" width="6" height="6" rx="1.5" fill="white" />
+          <rect width="24" height="24" rx="6" fill="#0093a7" />
+          {/* Authentic Code.org 4-Tile C-O-D-E Grid with Center Dot */}
+          <rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1.8" fill="white" />
+          <rect x="13" y="3.5" width="7.5" height="7.5" rx="1.8" fill="white" />
+          <rect x="3.5" y="13" width="7.5" height="7.5" rx="1.8" fill="white" />
+          <rect x="13" y="13" width="7.5" height="7.5" rx="1.8" fill="white" />
+          <text x="7.25" y="9.2" textAnchor="middle" dominantBaseline="middle" fill="#0093a7" fontSize="5.5" fontWeight="900" fontFamily="system-ui, -apple-system, sans-serif">C</text>
+          <text x="16.75" y="9.2" textAnchor="middle" dominantBaseline="middle" fill="#0093a7" fontSize="5.5" fontWeight="900" fontFamily="system-ui, -apple-system, sans-serif">O</text>
+          <text x="7.25" y="18.7" textAnchor="middle" dominantBaseline="middle" fill="#0093a7" fontSize="5.5" fontWeight="900" fontFamily="system-ui, -apple-system, sans-serif">D</text>
+          <text x="16.75" y="18.7" textAnchor="middle" dominantBaseline="middle" fill="#0093a7" fontSize="5.5" fontWeight="900" fontFamily="system-ui, -apple-system, sans-serif">E</text>
+          <circle cx="12" cy="12" r="0.9" fill="white" />
         </svg>
       );
     case 'makecode':
       return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
           <rect width="24" height="24" rx="6" fill="#0ea5e9" />
-          <circle cx="8" cy="12" r="3" stroke="white" strokeWidth="2.2" />
-          <circle cx="16" cy="12" r="3" stroke="white" strokeWidth="2.2" />
-          <path d="M8 9c2 0 6 6 8 6M8 15c2 0 6-6 8-6" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+          {/* Official BBC micro:bit Hardware Silhouette & Dual Display Matrix */}
+          <g transform="translate(3.5, 3.5) scale(0.71)">
+            <path
+              fill="white"
+              d="M6.857 5.143A6.865 6.865 0 000 12a6.864 6.864 0 006.857 6.857h10.287A6.863 6.863 0 0024 12c0-3.781-3.075-6.857-6.856-6.857zm0 2.744h10.287A4.117 4.117 0 0121.257 12a4.119 4.119 0 01-4.113 4.116H6.857A4.12 4.12 0 012.743 12a4.118 4.118 0 014.114-4.113zm10.168 2.729a1.385 1.385 0 10.003 2.77 1.385 1.385 0 00-.003-2.77zm-10.166 0a1.385 1.385 0 10-.003 2.771 1.385 1.385 0 00.003-2.77Z"
+            />
+          </g>
         </svg>
       );
     case 'tinkercad':
       return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-          <rect width="24" height="24" rx="6" fill="#ec4899" />
-          <path d="M12 4l7 4v8l-7 4-7-4V8l7-4z" stroke="white" strokeWidth="2" strokeLinejoin="round" fill="none" />
-          <path d="M12 4v8.5M19 8l-7 4M5 8l7 4" stroke="white" strokeWidth="2" />
+          <rect width="24" height="24" rx="6" fill="#0f172a" />
+          {/* Official Autodesk Tinkercad 9-Block Multi-Color 3D Grid */}
+          <rect x="3.5" y="3.5" width="4.8" height="4.8" rx="1.2" fill="#00bcd4" />
+          <rect x="9.6" y="3.5" width="4.8" height="4.8" rx="1.2" fill="#0288d1" />
+          <rect x="15.7" y="3.5" width="4.8" height="4.8" rx="1.2" fill="#1565c0" />
+          <rect x="3.5" y="9.6" width="4.8" height="4.8" rx="1.2" fill="#ffb300" />
+          <rect x="9.6" y="9.6" width="4.8" height="4.8" rx="1.2" fill="#0288d1" />
+          <rect x="15.7" y="9.6" width="4.8" height="4.8" rx="1.2" fill="#00bcd4" />
+          <rect x="3.5" y="15.7" width="4.8" height="4.8" rx="1.2" fill="#e53935" />
+          <rect x="9.6" y="15.7" width="4.8" height="4.8" rx="1.2" fill="#fb8c00" />
+          <rect x="15.7" y="15.7" width="4.8" height="4.8" rx="1.2" fill="#1565c0" />
         </svg>
       );
     case 'replit':
       return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-          <rect width="24" height="24" rx="6" fill="#a855f7" />
-          <path fillRule="evenodd" clipRule="evenodd" d="M6 6h4v4H6V6zm0 6h4v4H6v-4zm6 0h4v4h-4v-4zm0-6h6v4h-6V6z" fill="white" />
+          <rect width="24" height="24" rx="6" fill="#F26207" />
+          {/* Official Replit Prompt & Code Runner Mark */}
+          <g transform="translate(3.5, 3.5) scale(0.71)">
+            <path
+              fill="white"
+              d="M2 1.5A1.5 1.5 0 0 1 3.5 0h7A1.5 1.5 0 0 1 12 1.5V8H3.5A1.5 1.5 0 0 1 2 6.5ZM12 8h8.5A1.5 1.5 0 0 1 22 9.5v5a1.5 1.5 0 0 1-1.5 1.5H12ZM2 17.5A1.5 1.5 0 0 1 3.5 16H12v6.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 2 22.5Z"
+            />
+          </g>
         </svg>
       );
     case 'tynker':
     default:
       return (
         <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-          <rect width="24" height="24" rx="6" fill="#f97316" />
-          <path d="M7 10h2v4H7v-4zm8 0h2v4h-2v-4zm-5 1h4v2h-4v-2z" fill="white" />
-          <circle cx="8" cy="8" r="1.5" fill="white" />
-          <circle cx="16" cy="8" r="1.5" fill="white" />
+          <rect width="24" height="24" rx="6" fill="#ED1C24" />
+          {/* Official Tynker Playful Coding 't' & Star Spark */}
+          <path
+            d="M7 8.5h3V5.5c0-.8.6-1.5 1.5-1.5h1.5v4.5h4c.8 0 1.5.7 1.5 1.5s-.7 1.5-1.5 1.5h-4v6c0 1.4 1.1 2.5 2.5 2.5h1.5v3h-2c-3 0-5-2-5-5v-6.5H7c-.8 0-1.5-.7-1.5-1.5S6.2 8.5 7 8.5z"
+            fill="white"
+          />
+          <circle cx="18" cy="5.5" r="1.8" fill="#facc15" />
         </svg>
       );
   }
@@ -96,8 +125,8 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Code.org Studio',
     category: 'CS Fundamentals',
     icon: '🟩',
-    color: '#10b981',
-    textColor: '#047857',
+    color: '#0093a7',
+    textColor: '#007080',
     description: 'Hour of Code adventures, Dance Party, App Lab, and K-12 Computer Science courses.',
     url: 'https://studio.code.org',
     badge: 'Hour of Code',
@@ -120,8 +149,8 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Tinkercad Circuits',
     category: '3D & Electronics',
     icon: '🧊',
-    color: '#ec4899',
-    textColor: '#be185d',
+    color: '#0288d1',
+    textColor: '#01579b',
     description: 'Simulate Arduino circuits, breadboards, sensors, and 3D printing design.',
     url: 'https://www.tinkercad.com/circuits',
     badge: 'Autodesk 3D',
@@ -132,8 +161,8 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Replit Python & Web',
     category: 'Text-Based Coding',
     icon: '⚡',
-    color: '#a855f7',
-    textColor: '#6b21a8',
+    color: '#F26207',
+    textColor: '#c2410c',
     description: 'Collaborative cloud IDE for writing Python, HTML, CSS, JavaScript, and Node.js.',
     url: 'https://replit.com',
     badge: 'Cloud IDE',
@@ -144,8 +173,8 @@ export const EXTENSION_TOOLS: ExtensionTool[] = [
     name: 'Tynker STEM',
     category: 'Gamified Coding',
     icon: '🎮',
-    color: '#f97316',
-    textColor: '#c2410c',
+    color: '#ED1C24',
+    textColor: '#b91c1c',
     description: 'Gamified block coding courses, Minecraft modding, and robotics challenges.',
     url: 'https://www.tynker.com',
     badge: 'Gamified CS',

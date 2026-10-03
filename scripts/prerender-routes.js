@@ -14,12 +14,25 @@ const template = fs.readFileSync(templatePath, 'utf8');
 // Load STEM Kits & School Pack from data source
 let STEM_KITS = [];
 let SCHOOL_PACK_OFFERING = null;
+
 try {
-  const kitsData = require('../src/data/stemKits.ts');
-  STEM_KITS = kitsData.STEM_KITS || [];
-  SCHOOL_PACK_OFFERING = kitsData.SCHOOL_PACK_OFFERING || null;
+  const ts = require('typescript');
+  const kitsPath = path.resolve(__dirname, '../src/data/stemKits.ts');
+  const tsCode = fs.readFileSync(kitsPath, 'utf8');
+  const jsOutput = ts.transpileModule(tsCode, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
+  const mod = { exports: {} };
+  const fn = new Function('module', 'exports', 'require', jsOutput);
+  fn(mod, mod.exports, require);
+  STEM_KITS = mod.exports.STEM_KITS || [];
+  SCHOOL_PACK_OFFERING = mod.exports.SCHOOL_PACK_OFFERING || null;
 } catch (e) {
-  console.warn("Could not load stemKits.ts directly, attempting fallback:", e.message);
+  console.error("FATAL: Failed to compile and load stemKits.ts for prerendering:", e);
+  process.exit(1);
+}
+
+if (!STEM_KITS || STEM_KITS.length === 0) {
+  console.error("FATAL: No STEM kits loaded from stemKits.ts!");
+  process.exit(1);
 }
 
 const routes = [

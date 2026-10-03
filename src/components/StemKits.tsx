@@ -2585,7 +2585,7 @@ export default function StemKits() {
                 <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#4f46e5' }}>Direct Admissions &amp; Lab Desk:</div>
                 <div style={{ fontSize: '0.85rem', color: '#334155', marginTop: '0.35rem', lineHeight: 1.6 }}>
                   📞 Phone/WhatsApp: <strong>+233 55 199 3820</strong><br />
-                  ✉️ Email: <strong>admissions@koneacademy.io</strong><br />
+                  ✉️ Email: <strong>philipkone45@gmail.com</strong><br />
                   📍 Lab Center: Accra, Ghana
                 </div>
               </div>

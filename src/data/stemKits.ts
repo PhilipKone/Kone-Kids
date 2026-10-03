@@ -827,5 +827,5 @@ export const SCHOOL_PACK_OFFERING = {
     'Dedicated WhatsApp priority hardware support channel'
   ],
   contactPhone: '+233 55 199 3820',
-  contactEmail: 'admissions@koneacademy.io'
+  contactEmail: 'philipkone45@gmail.com'
 };
