@@ -207,21 +207,8 @@ function Home() {
             textDecoration: 'none', 
             fontWeight: 800, 
             fontSize: '0.95rem',
-            transition: 'color 0.2s',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.35rem'
+            transition: 'color 0.2s'
           }} className="hover-orange nav-link-desktop">
-            <span style={{ 
-              background: '#fef08a', 
-              color: '#854d0e', 
-              fontSize: '0.7rem', 
-              padding: '0.15rem 0.45rem', 
-              borderRadius: '6px', 
-              fontWeight: 800 
-            }}>
-              HARDWARE
-            </span>
             STEM Kits
           </Link>
 
@@ -283,69 +270,57 @@ function Home() {
             </Link>
           )}
           
-          {/* Language selector toggle (Desktop) */}
-          <div className="nav-link-desktop" style={{ display: 'flex', gap: '0.2rem', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '3px' }}>
-            {['en', 'fr', 'es', 'pt'].map((lang) => (
-              <button 
-                key={lang}
-                onClick={() => i18n.changeLanguage(lang)}
-                style={{
-                  background: i18n.language === lang ? 'linear-gradient(135deg, #ea580c 0%, #c2410c 100%)' : 'transparent',
-                  border: 'none',
-                  color: i18n.language === lang ? 'white' : 'var(--nav-link)',
-                  padding: '0.25rem 0.55rem',
-                  borderRadius: '8px',
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  fontFamily: "'Baloo 2', cursive",
-                  textTransform: 'uppercase'
-                }}
-              >
-                {lang}
-              </button>
-            ))}
-          </div>
-
-          {/* Language selector toggle (Mobile Dropdown) */}
-          <div className="nav-link-mobile" style={{ alignItems: 'center' }}>
-            <div style={{
-              position: 'relative',
+          {/* Unified Clean Language Selector */}
+          <div style={{
+            position: 'relative',
+            display: 'inline-flex',
+            alignItems: 'center',
+            background: 'var(--nav-pill-bg, rgba(255, 255, 255, 0.85))',
+            border: '1.5px solid var(--kids-border, #e2e8f0)',
+            borderRadius: '12px',
+            padding: '0.28rem 0.6rem',
+            gap: '0.35rem',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.03)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)'
+          }}>
+            <span style={{ fontSize: '0.9rem', lineHeight: 1 }} aria-hidden="true">🌐</span>
+            <select
+              value={i18n.language.slice(0, 2)}
+              onChange={(e) => {
+                i18n.changeLanguage(e.target.value);
+                sounds.playClick();
+              }}
+              aria-label="Select language"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--nav-link, #334155)',
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                fontFamily: "'Baloo 2', cursive",
+                outline: 'none',
+                appearance: 'none',
+                WebkitAppearance: 'none',
+                paddingRight: '0.9rem',
+                textTransform: 'uppercase'
+              }}
+            >
+              <option value="en" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>EN · English</option>
+              <option value="fr" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>FR · Français</option>
+              <option value="es" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>ES · Español</option>
+              <option value="pt" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>PT · Português</option>
+            </select>
+            <span style={{
+              position: 'absolute',
+              right: '0.45rem',
+              pointerEvents: 'none',
+              fontSize: '0.55rem',
+              color: 'var(--kids-text-muted, #64748b)',
               display: 'flex',
-              alignItems: 'center',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1.5px solid var(--nav-border)',
-              borderRadius: '12px',
-              padding: '0.35rem 0.55rem',
-              gap: '4px'
-            }}>
-              <span style={{ fontSize: '0.9rem', display: 'flex', alignItems: 'center' }}>🌐</span>
-              <select
-                value={i18n.language.slice(0, 2)}
-                onChange={(e) => {
-                  i18n.changeLanguage(e.target.value);
-                  sounds.playClick();
-                }}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  color: 'var(--nav-text)',
-                  fontSize: '0.8rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  fontFamily: "'Baloo 2', cursive",
-                  outline: 'none',
-                  paddingRight: '2px',
-                  appearance: 'none',
-                  WebkitAppearance: 'none'
-                }}
-              >
-                <option value="en" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>EN</option>
-                <option value="fr" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>FR</option>
-                <option value="es" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>ES</option>
-                <option value="pt" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>PT</option>
-              </select>
-            </div>
+              alignItems: 'center'
+            }}>▼</span>
           </div>
 
           {!studentName && (
