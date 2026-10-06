@@ -1879,20 +1879,23 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
         {/* Right: Language, JS/PY Switcher, Actions & Tools */}
         <div style={{ display: 'flex', gap: isMobile ? '0.25rem' : '0.5rem', alignItems: 'center', flexShrink: 0 }}>
-          {/* Dialect selector */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.2rem',
-            background: isDark ? 'rgba(255,255,255,0.06)' : '#f1f5f9',
-            borderRadius: '8px',
-            padding: isMobile ? '2px 4px' : '3px 6px',
-            border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0'
-          }}>
-            <span style={{ fontSize: '0.72rem', color: isDark ? 'rgba(255,255,255,0.7)' : '#64748b', display: isMobile ? 'none' : 'inline' }}>🗣️</span>
+          <div 
+            title="Mascot Voice Language / Ghanaian Dialect (English, Twi, Ga, Ewe)"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.2rem',
+              background: isDark ? 'rgba(255,255,255,0.06)' : '#f1f5f9',
+              borderRadius: '8px',
+              padding: isMobile ? '2px 4px' : '3px 6px',
+              border: isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid #e2e8f0'
+            }}
+          >
+            <span style={{ fontSize: '0.72rem', color: isDark ? 'rgba(255,255,255,0.7)' : '#64748b', display: isMobile ? 'none' : 'inline' }} aria-hidden="true">🗣️</span>
             <select
               value={dialect}
               onChange={(e) => setDialect(e.target.value as any)}
+              aria-label="Mascot voice dialect"
               style={{
                 background: 'transparent',
                 border: 'none',

@@ -14,6 +14,7 @@ const template = fs.readFileSync(templatePath, 'utf8');
 // Load STEM Kits & School Pack from data source
 let STEM_KITS = [];
 let SCHOOL_PACK_OFFERING = null;
+let CODING_MISSIONS = [];
 
 try {
   const ts = require('typescript');
@@ -25,8 +26,16 @@ try {
   fn(mod, mod.exports, require);
   STEM_KITS = mod.exports.STEM_KITS || [];
   SCHOOL_PACK_OFFERING = mod.exports.SCHOOL_PACK_OFFERING || null;
+
+  const missionsPath = path.resolve(__dirname, '../src/data/missions.ts');
+  const missionsTsCode = fs.readFileSync(missionsPath, 'utf8');
+  const missionsJs = ts.transpileModule(missionsTsCode, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
+  const missionsMod = { exports: {} };
+  const missionsFn = new Function('module', 'exports', 'require', missionsJs);
+  missionsFn(missionsMod, missionsMod.exports, require);
+  CODING_MISSIONS = missionsMod.exports.CODING_MISSIONS || [];
 } catch (e) {
-  console.error("FATAL: Failed to compile and load stemKits.ts for prerendering:", e);
+  console.error("FATAL: Failed to compile data for prerendering:", e);
   process.exit(1);
 }
 
@@ -206,6 +215,54 @@ if (SCHOOL_PACK_OFFERING) {
     image: schoolImg,
     isProduct: true
   });
+}
+
+// IDE Playground, Studio, and Editor Standalone Routes
+routes.push(
+  {
+    path: 'playground',
+    title: 'Blockly Coding Playground & Simulator | Kone Kids',
+    desc: 'Interactive visual block coding sandbox for kids with sprite animations, game physics, and real-time JavaScript/Python output.',
+    canonical: 'https://kids.koneacademy.io/playground/'
+  },
+  {
+    path: 'studio',
+    title: 'Blockly Coding Studio | Kone Kids',
+    desc: 'Interactive visual block coding sandbox for kids with sprite animations, game physics, and real-time JavaScript/Python output.',
+    canonical: 'https://kids.koneacademy.io/studio/'
+  },
+  {
+    path: 'editor',
+    title: 'Blockly Code Editor | Kone Kids',
+    desc: 'Interactive visual block coding sandbox for kids with sprite animations, game physics, and real-time JavaScript/Python output.',
+    canonical: 'https://kids.koneacademy.io/editor/'
+  }
+);
+
+// Dynamically generate static routes for EVERY individual Mission in the Coding, Robotics, and AI Labs
+for (const m of CODING_MISSIONS) {
+  const isRobotics = m.pathway && m.pathway.includes('Robotics');
+  const isAI = m.pathway && (m.pathway.includes('AI') || m.pathway.includes('Data Science') || m.pathway.includes('ML'));
+  const hub = isRobotics ? 'robotics' : isAI ? 'ai' : 'coding';
+  const hubLabel = isRobotics ? 'Robotics Lab' : isAI ? 'AI Studio' : 'Coding Lab';
+
+  // Primary hub route
+  routes.push({
+    path: `${hub}/mission/${m.id}`,
+    title: `${m.name} - ${hubLabel} Mission | Kone Kids`,
+    desc: `${m.objective} Earn ${m.xpReward} XP in the Kone Kids interactive ${hubLabel}.`,
+    canonical: `https://kids.koneacademy.io/${hub}/mission/${m.id}/`
+  });
+
+  // Secondary coding alias if not already in coding hub
+  if (hub !== 'coding') {
+    routes.push({
+      path: `coding/mission/${m.id}`,
+      title: `${m.name} - ${hubLabel} Mission | Kone Kids`,
+      desc: `${m.objective} Earn ${m.xpReward} XP in the Kone Kids interactive ${hubLabel}.`,
+      canonical: `https://kids.koneacademy.io/coding/mission/${m.id}/`
+    });
+  }
 }
 
 console.log(`Generating static HTML files for ${routes.length} sitelinks & social share cards...`);
