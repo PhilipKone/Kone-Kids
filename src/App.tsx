@@ -168,6 +168,20 @@ function Home() {
             Coding Lab
           </Link>
 
+          <Link to="/coding?view=syllabus" style={{ 
+            fontFamily: "'Baloo 2', cursive",
+            color: 'var(--nav-link)', 
+            textDecoration: 'none', 
+            fontWeight: 800, 
+            fontSize: '0.95rem',
+            transition: 'color 0.2s',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.35rem'
+          }} className="hover-orange nav-link-desktop">
+            <span style={{ fontSize: '0.9rem' }}>🎓</span> Kids Courses
+          </Link>
+
           <Link to="/robotics" style={{ 
             fontFamily: "'Baloo 2', cursive",
             color: 'var(--nav-link)', 
@@ -1092,8 +1106,12 @@ function AppContent() {
             <Route path="/stem-kits" element={<StemKits />} />
             <Route path="/stem-kits/:kitSlug" element={<StemKits />} />
             <Route path="/coding" element={<MissionMap hub="coding" />} />
+            <Route path="/courses" element={<MissionMap hub="coding" defaultView="syllabus" />} />
+            <Route path="/coding/courses" element={<MissionMap hub="coding" defaultView="syllabus" />} />
             <Route path="/robotics" element={<MissionMap hub="robotics" />} />
+            <Route path="/robotics/courses" element={<MissionMap hub="robotics" defaultView="syllabus" />} />
             <Route path="/ai" element={<MissionMap hub="ai" />} />
+            <Route path="/ai/courses" element={<MissionMap hub="ai" defaultView="syllabus" />} />
             <Route path="/profile" element={<ProfileView />} />
             <Route path="/studio" element={<KidsIDE standalone={true} />} />
             <Route path="/editor" element={<KidsIDE standalone={true} />} />

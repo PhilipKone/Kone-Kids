@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
-import { ShoppingBag, Coins, Volume2, VolumeX, Music } from 'lucide-react';
+import { ShoppingBag, Coins, Volume2, VolumeX, Music, GraduationCap, Map as MapIcon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { CODING_MISSIONS, Pathway } from '../data/missions';
 import Mascot from './Mascot';
@@ -9,6 +9,8 @@ import MascotShop from './MascotShop';
 import SeriesLibrary from './SeriesLibrary';
 import CoinStoreModal from './CoinStoreModal';
 import STEMExtensionsModal from './STEMExtensionsModal';
+import KidsCourseSyllabus from './KidsCourseSyllabus';
+import { getCourseByPathway } from '../data/kidsCourses';
 import { sounds } from '../utils/sounds';
 
 type HubType = 'coding' | 'robotics' | 'ai';
@@ -71,7 +73,12 @@ const HUB_PATHWAYS: Record<HubType, Pathway[]> = {
   ai: ['Data Science (AI 4 Kids)', 'ML (AI 4 Kids)', 'AI (AI 4 Kids)']
 };
 
-const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
+interface MissionMapProps {
+  hub?: HubType;
+  defaultView?: 'map' | 'syllabus';
+}
+
+const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showShop, setShowShop] = useState(false);
@@ -79,9 +86,22 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const activeSeriesId = searchParams.get('series');
   const [showCoinStore, setShowCoinStore] = useState(false);
   const [showExtensions, setShowExtensions] = useState(false);
+  const [viewMode, setViewMode] = useState<'map' | 'syllabus'>(
+    searchParams.get('view') === 'syllabus' || defaultView === 'syllabus' ? 'syllabus' : 'map'
+  );
   const { xp, level, completedMissions, coins, studentName } = useGamification();
   const { theme, toggleTheme } = useTheme();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Sync viewMode from URL query params
+  React.useEffect(() => {
+    const rawView = searchParams.get('view');
+    if (rawView === 'syllabus') {
+      setViewMode('syllabus');
+    } else if (rawView === 'map') {
+      setViewMode('map');
+    }
+  }, [searchParams]);
 
   // Auto-open extensions modal on ?extensions=true
   React.useEffect(() => {
@@ -103,6 +123,16 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
   const handleToggleMusic = () => {
     const isMusicOn = sounds.toggleMusic();
     setMusicOn(isMusicOn);
+    sounds.playClick();
+  };
+
+  const handleToggleView = (mode: 'map' | 'syllabus') => {
+    setViewMode(mode);
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.set('view', mode);
+      return next;
+    });
     sounds.playClick();
   };
 
@@ -140,6 +170,10 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
     });
     sounds.playClick();
   };
+
+  const activeCourse = useMemo(() => {
+    return getCourseByPathway(selectedPathway);
+  }, [selectedPathway]);
 
   const world = PATHWAY_WORLDS[selectedPathway][theme];
 
@@ -449,6 +483,68 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
         </div>
       </div>
 
+      {/* View Switcher: Adventure Map vs Course Syllabus */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: isMobile ? '0.4rem' : '0.6rem',
+        marginBottom: isMobile ? '1rem' : '1.5rem',
+        maxWidth: isMobile ? '380px' : 'none',
+        margin: isMobile ? '0 auto 1.25rem' : '0 0 1.5rem',
+        width: '100%'
+      }}>
+        <button
+          onClick={() => handleToggleView('map')}
+          style={{
+            flex: isMobile ? 1 : 'initial',
+            background: viewMode === 'map' ? world.color : (theme === 'dark' ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.9)'),
+            color: viewMode === 'map' ? '#ffffff' : 'var(--kids-text)',
+            border: `1.5px solid ${viewMode === 'map' ? world.color : 'var(--kids-border)'}`,
+            borderRadius: '12px',
+            padding: isMobile ? '0.5rem 0.5rem' : '0.55rem 1.4rem',
+            fontSize: isMobile ? '0.8rem' : '0.9rem',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.4rem',
+            boxShadow: viewMode === 'map' ? `0 6px 18px ${world.color}35` : 'none',
+            whiteSpace: 'nowrap',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <MapIcon size={15} />
+          Adventure Map
+        </button>
+
+        <button
+          onClick={() => handleToggleView('syllabus')}
+          style={{
+            flex: isMobile ? 1 : 'initial',
+            background: viewMode === 'syllabus' ? world.color : (theme === 'dark' ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.9)'),
+            color: viewMode === 'syllabus' ? '#ffffff' : 'var(--kids-text)',
+            border: `1.5px solid ${viewMode === 'syllabus' ? world.color : 'var(--kids-border)'}`,
+            borderRadius: '12px',
+            padding: isMobile ? '0.5rem 0.5rem' : '0.55rem 1.4rem',
+            fontSize: isMobile ? '0.8rem' : '0.9rem',
+            fontWeight: 800,
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.4rem',
+            boxShadow: viewMode === 'syllabus' ? `0 6px 18px ${world.color}35` : 'none',
+            whiteSpace: 'nowrap',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <GraduationCap size={15} />
+          {isMobile ? 'Course Syllabus' : 'Course Syllabus & Labs'}
+        </button>
+      </div>
+
       {showExtensions && (
         <STEMExtensionsModal
           isOpen={showExtensions}
@@ -469,12 +565,12 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
             background: 'var(--kids-surface)',
             border: '1px solid var(--kids-border)',
             borderRadius: '16px',
-            padding: '1rem 1.5rem',
+            padding: isMobile ? '0.85rem 1rem' : '1rem 1.5rem',
             marginBottom: '2rem',
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: isMobile ? 'stretch' : 'center',
-            gap: '1rem'
+            gap: isMobile ? '0.6rem' : '1rem'
           }}>
             <div style={{ flex: 1 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.85rem' }}>
@@ -496,7 +592,29 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
                 }} />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '1.5rem', flexShrink: 0 }}>
+            <div style={{ display: 'flex', gap: '0.85rem', flexShrink: 0, alignItems: 'center', justifyContent: isMobile ? 'space-between' : 'flex-end' }}>
+              {!isMobile && (
+                <button
+                  onClick={() => handleToggleView(viewMode === 'map' ? 'syllabus' : 'map')}
+                  style={{
+                    background: viewMode === 'syllabus' ? world.color : `${world.color}15`,
+                    color: viewMode === 'syllabus' ? '#ffffff' : world.color,
+                    border: `1.5px solid ${world.color}`,
+                    borderRadius: '10px',
+                    padding: '0.35rem 0.85rem',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem'
+                  }}
+                >
+                  <GraduationCap size={14} />
+                  {viewMode === 'syllabus' ? 'Show Adventure Map' : 'View Course Syllabus'}
+                </button>
+              )}
+
               {doneInPathway === totalInPathway && totalInPathway > 0 ? (
                 <span style={{ color: '#22c55e', fontWeight: 800, fontSize: '0.9rem' }}>✅ Pathway Complete!</span>
               ) : (
@@ -509,199 +627,210 @@ const MissionMap: React.FC<{ hub?: HubType }> = ({ hub = 'coding' }) => {
         );
       })()}
 
-      {/* Series Library Entry Point - Only for Game Dev */}
-      {selectedPathway === 'Game Dev' && (
-        <div style={{
-          background: 'linear-gradient(135deg, #f472b6, #ec4899)',
-          borderRadius: '20px',
-          padding: '1.5rem 2rem',
-          marginBottom: '2rem',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          color: 'white',
-          boxShadow: '0 10px 30px rgba(236, 72, 153, 0.2)',
-          border: '2px solid rgba(255,255,255,0.2)',
-          position: 'relative',
-          overflow: 'hidden'
-        }}>
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <h3 style={{ margin: 0, fontFamily: '"Baloo 2", cursive', fontSize: '1.5rem' }}>Want to chill? 🍦</h3>
-            <p style={{ margin: '0.2rem 0 0', opacity: 0.9, fontSize: '0.95rem' }}>
-              Explore the Game Series Library and play over 40+ mini-games!
-            </p>
-          </div>
-          <button 
-            onClick={() => setSearchParams({ library: 'true' })}
-            style={{
-              background: 'white',
-              color: '#ec4899',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '14px',
-              fontWeight: 900,
-              fontSize: '1rem',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      {/* Main View: Course Syllabus vs Adventure Map */}
+      {viewMode === 'syllabus' && activeCourse ? (
+        <KidsCourseSyllabus
+          course={activeCourse}
+          hub={hub}
+          onBackToMap={() => handleToggleView('map')}
+        />
+      ) : (
+        <>
+          {/* Series Library Entry Point - Only for Game Dev */}
+          {selectedPathway === 'Game Dev' && (
+            <div style={{
+              background: 'linear-gradient(135deg, #f472b6, #ec4899)',
+              borderRadius: '20px',
+              padding: '1.5rem 2rem',
+              marginBottom: '2rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              color: 'white',
+              boxShadow: '0 10px 30px rgba(236, 72, 153, 0.2)',
+              border: '2px solid rgba(255,255,255,0.2)',
               position: 'relative',
-              zIndex: 1
-            }}
-          >
-            Open Library 📚
-          </button>
-          
-          {/* Decorative icons */}
-          <div style={{ position: 'absolute', right: '150px', top: '-10px', fontSize: '3rem', opacity: 0.2, transform: 'rotate(15deg)' }}>🎮</div>
-          <div style={{ position: 'absolute', left: '40%', bottom: '-10px', fontSize: '2.5rem', opacity: 0.15, transform: 'rotate(-10deg)' }}>🧩</div>
-        </div>
-      )}
-
-      {/* The Winding Path */}
-      <div style={{ 
-        maxWidth: '800px', 
-        margin: '0 auto', 
-        position: 'relative',
-        padding: isMobile ? '2rem 1rem 10rem 1rem' : '2rem 0 10rem 0'
-      }}>
-        {/* Connection Line */}
-        <svg 
-          viewBox="0 0 800 1000" 
-          preserveAspectRatio="none"
-          style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, opacity: 0.2 }}
-        >
-          {world.pathStyle === 'curve' && (
-            <path 
-              d="M 400 100 Q 600 300 400 500 Q 200 700 400 900" 
-              fill="none" 
-              stroke={world.color} 
-              strokeWidth="12" 
-              strokeLinecap="round"
-              className="path-pulsing"
-            />
-          )}
-          {world.pathStyle === 'circuit' && (
-            <path 
-              d="M 400 100 L 400 200 L 600 200 L 600 400 L 400 400 L 400 600 L 200 600 L 200 800 L 400 800 L 400 900" 
-              fill="none" 
-              stroke={world.color} 
-              strokeWidth="8" 
-              strokeLinejoin="round"
-              className="path-pulsing"
-            />
-          )}
-          {world.pathStyle === 'pixel' && (
-            <path 
-              d="M 400 100 L 400 150 L 450 150 L 450 200 L 500 200 L 500 250 L 550 250 L 550 300 L 500 300 L 500 350 L 450 350 L 450 400 L 400 400 L 400 450 L 350 450 L 350 500 L 300 500 L 300 550 L 250 550 L 250 600 L 300 600 L 300 650 L 350 650 L 350 700 L 400 700 L 400 900" 
-              fill="none" 
-              stroke={world.color} 
-              strokeWidth="10" 
-              className="path-solid-pulse"
-              style={{ '--kids-blue': world.color } as React.CSSProperties}
-            />
-          )}
-          {world.pathStyle === 'dots' && (
-            <path 
-              d="M 400 100 Q 600 300 400 500 Q 200 700 400 900" 
-              fill="none" 
-              stroke={world.color} 
-              strokeWidth="6" 
-              strokeDasharray="1 20" 
-              strokeLinecap="round"
-              className="path-solid-pulse"
-              style={{ '--kids-blue': world.color } as React.CSSProperties}
-            />
-          )}
-          {world.pathStyle === 'wave' && (
-            <path 
-              d="M 400 100 T 500 200 T 400 300 T 300 400 T 400 500 T 500 600 T 400 700 T 300 800 T 400 900" 
-              fill="none" 
-              stroke={world.color} 
-              strokeWidth="14" 
-              strokeLinecap="round"
-              className="path-pulsing"
-              opacity={0.4}
-            />
-          )}
-        </svg>
-
-        {filteredMissions.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--kids-text-muted)' }}>
-            <h3>New missions loading...</h3>
-          </div>
-        ) : filteredMissions.map((mission, index) => {
-          const isUnlocked = index === 0 || completedMissions.includes(filteredMissions[index - 1].id);
-          const isCompleted = completedMissions.includes(mission.id);
-
-          return (
-            <div 
-              key={mission.id}
-              style={{
-                position: 'relative',
-                display: 'flex',
-                justifyContent: isMobile ? 'center' : (index % 2 === 0 ? 'flex-end' : 'flex-start'),
-                marginBottom: isMobile ? '6rem' : '8rem',
-                zIndex: 1
-              }}
-            >
-              <div 
-                onClick={() => isUnlocked && navigate(`/${hub}/mission/${mission.id}`)}
-                className={`mission-item-container ${isUnlocked ? 'animate-float' : ''}`}
+              overflow: 'hidden'
+            }}>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <h3 style={{ margin: 0, fontFamily: '"Baloo 2", cursive', fontSize: '1.5rem' }}>Want to chill? 🍦</h3>
+                <p style={{ margin: '0.2rem 0 0', opacity: 0.9, fontSize: '0.95rem' }}>
+                  Explore the Game Series Library and play over 40+ mini-games!
+                </p>
+              </div>
+              <button 
+                onClick={() => setSearchParams({ library: 'true' })}
                 style={{
-                  display: 'flex',
-                  flexDirection: isMobile ? 'column' : (index % 2 === 0 ? 'row-reverse' : 'row'),
-                  alignItems: 'center',
-                  gap: isMobile ? '1.5rem' : '2.5rem',
-                  cursor: isUnlocked ? 'pointer' : 'not-allowed',
-                  width: isMobile ? '100%' : 'auto',
-                  transition: 'all 0.3s ease'
+                  background: 'white',
+                  color: '#ec4899',
+                  border: 'none',
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: '14px',
+                  fontWeight: 900,
+                  fontSize: '1rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                  position: 'relative',
+                  zIndex: 1
                 }}
               >
-                <div 
-                  className={`mission-node ${isUnlocked ? 'mission-node-unlocked' : 'mission-node-locked'} ${isCompleted ? 'mission-node-completed' : ''}`}
-                  style={{
-                    '--node-color': world.color,
-                    '--node-shadow': `${world.color}dd`,
-                    flexShrink: 0
-                  } as any}
-                >
-                  {!isUnlocked ? (
-                    <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>🔒</span>
-                  ) : (
-                    <>
-                      <span style={{ fontSize: isMobile ? '1.8rem' : '2.2rem', fontWeight: 800 }}>{index + 1}</span>
-                      {isCompleted && <span style={{ fontSize: '0.75rem', position: 'absolute', bottom: '-10px', background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>DONE</span>}
-                    </>
-                  )}
-                </div>
-                
-                {/* Mission Label */}
-                <div style={{
-                  textAlign: isMobile ? 'center' : (index % 2 === 0 ? 'right' : 'left'),
-                  width: isMobile ? '180px' : '240px',
-                  pointerEvents: 'none'
-                }}>
-                  <h4 style={{ 
-                    margin: 0, 
-                    color: isUnlocked ? 'var(--kids-text)' : 'var(--kids-text-muted)', 
-                    fontSize: isMobile ? '1.1rem' : '1.3rem', 
-                    fontFamily: 'Baloo 2, cursive',
-                    lineHeight: 1.2
-                  }}>{mission.name}</h4>
-                  <p style={{ margin: '0.2rem 0 0 0', color: 'var(--kids-text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>{mission.xpReward} XP</p>
-                </div>
-              </div>
+                Open Library 📚
+              </button>
+              
+              {/* Decorative icons */}
+              <div style={{ position: 'absolute', right: '150px', top: '-10px', fontSize: '3rem', opacity: 0.2, transform: 'rotate(15deg)' }}>🎮</div>
+              <div style={{ position: 'absolute', left: '40%', bottom: '-10px', fontSize: '2.5rem', opacity: 0.15, transform: 'rotate(-10deg)' }}>🧩</div>
             </div>
-          );
-        })}
+          )}
 
-        {/* Mascot encouraging at the end */}
-        <div style={{ textAlign: 'center', marginTop: '4rem' }}>
-          <div style={{ width: '130px', margin: '0 auto', opacity: 0.9 }}>
-            <Mascot />
+          {/* The Winding Path */}
+          <div style={{ 
+            maxWidth: '800px', 
+            margin: '0 auto', 
+            position: 'relative',
+            padding: isMobile ? '2rem 1rem 10rem 1rem' : '2rem 0 10rem 0'
+          }}>
+            {/* Connection Line */}
+            <svg 
+              viewBox="0 0 800 1000" 
+              preserveAspectRatio="none"
+              style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 0, opacity: 0.2 }}
+            >
+              {world.pathStyle === 'curve' && (
+                <path 
+                  d="M 400 100 Q 600 300 400 500 Q 200 700 400 900" 
+                  fill="none" 
+                  stroke={world.color} 
+                  strokeWidth="12" 
+                  strokeLinecap="round"
+                  className="path-pulsing"
+                />
+              )}
+              {world.pathStyle === 'circuit' && (
+                <path 
+                  d="M 400 100 L 400 200 L 600 200 L 600 400 L 400 400 L 400 600 L 200 600 L 200 800 L 400 800 L 400 900" 
+                  fill="none" 
+                  stroke={world.color} 
+                  strokeWidth="8" 
+                  strokeLinejoin="round"
+                  className="path-pulsing"
+                />
+              )}
+              {world.pathStyle === 'pixel' && (
+                <path 
+                  d="M 400 100 L 400 150 L 450 150 L 450 200 L 500 200 L 500 250 L 550 250 L 550 300 L 500 300 L 500 350 L 450 350 L 450 400 L 400 400 L 400 450 L 350 450 L 350 500 L 300 500 L 300 550 L 250 550 L 250 600 L 300 600 L 300 650 L 350 650 L 350 700 L 400 700 L 400 900" 
+                  fill="none" 
+                  stroke={world.color} 
+                  strokeWidth="10" 
+                  className="path-solid-pulse"
+                  style={{ '--kids-blue': world.color } as React.CSSProperties}
+                />
+              )}
+              {world.pathStyle === 'dots' && (
+                <path 
+                  d="M 400 100 Q 600 300 400 500 Q 200 700 400 900" 
+                  fill="none" 
+                  stroke={world.color} 
+                  strokeWidth="6" 
+                  strokeDasharray="1 20" 
+                  strokeLinecap="round"
+                  className="path-solid-pulse"
+                  style={{ '--kids-blue': world.color } as React.CSSProperties}
+                />
+              )}
+              {world.pathStyle === 'wave' && (
+                <path 
+                  d="M 400 100 T 500 200 T 400 300 T 300 400 T 400 500 T 500 600 T 400 700 T 300 800 T 400 900" 
+                  fill="none" 
+                  stroke={world.color} 
+                  strokeWidth="14" 
+                  strokeLinecap="round"
+                  className="path-pulsing"
+                  opacity={0.4}
+                />
+              )}
+            </svg>
+
+            {filteredMissions.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--kids-text-muted)' }}>
+                <h3>New missions loading...</h3>
+              </div>
+            ) : filteredMissions.map((mission, index) => {
+              const isUnlocked = index === 0 || completedMissions.includes(filteredMissions[index - 1].id);
+              const isCompleted = completedMissions.includes(mission.id);
+
+              return (
+                <div 
+                  key={mission.id}
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    justifyContent: isMobile ? 'center' : (index % 2 === 0 ? 'flex-end' : 'flex-start'),
+                    marginBottom: isMobile ? '6rem' : '8rem',
+                    zIndex: 1
+                  }}
+                >
+                  <div 
+                    onClick={() => isUnlocked && navigate(`/${hub}/mission/${mission.id}`)}
+                    className={`mission-item-container ${isUnlocked ? 'animate-float' : ''}`}
+                    style={{
+                      display: 'flex',
+                      flexDirection: isMobile ? 'column' : (index % 2 === 0 ? 'row-reverse' : 'row'),
+                      alignItems: 'center',
+                      gap: isMobile ? '1.5rem' : '2.5rem',
+                      cursor: isUnlocked ? 'pointer' : 'not-allowed',
+                      width: isMobile ? '100%' : 'auto',
+                      transition: 'all 0.3s ease'
+                    }}
+                  >
+                    <div 
+                      className={`mission-node ${isUnlocked ? 'mission-node-unlocked' : 'mission-node-locked'} ${isCompleted ? 'mission-node-completed' : ''}`}
+                      style={{
+                        '--node-color': world.color,
+                        '--node-shadow': `${world.color}dd`,
+                        flexShrink: 0
+                      } as any}
+                    >
+                      {!isUnlocked ? (
+                        <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>🔒</span>
+                      ) : (
+                        <>
+                          <span style={{ fontSize: isMobile ? '1.8rem' : '2.2rem', fontWeight: 800 }}>{index + 1}</span>
+                          {isCompleted && <span style={{ fontSize: '0.75rem', position: 'absolute', bottom: '-10px', background: '#22c55e', color: 'white', padding: '2px 8px', borderRadius: '12px', fontWeight: 700 }}>DONE</span>}
+                        </>
+                      )}
+                    </div>
+                    
+                    {/* Mission Label */}
+                    <div style={{
+                      textAlign: isMobile ? 'center' : (index % 2 === 0 ? 'right' : 'left'),
+                      width: isMobile ? '180px' : '240px',
+                      pointerEvents: 'none'
+                    }}>
+                      <h4 style={{ 
+                        margin: 0, 
+                        color: isUnlocked ? 'var(--kids-text)' : 'var(--kids-text-muted)', 
+                        fontSize: isMobile ? '1.1rem' : '1.3rem', 
+                        fontFamily: 'Baloo 2, cursive',
+                        lineHeight: 1.2
+                      }}>{mission.name}</h4>
+                      <p style={{ margin: '0.2rem 0 0 0', color: 'var(--kids-text-muted)', fontSize: '0.85rem', fontWeight: 700 }}>{mission.xpReward} XP</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Mascot encouraging at the end */}
+            <div style={{ textAlign: 'center', marginTop: '4rem' }}>
+              <div style={{ width: '130px', margin: '0 auto', opacity: 0.9 }}>
+                <Mascot />
+              </div>
+              <h2 className="lab-title" style={{ marginTop: '1.5rem', color: world.color }}>Level Up Your Skills!</h2>
+            </div>
           </div>
-          <h2 className="lab-title" style={{ marginTop: '1.5rem', color: world.color }}>Level Up Your Skills!</h2>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

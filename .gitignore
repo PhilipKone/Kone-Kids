@@ -7,4 +7,6 @@ dist-ssr
 .env.*
 service_account.json
 *.pem
+scratch/
+
 
