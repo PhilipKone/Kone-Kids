@@ -14,7 +14,7 @@ import STEMExtensionsModal from './STEMExtensionsModal';
 import MissionBriefing from './MissionBriefing';
 import LessonStageBubbles from './LessonStageBubbles';
 import StageVictoryModal from './StageVictoryModal';
-import CodeInspector from './CodeInspector';
+import CodeInspector, { PythonIcon, JavaScriptIcon } from './CodeInspector';
 import { getStagesForMission, PuzzleStage } from '../data/puzzleStages';
 import { getTranslation } from '../utils/translations';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
@@ -1987,10 +1987,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 cursor: 'pointer'
               }}
             >
-              <option value="en" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>English</option>
-              <option value="twi" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>Twi</option>
-              <option value="ga" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>Ga</option>
-              <option value="ewe" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>Ewe</option>
+              <option value="en" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>{isMobile ? 'EN' : 'English'}</option>
+              <option value="twi" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>{isMobile ? 'TWI' : 'Twi'}</option>
+              <option value="ga" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>{isMobile ? 'GA' : 'Ga'}</option>
+              <option value="ewe" style={{ background: isDark ? '#1e293b' : 'white', color: isDark ? 'white' : '#0f172a' }}>{isMobile ? 'EWE' : 'Ewe'}</option>
             </select>
           </div>
 
@@ -2223,8 +2223,9 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   alignItems: 'center',
                   gap: '2px'
                 }}
+                title="Quick Settings & Tools"
               >
-                <span>⚙️ More</span>
+                <span>⚙️ Settings</span>
               </button>
 
               {showMobileMore && (
@@ -2500,7 +2501,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>🐍 Python</span>
+                <PythonIcon />
+                <span>Python</span>
               </button>
 
               <button
@@ -2522,7 +2524,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>⚡ JavaScript</span>
+                <JavaScriptIcon />
+                <span>JavaScript</span>
               </button>
 
               <button
