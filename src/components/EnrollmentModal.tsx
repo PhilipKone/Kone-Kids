@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import emailjs from '@emailjs/browser'
 import { useGamification } from '../context/GamificationContext'
 import Mascot from './Mascot'
@@ -12,6 +13,7 @@ interface EnrollmentModalProps {
 }
 
 const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, programTitle = '' }) => {
+  const { t } = useTranslation()
   const { unlockBadge } = useGamification()
   const isMobile = useIsMobile()
   const [inquiryType, setInquiryType] = useState<'parent' | 'school' | 'online'>('parent')
@@ -103,17 +105,17 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
               fontWeight: 800
             }}>
               {inquiryType === 'school'
-                ? "Let's Partner! 🏫"
+                ? t('enrollment.successSchoolTitle', "Let's Partner! 🏫")
                 : inquiryType === 'online'
-                  ? "Virtual Mission Launched! 🌐"
-                  : "Welcome, Hero! 🚀"}
+                  ? t('enrollment.successOnlineTitle', "Virtual Mission Launched! 🌐")
+                  : t('enrollment.successParentTitle', "Welcome, Hero! 🚀")}
             </h2>
             <p style={{ color: '#475569', maxWidth: '400px', margin: '0 auto', fontSize: '1.05rem', lineHeight: 1.5 }}>
               {inquiryType === 'school'
-                ? 'Your partnership inquiry has been successfully received. A Kone Kids School Partnership specialist will reach out shortly to plan your Live Lab Demo!'
+                ? t('enrollment.successSchoolDesc', 'Your partnership inquiry has been successfully received. A Kone Kids School Partnership specialist will reach out shortly to plan your Live Lab Demo!')
                 : inquiryType === 'online'
-                  ? "Your virtual training begins now! A Kone Kids Online Specialist will contact you soon to set up your kid's free 1-on-1 virtual onboarding session."
-                  : 'Your mission starts here! A Kone Kids representative will contact you soon to begin your home tutoring journey.'}
+                  ? t('enrollment.successOnlineDesc', "Your virtual training begins now! A Kone Kids Online Specialist will contact you soon to set up your kid's free 1-on-1 virtual onboarding session.")
+                  : t('enrollment.successParentDesc', 'Your mission starts here! A Kone Kids representative will contact you soon to begin your home tutoring journey.')}
             </p>
             <button
               className="kids-button"
@@ -133,7 +135,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
               }}
               onClick={onClose}
             >
-              Great! 👍
+              {t('enrollment.btnGreat', 'Great! 👍')}
             </button>
           </div>
         ) : (
@@ -145,9 +147,9 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 fontFamily: "'Baloo 2', cursive",
                 fontWeight: 800
               }}>
-                Join the <span style={{ color: inquiryType === 'school' ? 'var(--kids-orange)' : inquiryType === 'online' ? 'var(--kids-purple)' : 'var(--kids-blue)' }}>Mission</span>
+                {t('enrollment.title', 'Join the')} <span style={{ color: inquiryType === 'school' ? 'var(--kids-orange)' : inquiryType === 'online' ? 'var(--kids-purple)' : 'var(--kids-blue)' }}>{t('enrollment.mission', 'Mission')}</span>
               </h2>
-              <p style={{ color: '#64748b', fontSize: '0.95rem' }}>Ready to build the physical and digital future? 🤖✨</p>
+              <p style={{ color: '#64748b', fontSize: '0.95rem' }}>{t('enrollment.subtitle', 'Ready to build the physical and digital future? 🤖✨')}</p>
             </div>
 
             {/* Segment Toggle */}
@@ -184,7 +186,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   fontFamily: "'Baloo 2', cursive"
                 }}
               >
-                🏠 Home
+                {t('enrollment.tabParent', '🏠 Home')}
               </button>
               <button
                 type="button"
@@ -210,7 +212,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   fontFamily: "'Baloo 2', cursive"
                 }}
               >
-                🌐 Online
+                {t('enrollment.tabOnline', '🌐 Online')}
               </button>
               <button
                 type="button"
@@ -236,18 +238,18 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                   fontFamily: "'Baloo 2', cursive"
                 }}
               >
-                🏫 School
+                {t('enrollment.tabSchool', '🏫 School')}
               </button>
             </div>
 
             <form onSubmit={handleSubmit}>
               <div className="input-group" style={{ marginBottom: '1.25rem' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <span>👤</span> {inquiryType === 'school' ? 'Your Name & Role (e.g. Principal)' : 'What is your name (Parent/Guardian)?'}
+                  <span>👤</span> {inquiryType === 'school' ? 'Your Name & Role (e.g. Principal)' : t('enrollment.parentName', 'Parent / Guardian Name')}
                 </label>
                 <input
                   type="text" required className="kids-input"
-                  placeholder={inquiryType === 'school' ? 'e.g. Kojo Mensah (Director)' : 'e.g. Ama Kone'}
+                  placeholder={inquiryType === 'school' ? 'e.g. Kojo Mensah (Director)' : t('enrollment.parentNamePlaceholder', 'e.g., Dr. Kwame Mensah')}
                   value={formData.parentName}
                   onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
@@ -256,11 +258,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
 
               <div className="input-group" style={{ marginBottom: '1.25rem' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <span>{inquiryType === 'school' ? '🏫' : '✨'}</span> {inquiryType === 'school' ? 'School Name' : "My Future Tech Leader's Name is..."}
+                  <span>{inquiryType === 'school' ? '🏫' : '✨'}</span> {inquiryType === 'school' ? 'School Name' : t('enrollment.studentName', 'Student Full Name')}
                 </label>
                 <input
                   type="text" required className="kids-input"
-                  placeholder={inquiryType === 'school' ? "e.g. Ridge International School" : "Child's full name"}
+                  placeholder={inquiryType === 'school' ? "e.g. Ridge International School" : t('enrollment.studentNamePlaceholder', "e.g., Kofi Mensah")}
                   value={formData.studentName}
                   onChange={(e) => setFormData({ ...formData, studentName: e.target.value })}
                   style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
@@ -275,11 +277,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
               }}>
                 <div className="input-group">
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                    <span>📧</span> Email Address
+                    <span>📧</span> {t('enrollment.email', 'Email Address')}
                   </label>
                   <input
                     type="email" required className="kids-input"
-                    placeholder="hello@example.com"
+                    placeholder={t('enrollment.emailPlaceholder', 'parent@example.com')}
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
@@ -287,11 +289,11 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 </div>
                 <div className="input-group">
                   <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                    <span>{inquiryType === 'school' ? '👥' : '🎂'}</span> {inquiryType === 'school' ? 'Approximate Students' : 'Student Age'}
+                    <span>{inquiryType === 'school' ? '👥' : '🎂'}</span> {inquiryType === 'school' ? 'Approximate Students' : t('enrollment.age', "Child's Age / Grade")}
                   </label>
                   <input
                     type="number" required className="kids-input"
-                    placeholder={inquiryType === 'school' ? 'e.g. 150' : 'e.g. 8'}
+                    placeholder={inquiryType === 'school' ? 'e.g. 150' : '8'}
                     value={formData.age}
                     onChange={(e) => setFormData({ ...formData, age: e.target.value })}
                     style={{ borderRadius: '16px', padding: '0.9rem 1.25rem', fontSize: '1rem', width: '100%', boxSizing: 'border-box' }}
@@ -301,7 +303,7 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
 
               <div className="input-group" style={{ marginBottom: '1.5rem' }}>
                 <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '0.9rem', marginBottom: '0.5rem' }}>
-                  <span>🎯</span> {inquiryType === 'school' ? 'Proposed Partnership...' : "I'm Interested In..."}
+                  <span>🎯</span> {inquiryType === 'school' ? 'Proposed Partnership...' : t('enrollment.selectTrack', 'Select Learning Track')}
                 </label>
                 <select
                   className="kids-input"
@@ -359,12 +361,8 @@ const EnrollmentModal: React.FC<EnrollmentModalProps> = ({ isOpen, onClose, prog
                 disabled={status === 'sending'}
               >
                 {status === 'sending'
-                  ? 'Transmitting Mission Data...'
-                  : inquiryType === 'school'
-                    ? 'Schedule Free School Demo! 🏫'
-                    : inquiryType === 'online'
-                      ? 'Launch Online Mission! 🚀'
-                      : 'Launch Home Mission! 🚀'}
+                  ? t('enrollment.btnSending', 'Launching Mission...')
+                  : t('enrollment.btnSubmit', 'Enroll Hero 🚀')}
               </button>
 
               {status === 'error' && (

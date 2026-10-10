@@ -268,12 +268,12 @@ function Home() {
                   marginLeft: '0.5rem'
                 }}
               >
-                Logout
+                {t('nav.logout', 'Logout')}
               </button>
             </div>
           ) : (
             <Link to="/class-login" style={{ 
-              fontFamily: "'Baloo 2', cursive",
+              fontFamily: "'Baloo 2', cursive", 
               color: '#c2410c', 
               textDecoration: 'none', 
               fontWeight: 800, 
@@ -305,7 +305,7 @@ function Home() {
               <div className="mascot-hero-container">
                 {/* Speech Bubble */}
                 <div className="mascot-speech-bubble">
-                  <span>Hi! I'm Drop 💧 What will you build today?</span>
+                  <span>{t('home.mascotBubble', "Hi! I'm Drop 💧 What will you build today?")}</span>
                 </div>
 
                 <Mascot />
@@ -317,21 +317,21 @@ function Home() {
                     className="mascot-chip" 
                     style={{ '--chip-color': 'var(--kids-orange)' } as any}
                   >
-                    <span>✨ Scratch 3.0 Games</span>
+                    <span>{t('home.chipScratch', '✨ Scratch 3.0 Games')}</span>
                   </Link>
                   <Link 
                     to="/robotics" 
                     className="mascot-chip" 
                     style={{ '--chip-color': 'var(--kids-blue)' } as any}
                   >
-                    <span>🤖 micro:bit &amp; Circuits</span>
+                    <span>{t('home.chipHardware', '🤖 micro:bit & Circuits')}</span>
                   </Link>
                   <Link 
                     to="/ai" 
                     className="mascot-chip" 
                     style={{ '--chip-color': 'var(--kids-purple)' } as any}
                   >
-                    <span>🧠 Smart AI Models</span>
+                    <span>{t('home.chipAI', '🧠 Smart AI Models')}</span>
                   </Link>
                 </div>
               </div>
@@ -442,7 +442,7 @@ function Home() {
                 letterSpacing: '0.05em',
                 marginBottom: '1rem'
               }}>
-                <Sparkles size={14} /> Global Coding Extensions
+                <Sparkles size={14} /> {t('extensions.tag', 'Global Coding Extensions')}
               </div>
               <h2 style={{
                 fontFamily: "'Baloo 2', cursive",
@@ -451,7 +451,7 @@ function Home() {
                 margin: '0 0 0.75rem 0',
                 color: 'var(--nav-text)'
               }}>
-                🚀 STEM Extensions &amp; External Labs
+                {t('extensions.title', '🚀 STEM Extensions & External Labs')}
               </h2>
               <p style={{
                 fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
@@ -460,7 +460,7 @@ function Home() {
                 margin: '0 auto',
                 lineHeight: 1.5
               }}>
-                Launch world-class platforms directly—Scratch 3.0, Code.org, BBC micro:bit MakeCode, Tinkercad, and Replit.
+                {t('extensions.subtitle', 'Launch world-class platforms directly—Scratch 3.0, Code.org, BBC micro:bit MakeCode, Tinkercad, and Replit.')}
               </p>
             </div>
 
@@ -470,9 +470,9 @@ function Home() {
               gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
               gap: '1.5rem'
             }}>
-              {EXTENSION_TOOLS.map(t => (
+              {EXTENSION_TOOLS.map(tTool => (
                 <div
-                  key={t.id}
+                  key={tTool.id}
                   style={{
                     background: 'var(--blog-card-bg)',
                     border: '1px solid var(--blog-card-border)',
@@ -488,17 +488,17 @@ function Home() {
                 >
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem' }}>
-                      <ToolBrandLogo toolId={t.id} size={36} />
+                      <ToolBrandLogo toolId={tTool.id} size={36} />
                       <span style={{
-                        background: `${t.color}18`,
-                        color: t.textColor || t.color,
-                        border: `1px solid ${t.color}45`,
+                        background: `${tTool.color}18`,
+                        color: tTool.textColor || tTool.color,
+                        border: `1px solid ${tTool.color}45`,
                         fontSize: '0.72rem',
                         fontWeight: 800,
                         padding: '0.2rem 0.65rem',
                         borderRadius: '12px'
                       }}>
-                        {t.badge}
+                        {tTool.badge}
                       </span>
                     </div>
 
@@ -509,7 +509,7 @@ function Home() {
                       color: 'var(--nav-text)',
                       margin: '0 0 0.4rem 0'
                     }}>
-                      {t.name}
+                      {tTool.name}
                     </h3>
 
                     <p style={{
@@ -519,17 +519,17 @@ function Home() {
                       lineHeight: '1.45',
                       fontWeight: 500
                     }}>
-                      {t.description}
+                      {t(`extensions.tools.${tTool.id}.desc`, tTool.description)}
                     </p>
                   </div>
 
                   <a
-                    href={t.url}
+                    href={tTool.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
                       marginTop: '1.25rem',
-                      background: `linear-gradient(135deg, ${t.color} 0%, ${t.color}dd 100%)`,
+                      background: `linear-gradient(135deg, ${tTool.color} 0%, ${tTool.color}dd 100%)`,
                       color: 'white',
                       textDecoration: 'none',
                       padding: '0.6rem 1rem',
@@ -540,11 +540,11 @@ function Home() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: '0.4rem',
-                      boxShadow: `0 4px 12px ${t.color}30`,
+                      boxShadow: `0 4px 12px ${tTool.color}30`,
                       fontFamily: "'Baloo 2', cursive"
                     }}
                   >
-                    {t.buttonText} ↗
+                    {t(`extensions.tools.${tTool.id}.btn`, tTool.buttonText)} ↗
                   </a>
                 </div>
               ))}
@@ -578,7 +578,7 @@ function Home() {
               letterSpacing: '0.05em',
               marginBottom: '1rem'
             }}>
-              <Sparkles size={14} /> Parents &amp; Teachers Hub
+              <Sparkles size={14} /> {t('home.insightsTag', 'Parents & Teachers Hub')}
             </div>
             <h2 style={{
               fontFamily: "'Baloo 2', cursive",
@@ -587,7 +587,7 @@ function Home() {
               margin: '0 0 1rem 0',
               color: 'var(--nav-text)'
             }}>
-              Featured Insights &amp; STEM Wisdom
+              {t('home.insightsTitle', 'Featured Insights & STEM Wisdom')}
             </h2>
             <p style={{
               fontSize: 'clamp(0.95rem, 2.5vw, 1.15rem)',
@@ -596,7 +596,7 @@ function Home() {
               margin: '0 auto',
               lineHeight: 1.5
             }}>
-              Explore practical, research-backed advice on screen time, computational literacy, robotics engineering, and raising the next generation of builders in Ghana.
+              {t('home.insightsDesc', 'Explore practical, research-backed advice on screen time, computational literacy, robotics engineering, and raising the next generation of builders in Ghana.')}
             </p>
           </div>
 
@@ -654,7 +654,7 @@ function Home() {
                     color: '#1e293b'
                   }}>
                     <BookOpen size={16} style={{ color: art.accentColor }} />
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>Kone Kids Insights</span>
+                    <span style={{ fontSize: '0.8rem', fontWeight: 700 }}>{t('home.insightsLabel', 'Kone Kids Insights')}</span>
                   </div>
                 </div>
 
@@ -717,7 +717,7 @@ function Home() {
                       gap: '0.3rem',
                       transition: 'all 0.2s'
                     }} className="btn-read-hover">
-                      Read <ArrowRight size={12} />
+                      {t('home.readArticle', 'Read')} <ArrowRight size={12} />
                     </Link>
                   </div>
                 </div>
@@ -748,7 +748,7 @@ function Home() {
               }}
               className="btn-cta-hover"
             >
-              📖 Visit Parent &amp; Teacher Hub
+              {t('home.visitParentHub', '📖 Visit Parent & Teacher Hub')}
             </Link>
           </div>
         </div>
@@ -799,7 +799,7 @@ function Home() {
                 lineHeight: '1.5',
                 fontWeight: 500
               }}>
-                Empowering the next generation of tech leaders in Ghana & beyond through gamified Coding, Robotics, and AI.
+                {t('footer.brandTagline', 'Empowering the next generation of tech leaders in Ghana & beyond through gamified Coding, Robotics, and AI.')}
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
                 <span style={{ 
@@ -810,7 +810,7 @@ function Home() {
                   fontSize: '0.75rem', 
                   fontWeight: 800 
                 }}>
-                  🇬🇭 Made for Future Leaders
+                  {t('footer.badge', '🇬🇭 Made for Future Leaders')}
                 </span>
               </div>
             </div>
@@ -824,14 +824,14 @@ function Home() {
                 color: '#c2410c', 
                 fontWeight: 800 
               }}>
-                Explore Hubs 🚀
+                {t('footer.exploreHubs', 'Explore Hubs 🚀')}
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', fontWeight: 600 }}>
-                <Link to="/coding" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>💻 Coding 4 Kids</Link>
-                <Link to="/robotics" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>🤖 Robotics 4 Kids</Link>
-                <Link to="/ai" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>🧠 AI 4 Kids</Link>
-                <Link to="/class-login" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>🎒 Classroom Login</Link>
-                <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>📚 STEM Insights</Link>
+                <Link to="/coding" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.coding4Kids', '💻 Coding 4 Kids')}</Link>
+                <Link to="/robotics" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.robotics4Kids', '🤖 Robotics 4 Kids')}</Link>
+                <Link to="/ai" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.ai4Kids', '🧠 AI 4 Kids')}</Link>
+                <Link to="/class-login" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.classroomLogin', '🎒 Classroom Login')}</Link>
+                <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.stemInsights', '📚 STEM Insights')}</Link>
               </div>
             </div>
 
@@ -844,10 +844,10 @@ function Home() {
                 color: '#0369a1', 
                 fontWeight: 800 
               }}>
-                Kone Network 🌐
+                {t('footer.networkTitle', 'Kone Network 🌐')}
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', fontWeight: 600 }}>
-                <a href="https://www.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Academy Hub</a>
+                <a href="https://www.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.koneAcademyHub', 'Kone Academy Hub')}</a>
                 <a href="https://code.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Code</a>
                 <a href="https://lab.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Lab</a>
                 <a href="https://consult.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Consult</a>
@@ -864,10 +864,10 @@ function Home() {
                 color: '#6b21a8', 
                 fontWeight: 800 
               }}>
-                Join Our Community ✨
+                {t('footer.communityTitle', 'Join Our Community ✨')}
               </h4>
               <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--kids-text-muted)', fontWeight: 500 }}>
-                Follow our STEM journeys, student showcases & updates:
+                {t('footer.communitySubtitle', 'Follow our STEM journeys, student showcases & updates:')}
               </p>
               <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
                 <a 
@@ -941,7 +941,7 @@ function Home() {
                 </a>
               </div>
               <div style={{ marginTop: '0.5rem' }}>
-                <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', display: 'block', fontWeight: 600 }}>Direct Line / WhatsApp:</span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', display: 'block', fontWeight: 600 }}>{t('footer.directLine', 'Direct Line / WhatsApp:')}</span>
                 <span style={{ fontSize: '1rem', color: '#c2410c', fontWeight: 800 }}>+233 55 199 3820</span>
               </div>
             </div>
@@ -959,13 +959,13 @@ function Home() {
             fontSize: '0.82rem',
             color: 'var(--kids-text-muted)'
           }}>
-            <span>© 2026 Kone Kids. All rights reserved.</span>
+            <span>{t('footer.copyright', '© 2026 Kone Kids. All rights reserved.')}</span>
             <div style={{ display: 'flex', gap: '1rem', fontWeight: 600, alignItems: 'center', flexWrap: 'wrap' }}>
-              <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Academy Home</a>
+              <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.homeLink', 'Kone Academy Home')}</a>
               <span>•</span>
-              <Link to="/kits" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>STEM Kits Store</Link>
+              <Link to="/kits" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.kitsLink', 'STEM Kits Store')}</Link>
               <span>•</span>
-              <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Insights &amp; Articles</Link>
+              <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.insightsLink', 'Insights & Articles')}</Link>
             </div>
 
             {/* Global Language Selector (Footer Standard) */}
@@ -1023,6 +1023,7 @@ function Home() {
 }
 
 function AppContent() {
+  const { t } = useTranslation();
   const { markVisited, markBadgeViewed, latestBadge } = useGamification();
   const [activeBadge, setActiveBadge] = React.useState<any>(null);
   const location = useLocation();
@@ -1153,23 +1154,23 @@ function AppContent() {
         <div className="mobile-bottom-nav">
           <Link to="/" className={`nav-item ${location.pathname === '/' ? 'nav-item-active' : ''}`}>
             <HomeIcon size={24} className="nav-icon" />
-            <span>Home</span>
+            <span>{t('nav.home', 'Home')}</span>
           </Link>
           <Link to="/coding" className={`nav-item ${location.pathname === '/coding' ? 'nav-item-active' : ''}`}>
             <Code size={24} className="nav-icon" />
-            <span>Coding</span>
+            <span>{t('nav.coding', 'Coding')}</span>
           </Link>
           <Link to="/robotics" className={`nav-item ${location.pathname === '/robotics' ? 'nav-item-active' : ''}`}>
             <Cpu size={24} className="nav-icon" />
-            <span>Robotics</span>
+            <span>{t('nav.robotics', 'Robotics')}</span>
           </Link>
           <Link to="/ai" className={`nav-item ${location.pathname === '/ai' ? 'nav-item-active' : ''}`}>
             <Brain size={24} className="nav-icon" />
-            <span>AI Lab</span>
+            <span>{t('nav.aiLab', 'AI Lab')}</span>
           </Link>
           <Link to="/profile" className={`nav-item ${location.pathname === '/profile' ? 'nav-item-active' : ''}`}>
             <User size={24} className="nav-icon" />
-            <span>Profile</span>
+            <span>{t('nav.profile', 'Profile')}</span>
           </Link>
         </div>
       )}

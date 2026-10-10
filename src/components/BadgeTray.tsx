@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useGamification, Badge } from '../context/GamificationContext';
 import BadgeModal from './BadgeModal';
 import CertificateModal from './CertificateModal';
@@ -6,6 +7,7 @@ import Sparkles from 'lucide-react/dist/esm/icons/sparkles.mjs';
 import Award from 'lucide-react/dist/esm/icons/award.mjs';
 
 const BadgeTray: React.FC = () => {
+  const { t } = useTranslation();
   const { badges } = useGamification();
   const [selectedBadge, setSelectedBadge] = useState<Badge | null>(null);
   const [showCertificateModal, setShowCertificateModal] = useState(false);
@@ -31,14 +33,14 @@ const BadgeTray: React.FC = () => {
             letterSpacing: '0.05em',
             marginBottom: '0.75rem'
           }}>
-            <Award size={15} /> Gamified Milestones
+            <Award size={15} /> {t('badges.tag', 'Gamified Milestones')}
           </div>
 
           <h2 style={{ color: 'var(--kids-dark)', margin: 0, fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontFamily: "'Baloo 2', cursive", fontWeight: 800 }}>
-            My Achievement Gallery 🏆
+            {t('badges.title', 'My Achievement Gallery 🏆')}
           </h2>
           <p style={{ color: 'var(--kids-text-muted)', marginTop: '0.5rem', fontSize: '1rem' }}>
-            Click any badge to view its secret quest objective and unlock official certificates!
+            {t('badges.desc', 'Click any badge to view its secret quest objective and unlock official certificates!')}
           </p>
 
           {/* Progress Tracker Pill */}
@@ -53,7 +55,7 @@ const BadgeTray: React.FC = () => {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.85rem', fontWeight: 800, marginBottom: '6px' }}>
               <span style={{ color: '#0f172a', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Sparkles size={14} className="text-amber-500" /> Quests Completed
+                <Sparkles size={14} className="text-amber-500" /> {t('badges.questsCompleted', 'Quests Completed')}
               </span>
               <span style={{ color: 'var(--kids-blue)' }}>{unlockedCount} / {badges.length} ({progressPercent}%)</span>
             </div>
@@ -87,7 +89,7 @@ const BadgeTray: React.FC = () => {
               transition: 'all 0.2s'
             }}
           >
-            <span>📜 Generate Official Certificate</span>
+            <span>{t('badges.generateCert', '📜 Generate Official Certificate')}</span>
           </button>
         </div>
 
@@ -130,7 +132,7 @@ const BadgeTray: React.FC = () => {
                   background: badge.unlocked ? 'rgba(16, 185, 129, 0.1)' : 'rgba(100, 116, 139, 0.1)',
                   color: badge.unlocked ? '#059669' : '#64748b'
                 }}>
-                  {badge.unlocked ? '✨ Earned' : '🔒 Quest'}
+                  {badge.unlocked ? t('badges.unlocked', '✨ Earned') : t('badges.quest', '🔒 Quest')}
                 </span>
               </div>
 

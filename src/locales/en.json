@@ -15,12 +15,17 @@
     "courses": "Kids Courses",
     "robotics": "Robotics Lab",
     "aiLab": "AI Studio",
-    "stemKits": "STEM Kits"
+    "stemKits": "STEM Kits",
+    "profile": "Profile"
   },
   "home": {
     "title": "Welcome to Kone Kids!",
     "subtitle": "Embark on gamified coding adventures, earn coins, and build real smart hardware nodes.",
     "tagline": "Do it Right",
+    "mascotBubble": "Hi! I'm Drop 💧 What will you build today?",
+    "chipScratch": "✨ Scratch 3.0 Games",
+    "chipHardware": "🤖 micro:bit & Circuits",
+    "chipAI": "🧠 Smart AI Models",
     "codingTitle": "Coding 4 Kids",
     "codingDesc": "Build games and apps!",
     "roboticsTitle": "Robotics 4 Kids",
@@ -32,7 +37,96 @@
     "ctaButton": "Join the Academy",
     "insightsTag": "Parents & Teachers Hub",
     "insightsTitle": "Featured Insights & STEM Wisdom",
-    "insightsDesc": "Explore practical, research-backed advice on screen time, computational literacy, robotics engineering, and raising the next generation of builders."
+    "insightsDesc": "Explore practical, research-backed advice on screen time, computational literacy, robotics engineering, and raising the next generation of builders in Ghana.",
+    "insightsLabel": "Kone Kids Insights",
+    "readArticle": "Read",
+    "visitParentHub": "📖 Visit Parent & Teacher Hub"
+  },
+  "extensions": {
+    "tag": "Global Coding Extensions",
+    "title": "🚀 STEM Extensions & External Labs",
+    "subtitle": "Launch world-class platforms directly—Scratch 3.0, Code.org, BBC micro:bit MakeCode, Tinkercad, and Replit.",
+    "launch": "Launch",
+    "tools": {
+      "scratch": {
+        "desc": "The world famous MIT visual programming language for stories, games, and animations.",
+        "btn": "Launch Scratch"
+      },
+      "codeorg": {
+        "desc": "Hour of Code adventures, Dance Party, App Lab, and K-12 Computer Science courses.",
+        "btn": "Launch Code.org"
+      },
+      "makecode": {
+        "desc": "Official Microsoft block & JavaScript editor for pocket-sized micro:bit hardware.",
+        "btn": "Launch MakeCode"
+      },
+      "tinkercad": {
+        "desc": "Simulate Arduino circuits, breadboards, sensors, and 3D printing design.",
+        "btn": "Launch Tinkercad"
+      },
+      "replit": {
+        "desc": "Collaborative cloud IDE for writing Python, HTML, CSS, JavaScript, and Node.js.",
+        "btn": "Launch Replit"
+      },
+      "tynker": {
+        "desc": "Gamified block coding courses, Minecraft modding, and robotics challenges.",
+        "btn": "Launch Tynker"
+      }
+    }
+  },
+  "badges": {
+    "tag": "Gamified Milestones",
+    "title": "My Achievement Gallery 🏆",
+    "desc": "Click any badge to view its secret quest objective and unlock official certificates!",
+    "questsCompleted": "Quests Completed",
+    "generateCert": "📜 Generate Official Certificate",
+    "unlocked": "Unlocked",
+    "quest": "Quest"
+  },
+  "footer": {
+    "brandTagline": "Empowering the next generation of tech leaders in Ghana & beyond through gamified Coding, Robotics, and AI.",
+    "badge": "🇬🇭 Made for Future Leaders",
+    "exploreHubs": "Explore Hubs 🚀",
+    "coding4Kids": "💻 Coding 4 Kids",
+    "robotics4Kids": "🤖 Robotics 4 Kids",
+    "ai4Kids": "🧠 AI 4 Kids",
+    "classroomLogin": "🎒 Classroom Login",
+    "stemInsights": "📚 STEM Insights",
+    "networkTitle": "Kone Network 🌐",
+    "koneAcademyHub": "Kone Academy Hub",
+    "communityTitle": "Join Our Community ✨",
+    "communitySubtitle": "Follow our STEM journeys, student showcases & updates:",
+    "directLine": "Direct Line / WhatsApp:",
+    "copyright": "© 2026 Kone Kids. All rights reserved.",
+    "homeLink": "Kone Academy Home",
+    "kitsLink": "STEM Kits Store",
+    "insightsLink": "Insights & Articles"
+  },
+  "enrollment": {
+    "title": "Join the",
+    "mission": "Mission",
+    "subtitle": "Ready to build the physical and digital future? 🤖✨",
+    "tabParent": "Home Tutoring 🏡",
+    "tabSchool": "School STEM Lab 🏫",
+    "tabOnline": "Virtual Academy 🌐",
+    "parentName": "Parent / Guardian Name",
+    "parentNamePlaceholder": "e.g., Dr. Kwame Mensah",
+    "studentName": "Student Full Name",
+    "studentNamePlaceholder": "e.g., Kofi Mensah",
+    "email": "Email Address",
+    "emailPlaceholder": "parent@example.com",
+    "age": "Child's Age / Grade",
+    "agePlaceholder": "e.g., Age 9 (Grade 4)",
+    "selectTrack": "Select Learning Track",
+    "btnSending": "Launching Mission...",
+    "btnSubmit": "Enroll Hero 🚀",
+    "successSchoolTitle": "Let's Partner! 🏫",
+    "successSchoolDesc": "Your partnership inquiry has been successfully received. A Kone Kids School Partnership specialist will reach out shortly to plan your Live Lab Demo!",
+    "successOnlineTitle": "Virtual Mission Launched! 🌐",
+    "successOnlineDesc": "Your virtual training begins now! A Kone Kids Online Specialist will contact you soon to set up your kid's free 1-on-1 virtual onboarding session.",
+    "successParentTitle": "Welcome, Hero! 🚀",
+    "successParentDesc": "Your mission starts here! A Kone Kids representative will contact you soon to begin your home tutoring journey.",
+    "btnGreat": "Great! 👍"
   },
   "coinStore": {
     "title": "Kone Kids Coin Store",

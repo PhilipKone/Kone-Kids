@@ -15,24 +15,118 @@
     "courses": "Cours Enfants",
     "robotics": "Labo Robotique",
     "aiLab": "Studio IA",
-    "stemKits": "Kits STEM"
+    "stemKits": "Kits STEM",
+    "profile": "Profil"
   },
   "home": {
     "title": "Bienvenue sur Kone Kids !",
     "subtitle": "Lancez-vous dans des aventures de code ludiques, gagnez des pièces et créez de vrais circuits intelligents.",
     "tagline": "Faites-le Bien",
-    "codingTitle": "Code pour Enfants",
+    "mascotBubble": "Salut ! Je m'appelle Drop 💧 Que vas-tu créer aujourd'hui ?",
+    "chipScratch": "✨ Jeux Scratch 3.0",
+    "chipHardware": "🤖 micro:bit & Circuits",
+    "chipAI": "🧠 Modèles d'IA Intelligents",
+    "codingTitle": "Labo de Code",
     "codingDesc": "Créez des jeux et applications !",
-    "roboticsTitle": "Robotique pour Enfants",
+    "roboticsTitle": "Labo Robotique",
     "roboticsDesc": "Donnez vie aux machines !",
-    "aiTitle": "IA pour Enfants",
+    "aiTitle": "Studio IA",
     "aiDesc": "Entraînez votre propre IA !",
     "ctaTitle": "Prêt à commencer ?",
     "ctaDesc": "Rejoignez plus de 1 000 enfants qui construisent l'avenir !",
     "ctaButton": "Rejoindre l'Académie",
     "insightsTag": "Espace Parents & Enseignants",
     "insightsTitle": "Actualités & Conseils STEM",
-    "insightsDesc": "Découvrez des conseils pratiques basés sur la recherche pour gérer le temps d'écran, l'alphabétisation informatique et l'éducation de la prochaine génération de créateurs."
+    "insightsDesc": "Découvrez des conseils pratiques basés sur la recherche pour gérer le temps d'écran, l'alphabétisation informatique et l'éducation de la prochaine génération de créateurs.",
+    "insightsLabel": "Conseils Kone Kids",
+    "readArticle": "Lire",
+    "visitParentHub": "📖 Découvrir l'Espace Parents & Enseignants"
+  },
+  "extensions": {
+    "tag": "Extensions de Code Globales",
+    "title": "🚀 Extensions STEM & Labos Externes",
+    "subtitle": "Lancez des plateformes de renommée mondiale directement — Scratch 3.0, Code.org, BBC micro:bit MakeCode, Tinkercad et Replit.",
+    "launch": "Lancer",
+    "tools": {
+      "scratch": {
+        "desc": "Le célèbre langage visuel du MIT pour créer histoires interactives, jeux et animations.",
+        "btn": "Lancer Scratch"
+      },
+      "codeorg": {
+        "desc": "Aventures Heure du Code, Dance Party, App Lab et cours d'informatique pour tous niveaux.",
+        "btn": "Lancer Code.org"
+      },
+      "makecode": {
+        "desc": "L'éditeur officiel Microsoft par blocs et JavaScript pour microcontrôleurs BBC micro:bit.",
+        "btn": "Lancer MakeCode"
+      },
+      "tinkercad": {
+        "desc": "Simulez des circuits Arduino, platines d'expérimentation, capteurs et modélisation 3D.",
+        "btn": "Lancer Tinkercad"
+      },
+      "replit": {
+        "desc": "Environnement cloud collaboratif pour programmer en Python, HTML, CSS, JavaScript et Node.js.",
+        "btn": "Lancer Replit"
+      },
+      "tynker": {
+        "desc": "Cours de code ludiques par blocs, modding Minecraft et défis de robotique.",
+        "btn": "Lancer Tynker"
+      }
+    }
+  },
+  "badges": {
+    "tag": "Étapes Ludiques",
+    "title": "Ma Galerie de Trophées 🏆",
+    "desc": "Cliquez sur un badge pour découvrir sa quête secrète et débloquer des certificats officiels !",
+    "questsCompleted": "Quêtes Terminées",
+    "generateCert": "📜 Obtenir le Certificat Officiel",
+    "unlocked": "Débloqué",
+    "quest": "Quête"
+  },
+  "footer": {
+    "brandTagline": "Former la prochaine génération de leaders technologiques au Ghana et au-delà grâce au code, à la robotique et à l'IA ludiques.",
+    "badge": "🇬🇭 Conçu pour les Futurs Leaders",
+    "exploreHubs": "Explorer les Hubs 🚀",
+    "coding4Kids": "💻 Code pour Enfants",
+    "robotics4Kids": "🤖 Robotique pour Enfants",
+    "ai4Kids": "🧠 IA pour Enfants",
+    "classroomLogin": "🎒 Connexion Classe",
+    "stemInsights": "📚 Conseils STEM",
+    "networkTitle": "Réseau Kone 🌐",
+    "koneAcademyHub": "Portail Kone Academy",
+    "communityTitle": "Rejoindre notre Communauté ✨",
+    "communitySubtitle": "Suivez nos aventures STEM, les projets de nos élèves et nos actualités :",
+    "directLine": "Ligne directe / WhatsApp :",
+    "copyright": "© 2026 Kone Kids. Tous droits réservés.",
+    "homeLink": "Accueil Kone Academy",
+    "kitsLink": "Boutique Kits STEM",
+    "insightsLink": "Articles & Conseils"
+  },
+  "enrollment": {
+    "title": "Rejoignez la",
+    "mission": "Mission",
+    "subtitle": "Prêt à construire l'avenir physique et numérique ? 🤖✨",
+    "tabParent": "Cours à Domicile 🏡",
+    "tabSchool": "Labo STEM Scolaire 🏫",
+    "tabOnline": "Académie Virtuelle 🌐",
+    "parentName": "Nom du Parent / Tuteur",
+    "parentNamePlaceholder": "ex: Dr. Kwame Mensah",
+    "studentName": "Nom Complet de l'Élève",
+    "studentNamePlaceholder": "ex: Kofi Mensah",
+    "email": "Adresse E-mail",
+    "emailPlaceholder": "parent@exemple.com",
+    "age": "Âge / Classe de l'Enfant",
+    "agePlaceholder": "ex: 9 ans (CM1)",
+    "selectTrack": "Choisir le Parcours d'Apprentissage",
+    "btnSending": "Lancement de la Mission...",
+    "btnSubmit": "Inscrire l'Élève 🚀",
+    "successSchoolTitle": "Devenons Partenaires ! 🏫",
+    "successSchoolDesc": "Votre demande de partenariat scolaire a bien été reçue. Un spécialiste Kone Kids vous contactera sous peu pour organiser une démonstration en direct !",
+    "successOnlineTitle": "Mission Virtuelle Lancée ! 🌐",
+    "successOnlineDesc": "Votre formation virtuelle commence ! Un spécialiste Kone Kids vous contactera bientôt pour programmer la session d'intégration gratuite de votre enfant.",
+    "successParentTitle": "Bienvenue dans l'Aventure ! 🚀",
+    "successParentDesc": "Votre mission commence ici ! Un représentant Kone Kids vous contactera bientôt pour débuter le tutorat à domicile.",
+    "btnGreat": "Parfait ! 👍"
   },
   "coinStore": {
     "title": "Boutique de Pièces Kone Kids",
