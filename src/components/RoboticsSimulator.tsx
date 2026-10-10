@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useImperativeHandle, forwardRef, useRef } from 'react';
-import { Car, Radar, Flag, AlertTriangle, Compass, PenTool, Sparkles, RefreshCw, Play, Square } from 'lucide-react';
+import { Car, Radar, Flag, AlertTriangle, Compass, PenTool, Sparkles, RefreshCw, Play, Square, Gamepad2 } from 'lucide-react';
 import './RoboticsSimulator.css';
 import { sounds } from '../utils/sounds';
 
@@ -382,7 +382,7 @@ const RoboticsSimulator = forwardRef<RoboticsHandle, RoboticsSimulatorProps>(({ 
       }}>
         {/* Arena Mode Dropdown */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-          <span style={{ fontSize: '0.8rem' }}>🏟️</span>
+          <Compass size={13} style={{ color: '#38bdf8' }} />
           <select
             value={selectedArena}
             onChange={(e) => {
@@ -449,10 +449,14 @@ const RoboticsSimulator = forwardRef<RoboticsHandle, RoboticsSimulatorProps>(({ 
               padding: '2px 6px',
               fontSize: '0.65rem',
               fontWeight: 800,
-              cursor: 'pointer'
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '3px'
             }}
           >
-            🎮 Test
+            <Gamepad2 size={12} />
+            <span>Test</span>
           </button>
         </div>
       </div>
@@ -492,7 +496,7 @@ const RoboticsSimulator = forwardRef<RoboticsHandle, RoboticsSimulatorProps>(({ 
           }}>
             <Flag size={20} fill={reachedTarget ? '#10b981' : '#ef4444'} color={reachedTarget ? '#10b981' : '#ef4444'} className={reachedTarget ? 'animate-bounce' : ''} />
             <span style={{ fontSize: '0.55rem', color: reachedTarget ? '#10b981' : '#ef4444', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              {reachedTarget ? 'REACHED! 🏁' : 'Goal'}
+              {reachedTarget ? 'REACHED!' : 'Goal'}
             </span>
           </div>
         )}
@@ -599,11 +603,13 @@ const RoboticsSimulator = forwardRef<RoboticsHandle, RoboticsSimulatorProps>(({ 
                 fontFamily: '"Baloo 2", cursive',
                 fontWeight: 800,
                 fontSize: '0.75rem',
-                cursor: 'pointer',
-                boxShadow: '0 3px 0 #991b1b'
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '4px'
               }}
             >
-              Reset Rover 🔄
+              <RefreshCw size={12} />
+              <span>Reset Rover</span>
             </button>
           </div>
         )}

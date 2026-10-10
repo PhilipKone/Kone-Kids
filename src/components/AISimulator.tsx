@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
-import { Camera, RefreshCw, Cpu, Sparkles, BookOpen } from 'lucide-react';
+import { Camera, RefreshCw, Cpu, Sparkles, BookOpen, Palette, Hand, Smile, Landmark, Brain, Layers, CheckCircle2, Scissors, Frown, Laugh, Trees, Building2 } from 'lucide-react';
+import { sounds } from '../utils/sounds';
 import confetti from 'canvas-confetti';
 
 export interface AIHandle {
@@ -17,9 +18,9 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
   const [activeMode, setActiveMode] = useState<AIMode>('custom');
 
   // Class names for different modes
-  const [classA, setClassA] = useState('Cocoa Pod 🟫');
-  const [classB, setClassB] = useState('Banana 🟨');
-  const [classC, setClassC] = useState('Green Leaf 🟩');
+  const [classA, setClassA] = useState('Cocoa Pod');
+  const [classB, setClassB] = useState('Banana');
+  const [classC, setClassC] = useState('Green Leaf');
 
   // Captured images for the classes
   const [imagesA, setImagesA] = useState<string[]>([]);
@@ -72,21 +73,21 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
     setManualOverride('');
 
     if (activeMode === 'custom') {
-      setClassA('Cocoa Pod 🟫');
-      setClassB('Banana 🟨');
-      setClassC('Green Leaf 🟩');
+      setClassA('Cocoa Pod');
+      setClassB('Banana');
+      setClassC('Green Leaf');
     } else if (activeMode === 'gestures') {
-      setClassA('Rock ✊');
-      setClassB('Paper ✋');
-      setClassC('Scissors ✌️');
+      setClassA('Rock');
+      setClassB('Paper');
+      setClassC('Scissors');
     } else if (activeMode === 'emotions') {
-      setClassA('Happy 😊');
-      setClassB('Sad 😢');
-      setClassC('Surprised 😲');
+      setClassA('Happy');
+      setClassB('Sad');
+      setClassC('Surprised');
     } else if (activeMode === 'landmarks') {
-      setClassA('Independence Arch 🇬🇭');
-      setClassB('Kakum Canopy 🌲');
-      setClassC('Larabanga Mosque 🕌');
+      setClassA('Independence Arch');
+      setClassB('Kakum Canopy');
+      setClassC('Larabanga Mosque');
     }
   }, [activeMode]);
 
@@ -401,6 +402,18 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
     }
   };
 
+  const loadDemoDataset = () => {
+    captureSnapshot('a');
+    captureSnapshot('b');
+    captureSnapshot('c');
+    setTimeout(() => {
+      captureSnapshot('a');
+      captureSnapshot('b');
+      captureSnapshot('c');
+    }, 60);
+    sounds.playPop();
+  };
+
   const startTraining = () => {
     if (imagesA.length === 0 || imagesB.length === 0) {
       alert('Please capture at least 1 image for Class A and Class B first!');
@@ -564,8 +577,8 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
           
           {/* Target Telemetry Label */}
           <g fill="#fbbf24" fontFamily="monospace" fontSize="8" fontWeight="bold" opacity="0.95">
-            <text x="40" y="48">🎯 ID: {targetName}</text>
-            <text x="40" y="163">📡 SIGNAL: LOCK_ON</text>
+            <text x="40" y="48">TARGET: {targetName}</text>
+            <text x="40" y="163">SIGNAL: LOCK_ON</text>
             <text x="210" y="163">MATCH: {confidence}%</text>
           </g>
         </svg>
@@ -611,19 +624,20 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
   };
 
   const renderSimulatedCard = (itemName: string) => {
-    let emoji = '🤖';
-    if (itemName.includes('🟫') || itemName.toLowerCase().includes('cocoa')) emoji = '🟫';
-    else if (itemName.includes('🟨') || itemName.toLowerCase().includes('banana')) emoji = '🍌';
-    else if (itemName.includes('🟩') || itemName.toLowerCase().includes('leaf') || itemName.toLowerCase().includes('green')) emoji = '🍃';
-    else if (itemName.includes('✊') || itemName.toLowerCase().includes('rock')) emoji = '✊';
-    else if (itemName.includes('✋') || itemName.toLowerCase().includes('paper')) emoji = '✋';
-    else if (itemName.includes('✌️') || itemName.toLowerCase().includes('scissors')) emoji = '✌️';
-    else if (itemName.includes('😊') || itemName.toLowerCase().includes('happy')) emoji = '😊';
-    else if (itemName.includes('😢') || itemName.toLowerCase().includes('sad')) emoji = '😢';
-    else if (itemName.includes('😲') || itemName.toLowerCase().includes('surprised')) emoji = '😲';
-    else if (itemName.includes('🏛️') || itemName.toLowerCase().includes('arch') || itemName.toLowerCase().includes('independence')) emoji = '🏛️';
-    else if (itemName.includes('🌲') || itemName.toLowerCase().includes('canopy') || itemName.toLowerCase().includes('kakum')) emoji = '🌲';
-    else if (itemName.includes('🕌') || itemName.toLowerCase().includes('mosque') || itemName.toLowerCase().includes('larabanga')) emoji = '🕌';
+    const lower = itemName.toLowerCase();
+    let icon = <Brain size={48} color="#c084fc" />;
+    if (lower.includes('cocoa')) icon = <Layers size={48} color="#b45309" />;
+    else if (lower.includes('banana')) icon = <Sparkles size={48} color="#eab308" />;
+    else if (lower.includes('leaf') || lower.includes('green')) icon = <Sparkles size={48} color="#10b981" />;
+    else if (lower.includes('rock')) icon = <Hand size={48} color="#94a3b8" />;
+    else if (lower.includes('paper')) icon = <Hand size={48} color="#38bdf8" />;
+    else if (lower.includes('scissors')) icon = <Scissors size={48} color="#ec4899" />;
+    else if (lower.includes('happy')) icon = <Smile size={48} color="#fbbf24" />;
+    else if (lower.includes('sad')) icon = <Frown size={48} color="#38bdf8" />;
+    else if (lower.includes('surprised')) icon = <Laugh size={48} color="#a855f7" />;
+    else if (lower.includes('arch') || lower.includes('independence')) icon = <Landmark size={48} color="#fbbf24" />;
+    else if (lower.includes('canopy') || lower.includes('kakum')) icon = <Trees size={48} color="#10b981" />;
+    else if (lower.includes('mosque') || lower.includes('larabanga')) icon = <Building2 size={48} color="#f59e0b" />;
 
     return (
       <div style={{
@@ -636,9 +650,9 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
         flexDirection: 'column',
         gap: '0.4rem'
       }}>
-        <span style={{ fontSize: '3rem', filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.35))', animation: 'floatCard 3s ease-in-out infinite' }}>
-          {emoji}
-        </span>
+        <div style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.35))', animation: 'floatCard 3s ease-in-out infinite' }}>
+          {icon}
+        </div>
         <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#94a3b8', background: 'rgba(255,255,255,0.05)', padding: '0.2rem 0.6rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
           {itemName}
         </span>
@@ -668,27 +682,42 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
     }}>
       
       {/* Header Tabs */}
-      <div style={{ display: 'flex', gap: '0.25rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }} className="no-print">
-        {(['custom', 'gestures', 'emotions', 'landmarks'] as AIMode[]).map((mode) => (
-          <button
-            key={mode}
-            onClick={() => setActiveMode(mode)}
-            style={{
-              padding: '0.35rem 0.65rem',
-              borderRadius: '8px',
-              border: 'none',
-              background: activeMode === mode ? 'var(--kids-purple)' : 'rgba(255,255,255,0.04)',
-              color: activeMode === mode ? 'white' : '#94a3b8',
-              fontSize: '0.75rem',
-              fontWeight: 800,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.2s'
-            }}
-          >
-            {mode === 'custom' ? '🎨 Color Lab' : mode === 'gestures' ? '✊ Gestures' : mode === 'emotions' ? '😊 Emotions' : '🇬🇭 Landmarks'}
-          </button>
-        ))}
+      <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'space-between', paddingBottom: '0.5rem', marginBottom: '0.75rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }} className="no-print">
+        {(['custom', 'gestures', 'emotions', 'landmarks'] as AIMode[]).map((mode) => {
+          const modeTitle = mode === 'custom' ? 'Color Lab' : mode === 'gestures' ? 'Gestures' : mode === 'emotions' ? 'Emotions' : 'Landmarks';
+          return (
+            <button
+              key={mode}
+              onClick={() => setActiveMode(mode)}
+              title={modeTitle}
+              aria-label={modeTitle}
+              style={{
+                flex: 1,
+                padding: '0.4rem 0.5rem',
+                borderRadius: '8px',
+                border: 'none',
+                background: activeMode === mode ? 'var(--kids-purple)' : 'rgba(255,255,255,0.04)',
+                color: activeMode === mode ? 'white' : '#94a3b8',
+                fontSize: '0.75rem',
+                fontWeight: 800,
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.2s',
+                boxShadow: activeMode === mode ? '0 2px 0 #7e22ce' : 'none'
+              }}
+            >
+              {mode === 'custom' && <Palette size={14} />}
+              {mode === 'gestures' && <Hand size={14} />}
+              {mode === 'emotions' && <Smile size={14} />}
+              {mode === 'landmarks' && <Landmark size={14} />}
+              <span className="ai-mode-label">{modeTitle}</span>
+            </button>
+          );
+        })}
       </div>
 
       {isTraining ? (
@@ -835,9 +864,11 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
               />
               <button 
                 onClick={() => captureSnapshot('a')}
-                style={{ background: '#3b82f6', border: 'none', color: 'white', fontSize: '0.7rem', fontWeight: 800, padding: '0.35rem', borderRadius: '6px', cursor: 'pointer' }}
+                style={{ background: '#3b82f6', border: 'none', color: 'white', fontSize: '0.7rem', fontWeight: 800, padding: '0.35rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}
+                title="Capture sample for Class A"
               >
-                📸 Snap
+                <Camera size={13} />
+                <span>Snap</span>
               </button>
               <div style={{ fontSize: '0.6rem', color: '#94a3b8', textAlign: 'center' }}>{imagesA.length} images</div>
               <div style={{ display: 'flex', gap: '2px', overflowX: 'auto', minHeight: '16px' }}>
@@ -858,9 +889,11 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
               />
               <button 
                 onClick={() => captureSnapshot('b')}
-                style={{ background: '#ec4899', border: 'none', color: 'white', fontSize: '0.7rem', fontWeight: 800, padding: '0.35rem', borderRadius: '6px', cursor: 'pointer' }}
+                style={{ background: '#ec4899', border: 'none', color: 'white', fontSize: '0.7rem', fontWeight: 800, padding: '0.35rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}
+                title="Capture sample for Class B"
               >
-                📸 Snap
+                <Camera size={13} />
+                <span>Snap</span>
               </button>
               <div style={{ fontSize: '0.6rem', color: '#94a3b8', textAlign: 'center' }}>{imagesB.length} images</div>
               <div style={{ display: 'flex', gap: '2px', overflowX: 'auto', minHeight: '16px' }}>
@@ -881,9 +914,11 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
               />
               <button 
                 onClick={() => captureSnapshot('c')}
-                style={{ background: '#10b981', border: 'none', color: 'white', fontSize: '0.7rem', fontWeight: 800, padding: '0.35rem', borderRadius: '6px', cursor: 'pointer' }}
+                style={{ background: '#10b981', border: 'none', color: 'white', fontSize: '0.7rem', fontWeight: 800, padding: '0.35rem', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.25rem' }}
+                title="Capture sample for Class C"
               >
-                📸 Snap
+                <Camera size={13} />
+                <span>Snap</span>
               </button>
               <div style={{ fontSize: '0.6rem', color: '#94a3b8', textAlign: 'center' }}>{imagesC.length} images</div>
               <div style={{ display: 'flex', gap: '2px', overflowX: 'auto', minHeight: '16px' }}>
@@ -892,6 +927,31 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
                 ))}
               </div>
             </div>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <button
+              type="button"
+              onClick={loadDemoDataset}
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px dashed rgba(255,255,255,0.2)',
+                color: '#94a3b8',
+                borderRadius: '8px',
+                padding: '0.3rem 0.75rem',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s ease'
+              }}
+              title="Populate demo training samples automatically"
+            >
+              <Layers size={13} />
+              <span>Preload Demo Samples</span>
+            </button>
           </div>
 
           <button 
@@ -914,7 +974,8 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
               marginTop: 'auto'
             }}
           >
-            Train Neural Network 🧠
+            <Brain size={18} />
+            <span>Train Neural Network</span>
           </button>
         </div>
       )}
@@ -940,6 +1001,11 @@ const AISimulator = forwardRef<AIHandle, {}>((_, ref) => {
         @keyframes dash {
           to {
             stroke-dashoffset: -20;
+          }
+        }
+        @media (max-width: 640px) {
+          .ai-mode-label {
+            display: none;
           }
         }
       `}</style>

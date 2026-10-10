@@ -89,12 +89,14 @@ const CodeInspector: React.FC<CodeInspectorProps> = ({
           <button
             type="button"
             onClick={() => { sounds.playClick(); setLanguage('python'); }}
+            title="Python 3"
+            aria-label="Python"
             style={{
-              background: language === 'python' ? '#38bdf8' : 'rgba(255,255,255,0.06)',
-              color: language === 'python' ? '#0f172a' : '#94a3b8',
-              border: 'none',
+              background: language === 'python' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(255,255,255,0.06)',
+              color: language === 'python' ? '#38bdf8' : '#94a3b8',
+              border: language === 'python' ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid transparent',
               borderRadius: '8px',
-              padding: isMobile ? '3px 8px' : '4px 12px',
+              padding: isMobile ? '4px 8px' : '4px 12px',
               fontWeight: 800,
               fontSize: isMobile ? '0.72rem' : '0.8rem',
               cursor: 'pointer',
@@ -105,18 +107,20 @@ const CodeInspector: React.FC<CodeInspectorProps> = ({
             }}
           >
             <PythonIcon />
-            <span>{isMobile ? 'PY' : 'Python'}</span>
+            {!isMobile && <span>Python</span>}
           </button>
 
           <button
             type="button"
             onClick={() => { sounds.playClick(); setLanguage('javascript'); }}
+            title="JavaScript (ES6)"
+            aria-label="JavaScript"
             style={{
               background: language === 'javascript' ? '#fbbf24' : 'rgba(255,255,255,0.06)',
               color: language === 'javascript' ? '#0f172a' : '#94a3b8',
               border: 'none',
               borderRadius: '8px',
-              padding: isMobile ? '3px 8px' : '4px 12px',
+              padding: isMobile ? '4px 8px' : '4px 12px',
               fontWeight: 800,
               fontSize: isMobile ? '0.72rem' : '0.8rem',
               cursor: 'pointer',
@@ -127,7 +131,7 @@ const CodeInspector: React.FC<CodeInspectorProps> = ({
             }}
           >
             <JavaScriptIcon />
-            <span>{isMobile ? 'JS' : 'JavaScript'}</span>
+            {!isMobile && <span>JavaScript</span>}
           </button>
         </div>
 
@@ -136,13 +140,14 @@ const CodeInspector: React.FC<CodeInspectorProps> = ({
           <button
             type="button"
             onClick={handleCopy}
-            title="Copy text code"
+            title={copied ? "Copied to clipboard!" : "Copy code"}
+            aria-label="Copy"
             style={{
               background: copied ? '#22c55e' : 'rgba(255,255,255,0.08)',
               color: 'white',
               border: '1px solid rgba(255,255,255,0.15)',
               borderRadius: '8px',
-              padding: isMobile ? '3px 8px' : '4px 10px',
+              padding: isMobile ? '4px 7px' : '4px 10px',
               fontSize: isMobile ? '0.7rem' : '0.78rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -151,20 +156,21 @@ const CodeInspector: React.FC<CodeInspectorProps> = ({
               gap: '0.3rem'
             }}
           >
-            {copied ? <Check size={13} /> : <Copy size={13} />}
-            <span>{copied ? 'Copied!' : 'Copy'}</span>
+            {copied ? <Check size={14} /> : <Copy size={14} />}
+            {!isMobile && <span>{copied ? 'Copied!' : 'Copy'}</span>}
           </button>
 
           <button
             type="button"
             onClick={handleDownload}
-            title="Download script file"
+            title={`Download ${language === 'python' ? '.py' : '.js'} file`}
+            aria-label="Download"
             style={{
               background: 'rgba(255,255,255,0.08)',
               color: 'white',
               border: '1px solid rgba(255,255,255,0.15)',
               borderRadius: '8px',
-              padding: isMobile ? '3px 8px' : '4px 10px',
+              padding: isMobile ? '4px 7px' : '4px 10px',
               fontSize: isMobile ? '0.7rem' : '0.78rem',
               fontWeight: 700,
               cursor: 'pointer',
@@ -173,8 +179,8 @@ const CodeInspector: React.FC<CodeInspectorProps> = ({
               gap: '0.3rem'
             }}
           >
-            <Download size={13} />
-            <span>{isMobile ? (language === 'python' ? '.py' : '.js') : 'Download'}</span>
+            <Download size={14} />
+            {!isMobile && <span>Download</span>}
           </button>
         </div>
       </div>

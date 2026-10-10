@@ -22,7 +22,7 @@ import { useGamification } from '../context/GamificationContext';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { CODING_MISSIONS } from '../data/missions';
-import { Play, Square, FileCode, Blocks, Eye, EyeOff, Volume2, VolumeX, Music } from 'lucide-react';
+import { Play, Square, FileCode, Blocks, Eye, EyeOff, Volume2, VolumeX, Music, ArrowLeft, Settings, Grid3X3, Maximize2, ShoppingBag, Puzzle, Palette, Tv, Code2, Plug, Zap, Columns, Flag } from 'lucide-react';
 import MascotShop from './MascotShop';
 import { sounds } from '../utils/sounds';
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
@@ -1897,7 +1897,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             onClick={() => navigate(hubPath)}
             className="kids-button"
             style={{
-              padding: isMobile ? '0.2rem 0.45rem' : '0.3rem 0.7rem',
+              padding: isMobile ? '0.25rem 0.45rem' : '0.3rem 0.7rem',
               fontSize: isMobile ? '0.72rem' : '0.8rem',
               background: isDark ? 'var(--kids-surface)' : '#ffffff',
               border: isDark ? '1px solid var(--kids-border)' : '1.5px solid #cbd5e1',
@@ -1910,8 +1910,10 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               flexShrink: 0
             }}
             title={`Return to ${hubPath.replace('/', '')} Mission Map`}
+            aria-label="Back to Map"
           >
-            ← {mission ? (isMobile ? 'Map' : 'Mission Map') : 'Map'}
+            <ArrowLeft size={isMobile ? 16 : 15} />
+            {!isMobile && <span>Map</span>}
           </button>
 
           {mission ? (
@@ -2146,19 +2148,24 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               type="button"
               onClick={() => setLanguage('javascript')}
               style={{
-                background: language === 'javascript' ? 'var(--kids-orange)' : 'transparent',
+                background: language === 'javascript' ? '#fbbf24' : 'transparent',
                 border: 'none',
-                color: language === 'javascript' ? '#ffffff' : (isDark ? 'rgba(255,255,255,0.6)' : '#64748b'),
-                padding: isMobile ? '0.2rem 0.4rem' : '0.3rem 0.65rem',
+                color: language === 'javascript' ? '#0f172a' : (isDark ? 'rgba(255,255,255,0.6)' : '#64748b'),
+                padding: isMobile ? '0.22rem 0.35rem' : '0.25rem 0.55rem',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontSize: isMobile ? '0.68rem' : '0.75rem',
                 fontWeight: 800,
-                boxShadow: language === 'javascript' ? '0 2px 0 #9a3412' : 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+                boxShadow: language === 'javascript' ? '0 2px 0 #d97706' : 'none',
                 transition: 'all 0.15s ease'
               }}
+              title="Switch to JavaScript (ES6)"
             >
-              JS
+              <JavaScriptIcon />
+              {!isMobile && <span>JS</span>}
             </button>
             <button
               type="button"
@@ -2167,16 +2174,21 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 background: language === 'python' ? 'var(--kids-blue)' : 'transparent',
                 border: 'none',
                 color: language === 'python' ? '#ffffff' : (isDark ? 'rgba(255,255,255,0.6)' : '#64748b'),
-                padding: isMobile ? '0.2rem 0.4rem' : '0.3rem 0.65rem',
+                padding: isMobile ? '0.22rem 0.35rem' : '0.25rem 0.55rem',
                 borderRadius: '6px',
                 cursor: 'pointer',
                 fontSize: isMobile ? '0.68rem' : '0.75rem',
                 fontWeight: 800,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
                 boxShadow: language === 'python' ? '0 2px 0 #0369a1' : 'none',
                 transition: 'all 0.15s ease'
               }}
+              title="Switch to Python 3"
             >
-              PY
+              <PythonIcon />
+              {!isMobile && <span>PY</span>}
             </button>
           </div>
 
@@ -2216,18 +2228,18 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   background: showMobileMore ? 'var(--kids-blue)' : (isDark ? 'rgba(255,255,255,0.08)' : '#f1f5f9'),
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   color: showMobileMore ? 'white' : (isDark ? 'white' : '#0f172a'),
-                  padding: '0.22rem 0.45rem',
+                  padding: '0.28rem 0.45rem',
                   borderRadius: '7px',
                   cursor: 'pointer',
-                  fontSize: '0.7rem',
-                  fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '2px'
+                  justifyContent: 'center',
+                  transition: 'all 0.15s ease'
                 }}
                 title="Quick Settings & Tools"
+                aria-label="Settings"
               >
-                <span>⚙️ Settings</span>
+                <Settings size={18} />
               </button>
 
               {showMobileMore && (
@@ -2296,93 +2308,93 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           <button
             type="button"
             onClick={() => { setActiveMobileTab('blocks'); setEditorModeTab('code'); }}
+            title="Blocks Workspace"
+            aria-label="Blocks"
             style={{
               flex: 1,
               background: activeMobileTab === 'blocks' ? 'var(--kids-orange)' : 'transparent',
               border: 'none',
               color: activeMobileTab === 'blocks' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
-              padding: '0.35rem 0.2rem',
+              padding: '0.45rem 0.2rem',
               borderRadius: '8px',
               fontWeight: 800,
-              fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.2rem',
               boxShadow: activeMobileTab === 'blocks' ? '0 2px 0 #9a3412' : 'none',
               cursor: 'pointer'
             }}
           >
-            <span>🧩 Blocks</span>
+            <Puzzle size={19} />
           </button>
 
           <button
             type="button"
             onClick={() => { setActiveMobileTab('costumes'); setEditorModeTab('costumes'); }}
+            title="Costumes & Sprites"
+            aria-label="Costumes"
             style={{
               flex: 1,
               background: activeMobileTab === 'costumes' ? 'var(--kids-purple)' : 'transparent',
               border: 'none',
               color: activeMobileTab === 'costumes' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
-              padding: '0.35rem 0.2rem',
+              padding: '0.45rem 0.2rem',
               borderRadius: '8px',
               fontWeight: 800,
-              fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.2rem',
               boxShadow: activeMobileTab === 'costumes' ? '0 2px 0 #7e22ce' : 'none',
               cursor: 'pointer'
             }}
           >
-            <span>🎨 Costumes</span>
+            <Palette size={19} />
           </button>
 
           <button
             type="button"
             onClick={() => setActiveMobileTab('stage')}
+            title="Stage & Simulation View"
+            aria-label="Stage"
             style={{
               flex: 1,
               background: activeMobileTab === 'stage' ? 'var(--kids-blue)' : 'transparent',
               border: 'none',
               color: activeMobileTab === 'stage' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
-              padding: '0.35rem 0.2rem',
+              padding: '0.45rem 0.2rem',
               borderRadius: '8px',
               fontWeight: 800,
-              fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.2rem',
               boxShadow: activeMobileTab === 'stage' ? '0 2px 0 #0369a1' : 'none',
               cursor: 'pointer'
             }}
           >
-            <span>📺 Stage</span>
+            <Tv size={19} />
           </button>
 
           <button
             type="button"
             onClick={() => setActiveMobileTab('code')}
+            title="Code Inspector"
+            aria-label="Code"
             style={{
               flex: 1,
               background: activeMobileTab === 'code' ? '#10b981' : 'transparent',
               border: 'none',
               color: activeMobileTab === 'code' ? 'white' : (isDark ? '#94a3b8' : '#475569'),
-              padding: '0.35rem 0.2rem',
+              padding: '0.45rem 0.2rem',
               borderRadius: '8px',
               fontWeight: 800,
-              fontSize: '0.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: '0.2rem',
               boxShadow: activeMobileTab === 'code' ? '0 2px 0 #047857' : 'none',
               cursor: 'pointer'
             }}
           >
-            <span>💻 Code</span>
+            <Code2 size={19} />
           </button>
         </div>
       )}
@@ -2459,7 +2471,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>🧩 Blocks</span>
+                <Puzzle size={15} />
+                <span>Blocks</span>
               </button>
 
               <button
@@ -2481,7 +2494,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>🪟 Split View</span>
+                <Columns size={15} />
+                <span>Split View</span>
               </button>
 
               <button
@@ -2549,7 +2563,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>🎨 Costumes</span>
+                <Palette size={15} />
+                <span>Costumes</span>
               </button>
 
               <button
@@ -2571,7 +2586,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>🔊 Sounds</span>
+                <Volume2 size={15} />
+                <span>Sounds</span>
               </button>
             </div>
           )}
@@ -2812,7 +2828,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               <button
                 onClick={runCode}
                 disabled={isRunning}
-                title="Run Project (Green Flag 🚩)"
+                title="Run Project (Flag)"
+                aria-label="Run Project"
                 style={{
                   background: isRunning
                     ? 'linear-gradient(135deg, #16a34a, #15803d)'
@@ -2833,13 +2850,14 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transform: isRunning ? 'scale(1.05)' : 'none'
                 }}
               >
-                <span style={{ fontSize: '1.05rem', lineHeight: 1 }}>🚩</span>
+                <Flag size={15} fill="currentColor" />
               </button>
 
               <button
                 onClick={stopCode}
                 disabled={!isRunning}
-                title="Stop Project (Red Octagon 🛑)"
+                title="Stop Project"
+                aria-label="Stop Project"
                 style={{
                   background: isRunning
                     ? 'linear-gradient(135deg, #ef4444, #dc2626)'
@@ -2858,7 +2876,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.2s ease'
                 }}
               >
-                <span style={{ fontSize: '1rem', lineHeight: 1 }}>🛑</span>
+                <Square size={13} fill="currentColor" />
               </button>
 
               <div style={{
@@ -2882,69 +2900,72 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 <span>{isRunning ? 'RUNNING' : 'READY'}</span>
               </div>
 
-              {/* Execution Speed Selector (Slow-Mo / Normal / Turbo) */}
+              {/* Execution Speed Selector (0.5x / 1x / Turbo) */}
               <div style={{
                 display: 'flex',
+                alignItems: 'center',
                 background: isDark ? 'rgba(15, 23, 42, 0.7)' : 'rgba(241, 245, 249, 0.9)',
                 borderRadius: '16px',
-                padding: '2px',
-                border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1'
+                padding: '2px 4px',
+                border: isDark ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid #cbd5e1',
+                gap: '2px'
               }}>
+                <Zap size={12} style={{ color: '#0ea5e9', marginLeft: '2px', marginRight: '1px' }} />
                 <button
                   type="button"
-                  title="Slow-Mo Debugger Mode (1.8s per block step)"
+                  title="Slow-Mo Debugger Mode (1.8s per step)"
                   onClick={() => { setExecSpeed('slowmo'); execSpeedRef.current = 'slowmo'; sounds.playClick(); }}
                   style={{
                     background: execSpeed === 'slowmo' ? '#f59e0b' : 'transparent',
                     color: execSpeed === 'slowmo' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
                     border: 'none',
-                    borderRadius: '12px',
+                    borderRadius: '10px',
                     padding: '0.15rem 0.4rem',
-                    fontSize: '0.7rem',
+                    fontSize: '0.68rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  🐢
+                  0.5x
                 </button>
 
                 <button
                   type="button"
-                  title="Normal Execution Speed (0.6s step delay)"
+                  title="Normal Execution Speed (0.6s per step)"
                   onClick={() => { setExecSpeed('normal'); execSpeedRef.current = 'normal'; sounds.playClick(); }}
                   style={{
                     background: execSpeed === 'normal' ? '#0ea5e9' : 'transparent',
                     color: execSpeed === 'normal' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
                     border: 'none',
-                    borderRadius: '12px',
+                    borderRadius: '10px',
                     padding: '0.15rem 0.4rem',
-                    fontSize: '0.7rem',
+                    fontSize: '0.68rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  ⚡
+                  1x
                 </button>
 
                 <button
                   type="button"
-                  title="Turbo Speed (50ms step delay for fast math)"
+                  title="Turbo Speed (Fast Math Execution)"
                   onClick={() => { setExecSpeed('turbo'); execSpeedRef.current = 'turbo'; sounds.playClick(); }}
                   style={{
                     background: execSpeed === 'turbo' ? '#ec4899' : 'transparent',
                     color: execSpeed === 'turbo' ? '#ffffff' : (isDark ? '#94a3b8' : '#64748b'),
                     border: 'none',
-                    borderRadius: '12px',
+                    borderRadius: '10px',
                     padding: '0.15rem 0.4rem',
-                    fontSize: '0.7rem',
+                    fontSize: '0.68rem',
                     fontWeight: 800,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
                 >
-                  🚀
+                  Turbo
                 </button>
               </div>
             </div>
@@ -2958,6 +2979,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   sounds.playClick();
                 }}
                 title="Toggle Stage X/Y Coordinate Grid Overlay"
+                aria-label="Coordinate Grid"
                 style={{
                   background: showGrid ? 'rgba(56, 189, 248, 0.25)' : (isDark ? 'rgba(56, 189, 248, 0.1)' : '#f0f9ff'),
                   border: showGrid ? '1.5px solid #38bdf8' : (isDark ? '1px solid rgba(56, 189, 248, 0.25)' : '1px solid #bae6fd'),
@@ -2969,18 +2991,19 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.2rem',
+                  gap: '0.25rem',
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>🌐</span>
-                <span>{showGrid ? 'Grid ON' : 'Grid'}</span>
+                <Grid3X3 size={14} />
+                {!isMobile && <span>{showGrid ? 'Grid ON' : 'Grid'}</span>}
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsArenaFullscreen(prev => !prev)}
                 title="Toggle Fullscreen Theater Mode"
+                aria-label="Theater Mode"
                 style={{
                   background: isDark ? 'rgba(14, 165, 233, 0.1)' : '#f0f9ff',
                   border: isDark ? '1px solid rgba(14, 165, 233, 0.25)' : '1px solid #bae6fd',
@@ -2992,16 +3015,18 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.2rem'
+                  gap: '0.25rem'
                 }}
               >
-                <span>⛶</span>
-                <span>{isArenaFullscreen ? 'Exit' : 'Theater'}</span>
+                <Maximize2 size={14} />
+                {!isMobile && <span>{isArenaFullscreen ? 'Exit' : 'Theater'}</span>}
               </button>
 
               <button
                 type="button"
                 onClick={() => setShowShop(true)}
+                title="Mascot Costume Shop"
+                aria-label="Shop"
                 style={{
                   background: 'linear-gradient(135deg, #ea580c 0%, #f97316 100%)',
                   color: 'white',
@@ -3014,11 +3039,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   boxShadow: '0 2px 0 #9a3412',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.2rem'
+                  gap: '0.25rem'
                 }}
               >
-                <span>🛒</span>
-                <span>Shop</span>
+                <ShoppingBag size={14} />
+                {!isMobile && <span>Shop</span>}
               </button>
             </div>
           </div>
@@ -3124,6 +3149,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   type="button"
                   onClick={connectHardware}
                   className="kids-button"
+                  title="Connect Micro:bit / Arduino Board"
+                  aria-label="Connect Board"
                   style={{
                     padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.1rem',
                     display: 'flex',
@@ -3139,7 +3166,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     boxShadow: isDark ? '0 2px 0 #0f172a' : '0 2px 0 #cbd5e1'
                   }}
                 >
-                  <span>🔌 Connect</span>
+                  <Plug size={isMobile ? 14 : 16} />
+                  {!isMobile && <span>Connect</span>}
                 </button>
               ) : (
                 <div style={{ display: 'flex', gap: '0.3rem' }}>
@@ -3148,9 +3176,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     onClick={uploadToHardware}
                     disabled={uploading}
                     className="kids-button pulse-neon"
+                    title="Upload to connected board"
                     style={{ padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', '--shadow-color': '#047857' } as any}
                   >
-                    <span>🚀 {uploading ? 'Uploading...' : 'Upload'}</span>
+                    <Zap size={14} />
+                    <span>{uploading ? 'Uploading...' : 'Upload'}</span>
                   </button>
                   <button
                     type="button"
@@ -3158,8 +3188,9 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     className="kids-button"
                     style={{ padding: '0.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: isMobile ? '32px' : '44px', width: isMobile ? '32px' : '44px', background: '#ef4444', '--shadow-color': '#991b1b' } as any}
                     title="Disconnect Board"
+                    aria-label="Disconnect"
                   >
-                    🔌
+                    <Plug size={15} />
                   </button>
                 </div>
               )}
@@ -3174,7 +3205,8 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               execSpeedRef.current = nextSpeed;
               sounds.playClick();
             }}
-            title={`Execution Speed: ${execSpeed === 'slowmo' ? 'Slow-Motion Debugger' : execSpeed === 'turbo' ? 'Turbo Mode' : 'Normal'}`}
+            title={`Execution Speed: ${execSpeed === 'slowmo' ? 'Slow-Motion (0.5x)' : execSpeed === 'turbo' ? 'Turbo Mode' : 'Normal (1x)'}`}
+            aria-label="Execution Speed"
             className="kids-button"
             style={{
               padding: isMobile ? '0.2rem 0.5rem' : '0.45rem 0.85rem',
@@ -3191,21 +3223,50 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               boxShadow: execSpeed === 'slowmo' ? '0 2px 0 #b45309' : execSpeed === 'turbo' ? '0 2px 0 #9d174d' : (isDark ? '0 2px 0 #0f172a' : '0 2px 0 #cbd5e1')
             }}
           >
-            <span style={{ fontSize: '0.85rem' }}>{execSpeed === 'slowmo' ? '🐢' : execSpeed === 'turbo' ? '🚀' : '⚡'}</span>
-            <span style={{ display: isMobile ? 'none' : 'inline' }}>
-              {execSpeed === 'slowmo' ? 'Slow Mo' : execSpeed === 'turbo' ? 'Turbo' : 'Normal'}
-            </span>
+            <Zap size={isMobile ? 14 : 15} />
+            <span>{execSpeed === 'slowmo' ? '0.5x' : execSpeed === 'turbo' ? 'Turbo' : '1x'}</span>
           </button>
 
           {!isRunning ? (
-            <button id="run-code-btn" className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', minHeight: isMobile ? '32px' : '44px' }} onClick={runCode}>
-              <Play size={isMobile ? 14 : 18} fill="currentColor" />
-              <span>Run Code</span>
+            <button
+              id="run-code-btn"
+              className="kids-button"
+              title="Run Code"
+              aria-label="Run Code"
+              style={{
+                padding: isMobile ? '0.2rem 0.75rem' : '0.45rem 1.2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.3rem',
+                fontSize: isMobile ? '0.72rem' : '0.95rem',
+                minHeight: isMobile ? '32px' : '44px'
+              }}
+              onClick={runCode}
+            >
+              <Play size={isMobile ? 16 : 18} fill="currentColor" />
+              {!isMobile && <span>Run Code</span>}
             </button>
           ) : (
-            <button className="kids-button" style={{ padding: isMobile ? '0.2rem 0.7rem' : '0.45rem 1.2rem', display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.72rem' : '0.95rem', background: '#ef4444', '--shadow-color': '#991b1b', minHeight: isMobile ? '32px' : '44px' } as any} onClick={stopCode}>
-              <Square size={isMobile ? 13 : 16} fill="currentColor" />
-              <span>Stop</span>
+            <button
+              className="kids-button"
+              title="Stop Code"
+              aria-label="Stop Code"
+              style={{
+                padding: isMobile ? '0.2rem 0.75rem' : '0.45rem 1.2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.3rem',
+                fontSize: isMobile ? '0.72rem' : '0.95rem',
+                background: '#ef4444',
+                '--shadow-color': '#991b1b',
+                minHeight: isMobile ? '32px' : '44px'
+              } as any}
+              onClick={stopCode}
+            >
+              <Square size={isMobile ? 14 : 16} fill="currentColor" />
+              {!isMobile && <span>Stop</span>}
             </button>
           )}
         </div>
