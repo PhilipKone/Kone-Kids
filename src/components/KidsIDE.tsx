@@ -1916,16 +1916,18 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
 
           {mission ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', overflow: 'hidden' }}>
-              <span style={{
-                fontSize: isMobile ? '0.78rem' : '0.98rem',
-                fontWeight: 900,
-                color: 'var(--kids-orange)',
-                fontFamily: "'Baloo 2', cursive",
-                whiteSpace: 'nowrap',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                maxWidth: isMobile ? '120px' : '260px'
-              }}>
+              <span 
+                title={mission.name}
+                style={{
+                  fontSize: isMobile ? '0.78rem' : '0.98rem',
+                  fontWeight: 900,
+                  color: 'var(--kids-orange)',
+                  fontFamily: "'Baloo 2', cursive",
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  maxWidth: isMobile ? '138px' : '280px'
+                }}>
                 🎯 {mission.name}
               </span>
             </div>
