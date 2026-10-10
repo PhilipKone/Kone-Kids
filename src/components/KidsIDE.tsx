@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as Blockly from 'blockly';
 import { javascriptGenerator } from 'blockly/javascript';
 import { pythonGenerator } from 'blockly/python';
@@ -12,6 +12,10 @@ import CostumeStudio from './CostumeStudio';
 import SoundStudio from './SoundStudio';
 import STEMExtensionsModal from './STEMExtensionsModal';
 import MissionBriefing from './MissionBriefing';
+import LessonStageBubbles from './LessonStageBubbles';
+import StageVictoryModal from './StageVictoryModal';
+import CodeInspector from './CodeInspector';
+import { getStagesForMission, PuzzleStage } from '../data/puzzleStages';
 import { getTranslation } from '../utils/translations';
 import OnboardingTour, { ONBOARDING_STEPS } from './OnboardingTour';
 import { useGamification } from '../context/GamificationContext';
@@ -256,8 +260,26 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showShop, setShowShop] = useState(false);
 
-  // Scratch 3.0 Workspace Mode Tabs (Code vs Costumes vs Sounds)
-  const [editorModeTab, setEditorModeTab] = useState<'code' | 'costumes' | 'sounds'>('code');
+  // Code.org Stage Bubbles & Puzzle Progression
+  const [currentStageIndex, setCurrentStageIndex] = useState(0);
+  const [completedStageIds, setCompletedStageIds] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('kone_completed_stages') || '[]');
+    } catch {
+      return [];
+    }
+  });
+  const [showStageVictoryModal, setShowStageVictoryModal] = useState(false);
+  const [pythonCode, setPythonCode] = useState('');
+  const [javascriptCode, setJavascriptCode] = useState('');
+
+  const missionStages = useMemo(() => {
+    if (!mission) return [];
+    return getStagesForMission(mission.id, mission.name, mission.objective);
+  }, [mission]);
+
+  // Scratch 3.0 & Code.org Workspace Mode Tabs (Code vs Split vs Python vs JS vs Costumes vs Sounds)
+  const [editorModeTab, setEditorModeTab] = useState<'code' | 'split' | 'python' | 'javascript' | 'costumes' | 'sounds'>('code');
 
   // URL Query Param Sub-Tab Auto-Switching (?tab=costumes | sounds | playground | code)
   useEffect(() => {
@@ -278,7 +300,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
   }, []);
 
   useEffect(() => {
-    if (editorModeTab === 'code' && workspace.current) {
+    if ((editorModeTab === 'code' || editorModeTab === 'split') && workspace.current) {
       setTimeout(() => {
         if (workspace.current) Blockly.svgResize(workspace.current);
       }, 50);
@@ -975,6 +997,16 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         }
       }
 
+      try {
+        const initPy = pythonGenerator.workspaceToCode(ws);
+        const initJs = javascriptGenerator.workspaceToCode(ws);
+        setPythonCode(initPy);
+        setJavascriptCode(initJs);
+        setGeneratedCode(language === 'javascript' ? initJs : initPy);
+        setBlockCount(ws.getAllBlocks(false).length);
+        setLineCount((language === 'javascript' ? initJs : initPy).split('\n').filter((l: string) => l.trim().length > 0).length);
+      } catch (e) {}
+
       const handleResize = () => {
         if (ws) Blockly.svgResize(ws);
       };
@@ -1006,11 +1038,19 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         }
 
         if (event.type === Blockly.Events.BLOCK_MOVE || event.type === Blockly.Events.BLOCK_CHANGE || event.type === Blockly.Events.BLOCK_DELETE || event.type === Blockly.Events.BLOCK_CREATE) {
-          const generator = language === 'javascript' ? javascriptGenerator : pythonGenerator;
-          const code = generator.workspaceToCode(ws);
-          setGeneratedCode(code);
-          setBlockCount(ws.getAllBlocks(false).length);
-          setLineCount(code.split('\n').filter((l: string) => l.trim().length > 0).length);
+          try {
+            const py = pythonGenerator.workspaceToCode(ws);
+            const js = javascriptGenerator.workspaceToCode(ws);
+            setPythonCode(py);
+            setJavascriptCode(js);
+            const generator = language === 'javascript' ? javascriptGenerator : pythonGenerator;
+            const code = generator.workspaceToCode(ws);
+            setGeneratedCode(code);
+            setBlockCount(ws.getAllBlocks(false).length);
+            setLineCount(code.split('\n').filter((l: string) => l.trim().length > 0).length);
+          } catch (e) {
+            console.error('Code gen error:', e);
+          }
         }
       });
 
@@ -1052,6 +1092,21 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       workspace.current.setTheme(isDark ? KoneDark : KoneLight);
     }
   }, [isDark]);
+
+  useEffect(() => {
+    const activeStage = missionStages[currentStageIndex];
+    if (activeStage?.starterXml && workspace.current) {
+      const currentBlocks = workspace.current.getAllBlocks(false);
+      if (currentBlocks.length === 0) {
+        try {
+          const xmlDom = Blockly.utils.xml.textToDom(activeStage.starterXml);
+          Blockly.Xml.domToWorkspace(xmlDom, workspace.current);
+        } catch (e) {
+          console.error('Error loading stage starter blocks:', e);
+        }
+      }
+    }
+  }, [currentStageIndex, missionStages]);
 
   const getSharedUrl = () => {
     if (!workspace.current) return `${window.location.origin}/studio`;
@@ -1735,8 +1790,34 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         }
       }
 
-      // Only complete mission if code ran without errors and validation passed
-      if (ranSuccessfully && validationPassed && mission && !isMissionCompleted) {
+      // Code.org Stage Validation
+      const activeStage = missionStages[currentStageIndex];
+      let stagePassed = ranSuccessfully && validationPassed;
+      if (activeStage?.requiredBlocks && activeStage.requiredBlocks.length > 0 && workspace.current) {
+        const usedBlocks = workspace.current.getAllBlocks(false).map((b: any) => b.type);
+        const missing = activeStage.requiredBlocks.filter(rb => !usedBlocks.includes(rb));
+        if (missing.length > 0) {
+          stagePassed = false;
+          setBlockError(missing);
+        } else {
+          setBlockError(null);
+        }
+      }
+
+      // If stage passed, trigger Code.org stage victory
+      if (stagePassed && activeStage) {
+        if (!completedStageIds.includes(activeStage.id)) {
+          const nextCompleted = [...completedStageIds, activeStage.id];
+          setCompletedStageIds(nextCompleted);
+          try {
+            localStorage.setItem('kone_completed_stages', JSON.stringify(nextCompleted));
+          } catch (e) {}
+        }
+        sounds.playCheer();
+        triggerConfetti();
+        mascotRef.current?.celebrate('high');
+        setShowStageVictoryModal(true);
+      } else if (ranSuccessfully && validationPassed && mission && !isMissionCompleted) {
         sounds.playWin();
         triggerConfetti();
         mascotRef.current?.celebrate('high');
@@ -2319,94 +2400,25 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           flexDirection: 'column',
           gap: '0.6rem'
         }}>
-          {mission && (
-            <div style={{
-              background: isDark ? 'rgba(14, 165, 233, 0.1)' : '#ffffff',
-              border: isDark ? '1.5px solid rgba(14, 165, 233, 0.3)' : '1.5px solid #bae6fd',
-              borderRadius: '14px',
-              padding: isMobile ? '0.5rem 0.75rem' : '0.6rem 1rem',
-              boxShadow: isDark ? 'none' : '0 4px 12px rgba(14, 165, 233, 0.08)',
-              transition: 'all 0.2s ease'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
-                <div style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', minWidth: 0 }}>
-                  <div style={{ fontSize: isMobile ? '1.2rem' : '1.4rem', flexShrink: 0 }}>🎯</div>
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                      <span style={{ 
-                        background: 'rgba(14, 165, 233, 0.15)', 
-                        color: 'var(--kids-blue)', 
-                        borderRadius: '6px', 
-                        padding: '1px 6px', 
-                        fontSize: '0.65rem', 
-                        fontWeight: 800, 
-                        letterSpacing: '0.5px' 
-                      }}>
-                        MISSION {mission.level || 1}
-                      </span>
-                      <strong style={{ color: isDark ? '#ffffff' : '#0f172a', fontSize: isMobile ? '0.82rem' : '0.92rem' }}>
-                        {getTranslation(mission.name, dialect).text}
-                      </strong>
-                    </div>
-                    <p style={{ margin: '2px 0 0', color: isDark ? '#cbd5e1' : '#475569', fontSize: isMobile ? '0.75rem' : '0.85rem', lineHeight: 1.3 }}>
-                      {getTranslation(mission.objective, dialect).text}
-                    </p>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexShrink: 0 }}>
-                  {mission?.hints && mission.hints.length > 0 && !isMissionCompleted && (
-                    <button
-                      onClick={() => { mascotRef.current?.speak(mission.hints[hintIndex % mission.hints.length]); setHintIndex(h => h + 1); }}
-                      style={{ 
-                        background: isDark ? 'rgba(251,191,36,0.15)' : '#fef3c7', 
-                        border: '1px solid #f59e0b', 
-                        color: '#b45309', 
-                        padding: isMobile ? '0.2rem 0.45rem' : '0.25rem 0.6rem', 
-                        borderRadius: '8px', 
-                        cursor: 'pointer', 
-                        fontSize: isMobile ? '0.68rem' : '0.75rem', 
-                        fontWeight: 800,
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '2px'
-                      }}
-                      title="Get a hint from the mascot"
-                    >
-                      💡 Hint ({hintIndex % (mission.hints.length) === 0 && hintIndex > 0 ? 'all used' : `${mission.hints.length - (hintIndex % mission.hints.length)}`})
-                    </button>
-                  )}
-                  {mission.steps && (
-                    <button
-                      onClick={() => setIsMissionExpanded(prev => !prev)}
-                      style={{
-                        background: isDark ? 'transparent' : '#f0f9ff',
-                        border: '1px solid #bae6fd',
-                        color: '#0284c7',
-                        padding: isMobile ? '0.2rem 0.45rem' : '0.25rem 0.6rem',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontSize: isMobile ? '0.68rem' : '0.75rem',
-                        fontWeight: 800
-                      }}
-                    >
-                      {isMissionExpanded ? 'Hide Steps ▴' : 'Steps ▾'}
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {mission.steps && isMissionExpanded && (
-                <div style={{ borderTop: '1px solid rgba(14, 165, 233, 0.2)', marginTop: '0.5rem', paddingTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                  {mission.steps.map((step, i) => (
-                    <div key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start', fontSize: isMobile ? '0.75rem' : '0.82rem', color: isDark ? 'rgba(255,255,255,0.85)' : '#334155' }}>
-                      <span style={{ background: 'rgba(14,165,233,0.3)', color: 'var(--kids-blue)', borderRadius: '50%', width: '16px', height: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.6rem', fontWeight: 800, flexShrink: 0 }}>{i + 1}</span>
-                      <span>{getTranslation(step, dialect).text}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+          {mission && missionStages.length > 0 && (
+            <LessonStageBubbles
+              stages={missionStages}
+              currentStageIndex={currentStageIndex}
+              completedStageIds={completedStageIds}
+              blockCount={blockCount}
+              isDark={isDark}
+              isMobile={isMobile}
+              onSelectStage={(idx) => {
+                setCurrentStageIndex(idx);
+                sounds.playPop();
+              }}
+              onNextStage={() => {
+                if (currentStageIndex < missionStages.length - 1) {
+                  setCurrentStageIndex(prev => prev + 1);
+                  sounds.playPop();
+                }
+              }}
+            />
           )}
 
           {/* Block validation error banner */}
@@ -2422,21 +2434,21 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             </div>
           )}
 
-          {/* Desktop Only: Scratch 3.0 Workspace Mode Tabs (Code vs Costumes vs Sounds) */}
+          {/* Desktop Only: Scratch 3.0 & Code.org Workspace Mode Tabs */}
           {!isMobile && (
-            <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '-2px', zIndex: 10 }}>
+            <div style={{ display: 'flex', gap: '0.35rem', marginBottom: '-2px', zIndex: 10, flexWrap: 'wrap' }}>
               <button
                 type="button"
                 onClick={() => setEditorModeTab('code')}
                 style={{
-                  padding: '0.45rem 1.1rem',
-                  borderRadius: '14px 14px 0 0',
+                  padding: '0.42rem 0.95rem',
+                  borderRadius: '12px 12px 0 0',
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   borderBottom: editorModeTab === 'code' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
                   background: editorModeTab === 'code' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
                   color: editorModeTab === 'code' ? '#0ea5e9' : (isDark ? '#94a3b8' : '#64748b'),
                   fontWeight: 800,
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -2444,21 +2456,87 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   transition: 'all 0.15s ease'
                 }}
               >
-                <span>🧩 Code</span>
+                <span>🧩 Blocks</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEditorModeTab('split')}
+                style={{
+                  padding: '0.42rem 0.95rem',
+                  borderRadius: '12px 12px 0 0',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  borderBottom: editorModeTab === 'split' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                  background: editorModeTab === 'split' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                  color: editorModeTab === 'split' ? '#0ea5e9' : (isDark ? '#94a3b8' : '#64748b'),
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>🪟 Split View</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEditorModeTab('python')}
+                style={{
+                  padding: '0.42rem 0.95rem',
+                  borderRadius: '12px 12px 0 0',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  borderBottom: editorModeTab === 'python' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                  background: editorModeTab === 'python' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                  color: editorModeTab === 'python' ? '#38bdf8' : (isDark ? '#94a3b8' : '#64748b'),
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>🐍 Python</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setEditorModeTab('javascript')}
+                style={{
+                  padding: '0.42rem 0.95rem',
+                  borderRadius: '12px 12px 0 0',
+                  border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
+                  borderBottom: editorModeTab === 'javascript' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
+                  background: editorModeTab === 'javascript' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
+                  color: editorModeTab === 'javascript' ? '#f59e0b' : (isDark ? '#94a3b8' : '#64748b'),
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <span>⚡ JavaScript</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setEditorModeTab('costumes')}
                 style={{
-                  padding: '0.45rem 1.1rem',
-                  borderRadius: '14px 14px 0 0',
+                  padding: '0.42rem 0.95rem',
+                  borderRadius: '12px 12px 0 0',
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   borderBottom: editorModeTab === 'costumes' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
                   background: editorModeTab === 'costumes' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
                   color: editorModeTab === 'costumes' ? '#ec4899' : (isDark ? '#94a3b8' : '#64748b'),
                   fontWeight: 800,
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -2473,14 +2551,14 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 type="button"
                 onClick={() => setEditorModeTab('sounds')}
                 style={{
-                  padding: '0.45rem 1.1rem',
-                  borderRadius: '14px 14px 0 0',
+                  padding: '0.42rem 0.95rem',
+                  borderRadius: '12px 12px 0 0',
                   border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                   borderBottom: editorModeTab === 'sounds' ? 'none' : (isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1'),
                   background: editorModeTab === 'sounds' ? (isDark ? '#0b0e14' : '#ffffff') : (isDark ? 'rgba(15,23,42,0.6)' : '#e2e8f0'),
                   color: editorModeTab === 'sounds' ? '#a855f7' : (isDark ? '#94a3b8' : '#64748b'),
                   fontWeight: 800,
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -2493,21 +2571,56 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             </div>
           )}
 
-          <div style={{ position: 'relative', flex: 1, height: isMobile ? '450px' : '100%', minHeight: isMobile ? '400px' : '500px' }}>
+          <div style={{
+            position: 'relative',
+            flex: 1,
+            height: isMobile ? '450px' : '100%',
+            minHeight: isMobile ? '400px' : '500px',
+            display: 'flex',
+            flexDirection: 'row',
+            gap: '0.75rem',
+            overflow: 'hidden'
+          }}>
             <div
               ref={blocklyDiv}
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleFileDrop}
               style={{
                 height: '100%',
-                width: '100%',
+                flex: editorModeTab === 'split' ? '1 1 50%' : '1 1 100%',
+                width: editorModeTab === 'split' ? '50%' : '100%',
+                minWidth: 0,
                 borderRadius: '0 20px 20px 20px',
                 overflow: 'hidden',
                 border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #cbd5e1',
                 background: isDark ? '#0b0e14' : '#ffffff',
-                display: editorModeTab === 'code' ? 'block' : 'none'
+                display: (editorModeTab === 'code' || editorModeTab === 'split') ? 'block' : 'none'
               }}
             />
+
+            {editorModeTab === 'split' && (
+              <div style={{ flex: '1 1 50%', width: '50%', height: '100%', minWidth: 0, overflow: 'hidden' }}>
+                <CodeInspector
+                  pythonCode={pythonCode}
+                  javascriptCode={javascriptCode}
+                  isDark={isDark}
+                  isMobile={isMobile}
+                  initialLanguage={language}
+                />
+              </div>
+            )}
+
+            {(editorModeTab === 'python' || editorModeTab === 'javascript') && (
+              <div style={{ width: '100%', height: '100%', minWidth: 0 }}>
+                <CodeInspector
+                  pythonCode={pythonCode}
+                  javascriptCode={javascriptCode}
+                  isDark={isDark}
+                  isMobile={isMobile}
+                  initialLanguage={editorModeTab === 'python' ? 'python' : 'javascript'}
+                />
+              </div>
+            )}
 
             {editorModeTab === 'costumes' && (
               <div style={{ height: '100%', width: '100%' }}>
@@ -2522,7 +2635,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             )}
 
             {/* Quick Workspace Controls Bar */}
-            {editorModeTab === 'code' && (
+            {(editorModeTab === 'code' || editorModeTab === 'split') && (
               <div style={{
                 position: 'absolute',
                 top: isMobile ? '4px' : '12px',
@@ -2959,21 +3072,18 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           {showCode && (
             <div className="code-preview-panel" style={{
               flex: 1,
-              background: '#1e1e1e',
-              borderRadius: '12px',
-              border: '1px solid #333',
               overflow: 'hidden',
               display: (!isMobile || activeMobileTab === 'code') ? 'flex' : 'none',
               flexDirection: 'column',
-              minHeight: isMobile ? '350px' : 'auto'
+              minHeight: isMobile ? '350px' : '260px'
             }}>
-              <div style={{ background: '#252526', padding: '8px 12px', borderBottom: '1px solid #333', display: 'flex', alignItems: 'center', gap: '8px', color: '#94a3b8', fontSize: '0.8rem' }}>
-                <FileCode size={16} />
-                <span>main.{language === 'javascript' ? 'js' : 'py'}</span>
-              </div>
-              <pre style={{ margin: 0, padding: '1rem', color: '#cbd5e1', fontSize: '0.85rem', fontFamily: 'Fira Code, monospace', overflowY: 'auto', flex: 1 }}>
-                {generatedCode || '// Your code will appear here...'}
-              </pre>
+              <CodeInspector
+                pythonCode={pythonCode}
+                javascriptCode={javascriptCode}
+                isDark={isDark}
+                isMobile={isMobile}
+                initialLanguage={language}
+              />
             </div>
           )}
         </div>
@@ -3519,6 +3629,36 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Code.org Style Stage Victory Modal */}
+      {mission && missionStages[currentStageIndex] && (
+        <StageVictoryModal
+          isOpen={showStageVictoryModal}
+          stageNumber={missionStages[currentStageIndex].stageNumber}
+          totalStages={missionStages.length}
+          stageTitle={missionStages[currentStageIndex].title}
+          xpEarned={missionStages[currentStageIndex].xpReward}
+          blockCount={blockCount}
+          targetBlockCount={missionStages[currentStageIndex].targetBlockCount}
+          isDark={isDark}
+          onNext={() => {
+            setShowStageVictoryModal(false);
+            if (currentStageIndex < missionStages.length - 1) {
+              setCurrentStageIndex(prev => prev + 1);
+              sounds.playPop();
+            } else {
+              if (!isMissionCompleted) {
+                completeMission(mission.id, mission.xpReward);
+                setShowSuccessModal(true);
+              }
+            }
+          }}
+          onReplay={() => {
+            setShowStageVictoryModal(false);
+          }}
+          onClose={() => setShowStageVictoryModal(false)}
+        />
       )}
     </div>
   );
