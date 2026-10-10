@@ -9,11 +9,13 @@
     "logout": "Se Déconnecter",
     "classLogin": "Connexion Classe",
     "parentHub": "Espace Parents",
-    "joinHub": "Rejoindre l'Espace",
+    "joinHub": "Rejoindre l'Académie",
     "home": "Accueil",
-    "coding": "Code",
-    "robotics": "Robotique",
-    "aiLab": "Labo IA"
+    "coding": "Labo de Code",
+    "courses": "Cours Enfants",
+    "robotics": "Labo Robotique",
+    "aiLab": "Studio IA",
+    "stemKits": "Kits STEM"
   },
   "home": {
     "title": "Bienvenue sur Kone Kids !",

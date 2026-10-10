@@ -165,7 +165,7 @@ function Home() {
             fontSize: '0.95rem',
             transition: 'color 0.2s'
           }} className="hover-orange nav-link-desktop">
-            Coding Lab
+            {t('nav.coding', 'Coding Lab')}
           </Link>
 
           <Link to="/coding?view=syllabus" style={{ 
@@ -179,7 +179,7 @@ function Home() {
             alignItems: 'center',
             gap: '0.35rem'
           }} className="hover-orange nav-link-desktop">
-            <span style={{ fontSize: '0.9rem' }}>🎓</span> Kids Courses
+            <span style={{ fontSize: '0.9rem' }}>🎓</span> {t('nav.courses', 'Kids Courses')}
           </Link>
 
           <Link to="/robotics" style={{ 
@@ -190,7 +190,7 @@ function Home() {
             fontSize: '0.95rem',
             transition: 'color 0.2s'
           }} className="hover-blue nav-link-desktop">
-            Robotics Lab
+            {t('nav.robotics', 'Robotics Lab')}
           </Link>
 
           <Link to="/ai" style={{ 
@@ -201,7 +201,7 @@ function Home() {
             fontSize: '0.95rem',
             transition: 'color 0.2s'
           }} className="hover-purple nav-link-desktop">
-            AI Studio
+            {t('nav.aiLab', 'AI Studio')}
           </Link>
 
           <Link to="/blog" style={{ 
@@ -212,7 +212,7 @@ function Home() {
             fontSize: '0.95rem',
             transition: 'color 0.2s'
           }} className="hover-teal nav-link-desktop">
-            Parent Hub
+            {t('nav.parentHub', 'Parent Hub')}
           </Link>
 
           <Link to="/kits" style={{ 
@@ -223,7 +223,7 @@ function Home() {
             fontSize: '0.95rem',
             transition: 'color 0.2s'
           }} className="hover-orange nav-link-desktop">
-            STEM Kits
+            {t('nav.stemKits', 'STEM Kits')}
           </Link>
 
           {studentName ? (
@@ -280,62 +280,9 @@ function Home() {
               fontSize: '0.95rem',
               transition: 'color 0.2s'
             }} className="hover-orange nav-link-desktop">
-              Class Login 🎒
+              {t('nav.classLogin', 'Class Login')} 🎒
             </Link>
           )}
-          
-          {/* Unified Clean Language Selector */}
-          <div style={{
-            position: 'relative',
-            display: 'inline-flex',
-            alignItems: 'center',
-            background: 'var(--nav-pill-bg, rgba(255, 255, 255, 0.85))',
-            border: '1.5px solid var(--kids-border, #e2e8f0)',
-            borderRadius: '12px',
-            padding: '0.28rem 0.6rem',
-            gap: '0.35rem',
-            boxShadow: '0 2px 5px rgba(0,0,0,0.03)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)'
-          }}>
-            <span style={{ fontSize: '0.9rem', lineHeight: 1 }} aria-hidden="true">🌐</span>
-            <select
-              value={i18n.language.slice(0, 2)}
-              onChange={(e) => {
-                i18n.changeLanguage(e.target.value);
-                sounds.playClick();
-              }}
-              aria-label="Select language"
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--nav-link, #334155)',
-                fontSize: '0.82rem',
-                fontWeight: 800,
-                cursor: 'pointer',
-                fontFamily: "'Baloo 2', cursive",
-                outline: 'none',
-                appearance: 'none',
-                WebkitAppearance: 'none',
-                paddingRight: '0.9rem',
-                textTransform: 'uppercase'
-              }}
-            >
-              <option value="en" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>EN · English</option>
-              <option value="fr" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>FR · Français</option>
-              <option value="es" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>ES · Español</option>
-              <option value="pt" style={{ background: 'var(--kids-surface, #ffffff)', color: 'var(--kids-text, #0f172a)' }}>PT · Português</option>
-            </select>
-            <span style={{
-              position: 'absolute',
-              right: '0.45rem',
-              pointerEvents: 'none',
-              fontSize: '0.55rem',
-              color: 'var(--kids-text-muted, #64748b)',
-              display: 'flex',
-              alignItems: 'center'
-            }}>▼</span>
-          </div>
 
           {!studentName && (
             <button 
@@ -343,7 +290,7 @@ function Home() {
               onClick={() => setIsModalOpen(true)}
               style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
             >
-              Join Hub
+              {t('nav.joinHub', 'Join Hub')}
             </button>
           )}
         </div>
@@ -1008,17 +955,65 @@ function Home() {
             flexWrap: 'wrap',
             justifyContent: 'space-between',
             alignItems: 'center',
-            gap: '0.75rem',
+            gap: '1rem',
             fontSize: '0.82rem',
             color: 'var(--kids-text-muted)'
           }}>
             <span>© 2026 Kone Kids. All rights reserved.</span>
-            <div style={{ display: 'flex', gap: '1rem', fontWeight: 600 }}>
+            <div style={{ display: 'flex', gap: '1rem', fontWeight: 600, alignItems: 'center', flexWrap: 'wrap' }}>
               <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Academy Home</a>
               <span>•</span>
               <Link to="/kits" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>STEM Kits Store</Link>
               <span>•</span>
               <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Insights &amp; Articles</Link>
+            </div>
+
+            {/* Global Language Selector (Footer Standard) */}
+            <div style={{
+              position: 'relative',
+              display: 'inline-flex',
+              alignItems: 'center',
+              background: 'var(--kids-surface, #ffffff)',
+              border: '1px solid var(--kids-border, #e2e8f0)',
+              borderRadius: '10px',
+              padding: '0.25rem 0.6rem',
+              gap: '0.35rem',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
+            }}>
+              <span style={{ fontSize: '0.85rem', lineHeight: 1 }} aria-hidden="true">🌐</span>
+              <select
+                value={i18n.language.slice(0, 2)}
+                onChange={(e) => {
+                  i18n.changeLanguage(e.target.value);
+                  sounds.playClick();
+                }}
+                aria-label="Select website language"
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  color: 'var(--kids-text-muted, #475569)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  fontFamily: "'Nunito', sans-serif",
+                  outline: 'none',
+                  appearance: 'none',
+                  WebkitAppearance: 'none',
+                  paddingRight: '0.85rem'
+                }}
+              >
+                <option value="en" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>English (EN)</option>
+                <option value="fr" style={{ background: 'var(--kids-surface)', color: 'var(--kids-text)' }}>Français (FR)</option>
+              </select>
+              <span style={{
+                position: 'absolute',
+                right: '0.45rem',
+                pointerEvents: 'none',
+                fontSize: '0.55rem',
+                color: 'var(--kids-text-muted, #64748b)',
+                display: 'flex',
+                alignItems: 'center'
+              }}>▼</span>
             </div>
           </div>
         </div>

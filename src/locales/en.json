@@ -11,9 +11,11 @@
     "parentHub": "Parent Hub",
     "joinHub": "Join Hub",
     "home": "Home",
-    "coding": "Coding",
-    "robotics": "Robotics",
-    "aiLab": "AI Lab"
+    "coding": "Coding Lab",
+    "courses": "Kids Courses",
+    "robotics": "Robotics Lab",
+    "aiLab": "AI Studio",
+    "stemKits": "STEM Kits"
   },
   "home": {
     "title": "Welcome to Kone Kids!",
