@@ -14,6 +14,8 @@ i18n
     },
     fallbackLng: 'en',
     supportedLngs: ['en', 'fr'],
+    nonExplicitSupportedLngs: true,
+    load: 'languageOnly',
     detection: {
       order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
       caches: ['localStorage', 'cookie']
