@@ -240,7 +240,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Create responsive touch buttons that trigger animations and color changes when tapped.',
             duration: '50 mins',
             blocksFocused: ['When Tapped', 'Change Color'],
-            missionId: 'm_mob_1'
+            missionId: 'mobile_1'
           },
           {
             id: 'mob-les-2',
@@ -263,7 +263,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Build an incremental tapping game with bonus upgrades and dynamic score counters.',
             duration: '50 mins',
             blocksFocused: ['Variables', 'Multiply Score', 'Audio Chime'],
-            missionId: 'm_mob_2'
+            missionId: 'mobile_2'
           },
           {
             id: 'mob-les-4',
@@ -286,7 +286,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Detect device shakes to reset drawing boards or trigger secret Easter eggs.',
             duration: '50 mins',
             blocksFocused: ['Device Shake', 'Clear Canvas'],
-            missionId: 'm_mob_3'
+            missionId: 'mobile_3'
           },
           {
             id: 'mob-les-6',
@@ -376,7 +376,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Accept user inputs, ensure only valid numbers are processed, and output formatted results.',
             duration: '50 mins',
             blocksFocused: ['Prompt Input', 'Parse Number', 'Display Result'],
-            missionId: 'm_desk_1'
+            missionId: 'desktop_1'
           },
           {
             id: 'desk-les-2',
@@ -399,7 +399,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Save every calculation into a history list that users can scroll through and clear.',
             duration: '50 mins',
             blocksFocused: ['Create List', 'Append Item', 'Loop Through List'],
-            missionId: 'm_desk_2'
+            missionId: 'desktop_2'
           },
           {
             id: 'desk-les-4',
@@ -511,7 +511,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Build your first webpage layout by placing structured header, text, and image tags.',
             duration: '50 mins',
             blocksFocused: ['HTML Tag', 'Image Source', 'Text Node'],
-            missionId: 'm_web_1'
+            missionId: 'web_1'
           },
           {
             id: 'web-les-2',
@@ -534,7 +534,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Program buttons that toggle hidden text, switch picture galleries, and trigger animations.',
             duration: '50 mins',
             blocksFocused: ['Element Click', 'Change InnerText', 'Toggle Class'],
-            missionId: 'm_web_2'
+            missionId: 'web_2'
           },
           {
             id: 'web-les-4',
@@ -646,7 +646,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Place your hero sprite onto the stage and program arrow keys to move without leaving the screen.',
             duration: '50 mins',
             blocksFocused: ['When Key Pressed', 'Change X/Y', 'Keep on Screen'],
-            missionId: 'm_game_1'
+            missionId: 'game_1'
           },
           {
             id: 'game-les-2',
@@ -669,7 +669,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Program a Y-velocity variable that pulls your character downward until touching ground platforms.',
             duration: '55 mins',
             blocksFocused: ['Y-Velocity', 'Gravity Pull', 'Touching Ground'],
-            missionId: 'm_game_2'
+            missionId: 'game_2'
           },
           {
             id: 'game-les-4',
@@ -692,7 +692,7 @@ export const KIDS_COURSES: KidsCourse[] = [
             description: 'Spawn collectible stars that vanish when touched, play chimes, and increment your score.',
             duration: '50 mins',
             blocksFocused: ['Touching Sprite', 'Play Sound', 'Change Score'],
-            missionId: 'm_game_3'
+            missionId: 'game_3'
           },
           {
             id: 'game-les-6',

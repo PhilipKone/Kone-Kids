@@ -379,6 +379,19 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       _rawSegment === 'ai' ? '/ai' :
         '/coding';
 
+  const isFromSyllabus = Boolean(
+    location.state?.fromSyllabus || new URLSearchParams(location.search).get('from') === 'courses'
+  );
+
+  const handleBackToOrigin = () => {
+    sounds.playClick();
+    if (isFromSyllabus) {
+      navigate(`${hubPath}/courses`);
+    } else {
+      navigate(hubPath);
+    }
+  };
+
   useEffect(() => {
     if (missionId && !hasCompletedOnboarding) {
       setOnboardingStep(0);
@@ -1894,7 +1907,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         {/* Left: Back / Map & Project / Mission Title */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', minWidth: 0 }}>
           <button
-            onClick={() => navigate(hubPath)}
+            onClick={handleBackToOrigin}
             className="kids-button"
             style={{
               padding: isMobile ? '0.25rem 0.45rem' : '0.3rem 0.7rem',
@@ -1909,11 +1922,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
               gap: '0.25rem',
               flexShrink: 0
             }}
-            title={`Return to ${hubPath.replace('/', '')} Mission Map`}
-            aria-label="Back to Map"
+            title={isFromSyllabus ? `Return to ${hubPath.replace('/', '')} Course Syllabus` : `Return to ${hubPath.replace('/', '')} Mission Map`}
+            aria-label={isFromSyllabus ? "Back to Course Syllabus" : "Back to Map"}
           >
             <ArrowLeft size={isMobile ? 16 : 15} />
-            {!isMobile && <span>Map</span>}
+            {!isMobile && <span>{isFromSyllabus ? 'Syllabus' : 'Map'}</span>}
           </button>
 
           {mission ? (
@@ -3288,7 +3301,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
             <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '2rem' }}> Awesome work, Engineer! You earned <strong style={{ color: 'var(--kids-blue)' }}>{mission.xpReward} XP</strong>.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
               <button className="kids-button pulse-neon" onClick={handleNextMission} style={{ width: '100%', fontSize: '1.05rem', padding: '0.85rem' }}> NEXT MISSION 🚀 </button>
-              <button className="kids-button" onClick={() => navigate(hubPath)} style={{ width: '100%', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', fontSize: '0.95rem', color: 'var(--kids-text)', '--shadow-color': 'var(--kids-border)', '--shadow-height': '6px' } as any}> BACK TO MAP </button>
+              <button className="kids-button" onClick={handleBackToOrigin} style={{ width: '100%', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', fontSize: '0.95rem', color: 'var(--kids-text)', '--shadow-color': 'var(--kids-border)', '--shadow-height': '6px' } as any}> {isFromSyllabus ? 'BACK TO COURSE SYLLABUS' : 'BACK TO MAP'} </button>
             </div>
           </div>
         </div>

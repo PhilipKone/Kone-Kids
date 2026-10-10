@@ -56,9 +56,9 @@ const KidsCourseSyllabus: React.FC<KidsCourseSyllabusProps> = ({
   const handleLaunchLesson = (lesson: KidsLesson) => {
     sounds.playClick();
     if (lesson.missionId) {
-      navigate(`/${hub}/mission/${lesson.missionId}`);
+      navigate(`/${hub}/mission/${lesson.missionId}?from=courses`, { state: { fromSyllabus: true } });
     } else {
-      navigate('/playground');
+      navigate('/playground?from=courses', { state: { fromSyllabus: true } });
     }
   };
 
