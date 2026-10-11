@@ -1,7 +1,30 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
-import { ShoppingBag, Coins, Volume2, VolumeX, Music, GraduationCap, Map as MapIcon } from 'lucide-react';
+import { 
+  ShoppingBag, 
+  Coins, 
+  Volume2, 
+  VolumeX, 
+  Music, 
+  GraduationCap, 
+  Map as MapIcon,
+  Brain,
+  Smartphone,
+  Monitor,
+  Globe,
+  Gamepad2,
+  BarChart3,
+  Cpu,
+  Sparkles,
+  Bot,
+  Zap,
+  Star,
+  User,
+  LogOut,
+  Sun,
+  Moon
+} from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { CODING_MISSIONS, Pathway } from '../data/missions';
 import Mascot from './Mascot';
@@ -12,6 +35,22 @@ import STEMExtensionsModal from './STEMExtensionsModal';
 import KidsCourseSyllabus from './KidsCourseSyllabus';
 import { getCourseByPathway } from '../data/kidsCourses';
 import { sounds } from '../utils/sounds';
+
+export const getPathwayIcon = (pathway: string) => {
+  switch (pathway) {
+    case 'Fundamentals': return Brain;
+    case 'Mobile App Dev': return Smartphone;
+    case 'Desktop App Dev': return Monitor;
+    case 'Web App Dev': return Globe;
+    case 'Game Dev': return Gamepad2;
+    case 'Data Science (AI 4 Kids)': return BarChart3;
+    case 'ML (AI 4 Kids)': return Cpu;
+    case 'AI (AI 4 Kids)': return Sparkles;
+    case 'Robotics (Robotics 4 Kids)': return Bot;
+    case 'Electronics (Robotics 4 Kids)': return Zap;
+    default: return Brain;
+  }
+};
 
 type HubType = 'coding' | 'robotics' | 'ai';
 
@@ -209,64 +248,75 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
           background: theme === 'dark' ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
           backdropFilter: 'blur(10px)',
           borderRadius: isMobile ? '16px' : '24px',
-          padding: isMobile ? '0.5rem 0.75rem' : '0.75rem 2rem',
+          padding: isMobile ? '0.4rem 0.55rem' : '0.75rem 2rem',
           display: 'flex',
           alignItems: 'center',
-          gap: isMobile ? '0.5rem' : '1.5rem',
+          gap: isMobile ? '0.35rem' : '1.5rem',
           boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
           border: '1px solid rgba(255,255,255,0.1)',
           maxWidth: '1200px',
           width: '100%',
           justifyContent: 'space-between'
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.5rem' : '1rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '0.35rem' : '0.85rem' }}>
             <div style={{
-              background: world.color,
-              width: isMobile ? '32px' : '40px',
-              height: isMobile ? '32px' : '40px',
+              background: `linear-gradient(135deg, ${world.color}, ${world.color}dd)`,
+              padding: isMobile ? '0.22rem 0.45rem' : '0.35rem 0.75rem',
+              borderRadius: '10px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.3rem',
+              fontSize: isMobile ? '0.72rem' : '0.82rem',
+              fontWeight: 900,
+              color: 'white',
+              boxShadow: `0 2px 8px ${world.color}40`
+            }}>
+              <Star size={12} fill="currentColor" />
+              <span>LVL {level}</span>
+            </div>
+            {!isMobile && (
+              <span style={{ 
+                fontWeight: 900, 
+                fontSize: '1.05rem', 
+                letterSpacing: '0.5px', 
+                fontFamily: '"Baloo 2", cursive',
+                color: 'var(--kids-text)' 
+              }}>
+                {hub.toUpperCase()}
+              </span>
+            )}
+          </div>
+
+          <div style={{ display: 'flex', gap: isMobile ? '0.25rem' : '0.65rem', alignItems: 'center' }}>
+            <div style={{
+              background: 'rgba(251,191,36,0.12)',
+              border: '1px solid rgba(251,191,36,0.25)',
+              padding: isMobile ? '0.22rem 0.4rem' : '0.35rem 0.7rem',
               borderRadius: '10px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '0.9rem',
+              gap: '0.3rem',
+              color: '#f59e0b',
               fontWeight: 800,
-              color: 'white'
+              fontSize: isMobile ? '0.72rem' : '0.85rem'
             }}>
-              {level}
-            </div>
-            {!isMobile && <span style={{ fontWeight: 800, marginLeft: '0.25rem' }}>{hub.toUpperCase()}</span>}
-          </div>
-
-          <div style={{ display: 'flex', gap: isMobile ? '0.4rem' : '0.75rem', alignItems: 'center' }}>
-            <div style={{
-              background: 'rgba(251,191,36,0.1)',
-              padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.8rem',
-              borderRadius: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.35rem',
-              color: '#fbbf24',
-              fontWeight: 700,
-              fontSize: isMobile ? '0.75rem' : '0.9rem'
-            }}>
-              <Coins size={isMobile ? 14 : 16} />
-              {coins}
+              <Coins size={13} />
+              <span>{coins}</span>
             </div>
 
             <button
               onClick={() => setShowCoinStore(true)}
+              title="Get more coins"
               style={{
-                background: '#fbbf24',
+                background: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
                 border: 'none',
-                padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.8rem',
-                borderRadius: '12px',
+                padding: isMobile ? '0.22rem 0.4rem' : '0.35rem 0.7rem',
+                borderRadius: '10px',
                 color: '#1e293b',
-                fontWeight: 900,
+                fontWeight: 800,
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.25rem',
-                fontSize: isMobile ? '0.7rem' : '0.85rem'
+                fontSize: isMobile ? '0.7rem' : '0.8rem',
+                boxShadow: '0 2px 6px rgba(245, 158, 11, 0.25)'
               }}
             >
               + Get
@@ -274,52 +324,56 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
             
             <button
               onClick={() => setShowShop(true)}
-              className="kids-button"
+              title="Mascot Costume Shop"
               style={{
-                padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 1rem',
+                padding: isMobile ? '0.22rem 0.45rem' : '0.35rem 0.85rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                background: 'var(--kids-orange)',
+                gap: '0.3rem',
+                background: 'linear-gradient(135deg, #f97316, #ea580c)',
                 border: 'none',
-                borderRadius: '12px',
+                borderRadius: '10px',
                 color: 'white',
-                fontWeight: 700,
-                fontSize: isMobile ? '0.75rem' : '0.85rem'
+                fontWeight: 800,
+                fontSize: isMobile ? '0.72rem' : '0.82rem',
+                cursor: 'pointer',
+                boxShadow: '0 2px 8px rgba(249, 115, 22, 0.3)'
               }}
             >
-              <ShoppingBag size={isMobile ? 14 : 16} />
+              <ShoppingBag size={13} />
+              {!isMobile && <span>Shop</span>}
             </button>
 
             {studentName ? (
               <div
                 title="Class Account Logged In"
                 style={{
-                  background: 'rgba(14, 165, 233, 0.15)',
-                  border: '1px solid rgba(14, 165, 233, 0.3)',
+                  background: 'rgba(14, 165, 233, 0.12)',
+                  border: '1px solid rgba(14, 165, 233, 0.25)',
                   color: '#0ea5e9',
-                  borderRadius: '12px',
-                  padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.85rem',
-                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  borderRadius: '10px',
+                  padding: isMobile ? '0.22rem 0.45rem' : '0.35rem 0.75rem',
+                  fontSize: isMobile ? '0.72rem' : '0.82rem',
                   fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.3rem'
                 }}
               >
-                🎒 {!isMobile && studentName.split(' ')[0]}
+                <User size={13} />
+                {!isMobile && <span>{studentName.split(' ')[0]}</span>}
               </div>
             ) : (
               <button
                 onClick={() => navigate('/class-login')}
                 title="Guest Mode Active • Click to Log In"
                 style={{
-                  background: 'rgba(168, 85, 247, 0.15)',
-                  border: '1px solid rgba(168, 85, 247, 0.3)',
-                  color: '#c084fc',
-                  borderRadius: '12px',
-                  padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.85rem',
-                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  background: 'rgba(168, 85, 247, 0.12)',
+                  border: '1px solid rgba(168, 85, 247, 0.25)',
+                  color: '#a855f7',
+                  borderRadius: '10px',
+                  padding: isMobile ? '0.22rem 0.45rem' : '0.35rem 0.75rem',
+                  fontSize: isMobile ? '0.72rem' : '0.82rem',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'flex',
@@ -327,15 +381,26 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
                   gap: '0.3rem'
                 }}
               >
-                🌟 {!isMobile ? 'Guest • Login' : 'Login'}
+                <Sparkles size={13} />
+                {!isMobile ? 'Guest • Login' : 'Login'}
               </button>
             )}
 
             <button 
               onClick={toggleTheme}
-              style={{ background: 'transparent', border: 'none', fontSize: isMobile ? '1rem' : '1.2rem', cursor: 'pointer', padding: '0 2px' }}
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: theme === 'dark' ? '#fbbf24' : '#64748b',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0.25rem'
+              }}
             >
-              {theme === 'light' ? '🌙' : '☀️'}
+              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
             </button>
 
             {/* Audio controls for desktop */}
@@ -356,7 +421,7 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
                     outline: 'none'
                   }}
                 >
-                  <Music size={18} />
+                  <Music size={16} />
                 </button>
                 <button
                   onClick={handleToggleMute}
@@ -373,25 +438,30 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
                     outline: 'none'
                   }}
                 >
-                  {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                  {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
                 </button>
               </>
             )}
 
             <button 
               onClick={() => navigate('/')}
+              title="Exit to Homepage"
               style={{ 
-                background: '#ef4444', 
-                border: 'none', 
-                padding: isMobile ? '0.35rem 0.6rem' : '0.4rem 0.8rem',
-                borderRadius: '12px', 
-                color: 'white',
-                fontWeight: 700,
-                fontSize: isMobile ? '0.75rem' : '0.85rem',
-                cursor: 'pointer'
+                background: 'rgba(239, 68, 68, 0.12)', 
+                border: '1px solid rgba(239, 68, 68, 0.3)', 
+                padding: isMobile ? '0.25rem 0.45rem' : '0.35rem 0.75rem',
+                borderRadius: '10px', 
+                color: '#ef4444',
+                fontWeight: 800,
+                fontSize: isMobile ? '0.75rem' : '0.82rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.3rem'
               }}
             >
-              Exit
+              <LogOut size={13} />
+              {!isMobile && <span>Exit</span>}
             </button>
           </div>
         </div>
@@ -435,114 +505,112 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
       <CoinStoreModal isOpen={showCoinStore} onClose={() => setShowCoinStore(false)} />
 
 
-      {/* Pathway Selector */}
-      <div className="pathway-filters" style={{ 
-        padding: isMobile ? '0.4rem 0' : '1rem 0', 
-        marginBottom: isMobile ? '1.5rem' : '2.5rem',
-        gap: isMobile ? '0.5rem' : '0.75rem' 
-      }}>
-        {pathways.map(pathway => (
-          <div 
-            key={pathway}
-            className={`pathway-tab ${selectedPathway === pathway ? 'pathway-tab-active' : ''}`}
-            style={{
-              '--tab-color': world.color,
-              fontSize: isMobile ? '0.75rem' : '0.9rem',
-              padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.4rem',
-              gap: '0.75rem'
-            } as any}
-            onClick={() => handleSelectPathway(pathway)}
-          >
-            <span className="pathway-tab-icon" style={{ fontSize: isMobile ? '0.9rem' : '1.1rem' }}>
-              {PATHWAY_WORLDS[pathway][theme].icon.length > 2 ? (
-                <img src={PATHWAY_WORLDS[pathway][theme].icon} alt="" style={{ width: isMobile ? '16px' : '20px', height: isMobile ? '16px' : '20px' }} />
-              ) : (
-                PATHWAY_WORLDS[pathway][theme].icon
-              )}
-            </span>
-            {pathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}
-          </div>
-        ))}
-
-        <div
-          className="pathway-tab"
-          style={{
-            '--tab-color': '#a855f7',
-            fontSize: isMobile ? '0.75rem' : '0.9rem',
-            padding: isMobile ? '0.5rem 1rem' : '0.6rem 1.4rem',
-            gap: '0.75rem',
-            background: 'rgba(168, 85, 247, 0.12)',
-            border: '1.5px dashed rgba(168, 85, 247, 0.4)',
-            color: '#c084fc',
-            cursor: 'pointer'
-          } as any}
-          onClick={() => { setShowExtensions(true); sounds.playClick(); }}
-        >
-          <span className="pathway-tab-icon" style={{ fontSize: isMobile ? '0.9rem' : '1.1rem' }}>🚀</span>
-          STEM Extensions
-        </div>
-      </div>
-
-      {/* View Switcher: Adventure Map vs Course Syllabus */}
+      {/* Pathway Selector Bar */}
       <div style={{
         display: 'flex',
-        justifyContent: 'center',
         alignItems: 'center',
-        gap: isMobile ? '0.4rem' : '0.6rem',
-        marginBottom: isMobile ? '1rem' : '1.5rem',
-        maxWidth: isMobile ? '380px' : 'none',
-        margin: isMobile ? '0 auto 1.25rem' : '0 0 1.5rem',
-        width: '100%'
+        justifyContent: 'space-between',
+        gap: '0.75rem',
+        marginBottom: isMobile ? '1rem' : '1.25rem',
+        flexWrap: isMobile ? 'nowrap' : 'wrap'
       }}>
-        <button
-          onClick={() => handleToggleView('map')}
-          style={{
-            flex: isMobile ? 1 : 'initial',
-            background: viewMode === 'map' ? world.color : (theme === 'dark' ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.9)'),
-            color: viewMode === 'map' ? '#ffffff' : 'var(--kids-text)',
-            border: `1.5px solid ${viewMode === 'map' ? world.color : 'var(--kids-border)'}`,
-            borderRadius: '12px',
-            padding: isMobile ? '0.5rem 0.5rem' : '0.55rem 1.4rem',
-            fontSize: isMobile ? '0.8rem' : '0.9rem',
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.4rem',
-            boxShadow: viewMode === 'map' ? `0 6px 18px ${world.color}35` : 'none',
-            whiteSpace: 'nowrap',
-            transition: 'all 0.2s ease'
-          }}
-        >
-          <MapIcon size={15} />
-          Adventure Map
-        </button>
+        {/* Pathway Tabs */}
+        <div className="pathway-filters" style={{ 
+          display: 'flex',
+          gap: isMobile ? '0.4rem' : '0.6rem',
+          padding: 0,
+          margin: 0,
+          flexWrap: isMobile ? 'nowrap' : 'wrap',
+          overflowX: 'auto',
+          maxWidth: '100%',
+          alignItems: 'center'
+        }}>
+          {pathways.map(pathway => {
+            const isActive = selectedPathway === pathway;
+            const IconComponent = getPathwayIcon(pathway);
+            return (
+              <button 
+                key={pathway}
+                type="button"
+                className={`pathway-tab ${isActive ? 'pathway-tab-active' : ''}`}
+                style={{
+                  background: isActive ? world.color : (theme === 'dark' ? 'rgba(30, 41, 59, 0.6)' : '#ffffff'),
+                  color: isActive ? '#ffffff' : (theme === 'dark' ? '#cbd5e1' : '#475569'),
+                  border: isActive ? `1.5px solid ${world.color}` : `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#e2e8f0'}`,
+                  fontSize: isMobile ? '0.75rem' : '0.85rem',
+                  padding: isMobile ? '0.45rem 0.85rem' : '0.55rem 1.15rem',
+                  borderRadius: '12px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.45rem',
+                  whiteSpace: 'nowrap',
+                  boxShadow: isActive ? `0 4px 14px ${world.color}40` : '0 2px 6px rgba(0,0,0,0.03)',
+                  transition: 'all 0.15s ease'
+                }}
+                onClick={() => handleSelectPathway(pathway)}
+              >
+                <IconComponent size={isMobile ? 14 : 16} />
+                <span>{pathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}</span>
+              </button>
+            );
+          })}
 
-        <button
-          onClick={() => handleToggleView('syllabus')}
-          style={{
-            flex: isMobile ? 1 : 'initial',
-            background: viewMode === 'syllabus' ? world.color : (theme === 'dark' ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.9)'),
-            color: viewMode === 'syllabus' ? '#ffffff' : 'var(--kids-text)',
-            border: `1.5px solid ${viewMode === 'syllabus' ? world.color : 'var(--kids-border)'}`,
-            borderRadius: '12px',
-            padding: isMobile ? '0.5rem 0.5rem' : '0.55rem 1.4rem',
-            fontSize: isMobile ? '0.8rem' : '0.9rem',
-            fontWeight: 800,
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.4rem',
-            boxShadow: viewMode === 'syllabus' ? `0 6px 18px ${world.color}35` : 'none',
-            whiteSpace: 'nowrap',
-            transition: 'all 0.2s ease'
-          }}
-        >
-          <GraduationCap size={15} />
-          {isMobile ? 'Course Syllabus' : 'Course Syllabus & Labs'}
-        </button>
+          {/* On mobile: Embed STEM Extensions into the scrollable list */}
+          {isMobile && (hub === 'coding' || hub === 'robotics') && (
+            <button
+              type="button"
+              style={{
+                background: theme === 'dark' ? 'rgba(168, 85, 247, 0.12)' : 'rgba(168, 85, 247, 0.08)',
+                border: '1.5px dashed rgba(168, 85, 247, 0.4)',
+                color: '#a855f7',
+                fontSize: '0.75rem',
+                padding: '0.45rem 0.85rem',
+                borderRadius: '12px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
+              }}
+              onClick={() => { setShowExtensions(true); sounds.playClick(); }}
+              title="Connect Micro:bit, Arduino, VEX and hardware extensions"
+            >
+              <Zap size={14} />
+              <span>STEM Extensions</span>
+            </button>
+          )}
+        </div>
+
+        {/* Desktop STEM Hardware Extensions Action Button */}
+        {!isMobile && (hub === 'coding' || hub === 'robotics') && (
+          <button
+            type="button"
+            style={{
+              background: theme === 'dark' ? 'rgba(168, 85, 247, 0.12)' : 'rgba(168, 85, 247, 0.08)',
+              border: '1.5px dashed rgba(168, 85, 247, 0.4)',
+              color: '#a855f7',
+              fontSize: '0.82rem',
+              padding: '0.55rem 1rem',
+              borderRadius: '12px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              whiteSpace: 'nowrap',
+              marginLeft: 'auto'
+            }}
+            onClick={() => { setShowExtensions(true); sounds.playClick(); }}
+            title="Connect Micro:bit, Arduino, VEX and hardware extensions"
+          >
+            <Zap size={14} />
+            <span>STEM Extensions</span>
+          </button>
+        )}
       </div>
 
       {showExtensions && (
@@ -552,7 +620,7 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
         />
       )}
 
-      {/* Pathway Progress Panel */}
+      {/* Unified Pathway Progress & Segmented View Switcher Banner */}
       {(() => {
         const totalInPathway = filteredMissions.length;
         const doneInPathway = filteredMissions.filter(m => completedMissions.includes(m.id)).length;
@@ -560,68 +628,105 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
           .filter(m => !completedMissions.includes(m.id))
           .reduce((sum, m) => sum + m.xpReward, 0);
         const pct = totalInPathway > 0 ? (doneInPathway / totalInPathway) * 100 : 0;
+        const IconComponent = getPathwayIcon(selectedPathway);
+
         return (
           <div style={{
-            background: 'var(--kids-surface)',
-            border: '1px solid var(--kids-border)',
-            borderRadius: '16px',
-            padding: isMobile ? '0.85rem 1rem' : '1rem 1.5rem',
-            marginBottom: '2rem',
+            background: theme === 'dark' ? 'rgba(30, 41, 59, 0.7)' : '#ffffff',
+            border: `1.5px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#e2e8f0'}`,
+            borderRadius: '18px',
+            padding: isMobile ? '0.85rem 1rem' : '0.85rem 1.4rem',
+            marginBottom: isMobile ? '1.5rem' : '2rem',
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: isMobile ? 'stretch' : 'center',
-            gap: isMobile ? '0.6rem' : '1rem'
+            justifyContent: 'space-between',
+            gap: isMobile ? '0.85rem' : '1.5rem',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
           }}>
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.85rem' }}>
-                <span style={{ fontWeight: 700, color: 'var(--kids-text)' }}>
-                  {world.icon} {selectedPathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}
+            {/* Left: Pathway Title, Progress Bar, XP */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem', fontSize: '0.85rem' }}>
+                <span style={{ fontWeight: 800, color: 'var(--kids-text)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                  <IconComponent size={16} style={{ color: world.color }} />
+                  {selectedPathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}
                 </span>
-                <span style={{ color: world.color, fontWeight: 700 }}>
-                  {doneInPathway} / {totalInPathway} missions
+                <span style={{ color: world.color, fontWeight: 800, fontSize: '0.82rem' }}>
+                  {doneInPathway} / {totalInPathway} missions {doneInPathway === totalInPathway && totalInPathway > 0 ? '🎉 Complete!' : `• ${xpRemaining} XP left`}
                 </span>
               </div>
-              <div style={{ height: '8px', background: 'var(--kids-border)', borderRadius: '8px', overflow: 'hidden' }}>
+              <div style={{ height: '7px', background: theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#f1f5f9', borderRadius: '6px', overflow: 'hidden' }}>
                 <div style={{
                   width: `${pct}%`,
                   height: '100%',
                   background: `linear-gradient(90deg, ${world.color}, ${world.color}cc)`,
                   boxShadow: `0 0 8px ${world.color}88`,
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   transition: 'width 0.6s ease-out'
                 }} />
               </div>
             </div>
-            <div style={{ display: 'flex', gap: '0.85rem', flexShrink: 0, alignItems: 'center', justifyContent: isMobile ? 'space-between' : 'flex-end' }}>
-              {!isMobile && (
-                <button
-                  onClick={() => handleToggleView(viewMode === 'map' ? 'syllabus' : 'map')}
-                  style={{
-                    background: viewMode === 'syllabus' ? world.color : `${world.color}15`,
-                    color: viewMode === 'syllabus' ? '#ffffff' : world.color,
-                    border: `1.5px solid ${world.color}`,
-                    borderRadius: '10px',
-                    padding: '0.35rem 0.85rem',
-                    fontSize: '0.78rem',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '0.35rem'
-                  }}
-                >
-                  <GraduationCap size={14} />
-                  {viewMode === 'syllabus' ? 'Show Adventure Map' : 'View Course Syllabus'}
-                </button>
-              )}
 
-              {doneInPathway === totalInPathway && totalInPathway > 0 ? (
-                <span style={{ color: '#22c55e', fontWeight: 800, fontSize: '0.9rem' }}>✅ Pathway Complete!</span>
-              ) : (
-                <span style={{ color: 'var(--kids-text-muted)', fontSize: '0.85rem' }}>
-                  <strong style={{ color: world.color }}>{xpRemaining} XP</strong> remaining
-                </span>
-              )}
+            {/* Right: Sleek Segmented Switcher (Map vs Syllabus) */}
+            <div style={{
+              display: 'inline-flex',
+              background: theme === 'dark' ? 'rgba(15, 23, 42, 0.7)' : '#f1f5f9',
+              padding: '3px',
+              borderRadius: '12px',
+              border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.06)' : '#e2e8f0'}`,
+              flexShrink: 0,
+              alignSelf: isMobile ? 'center' : 'auto',
+              width: isMobile ? '100%' : 'auto'
+            }}>
+              <button
+                type="button"
+                onClick={() => handleToggleView('map')}
+                style={{
+                  flex: isMobile ? 1 : 'initial',
+                  background: viewMode === 'map' ? world.color : 'transparent',
+                  color: viewMode === 'map' ? '#ffffff' : (theme === 'dark' ? '#94a3b8' : '#64748b'),
+                  border: 'none',
+                  borderRadius: '9px',
+                  padding: isMobile ? '0.4rem 0.6rem' : '0.42rem 1.1rem',
+                  fontSize: isMobile ? '0.78rem' : '0.82rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  boxShadow: viewMode === 'map' ? `0 2px 8px ${world.color}50` : 'none',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <MapIcon size={14} />
+                <span>Adventure Map</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleToggleView('syllabus')}
+                style={{
+                  flex: isMobile ? 1 : 'initial',
+                  background: viewMode === 'syllabus' ? world.color : 'transparent',
+                  color: viewMode === 'syllabus' ? '#ffffff' : (theme === 'dark' ? '#94a3b8' : '#64748b'),
+                  border: 'none',
+                  borderRadius: '9px',
+                  padding: isMobile ? '0.4rem 0.6rem' : '0.42rem 1.1rem',
+                  fontSize: isMobile ? '0.78rem' : '0.82rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.4rem',
+                  boxShadow: viewMode === 'syllabus' ? `0 2px 8px ${world.color}50` : 'none',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <GraduationCap size={14} />
+                <span>Course Syllabus & Labs</span>
+              </button>
             </div>
           </div>
         );
