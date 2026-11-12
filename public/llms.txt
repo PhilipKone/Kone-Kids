@@ -6,10 +6,10 @@ Kone Kids empowers the next generation of engineers through hands-on gamified co
 
 ## Core Capabilities & Tracks
 
-- [Coding Lab](https://kids.koneacademy.io/#/coding) - Scratch, Blockly visual logic, Python for beginners, and game creation.
-- [Robotics Lab](https://kids.koneacademy.io/#/robotics) - Sensor kits, motor kinematics, and hands-on hardware builds.
-- [AI Studio](https://kids.koneacademy.io/#/ai) - Playful machine learning models, voice recognizers, and interactive neural games.
-- [Parent Hub & Blog](https://kids.koneacademy.io/#/blog) - Curriculum guides, digital safety, and youth tech education insights.
+- [Coding Lab](https://kids.codkon.com/#/coding) - Scratch, Blockly visual logic, Python for beginners, and game creation.
+- [Robotics Lab](https://kids.codkon.com/#/robotics) - Sensor kits, motor kinematics, and hands-on hardware builds.
+- [AI Studio](https://kids.codkon.com/#/ai) - Playful machine learning models, voice recognizers, and interactive neural games.
+- [Parent Hub & Blog](https://kids.codkon.com/#/blog) - Curriculum guides, digital safety, and youth tech education insights.
 
 ## Parent Ecosystem
 
