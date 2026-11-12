@@ -1,7 +1,7 @@
 {
     "name": "Kone-Kids",
     "version": "0.0.0",
-    "homepage": "https://kids.koneacademy.io",
+    "homepage": "https://kids.codkon.com",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
@@ -9,7 +9,7 @@
         "predeploy": "npm run build",
         "deploy": "gh-pages -d dist --dotfiles -f",
         "postinstall": "node patch-react-snap.cjs",
-        "submit-indexing": "npx google-indexing-script https://kids.koneacademy.io/",
+        "submit-indexing": "npx google-indexing-script https://kids.codkon.com/",
         "cap:copy": "cap copy",
         "cap:sync": "cap sync",
         "cap:open:android": "cap open android"
