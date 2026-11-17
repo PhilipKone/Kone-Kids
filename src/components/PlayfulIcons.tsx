@@ -1,11 +1,13 @@
-import React, { useId } from 'react';
+import React from 'react';
+let _seq = 0;
+const nextUid = () => String(++_seq);
 interface IconProps { size?: number; className?: string; }
 
 export const stripEmoji = (text: string): string =>
   text.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu, '').replace(/\s{2,}/g, ' ').trim();
 
 export const CodingLabIcon: React.FC<IconProps> = ({ size = 20, className }) => {
-  const u = useId().replace(/:/g, '');
+  const u = nextUid();
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
       <defs><linearGradient id={'cb-'+u} x1="3" y1="5" x2="29" y2="27" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#38bdf8"/><stop offset="100%" stopColor="#0284c7"/></linearGradient></defs>
@@ -18,7 +20,7 @@ export const CodingLabIcon: React.FC<IconProps> = ({ size = 20, className }) => 
 };
 
 export const RoboticsLabIcon: React.FC<IconProps> = ({ size = 20, className }) => {
-  const u = useId().replace(/:/g, '');
+  const u = nextUid();
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
       <defs><linearGradient id={'rb-'+u} x1="5" y1="9" x2="27" y2="28" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#34d399"/><stop offset="100%" stopColor="#059669"/></linearGradient></defs>
@@ -32,7 +34,7 @@ export const RoboticsLabIcon: React.FC<IconProps> = ({ size = 20, className }) =
 };
 
 export const AIStudioIcon: React.FC<IconProps> = ({ size = 20, className }) => {
-  const u = useId().replace(/:/g, '');
+  const u = nextUid();
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
       <defs><linearGradient id={'ai-'+u} x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#c084fc"/><stop offset="100%" stopColor="#7c3aed"/></linearGradient></defs>
@@ -44,7 +46,7 @@ export const AIStudioIcon: React.FC<IconProps> = ({ size = 20, className }) => {
 };
 
 export const SparkleStarIcon: React.FC<IconProps> = ({ size = 18, className }) => {
-  const u = useId().replace(/:/g, '');
+  const u = nextUid();
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
       <defs><linearGradient id={'st-'+u} x1="6" y1="4" x2="26" y2="28" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#fde047"/><stop offset="55%" stopColor="#f59e0b"/><stop offset="100%" stopColor="#ea580c"/></linearGradient></defs>
@@ -55,7 +57,7 @@ export const SparkleStarIcon: React.FC<IconProps> = ({ size = 18, className }) =
 };
 
 export const RocketLaunchIcon: React.FC<IconProps> = ({ size = 22, className }) => {
-  const u = useId().replace(/:/g, '');
+  const u = nextUid();
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
       <defs><linearGradient id={'rk-'+u} x1="8" y1="4" x2="25" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#38bdf8"/><stop offset="100%" stopColor="#0284c7"/></linearGradient></defs>
@@ -67,7 +69,7 @@ export const RocketLaunchIcon: React.FC<IconProps> = ({ size = 22, className }) 
   );
 };
 export const TrophyCupIcon: React.FC<IconProps> = ({ size = 28, className }) => {
-  const u = useId().replace(/:/g, '');
+  const u = nextUid();
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
       <defs><linearGradient id={'cp-'+u} x1="7" y1="4" x2="25" y2="23" gradientUnits="userSpaceOnUse"><stop offset="0%" stopColor="#fde047"/><stop offset="100%" stopColor="#d97706"/></linearGradient></defs>

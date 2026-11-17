@@ -1,3 +1,4 @@
+import { stripEmoji, CodingLabIcon, RoboticsLabIcon, AIStudioIcon, SparkleStarIcon, RocketLaunchIcon, StoryBookIcon, GlobeNetworkIcon, BackpackLoginIcon, StreakFlameIcon, DropMascotMiniIcon } from './components/PlayfulIcons';
 import React, { useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
 import './index.css'
