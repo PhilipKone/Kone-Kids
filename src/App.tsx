@@ -44,6 +44,7 @@ function Home() {
   const { t, i18n } = useTranslation()
   const location = useLocation()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isLabsOpen, setIsLabsOpen] = useState(false)
   const { studentName, logoutStudent, streak } = useGamification()
 
   // Deep-link triggers: Auto-open modal on ?join=true or ?enroll=true
@@ -88,154 +89,281 @@ function Home() {
       {isModalOpen && <EnrollmentModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
 
       {/* Navigation / Header */}
-      <nav className="kids-nav-bar" style={{ 
-        padding: '1rem 5%', 
-        display: 'flex', 
-        justifyContent: 'space-between', 
+      <nav className="kids-nav-bar" style={{
+        padding: '0.8rem 3.5%',
+        display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
+        gap: '1rem',
         background: 'var(--nav-bg)',
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(10px)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
         borderBottom: '1px solid var(--nav-border)'
       }}>
-        <Link to="/" className="kids-nav-logo-text" style={{ 
-          fontFamily: "'Baloo 2', cursive", 
-          fontWeight: 800, 
-          fontSize: '1.4rem', 
-          color: 'var(--nav-text)', 
-          textDecoration: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.4rem'
-        }}>
-          <img className="kids-nav-logo-img" src="/mascot.svg" alt="Kone Kids Logo" width="24" height="24" style={{ height: '24px', width: 'auto' }} /> Kone Kids
-        </Link>
-        <div className="nav-links-container" style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-          {/* Audio controls */}
-          <div className="nav-audio-controls" style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
+        {/* Left: Brand + Compact Audio Pill */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', flexShrink: 0 }}>
+          <Link to="/" className="kids-nav-logo-text" style={{
+            fontFamily: "'Baloo 2', cursive",
+            fontWeight: 800,
+            fontSize: '1.35rem',
+            color: 'var(--nav-text)',
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            whiteSpace: 'nowrap',
+            lineHeight: 1
+          }}>
+            <img className="kids-nav-logo-img" src="/mascot.svg" alt="Kone Kids Logo" width="24" height="24" style={{ height: '24px', width: 'auto', flexShrink: 0 }} />
+            <span>Kone Kids</span>
+          </Link>
+
+          <div
+            className="nav-audio-controls"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '2px',
+              padding: '2px',
+              borderRadius: '999px',
+              border: '1px solid var(--nav-border)',
+              background: 'rgba(148, 163, 184, 0.08)'
+            }}
+          >
             <button
               onClick={handleToggleMusic}
               title={musicOn ? 'Mute Music' : 'Play Background Music'}
+              aria-label={musicOn ? 'Mute Music' : 'Play Background Music'}
               style={{
-                background: musicOn ? 'rgba(168, 85, 247, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                background: musicOn ? 'rgba(168, 85, 247, 0.16)' : 'transparent',
                 border: 'none',
                 borderRadius: '50%',
-                width: '36px',
-                height: '36px',
+                width: '28px',
+                height: '28px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                color: musicOn ? '#c084fc' : '#94a3b8',
+                color: musicOn ? '#a855f7' : '#94a3b8',
                 transition: 'all 0.2s',
                 outline: 'none'
               }}
             >
-              <Music size={18} />
+              <Music size={15} />
             </button>
             <button
               onClick={handleToggleMute}
               title={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
+              aria-label={muted ? 'Unmute Sound FX' : 'Mute Sound FX'}
               style={{
-                background: !muted ? 'rgba(14, 165, 233, 0.15)' : 'rgba(255, 255, 255, 0.05)',
+                background: !muted ? 'rgba(14, 165, 233, 0.16)' : 'transparent',
                 border: 'none',
                 borderRadius: '50%',
-                width: '36px',
-                height: '36px',
+                width: '28px',
+                height: '28px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                color: !muted ? '#38bdf8' : '#94a3b8',
+                color: !muted ? '#0284c7' : '#94a3b8',
                 transition: 'all 0.2s',
                 outline: 'none'
               }}
             >
-              {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+              {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
             </button>
           </div>
-          {/* Primary Sitelink Navigation Links (Desktop) */}
-          <Link to="/coding" style={{ 
+        </div>
+
+        {/* Right: Consolidated Navigation + Account Actions */}
+        <div className="nav-links-container" style={{ display: 'flex', alignItems: 'center', gap: '1.15rem' }}>
+          {/* Labs Dropdown (Coding, Robotics, AI) */}
+          <div
+            className="nav-link-desktop nav-labs-dropdown"
+            style={{ position: 'relative' }}
+            onMouseEnter={() => setIsLabsOpen(true)}
+            onMouseLeave={() => setIsLabsOpen(false)}
+          >
+            <button
+              type="button"
+              onClick={() => setIsLabsOpen((prev) => !prev)}
+              aria-expanded={isLabsOpen}
+              className="hover-orange"
+              style={{
+                fontFamily: "'Baloo 2', cursive",
+                color: 'var(--nav-link)',
+                background: 'transparent',
+                border: 'none',
+                padding: '0.3rem 0.25rem',
+                fontWeight: 800,
+                fontSize: '0.94rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.3rem',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'color 0.2s'
+              }}
+            >
+              <span>{t('nav.labs', 'Labs')}</span>
+              <svg
+                viewBox="0 0 20 20"
+                width="14"
+                height="14"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{
+                  transform: isLabsOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.2s ease'
+                }}
+              >
+                <polyline points="6 8 10 12 14 8" />
+              </svg>
+            </button>
+
+            {isLabsOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  paddingTop: '0.5rem',
+                  zIndex: 200
+                }}
+              >
+                <div
+                  style={{
+                    background: 'var(--nav-bg)',
+                    border: '1.5px solid var(--nav-border)',
+                    borderRadius: '14px',
+                    padding: '0.4rem',
+                    minWidth: '195px',
+                    boxShadow: '0 12px 28px rgba(15, 23, 42, 0.14)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '2px'
+                  }}
+                >
+                  <Link
+                    to="/coding"
+                    onClick={() => setIsLabsOpen(false)}
+                    className="nav-dropdown-item"
+                    style={{
+                      fontFamily: "'Baloo 2', cursive",
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.55rem',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: '10px',
+                      textDecoration: 'none',
+                      color: 'var(--nav-link)',
+                      fontWeight: 800,
+                      fontSize: '0.9rem',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    <span>💻</span>
+                    <span>{t('nav.coding', 'Coding Lab')}</span>
+                  </Link>
+                  <Link
+                    to="/robotics"
+                    onClick={() => setIsLabsOpen(false)}
+                    className="nav-dropdown-item"
+                    style={{
+                      fontFamily: "'Baloo 2', cursive",
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.55rem',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: '10px',
+                      textDecoration: 'none',
+                      color: 'var(--nav-link)',
+                      fontWeight: 800,
+                      fontSize: '0.9rem',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    <span>🤖</span>
+                    <span>{t('nav.robotics', 'Robotics Lab')}</span>
+                  </Link>
+                  <Link
+                    to="/ai"
+                    onClick={() => setIsLabsOpen(false)}
+                    className="nav-dropdown-item"
+                    style={{
+                      fontFamily: "'Baloo 2', cursive",
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.55rem',
+                      padding: '0.5rem 0.75rem',
+                      borderRadius: '10px',
+                      textDecoration: 'none',
+                      color: 'var(--nav-link)',
+                      fontWeight: 800,
+                      fontSize: '0.9rem',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    <span>🧠</span>
+                    <span>{t('nav.aiLab', 'AI Studio')}</span>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Link to="/coding?view=syllabus" style={{
             fontFamily: "'Baloo 2', cursive",
-            color: 'var(--nav-link)', 
-            textDecoration: 'none', 
-            fontWeight: 800, 
-            fontSize: '0.95rem',
+            color: 'var(--nav-link)',
+            textDecoration: 'none',
+            fontWeight: 800,
+            fontSize: '0.94rem',
+            whiteSpace: 'nowrap',
             transition: 'color 0.2s'
           }} className="hover-orange nav-link-desktop">
-            {t('nav.coding', 'Coding Lab')}
+            {t('nav.courses', 'Kids Courses')}
           </Link>
 
-          <Link to="/coding?view=syllabus" style={{ 
+          <Link to="/blog" style={{
             fontFamily: "'Baloo 2', cursive",
-            color: 'var(--nav-link)', 
-            textDecoration: 'none', 
-            fontWeight: 800, 
-            fontSize: '0.95rem',
-            transition: 'color 0.2s',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.35rem'
-          }} className="hover-orange nav-link-desktop">
-            <span style={{ fontSize: '0.9rem' }}>🎓</span> {t('nav.courses', 'Kids Courses')}
-          </Link>
-
-          <Link to="/robotics" style={{ 
-            fontFamily: "'Baloo 2', cursive",
-            color: 'var(--nav-link)', 
-            textDecoration: 'none', 
-            fontWeight: 800, 
-            fontSize: '0.95rem',
-            transition: 'color 0.2s'
-          }} className="hover-blue nav-link-desktop">
-            {t('nav.robotics', 'Robotics Lab')}
-          </Link>
-
-          <Link to="/ai" style={{ 
-            fontFamily: "'Baloo 2', cursive",
-            color: 'var(--nav-link)', 
-            textDecoration: 'none', 
-            fontWeight: 800, 
-            fontSize: '0.95rem',
-            transition: 'color 0.2s'
-          }} className="hover-purple nav-link-desktop">
-            {t('nav.aiLab', 'AI Studio')}
-          </Link>
-
-          <Link to="/blog" style={{ 
-            fontFamily: "'Baloo 2', cursive",
-            color: 'var(--nav-link)', 
-            textDecoration: 'none', 
-            fontWeight: 800, 
-            fontSize: '0.95rem',
+            color: 'var(--nav-link)',
+            textDecoration: 'none',
+            fontWeight: 800,
+            fontSize: '0.94rem',
+            whiteSpace: 'nowrap',
             transition: 'color 0.2s'
           }} className="hover-teal nav-link-desktop">
             {t('nav.parentHub', 'Parent Hub')}
           </Link>
 
-          <Link to="/kits" style={{ 
+          <Link to="/kits" style={{
             fontFamily: "'Baloo 2', cursive",
-            color: 'var(--nav-link)', 
-            textDecoration: 'none', 
-            fontWeight: 800, 
-            fontSize: '0.95rem',
+            color: 'var(--nav-link)',
+            textDecoration: 'none',
+            fontWeight: 800,
+            fontSize: '0.94rem',
+            whiteSpace: 'nowrap',
             transition: 'color 0.2s'
           }} className="hover-orange nav-link-desktop">
             {t('nav.stemKits', 'STEM Kits')}
           </Link>
 
           {studentName ? (
-            <div className="nav-link-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span style={{ 
-                fontFamily: "'Baloo 2', cursive", 
-                fontWeight: 800, 
+            <div className="nav-link-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+              <span style={{
+                fontFamily: "'Baloo 2', cursive",
+                fontWeight: 800,
                 color: 'var(--kids-blue)',
                 background: 'rgba(14, 165, 233, 0.1)',
                 padding: '0.35rem 0.85rem',
                 borderRadius: '12px',
-                fontSize: '0.9rem'
+                fontSize: '0.9rem',
+                whiteSpace: 'nowrap'
               }}>
                 🎒 {studentName.split(' ')[0]}
               </span>
@@ -250,12 +378,13 @@ function Home() {
                   fontSize: '0.9rem',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.2rem'
+                  gap: '0.2rem',
+                  whiteSpace: 'nowrap'
                 }} title={`${streak} Day Coding Streak!`}>
                   🔥 {streak}
                 </span>
               )}
-              <button 
+              <button
                 onClick={logoutStudent}
                 style={{
                   background: 'none',
@@ -265,33 +394,39 @@ function Home() {
                   fontWeight: 800,
                   fontSize: '0.9rem',
                   cursor: 'pointer',
-                  marginLeft: '0.5rem'
+                  marginLeft: '0.25rem',
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {t('nav.logout', 'Logout')}
               </button>
             </div>
           ) : (
-            <Link to="/class-login" style={{ 
-              fontFamily: "'Baloo 2', cursive", 
-              color: '#c2410c', 
-              textDecoration: 'none', 
-              fontWeight: 800, 
-              fontSize: '0.95rem',
-              transition: 'color 0.2s'
-            }} className="hover-orange nav-link-desktop">
-              {t('nav.classLogin', 'Class Login')} 🎒
-            </Link>
-          )}
+            <div className="nav-link-desktop" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
+              <Link to="/class-login" style={{
+                fontFamily: "'Baloo 2', cursive",
+                color: '#c2410c',
+                background: 'rgba(234, 88, 12, 0.08)',
+                border: '1.5px solid rgba(234, 88, 12, 0.25)',
+                padding: '0.38rem 0.85rem',
+                borderRadius: '999px',
+                textDecoration: 'none',
+                fontWeight: 800,
+                fontSize: '0.88rem',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.2s'
+              }} className="hover-orange">
+                {t('nav.classLogin', 'Class Login')}
+              </Link>
 
-          {!studentName && (
-            <button 
-              className="kids-button nav-link-desktop" 
-              onClick={() => setIsModalOpen(true)}
-              style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
-            >
-              {t('nav.joinHub', 'Join Hub')}
-            </button>
+              <button
+                className="kids-button"
+                onClick={() => setIsModalOpen(true)}
+                style={{ padding: '0.45rem 1.1rem', fontSize: '0.88rem', whiteSpace: 'nowrap' }}
+              >
+                {t('nav.joinHub', 'Join Hub')}
+              </button>
+            </div>
           )}
         </div>
       </nav>
