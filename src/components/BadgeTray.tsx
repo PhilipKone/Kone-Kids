@@ -5,6 +5,7 @@ import BadgeModal from './BadgeModal';
 import CertificateModal from './CertificateModal';
 import Sparkles from 'lucide-react/dist/esm/icons/sparkles.mjs';
 import Award from 'lucide-react/dist/esm/icons/award.mjs';
+import { stripEmoji, TrophyCupIcon, ScrollCertIcon, SparkleStarIcon, QuestLockIcon, QuestBadgeArt } from './PlayfulIcons';
 
 const BadgeTray: React.FC = () => {
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ const BadgeTray: React.FC = () => {
           </div>
 
           <h2 style={{ color: 'var(--kids-dark)', margin: 0, fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontFamily: "'Baloo 2', cursive", fontWeight: 800 }}>
-            {t('badges.title', 'My Achievement Gallery 🏆')}
+            <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:"0.55rem",flexWrap:"wrap"}}><span>{stripEmoji(t('badges.title', 'My Achievement Gallery'))}</span><TrophyCupIcon size={32} className="playful-svg-icon"/></span>
           </h2>
           <p style={{ color: 'var(--kids-text-muted)', marginTop: '0.5rem', fontSize: '1rem' }}>
             {t('badges.desc', 'Click any badge to view its secret quest objective and unlock official certificates!')}
@@ -89,7 +90,7 @@ const BadgeTray: React.FC = () => {
               transition: 'all 0.2s'
             }}
           >
-            <span>{t('badges.generateCert', '📜 Generate Official Certificate')}</span>
+            <span style={{display:"inline-flex",alignItems:"center",gap:"0.5rem"}}><ScrollCertIcon size={21} className="playful-svg-icon"/><span>{stripEmoji(t('badges.generateCert', 'Generate Official Certificate'))}</span></span>
           </button>
         </div>
 
@@ -132,7 +133,7 @@ const BadgeTray: React.FC = () => {
                   background: badge.unlocked ? 'rgba(16, 185, 129, 0.1)' : 'rgba(100, 116, 139, 0.1)',
                   color: badge.unlocked ? '#059669' : '#64748b'
                 }}>
-                  {badge.unlocked ? t('badges.unlocked', '✨ Earned') : t('badges.quest', '🔒 Quest')}
+                  <span style={{display:"inline-flex",alignItems:"center",gap:"4px"}}>{badge.unlocked ? <><SparkleStarIcon size={12}/><span>{stripEmoji(t('badges.unlocked', 'Earned'))}</span></> : <><QuestLockIcon size={11}/><span>{stripEmoji(t('badges.quest', 'Quest'))}</span></>}</span>
                 </span>
               </div>
 
@@ -160,9 +161,7 @@ const BadgeTray: React.FC = () => {
                     }} 
                   />
                 ) : (
-                  <span style={{ filter: badge.unlocked ? 'drop-shadow(0 5px 10px rgba(0,0,0,0.1))' : 'none' }}>
-                    {badge.icon}
-                  </span>
+                  <QuestBadgeArt badge={badge} size={58} />
                 )}
               </div>
 

@@ -267,7 +267,7 @@ function Home() {
                       whiteSpace: 'nowrap'
                     }}
                   >
-                    <span>💻</span>
+                    <CodingLabIcon size={19} className="playful-svg-icon" />
                     <span>{t('nav.coding', 'Coding Lab')}</span>
                   </Link>
                   <Link
@@ -288,7 +288,7 @@ function Home() {
                       whiteSpace: 'nowrap'
                     }}
                   >
-                    <span>🤖</span>
+                    <RoboticsLabIcon size={19} className="playful-svg-icon" />
                     <span>{t('nav.robotics', 'Robotics Lab')}</span>
                   </Link>
                   <Link
@@ -309,7 +309,7 @@ function Home() {
                       whiteSpace: 'nowrap'
                     }}
                   >
-                    <span>🧠</span>
+                    <AIStudioIcon size={19} className="playful-svg-icon" />
                     <span>{t('nav.aiLab', 'AI Studio')}</span>
                   </Link>
                 </div>
@@ -365,7 +365,7 @@ function Home() {
                 fontSize: '0.9rem',
                 whiteSpace: 'nowrap'
               }}>
-                🎒 {studentName.split(' ')[0]}
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem"}}><BackpackLoginIcon size={16}/>{studentName.split(' ')[0]}</span>
               </span>
               {streak > 0 && (
                 <span style={{
@@ -381,7 +381,7 @@ function Home() {
                   gap: '0.2rem',
                   whiteSpace: 'nowrap'
                 }} title={`${streak} Day Coding Streak!`}>
-                  🔥 {streak}
+                  <StreakFlameIcon size={15}/> {streak}
                 </span>
               )}
               <button
@@ -440,7 +440,7 @@ function Home() {
               <div className="mascot-hero-container">
                 {/* Speech Bubble */}
                 <div className="mascot-speech-bubble">
-                  <span>{t('home.mascotBubble', "Hi! I'm Drop 💧 What will you build today?")}</span>
+                  <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem",flexWrap:"wrap",justifyContent:"center"}}>{stripEmoji(t('home.mascotBubble', "Hi! I'm Drop What will you build today?"))} <DropMascotMiniIcon size={18} className="playful-svg-icon"/></span>
                 </div>
 
                 <Mascot />
@@ -452,21 +452,21 @@ function Home() {
                     className="mascot-chip" 
                     style={{ '--chip-color': 'var(--kids-orange)' } as any}
                   >
-                    <span>{t('home.chipScratch', '✨ Scratch 3.0 Games')}</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"0.4rem"}}><SparkleStarIcon size={17} className="playful-svg-icon"/><span>{stripEmoji(t('home.chipScratch', 'Scratch 3.0 Games'))}</span></span>
                   </Link>
                   <Link 
                     to="/robotics" 
                     className="mascot-chip" 
                     style={{ '--chip-color': 'var(--kids-blue)' } as any}
                   >
-                    <span>{t('home.chipHardware', '🤖 micro:bit & Circuits')}</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"0.4rem"}}><RoboticsLabIcon size={18} className="playful-svg-icon"/><span>{stripEmoji(t('home.chipHardware', 'micro:bit & Circuits'))}</span></span>
                   </Link>
                   <Link 
                     to="/ai" 
                     className="mascot-chip" 
                     style={{ '--chip-color': 'var(--kids-purple)' } as any}
                   >
-                    <span>{t('home.chipAI', '🧠 Smart AI Models')}</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"0.4rem"}}><AIStudioIcon size={18} className="playful-svg-icon"/><span>{stripEmoji(t('home.chipAI', 'Smart AI Models'))}</span></span>
                   </Link>
                 </div>
               </div>
@@ -495,7 +495,7 @@ function Home() {
               
               <div style={{ marginBottom: '2.5rem' }}>
                 <span className="hero-tagline">
-                  {t('home.tagline', 'Do it Right')} ✨
+                  <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem",verticalAlign:"middle"}}><span>{stripEmoji(t('home.tagline', 'Do it Right'))}</span><SparkleStarIcon size={24} className="playful-svg-icon"/></span>
                 </span>
               </div>
               
@@ -533,7 +533,7 @@ function Home() {
 
               <div className="academy-cta-wrapper" style={{ marginTop: '2.5rem' }}>
                 <div className="academy-cta-card">
-                  <div className="cta-icon-float">🚀</div>
+                  <div className="cta-icon-float" style={{display:"inline-flex",alignItems:"center",justifyContent:"center"}}><RocketLaunchIcon size={44} className="playful-svg-icon"/></div>
                   <h2 className="cta-title">{t('home.ctaTitle', 'Ready to start?')}</h2>
                   <p className="cta-text">{t('home.ctaDesc', 'Join 1,000+ kids learning to build the future!')}</p>
                   <button 
@@ -586,7 +586,7 @@ function Home() {
                 margin: '0 0 0.75rem 0',
                 color: 'var(--nav-text)'
               }}>
-                {t('extensions.title', '🚀 STEM Extensions & External Labs')}
+                <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:"0.55rem",flexWrap:"wrap"}}><RocketLaunchIcon size={28} className="playful-svg-icon"/><span>{stripEmoji(t('extensions.title', 'STEM Extensions & External Labs'))}</span></span>
               </h2>
               <p style={{
                 fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
@@ -883,7 +883,7 @@ function Home() {
               }}
               className="btn-cta-hover"
             >
-              {t('home.visitParentHub', '📖 Visit Parent & Teacher Hub')}
+              <span style={{display:"inline-flex",alignItems:"center",gap:"0.5rem"}}><StoryBookIcon size={20} className="playful-svg-icon"/><span>{stripEmoji(t('home.visitParentHub', 'Visit Parent & Teacher Hub'))}</span></span>
             </Link>
           </div>
         </div>
@@ -959,14 +959,14 @@ function Home() {
                 color: '#c2410c', 
                 fontWeight: 800 
               }}>
-                {t('footer.exploreHubs', 'Explore Hubs 🚀')}
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><span>{stripEmoji(t('footer.exploreHubs', 'Explore Hubs'))}</span><RocketLaunchIcon size={18} className="playful-svg-icon"/></span>
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', fontWeight: 600 }}>
-                <Link to="/coding" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.coding4Kids', '💻 Coding 4 Kids')}</Link>
-                <Link to="/robotics" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.robotics4Kids', '🤖 Robotics 4 Kids')}</Link>
-                <Link to="/ai" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.ai4Kids', '🧠 AI 4 Kids')}</Link>
-                <Link to="/class-login" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.classroomLogin', '🎒 Classroom Login')}</Link>
-                <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.stemInsights', '📚 STEM Insights')}</Link>
+                <Link to="/coding" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><CodingLabIcon size={17} className="playful-svg-icon"/><span>{stripEmoji(t('footer.coding4Kids', 'Coding 4 Kids'))}</span></span></Link>
+                <Link to="/robotics" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><RoboticsLabIcon size={17} className="playful-svg-icon"/><span>{stripEmoji(t('footer.robotics4Kids', 'Robotics 4 Kids'))}</span></span></Link>
+                <Link to="/ai" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><AIStudioIcon size={17} className="playful-svg-icon"/><span>{stripEmoji(t('footer.ai4Kids', 'AI 4 Kids'))}</span></span></Link>
+                <Link to="/class-login" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><BackpackLoginIcon size={17} className="playful-svg-icon"/><span>{stripEmoji(t('footer.classroomLogin', 'Classroom Login'))}</span></span></Link>
+                <Link to="/blog" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><StoryBookIcon size={17} className="playful-svg-icon"/><span>{stripEmoji(t('footer.stemInsights', 'STEM Insights'))}</span></span></Link>
               </div>
             </div>
 
@@ -979,7 +979,7 @@ function Home() {
                 color: '#0369a1', 
                 fontWeight: 800 
               }}>
-                {t('footer.networkTitle', 'Kone Network 🌐')}
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><span>{stripEmoji(t('footer.networkTitle', 'Kone Network'))}</span><GlobeNetworkIcon size={18} className="playful-svg-icon"/></span>
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', fontWeight: 600 }}>
                 <a href="https://www.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.koneAcademyHub', 'Kone Academy Hub')}</a>
@@ -999,7 +999,7 @@ function Home() {
                 color: '#6b21a8', 
                 fontWeight: 800 
               }}>
-                {t('footer.communityTitle', 'Join Our Community ✨')}
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><span>{stripEmoji(t('footer.communityTitle', 'Join Our Community'))}</span><SparkleStarIcon size={18} className="playful-svg-icon"/></span>
               </h4>
               <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--kids-text-muted)', fontWeight: 500 }}>
                 {t('footer.communitySubtitle', 'Follow our STEM journeys, student showcases & updates:')}
@@ -1115,7 +1115,7 @@ function Home() {
               gap: '0.35rem',
               boxShadow: '0 1px 3px rgba(0,0,0,0.03)'
             }}>
-              <span style={{ fontSize: '0.85rem', lineHeight: 1 }} aria-hidden="true">🌐</span>
+              <GlobeNetworkIcon size={16}/>
               <select
                 value={i18n.language.slice(0, 2)}
                 onChange={(e) => {

@@ -1210,3 +1210,5 @@ html {
     font-size: 1.15rem !important;
   }
 }
+
+.playful-svg-icon{flex-shrink:0;transition:transform .24s cubic-bezier(.34,1.56,.64,1)}a:hover .playful-svg-icon,button:hover .playful-svg-icon,.badge-card-interactive:hover .playful-svg-icon{transform:scale(1.15) rotate(-5deg)}
