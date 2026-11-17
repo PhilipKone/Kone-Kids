@@ -1,3 +1,4 @@
+import { MicroscopeLabIcon, CubeBlockIcon, PartyPopperIcon, PhoneCallIcon, MailEnvelopeIcon, MapPinIcon } from './PlayfulIcons';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { 
@@ -958,7 +959,7 @@ export default function StemKits() {
                   }}
                 >
                   <span>
-                    {cat === 'All' ? 'All Kits' : cat === 'GES Science Sets' ? '🔬 GES Science Sets' : cat.startsWith('Basic') ? `${cat} (NaCCA)` : `${cat} Kits`}
+                    {cat === 'All' ? 'All Kits' : cat === 'GES Science Sets' ? <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><MicroscopeLabIcon size={16}/>GES Science Sets</span> : cat.startsWith('Basic') ? `${cat} (NaCCA)` : `${cat} Kits`}
                   </span>
                   <span style={{
                     background: isActive ? 'rgba(0,0,0,0.2)' : '#e2e8f0',
@@ -2013,7 +2014,7 @@ export default function StemKits() {
                   marginBottom: '1.25rem'
                 }}>
                   <div style={{ fontSize: '0.78rem', fontWeight: 800, color: '#0284c7', marginBottom: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    📦 Core Curriculum Experiments on Physical Box:
+                    <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}><CubeBlockIcon size={17}/>Core Curriculum Experiments on Physical Box:</span>
                   </div>
                   <ul style={{ margin: 0, paddingLeft: '1.2rem', fontSize: '0.82rem', color: '#334155', lineHeight: 1.55 }}>
                     {quickViewKit.experiments.map((exp, idx) => (
@@ -2349,7 +2350,7 @@ export default function StemKits() {
 
             {orderSubmitted ? (
               <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-                <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🎉</div>
+                <div style={{display:'flex',justifyContent:'center',marginBottom:'0.75rem'}}><PartyPopperIcon size={48} className="playful-svg-icon"/></div>
                 <h3 style={{ fontSize: '1.4rem', fontWeight: 900, color: '#16a34a', fontFamily: "'Baloo 2', cursive", marginBottom: '0.5rem' }}>
                   Order Request Received!
                 </h3>
@@ -2584,9 +2585,9 @@ export default function StemKits() {
               <div style={{ background: '#f8fafc', padding: '1.15rem', borderRadius: '14px', border: '1px solid #e2e8f0' }}>
                 <div style={{ fontWeight: 800, fontSize: '0.9rem', color: '#4f46e5' }}>Direct Admissions &amp; Lab Desk:</div>
                 <div style={{ fontSize: '0.85rem', color: '#334155', marginTop: '0.35rem', lineHeight: 1.6 }}>
-                  📞 Phone/WhatsApp: <strong>+233 55 199 3820</strong><br />
-                  ✉️ Email: <strong>philipkone45@gmail.com</strong><br />
-                  📍 Lab Center: Accra, Ghana
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><PhoneCallIcon size={15}/>Phone/WhatsApp:</span> <strong>+233 55 199 3820</strong><br />
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><MailEnvelopeIcon size={15}/>Email:</span> <strong>philipkone45@gmail.com</strong><br />
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><MapPinIcon size={15}/>Lab Center:</span> Accra, Ghana
                 </div>
               </div>
 

@@ -1,3 +1,4 @@
+import { RocketLaunchIcon, KeyAccessIcon } from './PlayfulIcons';
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
@@ -335,7 +336,7 @@ export default function ClassLogin() {
                   padding: '0.85rem'
                 }}
               >
-                {loading ? 'Entering Lab...' : 'Go to Class! 🚀'}
+                {loading ? 'Entering Lab...' : <span style={{display:'inline-flex',alignItems:'center',gap:'0.45rem'}}>Go to Class! <RocketLaunchIcon size={19}/></span>}
               </button>
 
               <div style={{ marginTop: '1.5rem', fontSize: '0.95rem', fontFamily: "'Baloo 2', cursive" }}>
@@ -350,7 +351,7 @@ export default function ClassLogin() {
                   }}
                   className="hover-teal"
                 >
-                  Teacher Portal 🔑
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}>Teacher Portal <KeyAccessIcon size={15}/></span>
                 </Link>
               </div>
             </div>

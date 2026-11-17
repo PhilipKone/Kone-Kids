@@ -441,7 +441,7 @@ function Home() {
               <div className="mascot-hero-container">
                 {/* Speech Bubble */}
                 <div className="mascot-speech-bubble">
-                  <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem",flexWrap:"wrap",justifyContent:"center"}}>{stripEmoji(t('home.mascotBubble', "Hi! I'm Drop What will you build today?"))} <DropMascotMiniIcon size={18} className="playful-svg-icon"/></span>
+                  <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem",flexWrap:"wrap",justifyContent:"center"}}>{stripEmoji(t('home.mascotBubble', "Hi! I'm Drop! What will you build today?"))} <DropMascotMiniIcon size={18} className="playful-svg-icon"/></span>
                 </div>
 
                 <Mascot />

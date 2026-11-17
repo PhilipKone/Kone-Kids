@@ -1,3 +1,4 @@
+import { LightBulbIcon, HomeHouseIcon, SchoolBuildingIcon } from './PlayfulIcons';
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Clock, Calendar, Sparkles, Send, Check } from 'lucide-react';
@@ -296,7 +297,7 @@ export default function ArticleReader() {
                       boxShadow: '0 4px 6px -1px rgba(0,0,0,0.01)'
                     }}
                   >
-                    <span style={{ fontSize: '1.25rem' }}>💡</span>
+                    <LightBulbIcon size={22} className="playful-svg-icon"/>
                     <div dangerouslySetInnerHTML={{ __html: block.content }} />
                   </div>
                 );
@@ -414,7 +415,7 @@ export default function ArticleReader() {
                 }}
                 className="btn-cta-hover"
               >
-                🏠 Book Home Trial
+                <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}><HomeHouseIcon size={17} className="playful-svg-icon"/>Book Home Trial</span>
               </button>
               
               <button 
@@ -434,7 +435,7 @@ export default function ArticleReader() {
                 }}
                 className="btn-orange-hover"
               >
-                🏫 Request School Demo
+                <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}><SchoolBuildingIcon size={17} className="playful-svg-icon"/>Request School Demo</span>
               </button>
               
               <a 

@@ -1,3 +1,4 @@
+import { HomeHouseIcon, SchoolBuildingIcon } from './PlayfulIcons';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, ArrowRight, Clock, User, ArrowLeft, Sparkles, HelpCircle, ChevronDown } from 'lucide-react';
@@ -451,7 +452,7 @@ export default function Blog() {
               }}
               className="btn-cta-hover"
             >
-              🏠 Request Free Home Trial
+              <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}><HomeHouseIcon size={17} className="playful-svg-icon"/>Request Free Home Trial</span>
             </button>
             <button
               onClick={() => setIsModalOpen(true)}
@@ -470,7 +471,7 @@ export default function Blog() {
               }}
               className="btn-orange-hover"
             >
-              🏫 Book School Lab Demo
+              <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}><SchoolBuildingIcon size={17} className="playful-svg-icon"/>Book School Lab Demo</span>
             </button>
           </div>
         </div>

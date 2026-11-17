@@ -258,3 +258,111 @@ export const PuzzlePieceIcon: React.FC<IconProps> = ({ size = 32, className }) =
     <path d="M8 10H13.5C13.5 8.3 14.6 7 16 7C17.4 7 18.5 8.3 18.5 10H24V15.5C25.7 15.5 27 16.6 27 18C27 19.4 25.7 20.5 24 20.5V26H8V10Z" fill="#10b981" />
   </svg>
 );
+export const LightBulbIcon: React.FC<IconProps> = ({ size = 18, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M16 4C10.8 4 6.5 8.2 6.5 13.5C6.5 17 8.4 20 11.2 21.6V24H20.8V21.6C23.6 20 25.5 17 25.5 13.5C25.5 8.2 21.2 4 16 4Z" fill="#fde047" stroke="#f59e0b" strokeWidth="1.8" />
+    <rect x="12" y="25" width="8" height="3.2" rx="1.6" fill="#64748b" />
+  </svg>
+);
+
+export const HomeHouseIcon: React.FC<IconProps> = ({ size = 18, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M4 15.5L16 5.5L28 15.5" stroke="#f97316" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M7.5 14V26.5H24.5V14" fill="#38bdf8" />
+    <rect x="13.5" y="18.5" width="5" height="8" rx="1.5" fill="#fde047" />
+  </svg>
+);
+
+export const SchoolBuildingIcon: React.FC<IconProps> = ({ size = 18, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M4 14L16 6.5L28 14H4Z" fill="#ef4444" />
+    <rect x="6" y="14" width="20" height="13" rx="2" fill="#f8fafc" stroke="#0284c7" strokeWidth="2" />
+    <rect x="13.5" y="19" width="5" height="8" fill="#f97316" />
+    <circle cx="16" cy="11" r="1.6" fill="#fde047" />
+  </svg>
+);
+
+export const KeyAccessIcon: React.FC<IconProps> = ({ size = 18, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <circle cx="11" cy="16" r="6" fill="#fde047" stroke="#d97706" strokeWidth="2.2" />
+    <circle cx="10" cy="16" r="2" fill="#fff" />
+    <path d="M17 16H27.5M23.5 16V20.5M27 16V19.5" stroke="#f59e0b" strokeWidth="2.6" strokeLinecap="round" />
+  </svg>
+);
+
+export const MicroscopeLabIcon: React.FC<IconProps> = ({ size = 18, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M18 6L12.5 16.5L16.5 18.5L22 8L18 6Z" fill="#0ea5e9" />
+    <path d="M20 13.5C23.5 15.5 24.5 20.5 22 24.5H9" stroke="#0284c7" strokeWidth="2.6" strokeLinecap="round" />
+    <rect x="7" y="24.5" width="18" height="3.2" rx="1.6" fill="#0f172a" />
+  </svg>
+);
+
+export const PhoneCallIcon: React.FC<IconProps> = ({ size = 16, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M8.5 5.5H13L15 11L12.2 13.2C13.6 16.1 15.9 18.4 18.8 19.8L21 17L26.5 19V23.5C26.5 25.2 25.1 26.5 23.4 26.5C13.5 26 5.9 18.4 5.5 8.6C5.5 6.9 6.8 5.5 8.5 5.5Z" fill="#10b981" />
+  </svg>
+);
+
+export const MailEnvelopeIcon: React.FC<IconProps> = ({ size = 16, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <rect x="4" y="7" width="24" height="18" rx="4" fill="#38bdf8" />
+    <path d="M5.5 9L16 17L26.5 9" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+export const MapPinIcon: React.FC<IconProps> = ({ size = 16, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M16 4C10.8 4 6.5 8.1 6.5 13.2C6.5 20.2 16 28.5 16 28.5C16 28.5 25.5 20.2 25.5 13.2C25.5 8.1 21.2 4 16 4Z" fill="#ef4444" />
+    <circle cx="16" cy="13" r="3.5" fill="#fff" />
+  </svg>
+);
+
+export const UsersGroupIcon: React.FC<IconProps> = ({ size = 18, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <circle cx="12" cy="11.5" r="4.2" fill="#0ea5e9" /><circle cx="21.5" cy="12.5" r="3.4" fill="#f97316" />
+    <path d="M5 25C5 21.1 8.1 18 12 18C15.9 18 19 21.1 19 25" fill="#38bdf8" />
+    <path d="M17.5 25C17.5 22 19.6 19.5 22.5 19.5C25.2 19.5 27.5 21.8 27.5 25" fill="#fb923c" />
+  </svg>
+);
+
+export const CheckCircleIcon: React.FC<IconProps> = ({ size = 15, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <circle cx="16" cy="16" r="12" fill="#10b981" />
+    <path d="M10.5 16.5L14.2 20.2L21.8 12.2" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+export const HourglassIcon: React.FC<IconProps> = ({ size = 15, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M8 5H24M8 27H24M10 5C10 11 16 14 16 16C16 18 10 21 10 27M22 5C22 11 16 14 16 16C16 18 22 21 22 27" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" />
+  </svg>
+);
+
+export const PencilEditIcon: React.FC<IconProps> = ({ size = 15, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M6 26L7.5 20.5L21.5 6.5L25.5 10.5L11.5 24.5L6 26Z" fill="#f59e0b" stroke="#d97706" strokeWidth="1.6" strokeLinejoin="round" />
+  </svg>
+);
+
+export const ClipboardCopyIcon: React.FC<IconProps> = ({ size = 15, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <rect x="7" y="6" width="18" height="22" rx="4" fill="#38bdf8" />
+    <rect x="11.5" y="3.5" width="9" height="4.5" rx="2" fill="#0284c7" />
+    <path d="M11 14H21M11 19H18" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" />
+  </svg>
+);
+
+export const TrashBinIcon: React.FC<IconProps> = ({ size = 15, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <path d="M6.5 9H25.5M12 9V6.5C12 5.7 12.7 5 13.5 5H18.5C19.3 5 20 5.7 20 6.5V9" stroke="#ef4444" strokeWidth="2.4" strokeLinecap="round" />
+    <path d="M8.5 9L10 26.5H22L23.5 9H8.5Z" fill="#f87171" />
+  </svg>
+);
+
+export const GoldCoinIcon: React.FC<IconProps> = ({ size = 16, className }) => (
+  <svg width={size} height={size} viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
+    <circle cx="16" cy="16" r="12" fill="#fbbf24" stroke="#d97706" strokeWidth="2.2" />
+    <circle cx="16" cy="16" r="7.5" stroke="#fef08a" strokeWidth="1.8" />
+  </svg>
+);

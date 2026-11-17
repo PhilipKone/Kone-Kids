@@ -1,3 +1,4 @@
+import { KeyAccessIcon, AlertWarnIcon, RocketLaunchIcon, BackpackLoginIcon, PhoneCallIcon, MailEnvelopeIcon, UsersGroupIcon, CheckCircleIcon, HourglassIcon, QuestLockIcon, PencilEditIcon, ClipboardCopyIcon, TrashBinIcon, GoldCoinIcon } from './PlayfulIcons';
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../firebase/config';
 import { doc, setDoc, getDoc, collection, getDocs, deleteDoc, query, where } from 'firebase/firestore';
@@ -540,7 +541,7 @@ export default function TeacherDashboard() {
               fontSize: '2rem',
               marginBottom: '1rem'
             }}>
-              🔑
+              <KeyAccessIcon size={28} className="playful-svg-icon"/>
             </div>
             <h1 style={{
               fontFamily: "'Baloo 2', cursive",
@@ -568,7 +569,7 @@ export default function TeacherDashboard() {
               marginBottom: '1.5rem',
               textAlign: 'left'
             }}>
-              ⚠️ {error}
+              <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}><AlertWarnIcon size={17}/>{error}</span>
             </div>
           )}
 
@@ -595,7 +596,7 @@ export default function TeacherDashboard() {
               marginBottom: '1.5rem'
             }}
           >
-            <span style={{ fontSize: '1.25rem' }}>🚀</span>
+            <RocketLaunchIcon size={21}/>
             {authLoading ? 'Signing in...' : 'Sign in with Google'}
           </button>
 
@@ -659,7 +660,7 @@ export default function TeacherDashboard() {
               className="kids-button"
               style={{ width: '100%', padding: '0.85rem', fontSize: '1rem', marginTop: '0.5rem' }}
             >
-              {authLoading ? 'Loading...' : (isSignUp ? 'Create Teacher Account 🎒' : 'Sign In 🔑')}
+              {authLoading ? 'Loading...' : (isSignUp ? <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}>Create Teacher Account <BackpackLoginIcon size={17}/></span> : <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}>Sign In <KeyAccessIcon size={17}/></span>)}
             </button>
           </form>
 
@@ -748,8 +749,8 @@ export default function TeacherDashboard() {
               Please message the Kone Kids Administrator (Philip Hotor) with your registered email (<strong>{currentUser.email}</strong>) to request activation.
             </p>
             <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.9rem', fontWeight: 700 }}>
-              <span style={{ color: 'var(--kids-orange)' }}>📞 Phone / WhatsApp: +233 55 199 3820</span>
-              <span style={{ color: 'var(--kids-blue)' }}>✉️ Email: philipkone45@gmail.com</span>
+              <span style={{ color: 'var(--kids-orange)' }}><span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><PhoneCallIcon size={15}/>Phone / WhatsApp:</span> +233 55 199 3820</span>
+              <span style={{ color: 'var(--kids-blue)' }}><span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><MailEnvelopeIcon size={15}/>Email:</span> philipkone45@gmail.com</span>
             </div>
           </div>
 
@@ -894,7 +895,7 @@ export default function TeacherDashboard() {
                   className="kids-button"
                   style={{ width: '100%', padding: '0.75rem' }}
                 >
-                  Create Class Code 🔑
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.4rem'}}>Create Class Code <KeyAccessIcon size={16}/></span>
                 </button>
               </form>
             </div>
@@ -909,7 +910,7 @@ export default function TeacherDashboard() {
                 boxShadow: '0 10px 30px rgba(14, 165, 233, 0.05)'
               }}>
                 <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0 0 1.25rem', color: 'var(--kids-blue)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  👥 Teacher Directory <span style={{ fontSize: '0.8rem', background: 'rgba(14, 165, 233, 0.1)', color: 'var(--kids-blue)', padding: '0.2rem 0.6rem', borderRadius: '8px' }}>ADMIN</span>
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.45rem'}}><UsersGroupIcon size={20}/>Teacher Directory</span> <span style={{ fontSize: '0.8rem', background: 'rgba(14, 165, 233, 0.1)', color: 'var(--kids-blue)', padding: '0.2rem 0.6rem', borderRadius: '8px' }}>ADMIN</span>
                 </h3>
 
                 {loadingTeachers ? (
@@ -942,7 +943,7 @@ export default function TeacherDashboard() {
                             color: t.approved ? '#10b981' : '#f97316',
                             whiteSpace: 'nowrap'
                           }}>
-                            {t.approved ? '🟢 Approved' : '⏳ Pending'}
+                            {t.approved ? <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}><CheckCircleIcon size={14}/>Approved</span> : <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}><HourglassIcon size={14}/>Pending</span>}
                           </span>
                         </div>
 
@@ -959,7 +960,7 @@ export default function TeacherDashboard() {
                               minHeight: '28px'
                             }}
                           >
-                            {t.approved ? 'Revoke 🔒' : 'Approve ✅'}
+                            {t.approved ? <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}>Revoke <QuestLockIcon size={13}/></span> : <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}>Approve <CheckCircleIcon size={13}/></span>}
                           </button>
                           <button
                             onClick={() => handleDeleteTeacher(t.uid)}
@@ -1075,7 +1076,7 @@ export default function TeacherDashboard() {
                             }}
                             style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: 0 }}
                           >
-                            ✏️ Rename
+                            <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}><PencilEditIcon size={14}/>Rename</span>
                           </button>
                         </div>
                       ) : (
@@ -1114,7 +1115,7 @@ export default function TeacherDashboard() {
                             padding: 0
                           }}
                         >
-                          {copySuccess ? '✅ Copied Direct Link!' : '📋 Copy Direct Login Link'}
+                          {copySuccess ? <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><CheckCircleIcon size={15}/>Copied Direct Link!</span> : <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><ClipboardCopyIcon size={15}/>Copy Direct Login Link</span>}
                         </button>
                       </span>
                     </div>
@@ -1162,7 +1163,7 @@ export default function TeacherDashboard() {
                           border: '1px solid rgba(239, 68, 68, 0.2)'
                         }}
                       >
-                        🗑️ Delete Class
+                        <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}><TrashBinIcon size={14}/>Delete Class</span>
                       </button>
                     </div>
                   </div>
@@ -1327,7 +1328,7 @@ export default function TeacherDashboard() {
                                 }}
                                 title="Edit Student"
                               >
-                                ✏️
+                                <PencilEditIcon size={14}/>
                               </button>
 
                               <button
@@ -1538,7 +1539,7 @@ export default function TeacherDashboard() {
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.95rem' }}>
                             <div>Current Level: <strong style={{ color: '#0d9488', fontSize: '1.1rem' }}>Level {level}</strong></div>
                             <div>Total Accumulated Experience: <strong>{student.xp || 0} XP</strong></div>
-                            <div>Coins Wallet: <strong style={{ color: '#b45309' }}>🪙 {student.coins || 0}</strong></div>
+                            <div>Coins Wallet: <strong style={{ color: '#b45309' }}><span style={{display:'inline-flex',alignItems:'center',gap:'0.25rem'}}><GoldCoinIcon size={15}/>{student.coins || 0}</span></strong></div>
                           </div>
 
                           {/* Level Progress bar */}
