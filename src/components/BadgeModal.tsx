@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { X, Download, Share2 } from 'lucide-react';
+import { X, Download, Share2, Sparkles, Printer, Award, ArrowRight } from 'lucide-react';
 import { Badge, useGamification } from '../context/GamificationContext';
 import { Share } from '@capacitor/share';
+import { SparkleStarIcon, QuestLockIcon, RocketLaunchIcon, TrophyCupIcon, ScrollCertIcon, QuestBadgeArt } from './PlayfulIcons';
+import { sounds } from '../utils/sounds';
 
 interface BadgeModalProps {
   badge: Badge;
@@ -10,179 +12,141 @@ interface BadgeModalProps {
 
 export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
   const { studentName } = useGamification();
-  const [name, setName] = useState(studentName || 'Young Tech Pioneer');
+  const [name, setName] = useState(studentName || 'Junior Coder');
+  const [certSerial] = useState(() => `KCA-BDG-${Math.floor(100000 + Math.random() * 900000)}`);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    if (!badge.unlocked) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set high-resolution dimensions
-    canvas.width = 1000;
-    canvas.height = 750;
+    const W = 1100;
+    const H = 780;
+    canvas.width = W;
+    canvas.height = H;
 
-    // 1. Draw Background Radial Gradient
-    const grad = ctx.createRadialGradient(500, 375, 100, 500, 375, 600);
-    grad.addColorStop(0, '#1e1b4b'); // deep indigo
-    grad.addColorStop(1, '#090514'); // dark slate/black
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 1000, 750);
+    // 1. Warm Ivory Parchment Base
+    const paper = ctx.createLinearGradient(0, 0, W, H);
+    paper.addColorStop(0, '#fffdf8');
+    paper.addColorStop(0.5, '#fdfaf1');
+    paper.addColorStop(1, '#faf5e8');
+    ctx.fillStyle = paper;
+    ctx.fillRect(0, 0, W, H);
 
-    // 2. Draw Decorative Glowing Borders
-    // Outer border (Cyan neon)
-    ctx.strokeStyle = '#06b6d4';
-    ctx.lineWidth = 6;
-    ctx.shadowColor = '#06b6d4';
-    ctx.shadowBlur = 15;
-    ctx.strokeRect(30, 30, 940, 690);
+    // 2. Double Border Frame
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 5;
+    ctx.strokeRect(30, 30, W - 60, H - 60);
 
-    // Inner border (Magenta neon)
-    ctx.strokeStyle = '#d946ef';
-    ctx.lineWidth = 3;
-    ctx.shadowColor = '#d946ef';
-    ctx.shadowBlur = 10;
-    ctx.strokeRect(45, 45, 910, 660);
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(42, 42, W - 84, H - 84);
 
-    // Reset shadow for text drawing to keep it crisp
-    ctx.shadowBlur = 0;
-
-    // Draw Corner Brackets (futuristic theme)
-    ctx.fillStyle = '#06b6d4';
-    // Top-Left
-    ctx.fillRect(20, 20, 40, 8);
-    ctx.fillRect(20, 20, 8, 40);
-    // Top-Right
-    ctx.fillRect(940, 20, 40, 8);
-    ctx.fillRect(972, 20, 8, 40);
-    // Bottom-Left
-    ctx.fillRect(20, 722, 40, 8);
-    ctx.fillRect(20, 690, 8, 40);
-    // Bottom-Right
-    ctx.fillRect(940, 722, 40, 8);
-    ctx.fillRect(972, 690, 8, 40);
-
-    // 3. Draw Header Text
+    // Header Identity
     ctx.textAlign = 'center';
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '800 16px "Outfit", system-ui, sans-serif';
+    ctx.fillText('KONE CODE ACADEMY  •  ACHIEVEMENT CREDENTIAL', W / 2, 90);
 
-    // Academy name
-    ctx.fillStyle = '#fbbf24'; // bright gold
-    ctx.font = 'bold 26px sans-serif';
-    ctx.fillText('KONE KIDS', 500, 115);
+    ctx.fillStyle = '#64748b';
+    ctx.font = '700 13px "Outfit", system-ui, sans-serif';
+    ctx.fillText('OFFICIAL BADGE CERTIFICATE OF MASTERY', W / 2, 116);
 
-    // "Certificate of Achievement"
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 44px sans-serif';
-    ctx.fillText('CERTIFICATE OF ACHIEVEMENT', 500, 175);
-
-    // Divider line
-    const divider = ctx.createLinearGradient(300, 0, 700, 0);
-    divider.addColorStop(0, 'transparent');
-    divider.addColorStop(0.5, '#06b6d4');
-    divider.addColorStop(1, 'transparent');
-    ctx.fillStyle = divider;
-    ctx.fillRect(250, 205, 500, 3);
-
-    // Award description
-    ctx.fillStyle = '#94a3b8'; // light slate
-    ctx.font = 'italic 20px Georgia, serif';
-    ctx.fillText('This certificate is proudly awarded to', 500, 255);
+    // Presentation subtitle
+    ctx.fillStyle = '#475569';
+    ctx.font = 'italic 19px Georgia, serif';
+    ctx.fillText('This credential is proudly conferred upon', W / 2, 160);
 
     // Student Name
-    ctx.fillStyle = '#38bdf8'; // bright blue
-    ctx.font = 'bold 50px sans-serif';
-    ctx.fillText(name.toUpperCase(), 500, 325);
+    const displayName = (name || 'Junior Coder').trim();
+    ctx.fillStyle = '#0f172a';
+    ctx.font = '900 52px "Baloo 2", "Outfit", system-ui, sans-serif';
+    ctx.fillText(displayName, W / 2, 230);
+
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(W / 2 - 200, 248);
+    ctx.lineTo(W / 2 + 200, 248);
+    ctx.stroke();
+
+    // Citation
+    ctx.fillStyle = '#334155';
+    ctx.font = '400 18px "Outfit", system-ui, sans-serif';
+    ctx.fillText('for successfully completing the quest requirements and earning the distinction of', W / 2, 292);
+
+    // Badge Title Highlight
+    ctx.fillStyle = '#b45309';
+    ctx.font = '900 32px "Outfit", system-ui, sans-serif';
+    ctx.fillText(`★ ${badge.name.toUpperCase()} ★`, W / 2, 340);
 
     // Description text
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '20px sans-serif';
-    ctx.fillText('for completing the coding pathways and unlocking the achievement', 500, 395);
+    ctx.fillStyle = '#475569';
+    ctx.font = 'italic 16px Georgia, serif';
+    ctx.fillText(`"${badge.description}"`, W / 2, 382);
 
-    // Badge Name
-    ctx.fillStyle = '#f59e0b'; // amber
-    ctx.font = 'bold 36px sans-serif';
-    ctx.fillText(`🏆 ${badge.name.toUpperCase()} 🏆`, 500, 455);
-
-    // Quote
-    ctx.fillStyle = '#cbd5e1';
-    ctx.font = 'italic 18px Georgia, serif';
-    ctx.fillText('"Keep building the future, one block at a time!"', 500, 515);
-
-    // Date
+    // Footer signatures & date
+    const footerY = 600;
     const unlockDate = badge.unlockedAt || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-    ctx.fillStyle = '#64748b';
-    ctx.font = '16px sans-serif';
-    ctx.fillText(`Unlocked on: ${unlockDate}`, 500, 555);
 
-    // 4. Signatures & Seals
-    // Draw Seal (gold rosette)
-    ctx.save();
-    ctx.translate(500, 640);
-    ctx.fillStyle = '#eab308';
-    ctx.shadowColor = '#eab308';
-    ctx.shadowBlur = 10;
-    // Draw circle seal
-    ctx.beginPath();
-    ctx.arc(0, 0, 35, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 16px sans-serif';
-    ctx.fillText('KK', 0, 6);
-    ctx.restore();
-
-    // Left Signature: Byte
-    ctx.strokeStyle = '#475569';
+    ctx.font = '700 16px Georgia, serif';
+    ctx.fillText(unlockDate, 260, footerY - 10);
+    ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(150, 645);
-    ctx.lineTo(350, 645);
+    ctx.moveTo(150, footerY);
+    ctx.lineTo(370, footerY);
     ctx.stroke();
-
-    ctx.fillStyle = '#cbd5e1';
-    ctx.font = 'italic 20px Georgia, serif';
-    ctx.fillText('Byte', 250, 630); // simulated signature text
     ctx.fillStyle = '#64748b';
-    ctx.font = '14px sans-serif';
-    ctx.fillText('AI Mascot Mentor', 250, 670);
+    ctx.font = '700 11px "Outfit", system-ui, sans-serif';
+    ctx.fillText('DATE UNLOCKED', 260, footerY + 20);
 
-    // Right Signature: Philip Hotor
-    ctx.strokeStyle = '#475569';
+    // Director Signature
+    const rx = W - 260;
+    ctx.fillStyle = '#0369a1';
+    ctx.font = 'italic 700 26px Georgia, serif';
+    ctx.fillText('Philip Hotor', rx, footerY - 10);
+    ctx.strokeStyle = '#94a3b8';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(650, 645);
-    ctx.lineTo(850, 645);
+    ctx.moveTo(rx - 110, footerY);
+    ctx.lineTo(rx + 110, footerY);
     ctx.stroke();
-
-    ctx.fillStyle = '#cbd5e1';
-    ctx.font = 'italic 20px Georgia, serif';
-    ctx.fillText('Philip Hotor', 750, 630); // simulated signature text
     ctx.fillStyle = '#64748b';
-    ctx.font = '14px sans-serif';
-    ctx.fillText('Founder, Kone Kids', 750, 670);
+    ctx.font = '700 11px "Outfit", system-ui, sans-serif';
+    ctx.fillText('ACADEMY DIRECTOR', rx, footerY + 20);
+
+    // Serial ID
+    ctx.fillStyle = '#64748b';
+    ctx.font = '600 11px "Outfit", system-ui, sans-serif';
+    ctx.fillText(`CREDENTIAL ID: ${certSerial}   •   KIDS.CODKON.COM`, W / 2, 715);
 
   }, [name, badge]);
 
   const downloadCertificate = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
+    sounds.playCertificateFanfare();
     const url = canvas.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = url;
-    a.download = `KoneKids_Certificate_${badge.name.replace(/\s+/g, '_')}.png`;
+    a.download = `Kone-Kids-Badge-${badge.name.replace(/\s+/g, '_')}.png`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
   };
 
   const shareAchievement = async () => {
-    const text = `I unlocked the "${badge.name}" badge in Kone Kids! 🚀 Check out my coding achievements!`;
+    const text = `I unlocked the "${badge.name}" badge in Kone Kids! Check out my coding achievements at kids.codkon.com!`;
     try {
       await Share.share({
         title: 'Kone Kids Achievement!',
         text: text,
-        url: 'https://kids.koneacademy.io',
+        url: 'https://kids.codkon.com',
         dialogTitle: 'Share Achievement'
       });
     } catch (err) {
@@ -192,16 +156,12 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
 
   return (
     <div
-      onClick={(e) => {
-        if (e.target === e.currentTarget) {
-          onClose();
-        }
-      }}
+      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(15, 23, 42, 0.85)',
-        backdropFilter: 'blur(8px)',
+        background: 'rgba(15, 23, 42, 0.75)',
+        backdropFilter: 'blur(10px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -210,122 +170,111 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
         overflowY: 'auto'
       }}
     >
-      <div className="glass-panel" style={{
-        background: '#151921',
-        border: '1px solid rgba(255,255,255,0.08)',
+      <div style={{
+        background: '#ffffff',
+        border: '2px solid #e2e8f0',
         borderRadius: '28px',
-        padding: '1.5rem 1.5rem 1.85rem 1.5rem',
-        maxWidth: '650px',
+        padding: '1.75rem',
+        maxWidth: '720px',
         width: '100%',
         margin: 'auto',
         position: 'relative',
-        boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
-        animation: 'modalPop 0.3s ease-out',
-        color: 'white'
+        boxShadow: '0 25px 60px rgba(15, 23, 42, 0.3)',
+        color: '#0f172a'
       }}>
         {/* Close Button */}
         <button
           onClick={onClose}
+          aria-label="Close badge modal"
           style={{
             position: 'absolute',
-            top: '1rem',
-            right: '1rem',
-            background: 'rgba(255,255,255,0.05)',
-            border: 'none',
-            borderRadius: '50%',
-            width: '36px',
-            height: '36px',
+            top: '1.25rem',
+            right: '1.25rem',
+            background: '#f1f5f9',
+            border: '1.5px solid #e2e8f0',
+            borderRadius: '14px',
+            width: '40px',
+            height: '40px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            color: '#94a3b8',
+            color: '#475569',
             transition: 'all 0.2s'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.2)'; e.currentTarget.style.color = '#ef4444'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = '#94a3b8'; }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = '#fee2e2'; e.currentTarget.style.color = '#ef4444'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = '#f1f5f9'; e.currentTarget.style.color = '#475569'; }}
         >
           <X size={20} />
         </button>
 
-        {/* Badge Details Header */}
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.25rem' }}>
-          <div style={{ 
-            fontSize: '3rem', 
-            filter: badge.unlocked ? 'none' : 'grayscale(0.4)',
-            background: badge.unlocked ? 'rgba(14, 165, 233, 0.1)' : 'rgba(255,255,255,0.05)',
-            width: '72px',
-            height: '72px',
-            borderRadius: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            border: badge.unlocked ? '2px solid var(--kids-blue)' : '2px dashed rgba(255,255,255,0.2)'
-          }}>
-            {badge.icon}
+        {/* Badge Header Summary */}
+        <div style={{ display: 'flex', gap: '1.1rem', alignItems: 'center', marginBottom: '1.25rem', paddingRight: '2.5rem' }}>
+          <div style={{ filter: badge.unlocked ? 'none' : 'grayscale(0.4)', flexShrink: 0 }}>
+            <QuestBadgeArt badge={badge} size={76} />
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 800, fontFamily: '"Baloo 2", cursive', color: 'white' }}>{badge.name}</h3>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.2rem' }}>
+              <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: 900, fontFamily: '"Baloo 2", cursive', color: '#0f172a' }}>{badge.name}</h3>
               <span style={{
-                background: badge.unlocked ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                color: badge.unlocked ? '#34d399' : '#fbbf24',
-                border: `1px solid ${badge.unlocked ? 'rgba(16, 185, 129, 0.3)' : 'rgba(245, 158, 11, 0.3)'}`,
-                padding: '2px 8px',
+                background: badge.unlocked ? '#ecfdf5' : '#fef3c7',
+                color: badge.unlocked ? '#059669' : '#d97706',
+                border: `1px solid ${badge.unlocked ? '#a7f3d0' : '#fde68a'}`,
+                padding: '2px 9px',
                 borderRadius: '12px',
                 fontSize: '0.75rem',
                 fontWeight: 800,
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '3px'
+                gap: '4px'
               }}>
-                {badge.unlocked ? '✨ Unlocked' : '🔒 Quest Active'}
+                {badge.unlocked ? <><SparkleStarIcon size={12}/> Earned</> : <><QuestLockIcon size={11}/> Quest Active</>}
               </span>
             </div>
-            <p style={{ margin: '4px 0 0', fontSize: '0.85rem', color: '#94a3b8' }}>
-              {badge.unlocked ? `Awarded on ${badge.unlockedAt || new Date().toLocaleDateString()}` : `Reward: +${badge.xpReward || 100} XP & Official Certificate`}
+            <p style={{ margin: 0, fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>
+              {badge.unlocked ? `Unlocked on ${badge.unlockedAt || new Date().toLocaleDateString()}` : `Reward: +${badge.xpReward || 100} XP & Official Credential`}
             </p>
           </div>
         </div>
 
-        <p style={{ fontSize: '0.95rem', color: '#cbd5e1', lineHeight: '1.5', marginBottom: '1.5rem' }}>{badge.description}</p>
+        <p style={{ fontSize: '0.95rem', color: '#334155', lineHeight: '1.5', marginBottom: '1.5rem', background: '#f8fafc', padding: '0.85rem 1rem', borderRadius: '14px', border: '1px solid #e2e8f0' }}>{badge.description}</p>
 
-        {/* LOCKED STATE: Interactive Quest Briefing & Direct Launcher */}
+        {/* LOCKED STATE: Interactive Quest Briefing */}
         {!badge.unlocked && (
-          <div style={{ 
-            background: 'rgba(15, 23, 42, 0.6)', 
-            border: '1.5px solid rgba(255, 255, 255, 0.1)', 
-            borderRadius: '18px', 
+          <div style={{
+            background: '#f8fafc',
+            border: '2px solid #cbd5e1',
+            borderRadius: '20px',
             padding: '1.25rem',
-            marginBottom: '1rem'
+            marginBottom: '0.5rem'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-              <span style={{ 
+              <span style={{
                 fontFamily: '"Baloo 2", cursive',
-                fontSize: '0.85rem', 
-                fontWeight: 800, 
-                color: '#fbbf24',
+                fontSize: '0.85rem',
+                fontWeight: 900,
+                color: '#d97706',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.4rem',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em'
               }}>
-                🎯 Mission Objective
+                <SparkleStarIcon size={15}/> Mission Objective
               </span>
               <span style={{
-                background: 'rgba(14, 165, 233, 0.15)',
-                color: '#38bdf8',
-                padding: '2px 8px',
-                borderRadius: '8px',
+                background: '#e0f2fe',
+                color: '#0284c7',
+                padding: '3px 10px',
+                borderRadius: '10px',
                 fontSize: '0.75rem',
-                fontWeight: 700
+                fontWeight: 800
               }}>
                 {badge.id.includes('robot') ? 'Robotics 4 Kids' : badge.id.includes('ai') || badge.id.includes('data') ? 'AI 4 Kids' : 'Coding 4 Kids'}
               </span>
             </div>
 
-            <p style={{ margin: '0 0 1.25rem', fontSize: '0.9rem', color: '#e2e8f0', lineHeight: '1.5' }}>
+            <p style={{ margin: '0 0 1.25rem', fontSize: '0.92rem', color: '#1e293b', lineHeight: '1.5' }}>
               {badge.id === 'first_hello' ? 'Open the Kids Coding IDE and click "Run" to test your first interactive block script.' :
                badge.id === 'explorer' ? 'Discover all 3 learning hubs: Coding 4 Kids, Robotics 4 Kids, and AI 4 Kids.' :
                badge.id === 'ai_genius' ? 'Launch the AI Lab and train your first machine learning neural vision model.' :
@@ -352,15 +301,16 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
                 textDecoration: 'none'
               }}
             >
-              <span>🚀 Start Quest Now</span>
+              <RocketLaunchIcon size={19}/>
+              <span>Start Quest Now</span>
             </a>
           </div>
         )}
 
         {badge.unlocked && (
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '1.25rem' }}>
-            <h4 style={{ margin: '0 0 0.5rem', fontSize: '1rem', color: '#fbbf24', fontWeight: 700 }}>Custom Certificate Generator</h4>
-            <p style={{ margin: '0 0 1rem', fontSize: '0.8rem', color: '#94a3b8' }}>Type your name below to print your graduation certificate!</p>
+          <div style={{ borderTop: '1.5px solid #f1f5f9', paddingTop: '1.25rem' }}>
+            <h4 style={{ margin: '0 0 0.35rem', fontSize: '1.05rem', color: '#d97706', fontWeight: 800 }}>Credential Personalization</h4>
+            <p style={{ margin: '0 0 1rem', fontSize: '0.82rem', color: '#64748b' }}>Type your name below to print your official badge diploma!</p>
 
             <input
               type="text"
@@ -369,32 +319,33 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
               placeholder="Enter your name..."
               style={{
                 width: '100%',
-                background: '#0f172a',
-                border: '1.5px solid #334155',
-                borderRadius: '12px',
-                color: 'white',
-                padding: '0.6rem 1rem',
+                background: '#f8fafc',
+                border: '2px solid #cbd5e1',
+                borderRadius: '14px',
+                color: '#0f172a',
+                padding: '0.65rem 1rem',
                 fontSize: '0.95rem',
+                fontWeight: 700,
                 outline: 'none',
-                marginBottom: '1rem',
-                transition: 'border-color 0.2s'
+                marginBottom: '1rem'
               }}
-              onFocus={(e) => e.target.style.borderColor = 'var(--kids-blue)'}
-              onBlur={(e) => e.target.style.borderColor = '#334155'}
+              onFocus={(e) => e.target.style.borderColor = '#0ea5e9'}
+              onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
             />
 
             {/* Certificate Preview Canvas */}
-            <canvas ref={canvasRef} style={{
-              width: '100%',
-              height: 'auto',
-              borderRadius: '16px',
-              border: '2px solid rgba(255,255,255,0.05)',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-              marginBottom: '1.5rem'
-            }} />
+            <div style={{ background: '#e2e8f0', borderRadius: '16px', padding: '0.75rem', marginBottom: '1.25rem' }}>
+              <canvas ref={canvasRef} style={{
+                width: '100%',
+                height: 'auto',
+                borderRadius: '10px',
+                boxShadow: '0 10px 30px rgba(15, 23, 42, 0.15)',
+                display: 'block'
+              }} />
+            </div>
 
             {/* Actions Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', paddingBottom: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               <button
                 onClick={downloadCertificate}
                 className="kids-button pulse-neon"
@@ -402,33 +353,32 @@ export default function BadgeModal({ badge, onClose }: BadgeModalProps) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.4rem',
+                  gap: '0.45rem',
                   fontSize: '0.9rem',
-                  padding: '0.65rem',
-                  '--shadow-height': '5px',
-                  '--shadow-color': '#9a3412',
-                  minHeight: '44px'
-                } as any}
+                  padding: '0.7rem',
+                  borderRadius: '14px',
+                  fontWeight: 900
+                }}
               >
                 <Download size={18} />
                 <span>Download PNG</span>
               </button>
               <button
                 onClick={shareAchievement}
-                className="kids-button"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '0.4rem',
+                  gap: '0.45rem',
                   fontSize: '0.9rem',
-                  padding: '0.65rem',
-                  background: 'var(--kids-purple)',
-                  borderColor: '#a855f7',
-                  '--shadow-height': '5px',
-                  '--shadow-color': '#7e22ce',
-                  minHeight: '44px'
-                } as any}
+                  padding: '0.7rem',
+                  borderRadius: '14px',
+                  background: '#f1f5f9',
+                  border: '2px solid #cbd5e1',
+                  color: '#0f172a',
+                  fontWeight: 800,
+                  cursor: 'pointer'
+                }}
               >
                 <Share2 size={18} />
                 <span>Share Badge</span>
