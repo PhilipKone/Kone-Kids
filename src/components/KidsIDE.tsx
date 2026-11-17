@@ -1,3 +1,4 @@
+import { SparkleStarIcon, RocketLaunchIcon, TrophyCupIcon, BackpackLoginIcon, GlobeNetworkIcon, SunDayIcon, MoonNightIcon, ShareLinkIcon, CloudSyncIcon, SearchLensIcon, TargetCenterIcon, BroomCleanIcon, AlertWarnIcon, BoltLightningIcon, CubeBlockIcon, CodeScrollIcon } from './PlayfulIcons';
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import * as Blockly from 'blockly';
 import { javascriptGenerator } from 'blockly/javascript';
@@ -1943,7 +1944,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   overflow: 'hidden',
                   maxWidth: isMobile ? '138px' : '280px'
                 }}>
-                🎯 {mission.name}
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem"}}><TargetCenterIcon size={15}/>{mission.name}</span>
               </span>
             </div>
           ) : (
@@ -1969,7 +1970,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 onBlur={(e) => (e.target.style.borderColor = 'transparent')}
               />
               <span style={{ fontSize: '0.72rem', color: '#10b981', fontWeight: 700, display: isMobile ? 'none' : 'inline-flex', alignItems: 'center', gap: '3px' }}>
-                ☁️ Auto-saved
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem"}}><CloudSyncIcon size={15}/>Auto-saved</span>
               </span>
             </div>
           )}
@@ -2031,7 +2032,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   fontSize: '0.95rem'
                 }}
               >
-                {isDark ? '☀️' : '🌙'}
+                {isDark ? <SunDayIcon size={16}/> : <MoonNightIcon size={16}/>}
               </button>
               <button
                 type="button"
@@ -2090,7 +2091,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   minHeight: '34px'
                 }}
               >
-                <span>✨ Examples</span>
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem"}}><SparkleStarIcon size={15} className="playful-svg-icon"/>Examples</span>
               </button>
 
               <button
@@ -2113,7 +2114,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   minHeight: '34px'
                 }}
               >
-                <span>🚀 Extensions</span>
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem"}}><RocketLaunchIcon size={16} className="playful-svg-icon"/>Extensions</span>
               </button>
 
               <button
@@ -2136,7 +2137,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                   minHeight: '34px'
                 }}
               >
-                <span>📤 Share</span>
+                <span style={{display:"inline-flex",alignItems:"center",gap:"0.35rem"}}><ShareLinkIcon size={15} className="playful-svg-icon"/>Share</span>
               </button>
             </div>
           )}
@@ -2274,7 +2275,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '0.3rem', borderBottom: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e2e8f0' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 800, color: isDark ? '#94a3b8' : '#64748b' }}>Quick Controls</span>
-                    <button onClick={toggleThemeHandler} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem' }}>{isDark ? '☀️' : '🌙'}</button>
+                    <button onClick={toggleThemeHandler} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem' }}>{isDark ? <SunDayIcon size={16}/> : <MoonNightIcon size={16}/>}</button>
                     <button onClick={handleToggleMusic} style={{ background: 'none', border: 'none', cursor: 'pointer', color: musicOn ? '#c084fc' : '#94a3b8' }}><Music size={14} /></button>
                     <button onClick={handleToggleMute} style={{ background: 'none', border: 'none', cursor: 'pointer', color: !muted ? '#38bdf8' : '#94a3b8' }}>{muted ? <VolumeX size={14} /> : <Volume2 size={14} />}</button>
                   </div>
@@ -2283,21 +2284,21 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     onClick={() => { setShowTemplatesModal(true); setShowMobileMore(false); }}
                     style={{ background: 'rgba(168, 85, 247, 0.1)', border: 'none', color: '#a855f7', padding: '0.35rem 0.5rem', borderRadius: '7px', fontWeight: 800, fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', textAlign: 'left' }}
                   >
-                    <span>✨ Starter Examples</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><SparkleStarIcon size={16}/>Starter Examples</span>
                   </button>
 
                   <button
                     onClick={() => { setShowExtensionsModal(true); setShowMobileMore(false); }}
                     style={{ background: 'rgba(14, 165, 233, 0.1)', border: 'none', color: '#0ea5e9', padding: '0.35rem 0.5rem', borderRadius: '7px', fontWeight: 800, fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', textAlign: 'left' }}
                   >
-                    <span>🚀 STEM Extensions</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><RocketLaunchIcon size={16}/>STEM Extensions</span>
                   </button>
 
                   <button
                     onClick={() => { setShowShareModal(true); setShowMobileMore(false); }}
                     style={{ background: 'rgba(16, 185, 129, 0.1)', border: 'none', color: '#10b981', padding: '0.35rem 0.5rem', borderRadius: '7px', fontWeight: 800, fontSize: '0.72rem', display: 'flex', alignItems: 'center', gap: '0.35rem', cursor: 'pointer', textAlign: 'left' }}
                   >
-                    <span>📤 Save &amp; Share</span>
+                    <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><ShareLinkIcon size={16}/>Save &amp; Share</span>
                   </button>
                 </div>
               )}
@@ -2452,7 +2453,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           {/* Block validation error banner */}
           {blockError && (
             <div style={{ background: 'rgba(239,68,68,0.15)', border: '1px solid rgba(239,68,68,0.5)', borderRadius: '12px', padding: '0.6rem 0.8rem', display: 'flex', gap: '0.6rem', alignItems: 'flex-start', animation: 'slideDown 0.3s ease' }}>
-              <span style={{ fontSize: '1.1rem', flexShrink: 0 }}>⚠️</span>
+              <AlertWarnIcon size={19}/>
               <div>
                 <p style={{ margin: 0, color: '#fca5a5', fontWeight: 700, fontSize: isMobile ? '0.75rem' : '0.85rem' }}>Missing required blocks:</p>
                 <ul style={{ margin: '0.2rem 0 0', paddingLeft: '1.2rem', color: '#fca5a5', fontSize: isMobile ? '0.7rem' : '0.8rem' }}>
@@ -2707,7 +2708,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  <span>🧹 {!isMobile && 'Clean Up'}</span>
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><BroomCleanIcon size={15}/>{!isMobile && 'Clean Up'}</span>
                 </button>
                 <button
                   onClick={handleUndo}
@@ -2772,7 +2773,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  <span>🔍 {!isMobile && 'Search'}</span>
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><SearchLensIcon size={15}/>{!isMobile && 'Search'}</span>
                 </button>
                 <button
                   onClick={handleCenterWorkspace}
@@ -2795,7 +2796,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     whiteSpace: 'nowrap'
                   }}
                 >
-                  <span>🎯 {!isMobile && 'Center'}</span>
+                  <span style={{display:'inline-flex',alignItems:'center',gap:'0.35rem'}}><TargetCenterIcon size={15}/>{!isMobile && 'Center'}</span>
                 </button>
               </div>
             )}
@@ -3146,11 +3147,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
         overflowX: isMobile ? 'auto' : 'visible'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', fontSize: isMobile ? '0.65rem' : '0.75rem', color: isDark ? '#94a3b8' : '#475569', fontWeight: 700, flexShrink: 0 }}>
-          <span>📦 {blockCount} {blockCount === 1 ? 'Block' : 'Blocks'}</span>
+          <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}><CubeBlockIcon size={14}/>{blockCount} {blockCount === 1 ? 'Block' : 'Blocks'}</span>
           <span>•</span>
-          <span>📜 {lineCount} {lineCount === 1 ? 'Line' : 'Lines'}</span>
+          <span style={{display:'inline-flex',alignItems:'center',gap:'0.3rem'}}><CodeScrollIcon size={14}/>{lineCount} {lineCount === 1 ? 'Line' : 'Lines'}</span>
           <span style={{ display: isMobile ? 'none' : 'inline' }}>•</span>
-          <span style={{ display: isMobile ? 'none' : 'inline', color: '#10b981' }}>⚡ 60 FPS</span>
+          <span style={{ display: isMobile ? 'none' : 'inline', color: '#10b981' }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.25rem"}}><BoltLightningIcon size={14}/>60 FPS</span></span>
         </div>
 
         <div style={{ display: 'flex', gap: isMobile ? '0.2rem' : '0.5rem', alignItems: 'center', flexShrink: 0 }}>
@@ -3296,11 +3297,11 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
       {showSuccessModal && mission && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.9)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2000 }}>
           <div style={{ background: '#1e293b', padding: '3rem', borderRadius: '32px', textAlign: 'center', maxWidth: '450px', width: '90%', border: '2px solid var(--kids-blue)', boxShadow: '0 0 50px rgba(14, 165, 233, 0.3)' }}>
-            <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🏆</div>
+            <div style={{display:'flex',justifyContent:'center',marginBottom:'1rem'}}><TrophyCupIcon size={76} className="playful-svg-icon"/></div>
             <h2 className="lab-title" style={{ fontSize: '2.2rem', marginBottom: '0.5rem' }}>MISSION COMPLETE!</h2>
             <p style={{ color: '#cbd5e1', fontSize: '1.2rem', marginBottom: '2rem' }}> Awesome work, Engineer! You earned <strong style={{ color: 'var(--kids-blue)' }}>{mission.xpReward} XP</strong>.</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
-              <button className="kids-button pulse-neon" onClick={handleNextMission} style={{ width: '100%', fontSize: '1.05rem', padding: '0.85rem' }}> NEXT MISSION 🚀 </button>
+              <button className="kids-button pulse-neon" onClick={handleNextMission} style={{ width: '100%', fontSize: '1.05rem', padding: '0.85rem' }}> <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",gap:"0.5rem"}}>NEXT MISSION <RocketLaunchIcon size={22}/></span> </button>
               <button className="kids-button" onClick={handleBackToOrigin} style={{ width: '100%', background: 'var(--kids-surface)', border: '2px solid var(--kids-border)', fontSize: '0.95rem', color: 'var(--kids-text)', '--shadow-color': 'var(--kids-border)', '--shadow-height': '6px' } as any}> {isFromSyllabus ? 'BACK TO COURSE SYLLABUS' : 'BACK TO MAP'} </button>
             </div>
           </div>
@@ -3346,7 +3347,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
               <div>
-                <h3 style={{ margin: 0, color: 'white', fontSize: '1.3rem', fontWeight: 900 }}>✨ Starter Projects</h3>
+                <h3 style={{ margin: 0, color: 'white', fontSize: '1.3rem', fontWeight: 900 }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.5rem"}}><SparkleStarIcon size={22}/>Starter Projects</span></h3>
                 <p style={{ margin: '0.2rem 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>Pick a template to instantly load example code into your workspace!</p>
               </div>
               <button
@@ -3423,7 +3424,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span style={{ fontSize: '1.2rem' }}>🔍</span>
+                <SearchLensIcon size={20}/>
                 <h3 style={{ margin: 0, color: 'white', fontSize: '1.2rem', fontWeight: 900 }}>Search Blocks</h3>
                 <span style={{ background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', fontSize: '0.7rem', fontWeight: 800, padding: '2px 8px', borderRadius: '6px', marginLeft: '0.4rem' }}>
                   Ctrl + K
@@ -3546,7 +3547,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.2rem' }}>
               <div>
-                <h3 style={{ margin: 0, color: 'white', fontSize: '1.3rem', fontWeight: 900 }}>📤 Share & Save Project</h3>
+                <h3 style={{ margin: 0, color: 'white', fontSize: '1.3rem', fontWeight: 900 }}><span style={{display:"inline-flex",alignItems:"center",gap:"0.5rem"}}><ShareLinkIcon size={22}/>Share &amp; Save Project</span></h3>
                 <p style={{ margin: '0.2rem 0 0', color: '#94a3b8', fontSize: '0.85rem' }}>Save your code, copy a share link, or send it to friends!</p>
               </div>
               <button
@@ -3571,7 +3572,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 gap: '0.8rem'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.69rem' }}>
-                  <span style={{ fontSize: '1.5rem' }}>🌟</span>
+                  <SparkleStarIcon size={26}/>
                   <div>
                     <div style={{ color: 'white', fontWeight: 800, fontSize: '0.85rem' }}>Guest Mode Active</div>
                     <div style={{ color: '#94a3b8', fontSize: '0.75rem', lineHeight: 1.3 }}>Progress auto-saved in browser memory. Create an account to backup to Cloud & sync across devices!</div>
@@ -3593,7 +3594,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     boxShadow: '0 2px 8px rgba(14, 165, 233, 0.3)'
                   }}
                 >
-                  🔑 Login / Register
+                  <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><BackpackLoginIcon size={18}/>Login / Register</span>
                 </button>
               </div>
             ) : (
@@ -3610,7 +3611,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 fontSize: '0.8rem',
                 fontWeight: 700
               }}>
-                <span>☁️</span>
+                <CloudSyncIcon size={18}/>
                 <span>Logged in as <strong>{user.displayName || user.email || 'Student'}</strong> • Cloud Auto-Sync Active</span>
               </div>
             )}
@@ -3631,7 +3632,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 }}
               >
                 <div style={{ fontSize: '2rem', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', borderRadius: '14px', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  🔗
+                  <ShareLinkIcon size={24}/>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ color: 'white', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.2rem' }}>{shareCopied ? '✅ Link Copied to Clipboard!' : 'Copy Shareable Link'}</div>
@@ -3654,7 +3655,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                 }}
               >
                 <div style={{ fontSize: '2rem', background: 'rgba(168, 85, 247, 0.15)', color: '#c084fc', borderRadius: '14px', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  📱
+                  <GlobeNetworkIcon size={24}/>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ color: 'white', fontWeight: 800, fontSize: '0.95rem', marginBottom: '0.2rem' }}>Send to WhatsApp & Friends</div>
@@ -3680,7 +3681,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     gap: '0.3rem'
                   }}
                 >
-                  <span style={{ fontSize: '1.4rem' }}>💾</span>
+                  <CloudSyncIcon size={24}/>
                   <span>Save .kone File</span>
                 </button>
 
@@ -3701,7 +3702,7 @@ const KidsIDE: React.FC<KidsIDEProps> = ({ standalone: propStandalone }) => {
                     gap: '0.3rem'
                   }}
                 >
-                  <span style={{ fontSize: '1.4rem' }}>📥</span>
+                  <RocketLaunchIcon size={24}/>
                   <span>Open Saved File</span>
                 </button>
               </div>

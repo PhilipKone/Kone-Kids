@@ -1,3 +1,4 @@
+import { SparkleStarIcon, IceCreamChillIcon, StoryBookIcon, GamepadIcon, PuzzlePieceIcon, QuestLockIcon } from './PlayfulIcons';
 import React, { useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGamification } from '../context/GamificationContext';
@@ -652,7 +653,7 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
                   {selectedPathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}
                 </span>
                 <span style={{ color: world.color, fontWeight: 800, fontSize: '0.82rem' }}>
-                  {doneInPathway} / {totalInPathway} missions {doneInPathway === totalInPathway && totalInPathway > 0 ? '🎉 Complete!' : `• ${xpRemaining} XP left`}
+                  {doneInPathway} / {totalInPathway} missions {doneInPathway === totalInPathway && totalInPathway > 0 ? <span style={{display:'inline-flex',alignItems:'center',gap:'4px'}}><SparkleStarIcon size={14}/>Complete!</span> : `• ${xpRemaining} XP left`}
                 </span>
               </div>
               <div style={{ height: '7px', background: theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#f1f5f9', borderRadius: '6px', overflow: 'hidden' }}>
@@ -758,7 +759,7 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
               overflow: 'hidden'
             }}>
               <div style={{ position: 'relative', zIndex: 1 }}>
-                <h3 style={{ margin: 0, fontFamily: '"Baloo 2", cursive', fontSize: '1.5rem' }}>Want to chill? 🍦</h3>
+                <h3 style={{ margin: 0, fontFamily: '"Baloo 2", cursive', fontSize: '1.5rem' }}><span style={{display:'inline-flex',alignItems:'center',gap:'0.45rem'}}>Want to chill? <IceCreamChillIcon size={26} className="playful-svg-icon"/></span></h3>
                 <p style={{ margin: '0.2rem 0 0', opacity: 0.9, fontSize: '0.95rem' }}>
                   Explore the Game Series Library and play over 40+ mini-games!
                 </p>
@@ -779,12 +780,12 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
                   zIndex: 1
                 }}
               >
-                Open Library 📚
+                <span style={{display:'inline-flex',alignItems:'center',gap:'0.45rem'}}>Open Library <StoryBookIcon size={19} className="playful-svg-icon"/></span>
               </button>
               
               {/* Decorative icons */}
-              <div style={{ position: 'absolute', right: '150px', top: '-10px', fontSize: '3rem', opacity: 0.2, transform: 'rotate(15deg)' }}>🎮</div>
-              <div style={{ position: 'absolute', left: '40%', bottom: '-10px', fontSize: '2.5rem', opacity: 0.15, transform: 'rotate(-10deg)' }}>🧩</div>
+              <div style={{ position: 'absolute', right: '150px', top: '-10px', opacity: 0.25, transform: 'rotate(15deg)', pointerEvents: 'none' }}><GamepadIcon size={48}/></div>
+              <div style={{ position: 'absolute', left: '40%', bottom: '-10px', opacity: 0.2, transform: 'rotate(-10deg)', pointerEvents: 'none' }}><PuzzlePieceIcon size={40}/></div>
             </div>
           )}
 
@@ -897,7 +898,7 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
                       } as any}
                     >
                       {!isUnlocked ? (
-                        <span style={{ fontSize: isMobile ? '1.5rem' : '2rem' }}>🔒</span>
+                        <QuestLockIcon size={isMobile ? 22 : 28} />
                       ) : (
                         <>
                           <span style={{ fontSize: isMobile ? '1.8rem' : '2.2rem', fontWeight: 800 }}>{index + 1}</span>

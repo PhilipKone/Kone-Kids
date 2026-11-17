@@ -1,3 +1,4 @@
+import { PartyPopperIcon, RoboticsLabIcon } from './PlayfulIcons';
 import React, { useState } from 'react';
 import { useGamification } from '../context/GamificationContext';
 import { SHOP_ITEMS, ShopItem } from '../data/shopItems';
@@ -304,7 +305,7 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
                       fontWeight: 800,
                       animation: 'fadeIn 0.2s ease-out'
                     }}>
-                      <div style={{ fontSize: '2rem' }}>🎉</div>
+                      <PartyPopperIcon size={34} className="playful-svg-icon" />
                       PURCHASED!
                     </div>
                   )}
@@ -327,7 +328,7 @@ const MascotShop: React.FC<MascotShopProps> = ({ onClose }) => {
           flexShrink: 0
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <span style={{ fontSize: '1.4rem' }}>🤖</span>
+            <RoboticsLabIcon size={24} className="playful-svg-icon" />
             <div>
               <div style={{ fontSize: '0.86rem', fontWeight: 800, color: '#fde047' }}>
                 Build with real circuits, motors &amp; Science Sets!
