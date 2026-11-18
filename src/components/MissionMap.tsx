@@ -65,44 +65,44 @@ interface WorldStyle {
 
 const PATHWAY_WORLDS: Record<Pathway, { dark: WorldStyle; light: WorldStyle }> = {
   'Fundamentals': {
-    dark: { color: '#38bdf8', glow: 'rgba(56, 189, 248, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🧠', pathStyle: 'curve' },
-    light: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.1)', pattern: 'radial-gradient(circle, rgba(14, 165, 233, 0.05) 1px, transparent 0)', icon: '🧠', pathStyle: 'curve' }
+    dark: { color: '#38bdf8', glow: 'rgba(56, 189, 248, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: 'ðŸ§ ', pathStyle: 'curve' },
+    light: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.1)', pattern: 'radial-gradient(circle, rgba(14, 165, 233, 0.05) 1px, transparent 0)', icon: 'ðŸ§ ', pathStyle: 'curve' }
   },
   'Mobile App Dev': {
-    dark: { color: '#22d3ee', glow: 'rgba(34, 211, 238, 0.15)', pattern: 'linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px)', icon: '📱', pathStyle: 'wave' },
-    light: { color: '#0891b2', glow: 'rgba(8, 145, 178, 0.1)', pattern: 'linear-gradient(rgba(8, 145, 178, 0.03) 1px, transparent 1px)', icon: '📱', pathStyle: 'wave' }
+    dark: { color: '#22d3ee', glow: 'rgba(34, 211, 238, 0.15)', pattern: 'linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px)', icon: 'ðŸ“±', pathStyle: 'wave' },
+    light: { color: '#0891b2', glow: 'rgba(8, 145, 178, 0.1)', pattern: 'linear-gradient(rgba(8, 145, 178, 0.03) 1px, transparent 1px)', icon: 'ðŸ“±', pathStyle: 'wave' }
   },
   'Desktop App Dev': {
-    dark: { color: '#94a3b8', glow: 'rgba(148, 163, 184, 0.15)', pattern: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px)', icon: '💻', pathStyle: 'dots' },
-    light: { color: '#475569', glow: 'rgba(71, 85, 105, 0.05)', pattern: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(71, 85, 105, 0.02) 10px, rgba(71, 85, 105, 0.02) 20px)', icon: '💻', pathStyle: 'dots' }
+    dark: { color: '#94a3b8', glow: 'rgba(148, 163, 184, 0.15)', pattern: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px)', icon: 'ðŸ’»', pathStyle: 'dots' },
+    light: { color: '#475569', glow: 'rgba(71, 85, 105, 0.05)', pattern: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(71, 85, 105, 0.02) 10px, rgba(71, 85, 105, 0.02) 20px)', icon: 'ðŸ’»', pathStyle: 'dots' }
   },
   'Web App Dev': {
-    dark: { color: '#6366f1', glow: 'rgba(99, 102, 241, 0.15)', pattern: 'radial-gradient(circle at 2px 2px, rgba(99, 102, 241, 0.1) 1px, transparent 0)', icon: '🌐', pathStyle: 'dots' },
-    light: { color: '#4338ca', glow: 'rgba(67, 56, 202, 0.08)', pattern: 'radial-gradient(circle at 2px 2px, rgba(67, 56, 202, 0.03) 1px, transparent 0)', icon: '🌐', pathStyle: 'dots' }
+    dark: { color: '#6366f1', glow: 'rgba(99, 102, 241, 0.15)', pattern: 'radial-gradient(circle at 2px 2px, rgba(99, 102, 241, 0.1) 1px, transparent 0)', icon: 'ðŸŒ', pathStyle: 'dots' },
+    light: { color: '#4338ca', glow: 'rgba(67, 56, 202, 0.08)', pattern: 'radial-gradient(circle at 2px 2px, rgba(67, 56, 202, 0.03) 1px, transparent 0)', icon: 'ðŸŒ', pathStyle: 'dots' }
   },
   'Game Dev': {
-    dark: { color: '#f472b6', glow: 'rgba(244, 114, 182, 0.15)', pattern: 'conic-gradient(from 0deg, rgba(244, 114, 182, 0.05) 0deg 90deg, transparent 90deg 360deg)', icon: '🎮', pathStyle: 'pixel' },
-    light: { color: '#db2777', glow: 'rgba(219, 39, 119, 0.08)', pattern: 'conic-gradient(from 0deg, rgba(219, 39, 119, 0.03) 0deg 90deg, transparent 90deg 360deg)', icon: '🎮', pathStyle: 'pixel' }
+    dark: { color: '#f472b6', glow: 'rgba(244, 114, 182, 0.15)', pattern: 'conic-gradient(from 0deg, rgba(244, 114, 182, 0.05) 0deg 90deg, transparent 90deg 360deg)', icon: 'ðŸŽ®', pathStyle: 'pixel' },
+    light: { color: '#db2777', glow: 'rgba(219, 39, 119, 0.08)', pattern: 'conic-gradient(from 0deg, rgba(219, 39, 119, 0.03) 0deg 90deg, transparent 90deg 360deg)', icon: 'ðŸŽ®', pathStyle: 'pixel' }
   },
   'Data Science (AI 4 Kids)': {
-    dark: { color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.15)', pattern: 'linear-gradient(90deg, rgba(251, 191, 36, 0.05) 1px, transparent 1px)', icon: '📊', pathStyle: 'dots' },
-    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'linear-gradient(90deg, rgba(217, 119, 6, 0.03) 1px, transparent 1px)', icon: '📊', pathStyle: 'dots' }
+    dark: { color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.15)', pattern: 'linear-gradient(90deg, rgba(251, 191, 36, 0.05) 1px, transparent 1px)', icon: 'ðŸ“Š', pathStyle: 'dots' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'linear-gradient(90deg, rgba(217, 119, 6, 0.03) 1px, transparent 1px)', icon: 'ðŸ“Š', pathStyle: 'dots' }
   },
   'ML (AI 4 Kids)': {
-    dark: { color: '#10b981', glow: 'rgba(16, 185, 129, 0.15)', pattern: 'radial-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px)', icon: '🤖', pathStyle: 'curve' },
-    light: { color: '#059669', glow: 'rgba(5, 150, 105, 0.08)', pattern: 'radial-gradient(rgba(5, 150, 105, 0.04) 1px, transparent 1px)', icon: '🤖', pathStyle: 'curve' }
+    dark: { color: '#10b981', glow: 'rgba(16, 185, 129, 0.15)', pattern: 'radial-gradient(rgba(16, 185, 129, 0.1) 1px, transparent 1px)', icon: 'ðŸ¤–', pathStyle: 'curve' },
+    light: { color: '#059669', glow: 'rgba(5, 150, 105, 0.08)', pattern: 'radial-gradient(rgba(5, 150, 105, 0.04) 1px, transparent 1px)', icon: 'ðŸ¤–', pathStyle: 'curve' }
   },
   'AI (AI 4 Kids)': {
-    dark: { color: '#a855f7', glow: 'rgba(168, 85, 247, 0.15)', pattern: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.05) 0%, transparent 70%)', icon: '✨', pathStyle: 'curve' },
-    light: { color: '#7e22ce', glow: 'rgba(126, 34, 206, 0.08)', pattern: 'radial-gradient(circle at center, rgba(126, 34, 206, 0.05) 0%, transparent 70%)', icon: '✨', pathStyle: 'curve' }
+    dark: { color: '#a855f7', glow: 'rgba(168, 85, 247, 0.15)', pattern: 'radial-gradient(circle at center, rgba(168, 85, 247, 0.05) 0%, transparent 70%)', icon: 'âœ¨', pathStyle: 'curve' },
+    light: { color: '#7e22ce', glow: 'rgba(126, 34, 206, 0.08)', pattern: 'radial-gradient(circle at center, rgba(126, 34, 206, 0.05) 0%, transparent 70%)', icon: 'âœ¨', pathStyle: 'curve' }
   },
   'Robotics (Robotics 4 Kids)': {
-    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px)', icon: '🦾', pathStyle: 'circuit' },
-    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'linear-gradient(rgba(2, 132, 199, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(2, 132, 199, 0.03) 1px, transparent 1px)', icon: '🦾', pathStyle: 'circuit' }
+    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'linear-gradient(rgba(14, 165, 233, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(14, 165, 233, 0.05) 1px, transparent 1px)', icon: 'ðŸ¦¾', pathStyle: 'circuit' },
+    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'linear-gradient(rgba(2, 132, 199, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(2, 132, 199, 0.03) 1px, transparent 1px)', icon: 'ðŸ¦¾', pathStyle: 'circuit' }
   },
   'Electronics (Robotics 4 Kids)': {
-    dark: { color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'dots' },
-    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(217, 119, 6, 0.03) 1px, transparent 0)', icon: '⚡', pathStyle: 'dots' }
+    dark: { color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: 'âš¡', pathStyle: 'dots' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(217, 119, 6, 0.03) 1px, transparent 0)', icon: 'âš¡', pathStyle: 'dots' }
   }
 };
 
@@ -367,7 +367,7 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
             ) : (
               <button
                 onClick={() => navigate('/class-login')}
-                title="Guest Mode Active • Click to Log In"
+                title="Guest Mode Active â€¢ Click to Log In"
                 style={{
                   background: 'rgba(168, 85, 247, 0.12)',
                   border: '1px solid rgba(168, 85, 247, 0.25)',
@@ -383,7 +383,7 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
                 }}
               >
                 <Sparkles size={13} />
-                {!isMobile ? 'Guest • Login' : 'Login'}
+                {!isMobile ? 'Guest â€¢ Login' : 'Login'}
               </button>
             )}
 
@@ -506,233 +506,214 @@ const MissionMap: React.FC<MissionMapProps> = ({ hub = 'coding', defaultView }) 
       <CoinStoreModal isOpen={showCoinStore} onClose={() => setShowCoinStore(false)} />
 
 
-      {/* Pathway Selector Bar */}
+      {/* Streamlined Pathway & View Controls Wrapper */}
       <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '0.75rem',
-        marginBottom: isMobile ? '1rem' : '1.25rem',
-        flexWrap: isMobile ? 'nowrap' : 'wrap'
+        maxWidth: viewMode === 'syllabus' ? '940px' : '1200px',
+        margin: '0 auto 1.5rem',
+        padding: viewMode === 'syllabus' ? (isMobile ? '0 0.5rem' : '0 1rem') : 0,
+        transition: 'max-width 0.25s ease'
       }}>
-        {/* Pathway Tabs */}
-        <div className="pathway-filters" style={{ 
+        {/* Row 1: Pathway Tabs + Compact Extensions Trigger */}
+        <div style={{
           display: 'flex',
-          gap: isMobile ? '0.4rem' : '0.6rem',
-          padding: 0,
-          margin: 0,
-          flexWrap: isMobile ? 'nowrap' : 'wrap',
-          overflowX: 'auto',
-          maxWidth: '100%',
-          alignItems: 'center'
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '0.6rem',
+          marginBottom: '0.85rem',
+          flexWrap: isMobile ? 'nowrap' : 'wrap'
         }}>
-          {pathways.map(pathway => {
-            const isActive = selectedPathway === pathway;
-            const IconComponent = getPathwayIcon(pathway);
-            return (
-              <button 
-                key={pathway}
+          <div className="pathway-filters" style={{
+            display: 'flex',
+            gap: '0.45rem',
+            padding: 0,
+            margin: 0,
+            flexWrap: isMobile ? 'nowrap' : 'wrap',
+            overflowX: 'auto',
+            maxWidth: '100%',
+            alignItems: 'center'
+          }}>
+            {pathways.map(pathway => {
+              const isActive = selectedPathway === pathway;
+              const IconComponent = getPathwayIcon(pathway);
+              return (
+                <button
+                  key={pathway}
+                  type="button"
+                  className={`pathway-tab ${isActive ? 'pathway-tab-active' : ''}`}
+                  style={{
+                    background: isActive ? world.color : (theme === 'dark' ? 'rgba(30, 41, 59, 0.55)' : '#ffffff'),
+                    color: isActive ? '#ffffff' : (theme === 'dark' ? '#cbd5e1' : '#475569'),
+                    border: `1px solid ${isActive ? world.color : (theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#e2e8f0')}`,
+                    fontSize: isMobile ? '0.75rem' : '0.82rem',
+                    padding: isMobile ? '0.42rem 0.8rem' : '0.48rem 0.95rem',
+                    borderRadius: '11px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    whiteSpace: 'nowrap',
+                    boxShadow: isActive ? `0 3px 10px ${world.color}35` : 'none',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onClick={() => handleSelectPathway(pathway)}
+                >
+                  <IconComponent size={14} />
+                  <span>{pathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}</span>
+                </button>
+              );
+            })}
+
+            {(hub === 'coding' || hub === 'robotics') && (
+              <button
                 type="button"
-                className={`pathway-tab ${isActive ? 'pathway-tab-active' : ''}`}
                 style={{
-                  background: isActive ? world.color : (theme === 'dark' ? 'rgba(30, 41, 59, 0.6)' : '#ffffff'),
-                  color: isActive ? '#ffffff' : (theme === 'dark' ? '#cbd5e1' : '#475569'),
-                  border: isActive ? `1.5px solid ${world.color}` : `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#e2e8f0'}`,
-                  fontSize: isMobile ? '0.75rem' : '0.85rem',
-                  padding: isMobile ? '0.45rem 0.85rem' : '0.55rem 1.15rem',
-                  borderRadius: '12px',
+                  background: theme === 'dark' ? 'rgba(168, 85, 247, 0.1)' : 'rgba(168, 85, 247, 0.06)',
+                  border: '1px solid rgba(168, 85, 247, 0.28)',
+                  color: '#c084fc',
+                  fontSize: isMobile ? '0.75rem' : '0.8rem',
+                  padding: isMobile ? '0.42rem 0.75rem' : '0.48rem 0.85rem',
+                  borderRadius: '11px',
                   fontWeight: 800,
                   cursor: 'pointer',
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '0.45rem',
+                  gap: '0.35rem',
                   whiteSpace: 'nowrap',
-                  boxShadow: isActive ? `0 4px 14px ${world.color}40` : '0 2px 6px rgba(0,0,0,0.03)',
-                  transition: 'all 0.15s ease'
+                  flexShrink: 0
                 }}
-                onClick={() => handleSelectPathway(pathway)}
+                onClick={() => { setShowExtensions(true); sounds.playClick(); }}
+                title="Connect Micro:bit, Arduino, VEX and hardware extensions"
               >
-                <IconComponent size={isMobile ? 14 : 16} />
-                <span>{pathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}</span>
+                <Zap size={13} />
+                <span>Extensions</span>
               </button>
-            );
-          })}
-
-          {/* On mobile: Embed STEM Extensions into the scrollable list */}
-          {isMobile && (hub === 'coding' || hub === 'robotics') && (
-            <button
-              type="button"
-              style={{
-                background: theme === 'dark' ? 'rgba(168, 85, 247, 0.12)' : 'rgba(168, 85, 247, 0.08)',
-                border: '1.5px dashed rgba(168, 85, 247, 0.4)',
-                color: '#a855f7',
-                fontSize: '0.75rem',
-                padding: '0.45rem 0.85rem',
-                borderRadius: '12px',
-                fontWeight: 800,
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                whiteSpace: 'nowrap',
-                flexShrink: 0
-              }}
-              onClick={() => { setShowExtensions(true); sounds.playClick(); }}
-              title="Connect Micro:bit, Arduino, VEX and hardware extensions"
-            >
-              <Zap size={14} />
-              <span>STEM Extensions</span>
-            </button>
-          )}
+            )}
+          </div>
         </div>
 
-        {/* Desktop STEM Hardware Extensions Action Button */}
-        {!isMobile && (hub === 'coding' || hub === 'robotics') && (
-          <button
-            type="button"
-            style={{
-              background: theme === 'dark' ? 'rgba(168, 85, 247, 0.12)' : 'rgba(168, 85, 247, 0.08)',
-              border: '1.5px dashed rgba(168, 85, 247, 0.4)',
-              color: '#a855f7',
-              fontSize: '0.82rem',
-              padding: '0.55rem 1rem',
-              borderRadius: '12px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              whiteSpace: 'nowrap',
-              marginLeft: 'auto'
-            }}
-            onClick={() => { setShowExtensions(true); sounds.playClick(); }}
-            title="Connect Micro:bit, Arduino, VEX and hardware extensions"
-          >
-            <Zap size={14} />
-            <span>STEM Extensions</span>
-          </button>
+        {showExtensions && (
+          <STEMExtensionsModal
+            isOpen={showExtensions}
+            onClose={() => setShowExtensions(false)}
+          />
         )}
-      </div>
 
-      {showExtensions && (
-        <STEMExtensionsModal
-          isOpen={showExtensions}
-          onClose={() => setShowExtensions(false)}
-        />
-      )}
+        {/* Row 2: Slim Progress & Mode Switcher Strip */}
+        {(() => {
+          const totalInPathway = filteredMissions.length;
+          const doneInPathway = filteredMissions.filter(m => completedMissions.includes(m.id)).length;
+          const xpRemaining = filteredMissions
+            .filter(m => !completedMissions.includes(m.id))
+            .reduce((sum, m) => sum + m.xpReward, 0);
+          const pct = totalInPathway > 0 ? (doneInPathway / totalInPathway) * 100 : 0;
+          const IconComponent = getPathwayIcon(selectedPathway);
 
-      {/* Unified Pathway Progress & Segmented View Switcher Banner */}
-      {(() => {
-        const totalInPathway = filteredMissions.length;
-        const doneInPathway = filteredMissions.filter(m => completedMissions.includes(m.id)).length;
-        const xpRemaining = filteredMissions
-          .filter(m => !completedMissions.includes(m.id))
-          .reduce((sum, m) => sum + m.xpReward, 0);
-        const pct = totalInPathway > 0 ? (doneInPathway / totalInPathway) * 100 : 0;
-        const IconComponent = getPathwayIcon(selectedPathway);
-
-        return (
-          <div style={{
-            background: theme === 'dark' ? 'rgba(30, 41, 59, 0.7)' : '#ffffff',
-            border: `1.5px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#e2e8f0'}`,
-            borderRadius: '18px',
-            padding: isMobile ? '0.85rem 1rem' : '0.85rem 1.4rem',
-            marginBottom: isMobile ? '1.5rem' : '2rem',
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: isMobile ? 'stretch' : 'center',
-            justifyContent: 'space-between',
-            gap: isMobile ? '0.85rem' : '1.5rem',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.04)'
-          }}>
-            {/* Left: Pathway Title, Progress Bar, XP */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.45rem', fontSize: '0.85rem' }}>
-                <span style={{ fontWeight: 800, color: 'var(--kids-text)', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <IconComponent size={16} style={{ color: world.color }} />
+          return (
+            <div style={{
+              background: theme === 'dark' ? 'rgba(22, 30, 46, 0.65)' : '#ffffff',
+              border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#e2e8f0'}`,
+              borderRadius: '14px',
+              padding: isMobile ? '0.65rem 0.85rem' : '0.6rem 1rem',
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'stretch' : 'center',
+              justifyContent: 'space-between',
+              gap: isMobile ? '0.65rem' : '1.25rem'
+            }}>
+              {/* Compact Pathway Progress */}
+              <div style={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                <span style={{
+                  fontWeight: 800,
+                  fontSize: '0.82rem',
+                  color: 'var(--kids-text)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  whiteSpace: 'nowrap'
+                }}>
+                  <IconComponent size={14} style={{ color: world.color }} />
                   {selectedPathway.replace(' (Robotics 4 Kids)', '').replace(' (AI 4 Kids)', '')}
                 </span>
-                <span style={{ color: world.color, fontWeight: 800, fontSize: '0.82rem' }}>
-                  {doneInPathway} / {totalInPathway} missions {doneInPathway === totalInPathway && totalInPathway > 0 ? <span style={{display:'inline-flex',alignItems:'center',gap:'4px'}}><SparkleStarIcon size={14}/>Complete!</span> : `• ${xpRemaining} XP left`}
+
+                <div style={{ flex: 1, height: '6px', background: theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#f1f5f9', borderRadius: '6px', overflow: 'hidden', minWidth: '60px' }}>
+                  <div style={{
+                    width: `${pct}%`,
+                    height: '100%',
+                    background: world.color,
+                    borderRadius: '6px',
+                    transition: 'width 0.5s ease-out'
+                  }} />
+                </div>
+
+                <span style={{ color: 'var(--kids-text-muted)', fontWeight: 700, fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
+                  {doneInPathway}/{totalInPathway}
+                  {!isMobile && (doneInPathway === totalInPathway && totalInPathway > 0 ? ' • Complete' : ` • ${xpRemaining} XP left`)}
                 </span>
               </div>
-              <div style={{ height: '7px', background: theme === 'dark' ? 'rgba(255,255,255,0.08)' : '#f1f5f9', borderRadius: '6px', overflow: 'hidden' }}>
-                <div style={{
-                  width: `${pct}%`,
-                  height: '100%',
-                  background: `linear-gradient(90deg, ${world.color}, ${world.color}cc)`,
-                  boxShadow: `0 0 8px ${world.color}88`,
-                  borderRadius: '6px',
-                  transition: 'width 0.6s ease-out'
-                }} />
+
+              {/* Segmented View Switcher */}
+              <div style={{
+                display: 'inline-flex',
+                background: theme === 'dark' ? 'rgba(15, 23, 42, 0.65)' : '#f1f5f9',
+                padding: '3px',
+                borderRadius: '10px',
+                border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.06)' : '#e2e8f0'}`,
+                flexShrink: 0,
+                width: isMobile ? '100%' : 'auto'
+              }}>
+                <button
+                  type="button"
+                  onClick={() => handleToggleView('map')}
+                  style={{
+                    flex: isMobile ? 1 : 'initial',
+                    background: viewMode === 'map' ? world.color : 'transparent',
+                    color: viewMode === 'map' ? '#ffffff' : (theme === 'dark' ? '#94a3b8' : '#64748b'),
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.36rem 0.85rem',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.35rem',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <MapIcon size={13} />
+                  <span>Adventure Map</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleToggleView('syllabus')}
+                  style={{
+                    flex: isMobile ? 1 : 'initial',
+                    background: viewMode === 'syllabus' ? world.color : 'transparent',
+                    color: viewMode === 'syllabus' ? '#ffffff' : (theme === 'dark' ? '#94a3b8' : '#64748b'),
+                    border: 'none',
+                    borderRadius: '8px',
+                    padding: '0.36rem 0.85rem',
+                    fontSize: '0.78rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.35rem',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <GraduationCap size={13} />
+                  <span>Syllabus & Labs</span>
+                </button>
               </div>
             </div>
-
-            {/* Right: Sleek Segmented Switcher (Map vs Syllabus) */}
-            <div style={{
-              display: 'inline-flex',
-              background: theme === 'dark' ? 'rgba(15, 23, 42, 0.7)' : '#f1f5f9',
-              padding: '3px',
-              borderRadius: '12px',
-              border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.06)' : '#e2e8f0'}`,
-              flexShrink: 0,
-              alignSelf: isMobile ? 'center' : 'auto',
-              width: isMobile ? '100%' : 'auto'
-            }}>
-              <button
-                type="button"
-                onClick={() => handleToggleView('map')}
-                style={{
-                  flex: isMobile ? 1 : 'initial',
-                  background: viewMode === 'map' ? world.color : 'transparent',
-                  color: viewMode === 'map' ? '#ffffff' : (theme === 'dark' ? '#94a3b8' : '#64748b'),
-                  border: 'none',
-                  borderRadius: '9px',
-                  padding: isMobile ? '0.4rem 0.6rem' : '0.42rem 1.1rem',
-                  fontSize: isMobile ? '0.78rem' : '0.82rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  boxShadow: viewMode === 'map' ? `0 2px 8px ${world.color}50` : 'none',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <MapIcon size={14} />
-                <span>Adventure Map</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleToggleView('syllabus')}
-                style={{
-                  flex: isMobile ? 1 : 'initial',
-                  background: viewMode === 'syllabus' ? world.color : 'transparent',
-                  color: viewMode === 'syllabus' ? '#ffffff' : (theme === 'dark' ? '#94a3b8' : '#64748b'),
-                  border: 'none',
-                  borderRadius: '9px',
-                  padding: isMobile ? '0.4rem 0.6rem' : '0.42rem 1.1rem',
-                  fontSize: isMobile ? '0.78rem' : '0.82rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.4rem',
-                  boxShadow: viewMode === 'syllabus' ? `0 2px 8px ${world.color}50` : 'none',
-                  transition: 'all 0.15s ease'
-                }}
-              >
-                <GraduationCap size={14} />
-                <span>Course Syllabus & Labs</span>
-              </button>
-            </div>
-          </div>
-        );
-      })()}
-
+          );
+        })()}
+      </div>
       {/* Main View: Course Syllabus vs Adventure Map */}
       {viewMode === 'syllabus' && activeCourse ? (
         <KidsCourseSyllabus
