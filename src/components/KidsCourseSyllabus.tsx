@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { KidsCourse, KidsModule, KidsLesson } from '../data/kidsCourses';
-import { 
-  BookOpen, 
-  Clock, 
-  Calendar, 
-  Award, 
-  Code, 
-  Sparkles, 
-  Play, 
-  CheckCircle, 
-  ChevronDown, 
-  ChevronUp, 
-  ExternalLink,
+import { KidsCourse, KidsLesson } from '../data/kidsCourses';
+import {
+  Clock,
+  Award,
+  Code,
+  Play,
+  CheckCircle2,
+  ChevronDown,
   MessageCircle,
   Mail,
-  ShieldCheck,
-  Zap,
-  Layers,
-  ArrowRight
+  Sparkles,
+  BookOpen
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { sounds } from '../utils/sounds';
+import {
+  CodingLabIcon,
+  RoboticsLabIcon,
+  AIStudioIcon,
+  ScrollCertIcon,
+  CubeBlockIcon
+} from './PlayfulIcons';
 import EnrollmentModal from './EnrollmentModal';
 import CertificateModal from './CertificateModal';
 
@@ -31,19 +31,26 @@ interface KidsCourseSyllabusProps {
   onBackToMap?: () => void;
 }
 
-const KidsCourseSyllabus: React.FC<KidsCourseSyllabusProps> = ({ 
-  course, 
-  hub = 'coding',
-  onBackToMap 
+const KidsCourseSyllabus: React.FC<KidsCourseSyllabusProps> = ({
+  course,
+  hub = 'coding'
 }) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
+
   const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({
     [course.modules[0]?.id || '']: true
   });
   const [showEnrollModal, setShowEnrollModal] = useState(false);
   const [showCertModal, setShowCertModal] = useState(false);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const toggleModule = (moduleId: string) => {
     sounds.playClick();
@@ -62,625 +69,643 @@ const KidsCourseSyllabus: React.FC<KidsCourseSyllabusProps> = ({
     }
   };
 
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' ? window.innerWidth < 768 : false);
+  const renderHubIcon = (size: number) => {
+    if (hub === 'robotics') return <RoboticsLabIcon size={size} />;
+    if (hub === 'ai') return <AIStudioIcon size={size} />;
+    return <CodingLabIcon size={size} />;
+  };
 
-  React.useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const cardSurface = isDark ? 'rgba(22, 30, 46, 0.72)' : '#ffffff';
+  const subtleBorder = isDark ? 'rgba(255, 255, 255, 0.08)' : '#e2e8f0';
+  const mutedBg = isDark ? 'rgba(15, 23, 42, 0.45)' : '#f8fafc';
+
+  const metaItems = [
+    { label: 'Age Group', value: course.ageGroup },
+    { label: 'Duration', value: course.duration },
+    { label: 'Weekly Pace', value: course.weeklyCommitment },
+    { label: 'Credential', value: course.certificateTitle }
+  ];
+
+  const allExpanded = course.modules.length > 0 && course.modules.every(m => expandedModules[m.id]);
 
   return (
-    <div className="kids-course-syllabus" style={{
-      maxWidth: '1100px',
-      margin: '0 auto',
-      padding: isMobile ? '0.5rem 0.5rem 6rem' : '0.75rem 1rem 8rem',
-      fontFamily: '"Nunito", sans-serif',
-      color: 'var(--kids-text)'
-    }}>
+    <div
+      className="kids-course-syllabus"
+      style={{
+        maxWidth: '940px',
+        margin: '0 auto',
+        padding: isMobile ? '0.75rem 0.5rem 5rem' : '1.25rem 1rem 6.5rem',
+        fontFamily: '"Nunito", sans-serif',
+        color: 'var(--kids-text)'
+      }}
+    >
+      {/* 1. Spacious Course Header */}
+      <header
+        style={{
+          background: cardSurface,
+          border: `1px solid ${subtleBorder}`,
+          borderRadius: '24px',
+          padding: isMobile ? '1.5rem' : '2.25rem 2.5rem',
+          marginBottom: '2.5rem',
+          boxShadow: isDark ? '0 16px 40px rgba(0,0,0,0.28)' : '0 10px 30px rgba(15, 23, 42, 0.05)'
+        }}
+      >
+        {/* Eyebrow Line */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.65rem',
+            flexWrap: 'wrap',
+            marginBottom: '1rem',
+            fontSize: '0.78rem',
+            fontWeight: 800,
+            letterSpacing: '0.04em',
+            color: 'var(--kids-text-muted)'
+          }}
+        >
+          <span style={{ color: course.color }}>{course.code}</span>
+          <span>•</span>
+          <span style={{ textTransform: 'uppercase' }}>{course.level}</span>
+          <span>•</span>
+          <span>Official STEM Curriculum</span>
+        </div>
 
-      {/* Hero Header Card */}
-      <div style={{
-        background: isDark 
-          ? 'linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98))' 
-          : 'linear-gradient(145deg, #ffffff, #f8fafc)',
-        border: `2px solid ${course.color}40`,
-        borderRadius: '24px',
-        padding: isMobile ? '1.5rem' : '2.5rem',
-        boxShadow: `0 20px 40px ${course.color}15`,
-        position: 'relative',
-        overflow: 'hidden',
-        marginBottom: '2rem'
-      }}>
-        {/* Glow Accent */}
-        <div style={{
-          position: 'absolute',
-          top: '-50px',
-          right: '-50px',
-          width: '200px',
-          height: '200px',
-          background: course.color,
-          filter: 'blur(90px)',
-          opacity: 0.25,
-          borderRadius: '50%',
-          pointerEvents: 'none'
-        }} />
-
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '0.75rem' }}>
-            <span style={{
-              background: `${course.color}20`,
-              color: course.color,
-              padding: '0.3rem 0.8rem',
-              borderRadius: '10px',
-              fontWeight: 800,
-              fontSize: '0.75rem',
-              letterSpacing: '0.5px'
-            }}>
-              {course.code}
-            </span>
-            <span style={{
-              background: 'rgba(34, 197, 94, 0.15)',
-              color: '#22c55e',
-              padding: '0.3rem 0.8rem',
-              borderRadius: '10px',
-              fontWeight: 800,
-              fontSize: '0.75rem'
-            }}>
-              🎓 OFFICIAL KONE KIDS COURSE
-            </span>
-            <span style={{
-              background: 'rgba(168, 85, 247, 0.15)',
-              color: '#c084fc',
-              padding: '0.3rem 0.8rem',
-              borderRadius: '10px',
-              fontWeight: 800,
-              fontSize: '0.75rem'
-            }}>
-              {course.level.toUpperCase()}
-            </span>
+        {/* Title Row */}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', marginBottom: '0.85rem' }}>
+          <div
+            style={{
+              width: isMobile ? '48px' : '56px',
+              height: isMobile ? '48px' : '56px',
+              borderRadius: '16px',
+              background: `${course.color}15`,
+              border: `1px solid ${course.color}30`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexShrink: 0,
+              marginTop: '2px'
+            }}
+          >
+            {renderHubIcon(isMobile ? 28 : 34)}
           </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem' }}>
-            <span style={{ fontSize: isMobile ? '2.2rem' : '3rem' }}>{course.icon}</span>
-            <h1 style={{
-              margin: 0,
-              fontFamily: '"Baloo 2", cursive',
-              fontSize: isMobile ? '1.8rem' : '2.6rem',
-              lineHeight: 1.15,
-              color: 'var(--kids-text)'
-            }}>
+          <div>
+            <h1
+              style={{
+                margin: 0,
+                fontFamily: '"Baloo 2", cursive',
+                fontSize: isMobile ? '1.75rem' : '2.35rem',
+                lineHeight: 1.15,
+                color: 'var(--kids-text)'
+              }}
+            >
               {course.title}
             </h1>
+            <p
+              style={{
+                margin: '0.5rem 0 0',
+                fontSize: isMobile ? '0.98rem' : '1.08rem',
+                lineHeight: 1.55,
+                color: 'var(--kids-text-muted)',
+                maxWidth: '720px'
+              }}
+            >
+              {course.tagline}
+            </p>
           </div>
+        </div>
 
-          <p style={{
-            fontSize: isMobile ? '1rem' : '1.15rem',
-            color: 'var(--kids-text-muted)',
-            marginTop: '0.5rem',
-            marginBottom: '1.5rem',
-            maxWidth: '800px',
-            lineHeight: 1.5
-          }}>
-            {course.tagline}
-          </p>
-
-          {/* Quick Metrics Bar */}
-          <div style={{
+        {/* Clean Inline Metadata Strip (replaces 4 heavy boxes) */}
+        <div
+          style={{
             display: 'grid',
             gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
-            gap: '1rem',
-            marginBottom: '1.75rem',
-            padding: '1rem',
-            background: isDark ? 'rgba(15, 23, 42, 0.6)' : 'rgba(241, 245, 249, 0.7)',
-            borderRadius: '16px',
-            border: '1px solid var(--kids-border)'
-          }}>
-            <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', fontWeight: 700 }}>AGE GROUP</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: course.color, marginTop: '0.15rem' }}>
-                👶 {course.ageGroup}
+            gap: isMobile ? '1rem' : '0',
+            padding: '1.15rem 0',
+            margin: '1.5rem 0',
+            borderTop: `1px solid ${subtleBorder}`,
+            borderBottom: `1px solid ${subtleBorder}`
+          }}
+        >
+          {metaItems.map((item, idx) => (
+            <div
+              key={item.label}
+              style={{
+                paddingLeft: !isMobile && idx > 0 ? '1.25rem' : 0,
+                paddingRight: !isMobile && idx < metaItems.length - 1 ? '1rem' : 0,
+                borderLeft: !isMobile && idx > 0 ? `1px solid ${subtleBorder}` : 'none'
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 800,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  color: 'var(--kids-text-muted)',
+                  marginBottom: '0.2rem'
+                }}
+              >
+                {item.label}
+              </div>
+              <div
+                style={{
+                  fontSize: '0.92rem',
+                  fontWeight: 800,
+                  color: 'var(--kids-text)',
+                  lineHeight: 1.35
+                }}
+              >
+                {item.value}
               </div>
             </div>
-            <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', fontWeight: 700 }}>COURSE DURATION</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--kids-text)', marginTop: '0.15rem' }}>
-                ⏱️ {course.duration.split('•')[0].trim()}
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', fontWeight: 700 }}>WEEKLY COMMITMENT</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--kids-text)', marginTop: '0.15rem' }}>
-                📅 {course.weeklyCommitment}
-              </div>
-            </div>
-            <div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)', fontWeight: 700 }}>CREDENTIAL</div>
-              <div style={{ fontSize: '1rem', fontWeight: 800, color: '#f59e0b', marginTop: '0.15rem' }}>
-                📜 Accredited Diploma
-              </div>
-            </div>
-          </div>
+          ))}
+        </div>
 
-          {/* Call-to-Action Buttons */}
-          <div style={{
+        {/* Focused Action Bar */}
+        <div
+          style={{
             display: 'flex',
-            gap: '0.75rem',
-            flexDirection: isMobile ? 'column' : 'row',
-            alignItems: 'stretch'
-          }}>
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.85rem'
+          }}
+        >
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', width: isMobile ? '100%' : 'auto' }}>
             <button
               onClick={() => { sounds.playClick(); setShowEnrollModal(true); }}
               style={{
-                width: isMobile ? '100%' : 'auto',
+                flex: isMobile ? 1 : 'initial',
                 justifyContent: 'center',
-                background: `linear-gradient(135deg, ${course.color}, ${course.accentColor})`,
-                color: 'white',
+                background: course.color,
+                color: '#ffffff',
                 border: 'none',
-                padding: isMobile ? '0.85rem 1.25rem' : '0.85rem 1.8rem',
-                borderRadius: '14px',
-                fontWeight: 900,
-                fontSize: isMobile ? '0.95rem' : '1rem',
+                padding: '0.78rem 1.45rem',
+                borderRadius: '12px',
+                fontWeight: 800,
+                fontSize: '0.94rem',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.6rem',
-                boxShadow: `0 8px 20px ${course.color}40`,
-                transition: 'transform 0.2s ease'
+                gap: '0.5rem',
+                boxShadow: `0 6px 18px ${course.color}35`
               }}
             >
-              <Award size={18} />
-              Enrol Student / Get Quote
+              <Award size={17} />
+              Enrol Student
             </button>
 
             <button
               onClick={() => { sounds.playClick(); navigate('/playground'); }}
               style={{
-                width: isMobile ? '100%' : 'auto',
+                flex: isMobile ? 1 : 'initial',
                 justifyContent: 'center',
-                background: isDark ? 'rgba(30, 41, 59, 0.8)' : '#f1f5f9',
+                background: mutedBg,
                 color: 'var(--kids-text)',
-                border: '1px solid var(--kids-border)',
-                padding: isMobile ? '0.85rem 1.25rem' : '0.85rem 1.5rem',
-                borderRadius: '14px',
+                border: `1px solid ${subtleBorder}`,
+                padding: '0.78rem 1.3rem',
+                borderRadius: '12px',
                 fontWeight: 800,
-                fontSize: isMobile ? '0.95rem' : '1rem',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.6rem',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              <Code size={18} style={{ color: course.color }} />
-              Open Kids IDE Sandbox
-            </button>
-
-            <button
-              onClick={() => { sounds.playClick(); setShowCertModal(true); }}
-              style={{
-                width: isMobile ? '100%' : 'auto',
-                justifyContent: 'center',
-                background: 'transparent',
-                color: '#f59e0b',
-                border: '1.5px dashed rgba(245, 158, 11, 0.5)',
-                padding: isMobile ? '0.8rem 1rem' : '0.85rem 1.3rem',
-                borderRadius: '14px',
-                fontWeight: 800,
-                fontSize: isMobile ? '0.9rem' : '0.95rem',
+                fontSize: '0.92rem',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem'
               }}
             >
-              <Award size={16} />
-              Diploma Preview
+              <Code size={17} style={{ color: course.color }} />
+              Open IDE Sandbox
             </button>
           </div>
-        </div>
-      </div>
 
-      {/* Grid: Overview & Learning Outcomes */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr',
-        gap: '1.5rem',
-        marginBottom: '2.5rem'
-      }}>
-        {/* Overview Card */}
-        <div style={{
-          background: 'var(--kids-surface)',
-          border: '1px solid var(--kids-border)',
-          borderRadius: '20px',
-          padding: '1.75rem',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.04)'
-        }}>
-          <h3 style={{
-            margin: '0 0 1rem 0',
-            fontFamily: '"Baloo 2", cursive',
-            fontSize: '1.35rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
-            <BookOpen size={20} style={{ color: course.color }} />
-            Course Overview
-          </h3>
-          <p style={{
-            fontSize: '0.95rem',
-            lineHeight: 1.6,
-            color: 'var(--kids-text-muted)',
-            marginBottom: '1.25rem'
-          }}>
+          <button
+            onClick={() => { sounds.playClick(); setShowCertModal(true); }}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#f59e0b',
+              padding: '0.45rem 0.25rem',
+              fontWeight: 800,
+              fontSize: '0.88rem',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem'
+            }}
+          >
+            <ScrollCertIcon size={18} />
+            Preview Sample Diploma
+          </button>
+        </div>
+      </header>
+
+      {/* 2. Course Overview & Outcomes (Clean Editorial Split) */}
+      <section
+        style={{
+          display: 'grid',
+          gridTemplateColumns: isMobile ? '1fr' : '1.15fr 1fr',
+          gap: '2rem',
+          marginBottom: '3rem'
+        }}
+      >
+        {/* Left: Overview & Skills */}
+        <div
+          style={{
+            background: cardSurface,
+            border: `1px solid ${subtleBorder}`,
+            borderRadius: '20px',
+            padding: isMobile ? '1.4rem' : '1.75rem'
+          }}
+        >
+          <h2
+            style={{
+              margin: '0 0 0.85rem',
+              fontFamily: '"Baloo 2", cursive',
+              fontSize: '1.3rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}
+          >
+            <BookOpen size={19} style={{ color: course.color }} />
+            About This Track
+          </h2>
+
+          <p
+            style={{
+              fontSize: '0.95rem',
+              lineHeight: 1.65,
+              color: 'var(--kids-text-muted)',
+              margin: '0 0 1.25rem'
+            }}
+          >
             {course.overview}
           </p>
 
-          <div style={{
-            background: isDark ? 'rgba(15, 23, 42, 0.5)' : '#f8fafc',
-            border: '1px solid var(--kids-border)',
-            borderRadius: '12px',
-            padding: '0.9rem',
-            fontSize: '0.85rem',
-            color: 'var(--kids-text-muted)'
-          }}>
-            <strong style={{ color: 'var(--kids-text)' }}>📌 Prerequisites: </strong>
+          <p
+            style={{
+              fontSize: '0.86rem',
+              lineHeight: 1.5,
+              color: 'var(--kids-text-muted)',
+              paddingTop: '0.9rem',
+              borderTop: `1px solid ${subtleBorder}`,
+              margin: '0 0 1.25rem'
+            }}
+          >
+            <strong style={{ color: 'var(--kids-text)' }}>Prerequisites: </strong>
             {course.prerequisites}
-          </div>
+          </p>
 
-          {/* Skills Chips */}
-          <div style={{ marginTop: '1.25rem' }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--kids-text-muted)', marginBottom: '0.5rem' }}>
-              KEY SKILLS DEVELOPED
+          <div>
+            <div
+              style={{
+                fontSize: '0.74rem',
+                fontWeight: 800,
+                letterSpacing: '0.05em',
+                color: 'var(--kids-text-muted)',
+                textTransform: 'uppercase',
+                marginBottom: '0.6rem'
+              }}
+            >
+              Core Skills Developed
             </div>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap' }}>
               {course.skills.map((skill, idx) => (
                 <span
                   key={idx}
                   style={{
-                    background: `${course.color}15`,
+                    background: `${course.color}12`,
                     color: course.color,
-                    padding: '0.3rem 0.75rem',
+                    padding: '0.32rem 0.72rem',
                     borderRadius: '8px',
                     fontSize: '0.8rem',
                     fontWeight: 700
                   }}
                 >
-                  ✓ {skill}
+                  {skill}
                 </span>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Learning Outcomes Card */}
-        <div style={{
-          background: 'var(--kids-surface)',
-          border: '1px solid var(--kids-border)',
-          borderRadius: '20px',
-          padding: '1.75rem',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.04)'
-        }}>
-          <h3 style={{
-            margin: '0 0 1rem 0',
-            fontFamily: '"Baloo 2", cursive',
-            fontSize: '1.35rem',
+        {/* Right: Learning Outcomes & Capstone */}
+        <div
+          style={{
+            background: cardSurface,
+            border: `1px solid ${subtleBorder}`,
+            borderRadius: '20px',
+            padding: isMobile ? '1.4rem' : '1.75rem',
             display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
-            <Sparkles size={20} style={{ color: '#f59e0b' }} />
-            What Students Will Achieve
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            {course.learningOutcomes.map((outcome, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <CheckCircle size={18} style={{ color: '#22c55e', flexShrink: 0, marginTop: '2px' }} />
-                <span style={{ fontSize: '0.9rem', lineHeight: 1.45, color: 'var(--kids-text)' }}>
-                  {outcome}
-                </span>
-              </div>
-            ))}
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            gap: '1.5rem'
+          }}
+        >
+          <div>
+            <h2
+              style={{
+                margin: '0 0 1rem',
+                fontFamily: '"Baloo 2", cursive',
+                fontSize: '1.3rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <Sparkles size={19} style={{ color: '#f59e0b' }} />
+              What Students Master
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+              {course.learningOutcomes.map((outcome, idx) => (
+                <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
+                  <CheckCircle2 size={17} style={{ color: '#10b981', flexShrink: 0, marginTop: '3px' }} />
+                  <span style={{ fontSize: '0.92rem', lineHeight: 1.48, color: 'var(--kids-text)' }}>
+                    {outcome}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Capstone Box */}
-          <div style={{
-            marginTop: '1.5rem',
-            background: `linear-gradient(135deg, ${course.color}15, ${course.color}05)`,
-            border: `1.5px solid ${course.color}40`,
-            borderRadius: '14px',
-            padding: '1.1rem'
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginBottom: '0.4rem'
-            }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: course.color }}>
-                {course.capstoneProject.previewBadge}
-              </span>
-              <span style={{ fontSize: '0.75rem', color: 'var(--kids-text-muted)' }}>
-                Final Project
-              </span>
+          <div
+            style={{
+              paddingTop: '1.1rem',
+              borderTop: `1px solid ${subtleBorder}`
+            }}
+          >
+            <div
+              style={{
+                fontSize: '0.73rem',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                color: course.color,
+                marginBottom: '0.3rem'
+              }}
+            >
+              Capstone Project • {course.capstoneProject.previewBadge}
             </div>
-            <h4 style={{
-              margin: '0 0 0.3rem 0',
-              fontFamily: '"Baloo 2", cursive',
-              fontSize: '1.1rem',
-              color: 'var(--kids-text)'
-            }}>
+            <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--kids-text)', marginBottom: '0.25rem' }}>
               {course.capstoneProject.title}
-            </h4>
-            <p style={{
-              margin: 0,
-              fontSize: '0.82rem',
-              lineHeight: 1.4,
-              color: 'var(--kids-text-muted)'
-            }}>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: 1.45, color: 'var(--kids-text-muted)' }}>
               {course.capstoneProject.description}
             </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Modules & Lessons Syllabus Accordion */}
-      <div style={{ marginBottom: '3rem' }}>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '1.25rem',
-          flexWrap: 'wrap',
-          gap: '0.75rem'
-        }}>
+      {/* 3. Modules & Interactive Labs Accordion */}
+      <section style={{ marginBottom: '3rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            marginBottom: '1.25rem',
+            flexWrap: 'wrap',
+            gap: '0.75rem'
+          }}
+        >
           <div>
-            <h2 style={{
-              margin: 0,
-              fontFamily: '"Baloo 2", cursive',
-              fontSize: isMobile ? '1.5rem' : '1.85rem',
-              color: 'var(--kids-text)'
-            }}>
-              📚 Complete Course Syllabus & Interactive Labs
+            <h2
+              style={{
+                margin: 0,
+                fontFamily: '"Baloo 2", cursive',
+                fontSize: isMobile ? '1.45rem' : '1.75rem',
+                color: 'var(--kids-text)'
+              }}
+            >
+              Course Modules & Interactive Labs
             </h2>
-            <p style={{
-              margin: '0.2rem 0 0',
-              fontSize: '0.9rem',
-              color: 'var(--kids-text-muted)'
-            }}>
-              Each lesson includes direct hands-on practice in the Kids IDE.
+            <p style={{ margin: '0.2rem 0 0', fontSize: '0.92rem', color: 'var(--kids-text-muted)' }}>
+              Select any module to inspect weekly lessons and launch hands-on labs directly in the IDE.
             </p>
           </div>
 
-          <button
-            onClick={() => {
-              sounds.playClick();
-              const allOpen = Object.values(expandedModules).every(v => v);
-              const next: Record<string, boolean> = {};
-              course.modules.forEach(m => { next[m.id] = !allOpen; });
-              setExpandedModules(next);
-            }}
-            style={{
-              background: 'transparent',
-              border: '1px solid var(--kids-border)',
-              borderRadius: '10px',
-              padding: '0.4rem 0.9rem',
-              fontSize: '0.8rem',
-              fontWeight: 700,
-              color: 'var(--kids-text-muted)',
-              cursor: 'pointer'
-            }}
-          >
-            {Object.values(expandedModules).every(v => v) ? 'Collapse All' : 'Expand All'}
-          </button>
+          {course.modules.length > 0 && (
+            <button
+              onClick={() => {
+                sounds.playClick();
+                const next: Record<string, boolean> = {};
+                course.modules.forEach(m => { next[m.id] = !allExpanded; });
+                setExpandedModules(next);
+              }}
+              style={{
+                background: 'transparent',
+                border: `1px solid ${subtleBorder}`,
+                borderRadius: '10px',
+                padding: '0.42rem 0.85rem',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                color: 'var(--kids-text-muted)',
+                cursor: 'pointer'
+              }}
+            >
+              {allExpanded ? 'Collapse All' : 'Expand All'}
+            </button>
+          )}
         </div>
 
         {course.modules.length === 0 ? (
-          <div style={{
-            background: 'var(--kids-surface)',
-            border: '1px solid var(--kids-border)',
-            borderRadius: '16px',
-            padding: '2.5rem',
-            textAlign: 'center',
-            color: 'var(--kids-text-muted)'
-          }}>
-            <p style={{ margin: 0 }}>Detailed module lessons are being finalized for this track. Stay tuned!</p>
+          <div
+            style={{
+              background: cardSurface,
+              border: `1px solid ${subtleBorder}`,
+              borderRadius: '18px',
+              padding: '2.5rem',
+              textAlign: 'center',
+              color: 'var(--kids-text-muted)'
+            }}
+          >
+            Detailed module lessons are being finalized for this track.
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
             {course.modules.map((mod, modIdx) => {
               const isOpen = !!expandedModules[mod.id];
               return (
                 <div
                   key={mod.id}
                   style={{
-                    background: 'var(--kids-surface)',
-                    border: `1.5px solid ${isOpen ? `${course.color}60` : 'var(--kids-border)'}`,
+                    background: cardSurface,
+                    border: `1px solid ${isOpen ? `${course.color}55` : subtleBorder}`,
                     borderRadius: '18px',
                     overflow: 'hidden',
-                    transition: 'all 0.25s ease',
-                    boxShadow: isOpen ? `0 8px 25px ${course.color}10` : 'none'
+                    transition: 'border-color 0.2s ease'
                   }}
                 >
-                  {/* Module Header Bar */}
-                  <div
+                  {/* Module Header */}
+                  <button
+                    type="button"
                     onClick={() => toggleModule(mod.id)}
                     style={{
-                      padding: isMobile ? '1rem' : '1.25rem 1.5rem',
+                      width: '100%',
+                      textAlign: 'left',
+                      border: 'none',
+                      padding: isMobile ? '1.1rem 1.15rem' : '1.25rem 1.5rem',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
+                      gap: '1rem',
                       cursor: 'pointer',
-                      background: isOpen 
-                        ? (isDark ? 'rgba(30, 41, 59, 0.4)' : `${course.color}08`)
-                        : 'transparent'
+                      background: isOpen ? (isDark ? 'rgba(255,255,255,0.02)' : '#fafbfc') : 'transparent',
+                      color: 'inherit'
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      <div style={{
-                        width: '36px',
-                        height: '36px',
-                        borderRadius: '10px',
-                        background: `${course.color}20`,
-                        color: course.color,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontWeight: 900,
-                        fontSize: '0.95rem'
-                      }}>
+                      <span
+                        style={{
+                          width: '34px',
+                          height: '34px',
+                          borderRadius: '10px',
+                          background: `${course.color}18`,
+                          color: course.color,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 900,
+                          fontSize: '0.9rem',
+                          flexShrink: 0
+                        }}
+                      >
                         {modIdx + 1}
-                      </div>
+                      </span>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
-                          <h3 style={{
-                            margin: 0,
-                            fontFamily: '"Baloo 2", cursive',
-                            fontSize: isMobile ? '1.1rem' : '1.25rem',
-                            color: 'var(--kids-text)'
-                          }}>
+                          <h3
+                            style={{
+                              margin: 0,
+                              fontFamily: '"Baloo 2", cursive',
+                              fontSize: isMobile ? '1.08rem' : '1.2rem',
+                              color: 'var(--kids-text)'
+                            }}
+                          >
                             {mod.title}
                           </h3>
-                          <span style={{
-                            background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-                            padding: '0.15rem 0.55rem',
-                            borderRadius: '6px',
-                            fontSize: '0.72rem',
-                            fontWeight: 700,
-                            color: 'var(--kids-text-muted)'
-                          }}>
-                            {mod.duration}
+                          <span
+                            style={{
+                              fontSize: '0.76rem',
+                              fontWeight: 700,
+                              color: 'var(--kids-text-muted)'
+                            }}
+                          >
+                            • {mod.duration}
                           </span>
                         </div>
-                        <p style={{
-                          margin: '0.2rem 0 0',
-                          fontSize: '0.85rem',
-                          color: 'var(--kids-text-muted)'
-                        }}>
+                        <p style={{ margin: '0.2rem 0 0', fontSize: '0.86rem', color: 'var(--kids-text-muted)' }}>
                           {mod.description}
                         </p>
                       </div>
                     </div>
 
-                    <div style={{ color: course.color, marginLeft: '0.5rem' }}>
-                      {isOpen ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
-                    </div>
-                  </div>
+                    <ChevronDown
+                      size={20}
+                      style={{
+                        color: 'var(--kids-text-muted)',
+                        flexShrink: 0,
+                        transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s ease'
+                      }}
+                    />
+                  </button>
 
-                  {/* Lessons List */}
+                  {/* Clean Hairline-Separated Lesson List */}
                   {isOpen && (
-                    <div style={{
-                      padding: isMobile ? '0.75rem' : '1rem 1.5rem 1.5rem',
-                      borderTop: '1px solid var(--kids-border)',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.75rem',
-                      background: isDark ? 'rgba(15, 23, 42, 0.2)' : '#ffffff'
-                    }}>
-                      {mod.lessons.map((lesson, lesIdx) => (
-                        <div
-                          key={lesson.id}
-                          style={{
-                            background: isDark ? 'rgba(30, 41, 59, 0.6)' : '#f8fafc',
-                            border: '1px solid var(--kids-border)',
-                            borderRadius: '14px',
-                            padding: isMobile ? '0.85rem' : '1rem 1.25rem',
-                            display: 'flex',
-                            flexDirection: isMobile ? 'column' : 'row',
-                            alignItems: isMobile ? 'stretch' : 'center',
-                            justifyContent: 'space-between',
-                            gap: '0.85rem'
-                          }}
-                        >
-                          <div style={{ flex: 1 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                              <span style={{
-                                fontSize: '0.75rem',
-                                fontWeight: 800,
-                                color: course.color,
-                                background: `${course.color}15`,
-                                padding: '0.15rem 0.5rem',
-                                borderRadius: '6px'
-                              }}>
-                                Lab {modIdx + 1}.{lesIdx + 1}
-                              </span>
-                              <span style={{
-                                fontSize: '0.75rem',
-                                color: 'var(--kids-text-muted)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.25rem'
-                              }}>
-                                <Clock size={12} /> {lesson.duration}
-                              </span>
-                            </div>
-                            <h4 style={{
-                              margin: '0.2rem 0',
-                              fontSize: '0.98rem',
-                              fontWeight: 800,
-                              color: 'var(--kids-text)'
-                            }}>
-                              {lesson.title}
-                            </h4>
-                            <p style={{
-                              margin: 0,
-                              fontSize: '0.85rem',
-                              color: 'var(--kids-text-muted)',
-                              lineHeight: 1.4
-                            }}>
-                              {lesson.description}
-                            </p>
-                            <div style={{
+                    <div style={{ borderTop: `1px solid ${subtleBorder}`, padding: isMobile ? '0.25rem 1.15rem' : '0.25rem 1.5rem' }}>
+                      {mod.lessons.map((lesson, lesIdx) => {
+                        const isLast = lesIdx === mod.lessons.length - 1;
+                        return (
+                          <div
+                            key={lesson.id}
+                            style={{
+                              padding: '1.15rem 0',
+                              borderBottom: isLast ? 'none' : `1px solid ${subtleBorder}`,
                               display: 'flex',
-                              gap: '0.4rem',
-                              flexWrap: 'wrap',
-                              marginTop: '0.45rem'
-                            }}>
-                              {lesson.blocksFocused.map((b, bIdx) => (
+                              flexDirection: isMobile ? 'column' : 'row',
+                              alignItems: isMobile ? 'stretch' : 'center',
+                              justifyContent: 'space-between',
+                              gap: '1rem'
+                            }}
+                          >
+                            <div style={{ flex: 1 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
+                                <span style={{ fontSize: '0.75rem', fontWeight: 800, color: course.color }}>
+                                  Lab {modIdx + 1}.{lesIdx + 1}
+                                </span>
                                 <span
-                                  key={bIdx}
                                   style={{
-                                    fontSize: '0.72rem',
-                                    fontWeight: 700,
-                                    background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)',
+                                    fontSize: '0.75rem',
                                     color: 'var(--kids-text-muted)',
-                                    padding: '0.1rem 0.45rem',
-                                    borderRadius: '5px'
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '0.25rem'
                                   }}
                                 >
-                                  🧱 {b}
+                                  <Clock size={12} /> {lesson.duration}
                                 </span>
-                              ))}
-                            </div>
-                          </div>
+                              </div>
 
-                          <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>
+                              <h4 style={{ margin: '0 0 0.25rem', fontSize: '0.98rem', fontWeight: 800, color: 'var(--kids-text)' }}>
+                                {lesson.title}
+                              </h4>
+
+                              <p style={{ margin: 0, fontSize: '0.86rem', color: 'var(--kids-text-muted)', lineHeight: 1.45 }}>
+                                {lesson.description}
+                              </p>
+
+                              {lesson.blocksFocused.length > 0 && (
+                                <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', marginTop: '0.55rem' }}>
+                                  {lesson.blocksFocused.map((b, bIdx) => (
+                                    <span
+                                      key={bIdx}
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '0.3rem',
+                                        fontSize: '0.74rem',
+                                        fontWeight: 700,
+                                        color: 'var(--kids-text-muted)',
+                                        background: mutedBg,
+                                        border: `1px solid ${subtleBorder}`,
+                                        padding: '0.15rem 0.55rem',
+                                        borderRadius: '6px'
+                                      }}
+                                    >
+                                      <CubeBlockIcon size={11} />
+                                      {b}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
                             <button
                               onClick={() => handleLaunchLesson(lesson)}
                               style={{
-                                background: `linear-gradient(135deg, ${course.color}, ${course.accentColor})`,
-                                color: 'white',
-                                border: 'none',
-                                padding: '0.6rem 1.1rem',
+                                background: mutedBg,
+                                color: 'var(--kids-text)',
+                                border: `1px solid ${subtleBorder}`,
+                                padding: '0.55rem 1rem',
                                 borderRadius: '10px',
                                 fontWeight: 800,
                                 fontSize: '0.82rem',
                                 cursor: 'pointer',
                                 display: 'inline-flex',
                                 alignItems: 'center',
-                                gap: '0.45rem',
-                                width: isMobile ? '100%' : 'auto',
                                 justifyContent: 'center',
-                                boxShadow: `0 4px 12px ${course.color}35`,
-                                transition: 'all 0.2s ease'
+                                gap: '0.4rem',
+                                flexShrink: 0
                               }}
                             >
-                              <Play size={14} fill="white" />
-                              {lesson.missionId ? 'Launch in Kids IDE' : 'Practice in Kids IDE'}
+                              <Play size={13} style={{ color: course.color }} fill={course.color} />
+                              {lesson.missionId ? 'Launch Lab' : 'Practice'}
                             </button>
                           </div>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -688,150 +713,130 @@ const KidsCourseSyllabus: React.FC<KidsCourseSyllabusProps> = ({
             })}
           </div>
         )}
-      </div>
+      </section>
 
-      {/* Graduation & Verification Card */}
-      <div style={{
-        background: isDark ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.9)',
-        border: '2px solid rgba(245, 158, 11, 0.4)',
-        borderRadius: '20px',
-        padding: isMobile ? '1.5rem' : '2rem',
-        display: 'flex',
-        flexDirection: isMobile ? 'column' : 'row',
-        alignItems: isMobile ? 'stretch' : 'center',
-        justifyContent: 'space-between',
-        gap: '1.5rem',
-        marginBottom: '2.5rem'
-      }}>
-        <div style={{ maxWidth: '650px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-            <Award size={22} style={{ color: '#f59e0b' }} />
-            <span style={{ fontSize: '0.85rem', fontWeight: 900, color: '#f59e0b', letterSpacing: '0.5px' }}>
-              ACCREDITED KONE ACADEMY CREDENTIAL
-            </span>
-          </div>
-          <h3 style={{
-            margin: '0 0 0.4rem 0',
-            fontFamily: '"Baloo 2", cursive',
-            fontSize: isMobile ? '1.3rem' : '1.6rem',
-            color: 'var(--kids-text)'
-          }}>
-            Earn the {course.certificateTitle}
-          </h3>
-          <p style={{
-            margin: 0,
-            fontSize: '0.9rem',
-            color: 'var(--kids-text-muted)',
-            lineHeight: 1.5
-          }}>
-            Upon completing all labs and presenting the capstone project, students receive a verified, high-resolution certificate stamped with their name, unique verification serial, and skills transcript.
-          </p>
-        </div>
-
-        <button
-          onClick={() => { sounds.playClick(); setShowCertModal(true); }}
+      {/* 4. Unified Credential & Admissions Footer Card */}
+      <footer
+        style={{
+          background: cardSurface,
+          border: `1px solid ${subtleBorder}`,
+          borderRadius: '22px',
+          padding: isMobile ? '1.5rem' : '2.25rem',
+          boxShadow: isDark ? '0 16px 40px rgba(0,0,0,0.25)' : '0 10px 30px rgba(15, 23, 42, 0.04)'
+        }}
+      >
+        <div
           style={{
-            background: '#f59e0b',
-            color: '#1e293b',
-            border: 'none',
-            padding: '0.85rem 1.6rem',
-            borderRadius: '14px',
-            fontWeight: 900,
-            fontSize: '0.95rem',
-            cursor: 'pointer',
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '0.5rem',
-            boxShadow: '0 8px 20px rgba(245, 158, 11, 0.3)',
-            flexShrink: 0
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? 'flex-start' : 'center',
+            justifyContent: 'space-between',
+            gap: '1.25rem',
+            paddingBottom: '1.75rem',
+            marginBottom: '1.75rem',
+            borderBottom: `1px solid ${subtleBorder}`
           }}
         >
-          📜 Preview Diploma
-        </button>
-      </div>
+          <div style={{ maxWidth: '580px' }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#f59e0b', letterSpacing: '0.05em', marginBottom: '0.3rem' }}>
+              ACCREDITED KONE ACADEMY CREDENTIAL
+            </div>
+            <h3 style={{ margin: '0 0 0.35rem', fontFamily: '"Baloo 2", cursive', fontSize: isMobile ? '1.25rem' : '1.5rem' }}>
+              Earn the {course.certificateTitle}
+            </h3>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--kids-text-muted)', lineHeight: 1.55 }}>
+              Complete the labs and capstone showcase to unlock a verified parchment diploma with your unique credential ID.
+            </p>
+          </div>
 
-      {/* Admissions & School Inquiry Footer Banner */}
-      <div style={{
-        background: `linear-gradient(135deg, ${course.color}25, ${course.accentColor}15)`,
-        border: `1.5px solid ${course.color}50`,
-        borderRadius: '20px',
-        padding: isMobile ? '1.5rem' : '2rem',
-        textAlign: 'center'
-      }}>
-        <h3 style={{
-          margin: '0 0 0.5rem 0',
-          fontFamily: '"Baloo 2", cursive',
-          fontSize: isMobile ? '1.35rem' : '1.75rem',
-          color: 'var(--kids-text)'
-        }}>
-          Ready to Start Your Child’s Engineering Journey?
-        </h3>
-        <p style={{
-          margin: '0 auto 1.5rem',
-          maxWidth: '650px',
-          fontSize: '0.95rem',
-          color: 'var(--kids-text-muted)',
-          lineHeight: 1.5
-        }}>
-          We offer private 1-on-1 mentorship, weekend cohorts, and turnkey STEM curriculum licensing for primary and junior high schools.
-        </p>
-
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '0.75rem',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: 'stretch'
-        }}>
           <button
-            onClick={() => { sounds.playClick(); setShowEnrollModal(true); }}
+            onClick={() => { sounds.playClick(); setShowCertModal(true); }}
             style={{
-              width: isMobile ? '100%' : 'auto',
-              justifyContent: 'center',
-              background: course.color,
-              color: 'white',
-              border: 'none',
-              padding: isMobile ? '0.85rem 1.25rem' : '0.8rem 1.8rem',
+              background: '#fef3c7',
+              color: '#92400e',
+              border: '1px solid #fde68a',
+              padding: '0.72rem 1.25rem',
               borderRadius: '12px',
-              fontWeight: 900,
-              fontSize: isMobile ? '0.9rem' : '0.95rem',
+              fontWeight: 800,
+              fontSize: '0.88rem',
               cursor: 'pointer',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.5rem'
+              gap: '0.45rem',
+              flexShrink: 0
             }}
           >
-            <Mail size={16} />
-            Enrol Online / Request Quote
+            <ScrollCertIcon size={18} />
+            Preview Diploma
           </button>
-
-          <a
-            href="https://wa.me/233551993820?text=Hello%20Kone%20Academy!%20I'm%20interested%20in%20enrolling%20in%20the%20Kids%20Course:%20"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              width: isMobile ? '100%' : 'auto',
-              justifyContent: 'center',
-              background: '#22c55e',
-              color: 'white',
-              border: 'none',
-              padding: isMobile ? '0.85rem 1.25rem' : '0.8rem 1.8rem',
-              borderRadius: '12px',
-              fontWeight: 900,
-              fontSize: isMobile ? '0.9rem' : '0.95rem',
-              cursor: 'pointer',
-              textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}
-          >
-            <MessageCircle size={16} />
-            Chat on WhatsApp (+233 55 199 3820)
-          </a>
         </div>
-      </div>
+
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
+            alignItems: isMobile ? 'stretch' : 'center',
+            justifyContent: 'space-between',
+            gap: '1.25rem'
+          }}
+        >
+          <div>
+            <h4 style={{ margin: '0 0 0.25rem', fontFamily: '"Baloo 2", cursive', fontSize: '1.25rem' }}>
+              Ready to Begin?
+            </h4>
+            <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--kids-text-muted)' }}>
+              Join a weekend cohort, book 1-on-1 mentorship, or request school curriculum licensing.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '0.75rem', flexDirection: isMobile ? 'column' : 'row', flexShrink: 0 }}>
+            <button
+              onClick={() => { sounds.playClick(); setShowEnrollModal(true); }}
+              style={{
+                justifyContent: 'center',
+                background: course.color,
+                color: '#ffffff',
+                border: 'none',
+                padding: '0.78rem 1.35rem',
+                borderRadius: '12px',
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem'
+              }}
+            >
+              <Mail size={16} />
+              Enrol Online
+            </button>
+
+            <a
+              href="https://wa.me/233551993820?text=Hello%20Kone%20Academy!%20I'm%20interested%20in%20enrolling%20in%20the%20Kids%20Course:%20"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                justifyContent: 'center',
+                background: '#16a34a',
+                color: '#ffffff',
+                border: 'none',
+                padding: '0.78rem 1.35rem',
+                borderRadius: '12px',
+                fontWeight: 800,
+                fontSize: '0.9rem',
+                cursor: 'pointer',
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem'
+              }}
+            >
+              <MessageCircle size={16} />
+              Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+      </footer>
 
       {/* Modals */}
       {showEnrollModal && (
