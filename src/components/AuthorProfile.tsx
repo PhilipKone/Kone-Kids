@@ -247,7 +247,7 @@ export const AuthorProfile: React.FC = () => {
 
               {/* Kone Academy Site */}
               <a 
-                href="https://www.koneacademy.io"
+                href="https://academy.codkon.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{

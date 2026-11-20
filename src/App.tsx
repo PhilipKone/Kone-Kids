@@ -983,11 +983,11 @@ function Home() {
                 <span style={{display:"inline-flex",alignItems:"center",gap:"0.45rem"}}><span>{stripEmoji(t('footer.networkTitle', 'Kone Network'))}</span><GlobeNetworkIcon size={18} className="playful-svg-icon"/></span>
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.88rem', fontWeight: 600 }}>
-                <a href="https://www.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.koneAcademyHub', 'Kone Academy Hub')}</a>
-                <a href="https://code.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Code</a>
-                <a href="https://lab.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Lab</a>
-                <a href="https://consult.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Consult</a>
-                <a href="https://shop.koneacademy.io" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Shop</a>
+                <a href="https://academy.codkon.com" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.koneAcademyHub', 'Kone Academy Hub')}</a>
+                <a href="https://code.codkon.com" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Code</a>
+                <a href="https://lab.codkon.com" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Lab</a>
+                <a href="https://consult.codkon.com" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Consult</a>
+                <a href="https://shop.codkon.com" target="_blank" rel="noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>Kone Shop</a>
               </div>
             </div>
 
@@ -1097,7 +1097,7 @@ function Home() {
           }}>
             <span>{t('footer.copyright', '© 2026 Kone Kids. All rights reserved.')}</span>
             <div style={{ display: 'flex', gap: '1rem', fontWeight: 600, alignItems: 'center', flexWrap: 'wrap' }}>
-              <a href="https://www.koneacademy.io" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.homeLink', 'Kone Academy Home')}</a>
+              <a href="https://academy.codkon.com" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.homeLink', 'Kone Academy Home')}</a>
               <span>•</span>
               <Link to="/kits" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none' }}>{t('footer.kitsLink', 'STEM Kits Store')}</Link>
               <span>•</span>

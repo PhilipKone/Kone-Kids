@@ -19,11 +19,11 @@ const DEFAULT_SEO: SEOConfig = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Kone Kids Hub",
-    "url": "https://kids.koneacademy.io/",
+    "url": "https://kids.codkon.com/",
     "parentOrganization": {
       "@type": "Organization",
       "name": "Kone Academy",
-      "url": "https://www.koneacademy.io/"
+      "url": "https://academy.codkon.com/"
     }
   }
 };
@@ -38,8 +38,8 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Class Login", "item": "https://kids.koneacademy.io/class-login/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.codkon.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Class Login", "item": "https://kids.codkon.com/class-login/" }
       ]
     }
   },
@@ -51,8 +51,8 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Teacher Dashboard", "item": "https://kids.koneacademy.io/teacher-dashboard/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.codkon.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Teacher Dashboard", "item": "https://kids.codkon.com/teacher-dashboard/" }
       ]
     }
   },
@@ -64,8 +64,8 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Parent Hub & Articles", "item": "https://kids.koneacademy.io/blog/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.codkon.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Parent Hub & Articles", "item": "https://kids.codkon.com/blog/" }
       ]
     }
   },
@@ -77,8 +77,8 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Coding Lab", "item": "https://kids.koneacademy.io/coding/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.codkon.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Coding Lab", "item": "https://kids.codkon.com/coding/" }
       ]
     }
   },
@@ -90,8 +90,8 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "Robotics Lab", "item": "https://kids.koneacademy.io/robotics/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.codkon.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Robotics Lab", "item": "https://kids.codkon.com/robotics/" }
       ]
     }
   },
@@ -103,8 +103,8 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.koneacademy.io/" },
-        { "@type": "ListItem", "position": 2, "name": "AI Studio", "item": "https://kids.koneacademy.io/ai/" }
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kids.codkon.com/" },
+        { "@type": "ListItem", "position": 2, "name": "AI Studio", "item": "https://kids.codkon.com/ai/" }
       ]
     }
   },
@@ -127,7 +127,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
             "price": "125.00",
             "priceCurrency": "GHS",
             "availability": "https://schema.org/InStock",
-            "url": "https://kids.koneacademy.io/kits/"
+            "url": "https://kids.codkon.com/kits/"
           }
         },
         {
@@ -140,7 +140,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
             "price": "135.00",
             "priceCurrency": "GHS",
             "availability": "https://schema.org/InStock",
-            "url": "https://kids.koneacademy.io/kits/"
+            "url": "https://kids.codkon.com/kits/"
           }
         },
         {
@@ -153,7 +153,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
             "price": "145.00",
             "priceCurrency": "GHS",
             "availability": "https://schema.org/InStock",
-            "url": "https://kids.koneacademy.io/kits/"
+            "url": "https://kids.codkon.com/kits/"
           }
         },
         {
@@ -166,7 +166,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
             "price": "280.00",
             "priceCurrency": "GHS",
             "availability": "https://schema.org/InStock",
-            "url": "https://kids.koneacademy.io/kits/"
+            "url": "https://kids.codkon.com/kits/"
           }
         },
         {
@@ -179,7 +179,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
             "price": "460.00",
             "priceCurrency": "GHS",
             "availability": "https://schema.org/InStock",
-            "url": "https://kids.koneacademy.io/kits/"
+            "url": "https://kids.codkon.com/kits/"
           }
         },
         {
@@ -192,7 +192,7 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
             "price": "520.00",
             "priceCurrency": "GHS",
             "availability": "https://schema.org/InStock",
-            "url": "https://kids.koneacademy.io/kits/"
+            "url": "https://kids.codkon.com/kits/"
           }
         },
         {
@@ -205,24 +205,24 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
             "price": "680.00",
             "priceCurrency": "GHS",
             "availability": "https://schema.org/InStock",
-            "url": "https://kids.koneacademy.io/kits/"
+            "url": "https://kids.codkon.com/kits/"
           }
         }
       ]
     },
-    image: "https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg"
+    image: "https://kids.codkon.com/images/kits/explorer-robotics-rover.jpg"
   },
   '/stem-kits': {
     title: "STEM & Science Sets for Kids | Ghana GES Curriculum & Robotics - Kone Kids",
     description: "Hands-on Ghana GES / NaCCA Science Sets (Basic 4.1 to 6.3) and child-safe robotics rovers with online mission guides. Fast doorstep delivery across Accra and Ghana.",
     keywords: "Ghana science sets, GES science kit Basic 4 5 6, NaCCA STEM kits, robotics kits for kids Ghana, STEM kits Accra, buy children coding kit, microbit robot kit",
-    image: "https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg"
+    image: "https://kids.codkon.com/images/kits/explorer-robotics-rover.jpg"
   },
   '/author/philip-hotor': {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
     description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
     keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator, STEM Africa, kids coding founder",
-    image: "https://kids.koneacademy.io/author-philip.jpg",
+    image: "https://kids.codkon.com/author-philip.jpg",
     schema: {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
@@ -234,14 +234,14 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
         "worksFor": {
           "@type": "Organization",
           "name": "Kone Academy",
-          "url": "https://www.koneacademy.io/"
+          "url": "https://academy.codkon.com/"
         },
-        "image": "https://kids.koneacademy.io/author-philip.jpg",
+        "image": "https://kids.codkon.com/author-philip.jpg",
         "url": "https://www.linkedin.com/in/philip-kone/",
         "sameAs": [
           "https://www.linkedin.com/in/philip-kone/",
-          "https://www.koneacademy.io",
-          "https://tech.koneacademy.io"
+          "https://academy.codkon.com",
+          "https://tech.codkon.com"
         ]
       }
     }
@@ -250,13 +250,13 @@ const ROUTE_SEO_MAP: Record<string, SEOConfig> = {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
     description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
     keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator",
-    image: "https://kids.koneacademy.io/author-philip.jpg"
+    image: "https://kids.codkon.com/author-philip.jpg"
   },
   '/author': {
     title: "Philip Hotor | Founder & Head of Engineering - Kone Academy",
     description: "Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.",
     keywords: "Philip Hotor, Philip Kone, Kone Academy founder, software engineering educator",
-    image: "https://kids.koneacademy.io/author-philip.jpg"
+    image: "https://kids.codkon.com/author-philip.jpg"
   }
 };
 
@@ -290,7 +290,7 @@ export const SEOManager: React.FC = () => {
       const kitSlug = path.replace(/^\/(kits|stem-kits)\//, '').replace(/\/$/, '');
       const kit = STEM_KITS.find(k => k.slug === kitSlug || k.id === kitSlug);
       if (kit) {
-        const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.koneacademy.io${kit.image}`;
+        const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.codkon.com${kit.image}`;
         activeSEO = {
           title: `${kit.title} | Kone Kids STEM Hardware`,
           description: `${kit.tagline} Designed for ${kit.ageRange}. Hands-on STEM hardware with video guides and syllabus alignment. Available in Ghana.`,
@@ -311,12 +311,12 @@ export const SEOManager: React.FC = () => {
               "price": kit.priceGHS.toFixed(2),
               "priceCurrency": "GHS",
               "availability": "https://schema.org/InStock",
-              "url": `https://kids.koneacademy.io/kits/${kit.slug}/`
+              "url": `https://kids.codkon.com/kits/${kit.slug}/`
             }
           }
         };
       } else if (kitSlug === 'school-stem-pack' || kitSlug === 'school-pack') {
-        const schoolImg = `https://kids.koneacademy.io${SCHOOL_PACK_OFFERING.image}`;
+        const schoolImg = `https://kids.codkon.com${SCHOOL_PACK_OFFERING.image}`;
         activeSEO = {
           title: `${SCHOOL_PACK_OFFERING.title} | Kone Kids`,
           description: SCHOOL_PACK_OFFERING.subtitle,
@@ -332,7 +332,7 @@ export const SEOManager: React.FC = () => {
       if (qKit) {
         const kit = STEM_KITS.find(k => k.slug === qKit || k.id === qKit);
         if (kit) {
-          const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.koneacademy.io${kit.image}`;
+          const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.codkon.com${kit.image}`;
           activeSEO = {
             title: `${kit.title} | Kone Kids STEM Hardware`,
             description: `${kit.tagline} Designed for ${kit.ageRange}. Available across Ghana with doorstep delivery.`,
@@ -356,7 +356,7 @@ export const SEOManager: React.FC = () => {
             "headline": article.title,
             "description": article.summary,
             "image": [
-              "https://kids.koneacademy.io/og-image.png?v=2"
+              "https://kids.codkon.com/og-image.png?v=2"
             ],
             "datePublished": article.isoDate,
             "dateModified": article.isoDate,
@@ -364,7 +364,7 @@ export const SEOManager: React.FC = () => {
               "@type": "Person",
               "name": article.author.name,
               "jobTitle": article.author.role,
-              "image": "https://kids.koneacademy.io/author-philip.jpg",
+              "image": "https://kids.codkon.com/author-philip.jpg",
               "url": "https://www.linkedin.com/in/philip-kone/",
               "sameAs": [
                 "https://www.linkedin.com/in/philip-kone/"
@@ -373,15 +373,15 @@ export const SEOManager: React.FC = () => {
             "publisher": {
               "@type": "Organization",
               "name": "Kone Academy",
-              "url": "https://www.koneacademy.io/",
+              "url": "https://academy.codkon.com/",
               "logo": {
                 "@type": "ImageObject",
-                "url": "https://kids.koneacademy.io/og-image.png?v=2"
+                "url": "https://kids.codkon.com/og-image.png?v=2"
               }
             },
             "mainEntityOfPage": {
               "@type": "WebPage",
-              "@id": `https://kids.koneacademy.io/blog/${article.slug}`
+              "@id": `https://kids.codkon.com/blog/${article.slug}`
             }
           }
         };
@@ -404,7 +404,7 @@ export const SEOManager: React.FC = () => {
     document.title = activeSEO.title;
 
     const isBlogArticle = path.startsWith('/blog/') && Boolean(params.id);
-    const imgUrl = activeSEO.image || 'https://kids.koneacademy.io/og-image.png?v=2';
+    const imgUrl = activeSEO.image || 'https://kids.codkon.com/og-image.png?v=2';
 
     // Update main description & keyword tags
     updateMetaTag('description', activeSEO.description);
@@ -417,7 +417,7 @@ export const SEOManager: React.FC = () => {
     const canonicalPath = location.pathname.endsWith('/') ? location.pathname : `${location.pathname}/`;
     updateMetaTag('og:title', activeSEO.title, true);
     updateMetaTag('og:description', activeSEO.description, true);
-    updateMetaTag('og:url', `https://kids.koneacademy.io${canonicalPath}`, true);
+    updateMetaTag('og:url', `https://kids.codkon.com${canonicalPath}`, true);
     updateMetaTag('og:image', imgUrl, true);
     updateMetaTag('og:image:secure_url', imgUrl, true);
     updateMetaTag('og:image:type', 'image/png', true);
@@ -435,7 +435,7 @@ export const SEOManager: React.FC = () => {
     updateMetaTag('twitter:card', 'summary_large_image');
     updateMetaTag('twitter:site', '@koneacademy');
     updateMetaTag('twitter:creator', '@koneacademy');
-    updateMetaTag('twitter:domain', 'kids.koneacademy.io');
+    updateMetaTag('twitter:domain', 'kids.codkon.com');
     updateMetaTag('twitter:title', activeSEO.title);
     updateMetaTag('twitter:description', activeSEO.description);
     updateMetaTag('twitter:image', imgUrl);
@@ -448,7 +448,7 @@ export const SEOManager: React.FC = () => {
       canonical.setAttribute('rel', 'canonical');
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute('href', `https://kids.koneacademy.io${canonicalPath}`);
+    canonical.setAttribute('href', `https://kids.codkon.com${canonicalPath}`);
 
     // 3. Update Dynamic JSON-LD Schema
     const SCHEMA_SCRIPT_ID = 'seo-dynamic-jsonld';

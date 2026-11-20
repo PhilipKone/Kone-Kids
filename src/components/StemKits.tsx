@@ -155,7 +155,7 @@ export default function StemKits() {
 
   const handleShareKit = async (kit: StemKit, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    const shareUrl = `https://kids.koneacademy.io/kits/${kit.slug}`;
+    const shareUrl = `https://kids.codkon.com/kits/${kit.slug}`;
     const shareTitle = `${kit.title} | Kone Kids`;
     const shareText = `Check out the ${kit.title} (${kit.category} • ${kit.ageRange}) on Kone Kids! Includes complete hands-on experiments and video guides:`;
 
@@ -175,7 +175,7 @@ export default function StemKits() {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopiedKitId(kit.id);
-      setShareToast({ visible: true, message: `📋 Direct link copied: kids.koneacademy.io/kits/${kit.slug}` });
+      setShareToast({ visible: true, message: `📋 Direct link copied: kids.codkon.com/kits/${kit.slug}` });
       setTimeout(() => {
         setCopiedKitId(null);
         setShareToast({ visible: false, message: '' });
@@ -198,7 +198,7 @@ export default function StemKits() {
 
   const handleWhatsAppShareKit = (kit: StemKit, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    const shareUrl = `https://kids.koneacademy.io/kits/${kit.slug}`;
+    const shareUrl = `https://kids.codkon.com/kits/${kit.slug}`;
     const priceText = formatPrice(kit.priceGHS, kit.priceUSD);
     const text = encodeURIComponent(
       `Check out the *${kit.title}* (${priceText}, ${kit.ageRange}) on Kone Kids! 🚀\n\n${kit.tagline}\n\n👉 View details & order here: ${shareUrl}`
@@ -2056,7 +2056,7 @@ export default function StemKits() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', minWidth: 0, flex: 1 }}>
                   <Share2 size={14} color="#0284c7" />
                   <span style={{ color: '#334155', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    kids.koneacademy.io/kits/{quickViewKit.slug}
+                    kids.codkon.com/kits/{quickViewKit.slug}
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>

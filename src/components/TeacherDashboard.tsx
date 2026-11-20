@@ -1413,7 +1413,7 @@ export default function TeacherDashboard() {
                         <h3 style={{ fontFamily: "'Baloo 2', cursive", fontSize: '1.4rem', margin: '0.25rem 0 0.75rem', color: '#1e3a8a' }}>{student.name}</h3>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '0.85rem', color: '#475569' }}>
-                          <div>1. Visit: <strong>kids.koneacademy.io</strong></div>
+                          <div>1. Visit: <strong>kids.codkon.com</strong></div>
                           <div>2. Click <strong>Student Login</strong> button</div>
                           <div>3. Enter classroom code: <strong>{activeCode}</strong></div>
                           <div>4. Select your name: <strong>{student.name}</strong></div>
@@ -1557,7 +1557,7 @@ export default function TeacherDashboard() {
                         <div style={{ border: '2px solid #e2e8f0', borderRadius: '16px', padding: '1.25rem', background: '#f8fafc' }}>
                           <h4 style={{ margin: '0 0 0.5rem', color: '#475569', fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase' }}>Classroom Access</h4>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.95rem', color: '#475569' }}>
-                            <div>Portal Link: <strong>kids.koneacademy.io</strong></div>
+                            <div>Portal Link: <strong>kids.codkon.com</strong></div>
                             <div>Classroom Code: <strong>{activeCode}</strong></div>
                             <div>Login ID: <strong>{student.name}</strong></div>
                             <div>Secret Mascot Passkey: <span style={{ fontSize: '1.25rem', fontWeight: 800 }}>{student.secretPicture}</span></div>

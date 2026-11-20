@@ -15,11 +15,11 @@ if (!fs.existsSync(keyPath)) {
 
 const keyData = JSON.parse(fs.readFileSync(keyPath, 'utf8'));
 console.log('🔑 Service Account Email:', keyData.client_email);
-console.log('🌐 Target Domain: https://kids.koneacademy.io/');
+console.log('🌐 Target Domain: https://kids.codkon.com/');
 console.log('\n---------------------------------------------------');
 console.log('📌 NOTE: To allow this script to submit URLs automatically:');
 console.log('1. Go to Google Search Console (https://search.google.com/search-console)');
-console.log('2. Select kids.koneacademy.io (or koneacademy.io)');
+console.log('2. Select kids.codkon.com (or koneacademy.io)');
 console.log('3. Go to Settings -> Users and permissions -> Add User');
 console.log(`4. Add: ${keyData.client_email} as Owner or Full User.`);
 console.log('---------------------------------------------------\n');

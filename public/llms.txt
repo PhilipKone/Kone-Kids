@@ -13,4 +13,4 @@ Kone Kids empowers the next generation of engineers through hands-on gamified co
 
 ## Parent Ecosystem
 
-- [Kone Academy Main Hub](https://www.koneacademy.io/) - Multidisciplinary innovation and technology collective.
+- [Kone Academy Main Hub](https://academy.codkon.com/) - Multidisciplinary innovation and technology collective.

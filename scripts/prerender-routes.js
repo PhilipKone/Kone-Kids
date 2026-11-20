@@ -49,127 +49,127 @@ const routes = [
     path: 'coding',
     title: 'Coding Lab - Visual Block & Python Missions | Kone Kids',
     desc: 'Interactive learning pathway teaching block-based coding, visual algorithms, HTML/CSS, and Python to young coders.',
-    canonical: 'https://kids.koneacademy.io/coding/'
+    canonical: 'https://kids.codkon.com/coding/'
   },
   {
     path: 'robotics',
     title: 'Robotics Lab - Hardware & Microcontroller Sandbox | Kone Kids',
     desc: 'Virtual and hands-on robotics labs teaching microcontrollers, circuit design, telemetry, and Arduino coding.',
-    canonical: 'https://kids.koneacademy.io/robotics/'
+    canonical: 'https://kids.codkon.com/robotics/'
   },
   {
     path: 'ai',
     title: 'AI Studio - Youth Machine Learning & AI | Kone Kids',
     desc: 'Learn how artificial intelligence works by training custom models, classifying images, and coding neural networks.',
-    canonical: 'https://kids.koneacademy.io/ai/'
+    canonical: 'https://kids.codkon.com/ai/'
   },
   {
     path: 'kits',
     title: 'STEM & Robotics Kits for Kids | Hands-On Hardware - Kone Kids',
     desc: 'Explore child-safe robotics kits, Arduino rovers, and Ghana GES science kits with step-by-step video tutorials. Doorstep delivery across Ghana.',
-    canonical: 'https://kids.koneacademy.io/kits/',
-    image: 'https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg'
+    canonical: 'https://kids.codkon.com/kits/',
+    image: 'https://kids.codkon.com/images/kits/explorer-robotics-rover.jpg'
   },
   {
     path: 'stem-kits',
     title: 'STEM & Robotics Kits for Kids | Hands-On Hardware - Kone Kids',
     desc: 'Explore child-safe robotics kits, Arduino rovers, and Ghana GES science kits with step-by-step video tutorials. Doorstep delivery across Ghana.',
-    canonical: 'https://kids.koneacademy.io/kits/',
-    image: 'https://kids.koneacademy.io/images/kits/explorer-robotics-rover.jpg'
+    canonical: 'https://kids.codkon.com/kits/',
+    image: 'https://kids.codkon.com/images/kits/explorer-robotics-rover.jpg'
   },
   {
     path: 'blog',
     title: 'Parent Hub & STEM Insights | Kone Kids Blog',
     desc: 'Research-backed guides, EdTech articles, and parenting insights for youth tech education. Learn how to foster STEM literacy at home.',
-    canonical: 'https://kids.koneacademy.io/blog/'
+    canonical: 'https://kids.codkon.com/blog/'
   },
   {
     path: 'author/philip-hotor',
     title: 'Philip Hotor | Founder & Head of Engineering - Kone Academy',
     desc: 'Biography, research insights, and STEM publications by Philip Hotor, Founder & Head of Engineering at Kone Academy and Kone Kids.',
-    canonical: 'https://kids.koneacademy.io/author/philip-hotor/',
-    image: 'https://kids.koneacademy.io/author-philip.jpg'
+    canonical: 'https://kids.codkon.com/author/philip-hotor/',
+    image: 'https://kids.codkon.com/author-philip.jpg'
   },
   {
     path: 'class-login',
     title: 'Student Class Login | Mission Map - Kone Kids',
     desc: 'Log in to your student account at Kone Kids. Connect with your class, track your badges, and continue your programming missions.',
-    canonical: 'https://kids.koneacademy.io/class-login/'
+    canonical: 'https://kids.codkon.com/class-login/'
   },
   {
     path: 'teacher-dashboard',
     title: 'Teacher & School Dashboard | Classroom Analytics - Kone Kids',
     desc: 'Classroom analytics, assignment manager, and student progress oversight for STEM educators and schools.',
-    canonical: 'https://kids.koneacademy.io/teacher-dashboard/'
+    canonical: 'https://kids.codkon.com/teacher-dashboard/'
   },
   {
     path: 'blog/mobile-app-development-kids',
     title: 'Mobile App Development for Kids: How to Build Your First Android App | Kone Kids',
     desc: 'Discover how kids aged 8-16 can turn screen time into creator time by designing and building their very own real Android mobile applications.',
-    canonical: 'https://kids.koneacademy.io/blog/mobile-app-development-kids/'
+    canonical: 'https://kids.codkon.com/blog/mobile-app-development-kids/'
   },
   {
     path: 'blog/beyond-the-chalkboard',
     title: 'Beyond the Chalkboard: The Psychological Power of Tangible STEM Learning | Kone Kids',
     desc: 'Why abstract classroom theories fail young learners, and how tactile, hands-on microcontrollers spark profound cognitive development.',
-    canonical: 'https://kids.koneacademy.io/blog/beyond-the-chalkboard/'
+    canonical: 'https://kids.codkon.com/blog/beyond-the-chalkboard/'
   },
   {
     path: 'blog/consumers-to-creators',
     title: 'From Gamers to Game Developers: Transforming Screen Addiction Into Innovation | Kone Kids',
     desc: 'How to channel screen time into game architecture, logic problem-solving, and creative software engineering.',
-    canonical: 'https://kids.koneacademy.io/blog/consumers-to-creators/'
+    canonical: 'https://kids.codkon.com/blog/consumers-to-creators/'
   },
   {
     path: 'blog/science-of-show-and-solve',
     title: 'The Science of Show-and-Solve: Debugging as a Core Emotional Skill | Kone Kids',
     desc: 'Debugging teaches resilient grit, emotional regulation, and analytical troubleshooting that prepares children for future leadership.',
-    canonical: 'https://kids.koneacademy.io/blog/science-of-show-and-solve/'
+    canonical: 'https://kids.codkon.com/blog/science-of-show-and-solve/'
   },
   {
     path: 'blog/girls-in-tech-ghana',
     title: 'Girls in Tech: Empowering the Next Wave of African Female Engineers | Kone Kids',
     desc: 'Breaking down barriers and inspiring young girls across Accra and West Africa to master robotics, logic, and artificial intelligence.',
-    canonical: 'https://kids.koneacademy.io/blog/girls-in-tech-ghana/'
+    canonical: 'https://kids.codkon.com/blog/girls-in-tech-ghana/'
   },
   {
     path: 'blog/demystifying-ai-five-ideas',
     title: 'Demystifying AI for Young Coders: Five Core Concepts Every Child Should Know | Kone Kids',
     desc: 'A breakdown of classification, neural networks, ethics, training data, and computer vision that curious kids can easily grasp.',
-    canonical: 'https://kids.koneacademy.io/blog/demystifying-ai-five-ideas/'
+    canonical: 'https://kids.codkon.com/blog/demystifying-ai-five-ideas/'
   },
   {
     path: 'blog/robotics-agriculture-cocoa-farms',
     title: 'Smart Rovers & Sensors: Teaching Kids IoT Telemetry on Tropical Farms | Kone Kids',
     desc: 'Connecting embedded Arduino and micro:bit sensors to soil moisture, temperature monitoring, and smart farming rovers.',
-    canonical: 'https://kids.koneacademy.io/blog/robotics-agriculture-cocoa-farms/'
+    canonical: 'https://kids.codkon.com/blog/robotics-agriculture-cocoa-farms/'
   },
   {
     path: 'blog/coding-as-new-literacy',
     title: 'Coding as the New Literacy: Why Programming Matters More Than Ever | Kone Kids',
     desc: 'Why learning computational syntax in childhood unlocks creative confidence and cognitive problem-solving across all academic disciplines.',
-    canonical: 'https://kids.koneacademy.io/blog/coding-as-new-literacy/'
+    canonical: 'https://kids.codkon.com/blog/coding-as-new-literacy/'
   },
   {
     path: 'blog/unlocking-hardware-microbit',
     title: 'Unlocking Hardware: The Magic of BBC micro:bit and Circuit Prototyping | Kone Kids',
     desc: 'Hands-on guide to physical computing with buttons, LEDs, buzzers, accelerometer sensors, and radio mesh communication.',
-    canonical: 'https://kids.koneacademy.io/blog/unlocking-hardware-microbit/'
+    canonical: 'https://kids.codkon.com/blog/unlocking-hardware-microbit/'
   },
   {
     path: 'blog/best-coding-platforms-kids',
     title: 'Top 5 Coding Environments for Kids: From Visual Blocks to Python | Kone Kids',
     desc: 'Comparative review of Blockly, Scratch, MakeCode, Replit, and Kone Kids IDE for young learners stepping into computer science.',
-    canonical: 'https://kids.koneacademy.io/blog/best-coding-platforms-kids/'
+    canonical: 'https://kids.codkon.com/blog/best-coding-platforms-kids/'
   }
 ];
 
 // Dynamically generate static routes for EVERY individual STEM Kit & Science Set
 for (const kit of STEM_KITS) {
-  const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.koneacademy.io${kit.image}`;
+  const fullImg = kit.image.startsWith('http') ? kit.image : `https://kids.codkon.com${kit.image}`;
   const kitTitle = `${kit.title} | Kone Kids STEM Hardware`;
   const kitDesc = `${kit.tagline} Designed for ${kit.ageRange}. Includes hands-on hardware components, syllabus alignments, and step-by-step video tutorials. Doorstep delivery across Ghana.`;
-  const canonical = `https://kids.koneacademy.io/kits/${kit.slug}/`;
+  const canonical = `https://kids.codkon.com/kits/${kit.slug}/`;
 
   // 1. Primary slug route: /kits/<slug>
   routes.push({
@@ -198,12 +198,12 @@ for (const kit of STEM_KITS) {
 
 // School STEM Lab Pack routes
 if (SCHOOL_PACK_OFFERING) {
-  const schoolImg = `https://kids.koneacademy.io${SCHOOL_PACK_OFFERING.image}`;
+  const schoolImg = `https://kids.codkon.com${SCHOOL_PACK_OFFERING.image}`;
   routes.push({
     path: 'kits/school-stem-pack',
     title: `${SCHOOL_PACK_OFFERING.title} | Kone Kids`,
     desc: SCHOOL_PACK_OFFERING.subtitle,
-    canonical: 'https://kids.koneacademy.io/kits/school-stem-pack/',
+    canonical: 'https://kids.codkon.com/kits/school-stem-pack/',
     image: schoolImg,
     isProduct: true
   });
@@ -211,7 +211,7 @@ if (SCHOOL_PACK_OFFERING) {
     path: 'kits/school-pack',
     title: `${SCHOOL_PACK_OFFERING.title} | Kone Kids`,
     desc: SCHOOL_PACK_OFFERING.subtitle,
-    canonical: 'https://kids.koneacademy.io/kits/school-pack/',
+    canonical: 'https://kids.codkon.com/kits/school-pack/',
     image: schoolImg,
     isProduct: true
   });
@@ -223,19 +223,19 @@ routes.push(
     path: 'playground',
     title: 'Blockly Coding Playground & Simulator | Kone Kids',
     desc: 'Interactive visual block coding sandbox for kids with sprite animations, game physics, and real-time JavaScript/Python output.',
-    canonical: 'https://kids.koneacademy.io/playground/'
+    canonical: 'https://kids.codkon.com/playground/'
   },
   {
     path: 'studio',
     title: 'Blockly Coding Studio | Kone Kids',
     desc: 'Interactive visual block coding sandbox for kids with sprite animations, game physics, and real-time JavaScript/Python output.',
-    canonical: 'https://kids.koneacademy.io/studio/'
+    canonical: 'https://kids.codkon.com/studio/'
   },
   {
     path: 'editor',
     title: 'Blockly Code Editor | Kone Kids',
     desc: 'Interactive visual block coding sandbox for kids with sprite animations, game physics, and real-time JavaScript/Python output.',
-    canonical: 'https://kids.koneacademy.io/editor/'
+    canonical: 'https://kids.codkon.com/editor/'
   }
 );
 
@@ -251,7 +251,7 @@ for (const m of CODING_MISSIONS) {
     path: `${hub}/mission/${m.id}`,
     title: `${m.name} - ${hubLabel} Mission | Kone Kids`,
     desc: `${m.objective} Earn ${m.xpReward} XP in the Kone Kids interactive ${hubLabel}.`,
-    canonical: `https://kids.koneacademy.io/${hub}/mission/${m.id}/`
+    canonical: `https://kids.codkon.com/${hub}/mission/${m.id}/`
   });
 
   // Secondary coding alias if not already in coding hub
@@ -260,7 +260,7 @@ for (const m of CODING_MISSIONS) {
       path: `coding/mission/${m.id}`,
       title: `${m.name} - ${hubLabel} Mission | Kone Kids`,
       desc: `${m.objective} Earn ${m.xpReward} XP in the Kone Kids interactive ${hubLabel}.`,
-      canonical: `https://kids.koneacademy.io/coding/mission/${m.id}/`
+      canonical: `https://kids.codkon.com/coding/mission/${m.id}/`
     });
   }
 }
@@ -288,7 +288,7 @@ for (const r of routes) {
 
   // Specific Item Thumbnail / OG Image & Twitter Image
   if (r.image) {
-    const fullImg = r.image.startsWith('http') ? r.image : `https://kids.koneacademy.io${r.image}`;
+    const fullImg = r.image.startsWith('http') ? r.image : `https://kids.codkon.com${r.image}`;
     html = html.replace(/<meta property="og:image" content=".*?" \/>/i, `<meta property="og:image" content="${fullImg}" />`);
     html = html.replace(/<meta property="og:image:secure_url" content=".*?" \/>/i, `<meta property="og:image:secure_url" content="${fullImg}" />`);
     html = html.replace(/<meta property="og:image:alt" content=".*?" \/>/i, `<meta property="og:image:alt" content="${cleanTitle}" />`);

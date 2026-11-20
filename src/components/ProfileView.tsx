@@ -374,7 +374,7 @@ const ProfileView: React.FC = () => {
                   }}>
                     <LogIn size={16} /> Class Login 🎒
                   </Link>
-                  <a href="https://www.koneacademy.io" target="_blank" rel="noopener noreferrer" style={{
+                  <a href="https://academy.codkon.com" target="_blank" rel="noopener noreferrer" style={{
                     background: 'var(--kids-orange)',
                     color: 'white',
                     padding: '0.75rem 1rem',
@@ -514,10 +514,10 @@ const ProfileView: React.FC = () => {
           fontSize: '0.85rem',
           marginTop: '0.75rem'
         }}>
-          <a href="https://code.koneacademy.io" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Code</a>
-          <a href="https://lab.koneacademy.io" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Lab</a>
-          <a href="https://farms.koneacademy.io" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Farms</a>
-          <a href="https://shop.koneacademy.io" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Shop</a>
+          <a href="https://code.codkon.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Code</a>
+          <a href="https://lab.codkon.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Lab</a>
+          <a href="https://farms.codkon.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Farms</a>
+          <a href="https://shop.codkon.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--kids-text-muted)', textDecoration: 'none', fontWeight: 700 }}>Kone Shop</a>
         </div>
       </div>
 

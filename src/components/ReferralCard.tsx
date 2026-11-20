@@ -13,7 +13,7 @@ interface InvitedFriend {
 export const ReferralCard: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const studentId = 'student_kca_9281'; // Mock current student ID
-  const referralLink = `https://kids.koneacademy.io/join?ref=${studentId}`;
+  const referralLink = `https://kids.codkon.com/join?ref=${studentId}`;
 
   // Mock list of referred friends
   const [friends] = useState<InvitedFriend[]>([
