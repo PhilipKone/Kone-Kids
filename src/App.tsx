@@ -1,3 +1,4 @@
+import { useEffect as useNotFoundEffect } from 'react';
 import { stripEmoji, CodingLabIcon, RoboticsLabIcon, AIStudioIcon, SparkleStarIcon, RocketLaunchIcon, StoryBookIcon, GlobeNetworkIcon, BackpackLoginIcon, StreakFlameIcon, DropMascotMiniIcon } from './components/PlayfulIcons';
 import React, { useState } from 'react'
 import { Routes, Route, Link } from 'react-router-dom'
@@ -1282,6 +1283,7 @@ function AppContent() {
                 />
               } 
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </React.Suspense>
       </div>
@@ -1316,6 +1318,27 @@ function AppContent() {
   )
 }
 
+function NotFound() {
+  useNotFoundEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => {
+      document.head.removeChild(meta);
+    };
+  }, []);
+
+  return (
+    <div style={{ minHeight: '70vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center', color: 'var(--kids-text)' }}>
+      <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '0.5rem' }}>404 — Page Not Found</h1>
+      <p style={{ color: 'var(--kids-text-muted)', marginBottom: '1.5rem' }}>Oops! We could not find the page you were looking for.</p>
+      <Link to="/" style={{ background: 'var(--kids-blue)', color: '#fff', padding: '0.75rem 1.5rem', borderRadius: '14px', fontWeight: 800, textDecoration: 'none' }}>
+        Back to Kone Kids Home
+      </Link>
+    </div>
+  );
+}
 function App() {
   return (
     <ThemeProvider>
