@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Google Indexing Script
         run: |
-          npx google-indexing-script https://kids.koneacademy.io/ --path service_account.json
+          npx google-indexing-script https://kids.codkon.com/ --path service_account.json
 
       - name: Clean up Credentials
         if: always()
