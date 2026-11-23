@@ -1549,22 +1549,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Hello Hardware: Blinking External LEDs",
             "description": "Wire an LED with a 220-ohm resistor and code custom heartbeat blink rhythms.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "digital_write",
-              "wait_ms",
-              "repeat_loop"
-            ]
+            "blocksFocused": ["LED State","Wait Timer","Repeat Ext"]
           },
           {
             "id": "l2ef-2",
             "title": "PWM Fading & RGB Color Mixing",
             "description": "Use analogWrite PWM duty cycles to blend smooth RGB colors.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "pwm_write",
-              "for_loop",
-              "math_map"
-            ]
+            "blocksFocused": ["LED State","Repeat Ext","Math Number"]
           }
         ]
       },
@@ -1579,22 +1571,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Tactile Switches & Debounced Counters",
             "description": "Read pushbutton states to toggle modes and count presses.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "digital_read",
-              "if_else",
-              "variables_set"
-            ]
+            "blocksFocused": ["On Click","Controls If","Variables Set"]
           },
           {
             "id": "l2ef-4",
             "title": "LDR Light Sensor & Piezo Alarm",
             "description": "Build a twilight detector that sounds a melody when lights dim.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "analog_read",
-              "logic_compare",
-              "tone_play"
-            ]
+            "blocksFocused": ["Logic Compare","Controls If","Ghana Kit Buzzer"]
           }
         ]
       },
@@ -1609,22 +1593,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Multi-Zone Reaction Timer Circuit",
             "description": "Program a two-player LED reflex tester with buzzer feedback.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "random_int",
-              "millis_timer",
-              "digital_read"
-            ]
+            "blocksFocused": ["Wait Timer","Variables Set","Ghana Kit Buzzer"]
           },
           {
             "id": "l2ef-6",
             "title": "Capstone: Smart Study Desk Sentinel",
             "description": "Build an automated ambient lamp and posture/break reminder station.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "sensor_fusion",
-              "state_machine",
-              "cpp_preview"
-            ]
+            "blocksFocused": ["LED State","Ghana Kit Buzzer","Controls If"]
           }
         ]
       }
@@ -1685,22 +1661,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "First Ignition: Motor Polarity & Straight Drive",
             "description": "Wire an H-bridge motor driver and tune left/right wheel balance.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "motor_run",
-              "wait_sec",
-              "motor_stop"
-            ]
+            "blocksFocused": ["Robot Move","Wait Timer","Robot Stop"]
           },
           {
             "id": "l2rf-2",
             "title": "Geometric Patrol: Squares & Figure-Eights",
             "description": "Use repeat loops and calibrated 90-degree pivots to trace floor shapes.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "repeat_loop",
-              "motor_turn",
-              "variables_set"
-            ]
+            "blocksFocused": ["Repeat Ext","Robot Move","Robot Turn"]
           }
         ]
       },
@@ -1715,22 +1683,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Ultrasonic Radar & Auto-Braking",
             "description": "Measure obstacle distance and brake smoothly before impact.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "ultrasonic_cm",
-              "if_else",
-              "pwm_speed"
-            ]
+            "blocksFocused": ["Robot Distance","Controls If","Robot Stop"]
           },
           {
             "id": "l2rf-4",
             "title": "Panning Servo Scanner",
             "description": "Sweep a servo-mounted sensor left and right to find open corridors.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "servo_angle",
-              "logic_compare",
-              "list_store"
-            ]
+            "blocksFocused": ["Ghana Kit Servo","Robot Distance","Logic Compare"]
           }
         ]
       },
@@ -1745,22 +1705,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Line-Following & Edge Detection",
             "description": "Use infrared reflectance sensors to track dark paths on white surfaces.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "ir_sensor",
-              "while_loop",
-              "motor_steer"
-            ]
+            "blocksFocused": ["Robot Distance","Controls If","Robot Turn"]
           },
           {
             "id": "l2rf-6",
             "title": "Capstone: Autonomous Maze Explorer Rover",
             "description": "Deploy a self-navigating rover that scans, reverses, and escapes box mazes.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "autonomous_loop",
-              "sensor_scan",
-              "telemetry_log"
-            ]
+            "blocksFocused": ["Robot Move","Robot Distance","Ghana Kit Servo"]
           }
         ]
       }
@@ -1821,22 +1773,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Serial Handshake: App Buttons to LED Relays",
             "description": "Toggle physical room lights from custom UI switches over USB Serial.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "serial_write",
-              "on_click",
-              "digital_write"
-            ]
+            "blocksFocused": ["Mobile Button","On Click","LED State"]
           },
           {
             "id": "l2ea-2",
             "title": "PWM Dimmer Sliders & Fan Speed Controllers",
             "description": "Map on-screen slider values (0–255) to live motor and LED intensity.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "on_slider",
-              "serial_send_int",
-              "pwm_write"
-            ]
+            "blocksFocused": ["Mobile Screen","Math Number","LED State"]
           }
         ]
       },
@@ -1851,22 +1795,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Digital Thermometer & Humidity Gauge App",
             "description": "Read environmental sensors and render live color-coded gauge cards.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "serial_read_line",
-              "ui_gauge_update",
-              "math_round"
-            ]
+            "blocksFocused": ["Logic Compare","Variables Set","LED State"]
           },
           {
             "id": "l2ea-4",
             "title": "Automated Threshold Rules Engine",
             "description": "Trigger app notifications and hardware buzzers when limits are crossed.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "if_else",
-              "logic_operation",
-              "alert_banner"
-            ]
+            "blocksFocused": ["Controls If","Logic Compare","Ghana Kit Buzzer"]
           }
         ]
       },
@@ -1881,22 +1817,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Scene Presets: Study, Night & Eco Modes",
             "description": "Save and dispatch multi-pin hardware states with one tap.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "objects_map",
-              "serial_batch",
-              "switch_screen"
-            ]
+            "blocksFocused": ["Mobile Button","LED State","DB Save"]
           },
           {
             "id": "l2ea-6",
             "title": "Capstone: Kone Smart Room Control App",
             "description": "Build a full smart-room controller with live sensor charts and device toggles.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "two_way_serial",
-              "state_sync",
-              "ux_polish"
-            ]
+            "blocksFocused": ["Mobile Screen","LED State","Ghana Kit Buzzer"]
           }
         ]
       }
@@ -1957,22 +1885,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "D-Pad Controller & Emergency Stop App",
             "description": "Create responsive drive buttons with an instant fail-safe halt trigger.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "on_press",
-              "on_release",
-              "serial_cmd"
-            ]
+            "blocksFocused": ["Mobile Button","Robot Move","Robot Stop"]
           },
           {
             "id": "l2ra-2",
             "title": "Waypoint Sequencer: Record & Replay Paths",
             "description": "Store forward/turn instructions in a list and execute them sequentially.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "lists_append",
-              "for_each",
-              "motor_execute"
-            ]
+            "blocksFocused": ["Repeat Ext","Robot Move","Robot Turn"]
           }
         ]
       },
@@ -1987,22 +1907,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Live Ultrasonic Proximity Radar UI",
             "description": "Render dynamic warning zones as the robot approaches obstacles.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "serial_parse",
-              "ui_progress_bar",
-              "if_else"
-            ]
+            "blocksFocused": ["Robot Distance","Logic Compare","Mobile Screen"]
           },
           {
             "id": "l2ra-4",
             "title": "Speed Gear Selector & Mission Timer",
             "description": "Add Low/Medium/Turbo PWM presets and lap-time tracking.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "variables_set",
-              "timer_tick",
-              "pwm_scale"
-            ]
+            "blocksFocused": ["Variables Set","Wait Timer","Robot Move"]
           }
         ]
       },
@@ -2017,22 +1929,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Mode Switcher: Manual vs. Patrol State Machine",
             "description": "Toggle robot behavior modes cleanly from the control app.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "state_switch",
-              "serial_sync",
-              "status_badge"
-            ]
+            "blocksFocused": ["Mobile Button","Controls If","Robot Turn"]
           },
           {
             "id": "l2ra-6",
             "title": "Capstone: Kone Rover Mission Control Suite",
             "description": "Deliver a complete waypoint planner, live radar, and telemetry logger app.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "command_queue",
-              "telemetry_ui",
-              "failsafe_check"
-            ]
+            "blocksFocused": ["Mobile Screen","Robot Distance","Robot Move"]
           }
         ]
       }
@@ -2093,22 +1997,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "BLE Pairing & Wireless LED Torch App",
             "description": "Connect over Bluetooth and toggle physical circuit lights with mobile taps.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "ble_connect",
-              "on_tap",
-              "ble_send"
-            ]
+            "blocksFocused": ["Mobile Screen","Mobile Button","LED State"]
           },
           {
             "id": "l2em-2",
             "title": "Color Wheel & Mood Lamp Mobile Controller",
             "description": "Pick colors on a mobile palette to update a physical RGB strip wirelessly.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "color_picker",
-              "rgb_split",
-              "ble_write_bytes"
-            ]
+            "blocksFocused": ["Mobile Button","Set Bg Color","LED State"]
           }
         ]
       },
@@ -2123,22 +2019,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Tilt-to-Servo & Shake-to-Buzzer Gestures",
             "description": "Map smartphone accelerometer tilt angles to a physical micro-servo.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "accel_tilt",
-              "math_map",
-              "ble_send_int"
-            ]
+            "blocksFocused": ["Math Number","Variables Set","Ghana Kit Servo"]
           },
           {
             "id": "l2em-4",
             "title": "Doorbell & Intruder Alert Push Screen",
             "description": "Trigger a phone chime and vibration when a hardware sensor detects motion.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "ble_on_receive",
-              "vibrate_phone",
-              "play_sound"
-            ]
+            "blocksFocused": ["Controls If","Ghana Kit Buzzer","Sound Play Effect"]
           }
         ]
       },
@@ -2153,22 +2041,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "BLE Signal Strength & Auto-Reconnect Logic",
             "description": "Handle wireless disconnects gracefully with status banners.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "ble_status",
-              "timer_retry",
-              "ui_badge"
-            ]
+            "blocksFocused": ["Wait Timer","Controls If","Mobile Screen"]
           },
           {
             "id": "l2em-6",
             "title": "Capstone: Pocket Smart-Home & Security Companion",
             "description": "Create a mobile app that controls lights, reads sensors, and alarms on triggers.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "ble_two_way",
-              "mobile_tabs",
-              "ux_testing"
-            ]
+            "blocksFocused": ["Mobile Screen","LED State","Ghana Kit Buzzer"]
           }
         ]
       }
@@ -2229,22 +2109,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Wireless Rover Pairing & Touch Pedals",
             "description": "Connect a mobile app to a BLE rover for forward, reverse, and spin control.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "ble_connect",
-              "on_touch_down",
-              "motor_cmd"
-            ]
+            "blocksFocused": ["Mobile Screen","Mobile Button","Robot Move"]
           },
           {
             "id": "l2rm-2",
             "title": "Differential Steering Math & Deadzones",
             "description": "Translate X/Y joystick drag offsets into smooth left and right wheel speeds.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "touch_xy",
-              "math_clamp",
-              "differential_mix"
-            ]
+            "blocksFocused": ["Math Number","Robot Move","Robot Turn"]
           }
         ]
       },
@@ -2259,22 +2131,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Gyro/Accelerometer Tilt Pilot Mode",
             "description": "Steer the rover smoothly by tilting the smartphone forward and sideways.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "accel_xy",
-              "deadzone_filter",
-              "ble_stream"
-            ]
+            "blocksFocused": ["Logic Compare","Controls If","Robot Turn"]
           },
           {
             "id": "l2rm-4",
             "title": "Obstacle Proximity Vibration & Headlights",
             "description": "Vibrate the phone and flash rover LEDs when ultrasonic radar detects walls.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "ble_receive",
-              "if_else",
-              "vibrate_phone"
-            ]
+            "blocksFocused": ["Robot Distance","Controls If","LED State"]
           }
         ]
       },
@@ -2289,22 +2153,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "One-Tap Park & 360-Spin Trick Macros",
             "description": "Trigger pre-programmed autonomous sequences from mobile action buttons.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "macro_trigger",
-              "state_badge",
-              "ble_send"
-            ]
+            "blocksFocused": ["Mobile Button","Repeat Ext","Robot Turn"]
           },
           {
             "id": "l2rm-6",
             "title": "Capstone: Kone Tilt-Pilot Rover App",
             "description": "Deliver a dual-mode (Joystick + Tilt) mobile controller with live radar feedback.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "dual_control_ui",
-              "watchdog_stop",
-              "telemetry_bar"
-            ]
+            "blocksFocused": ["Mobile Screen","Robot Distance","Robot Stop"]
           }
         ]
       }
@@ -2365,22 +2221,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Web Serial Connect & Browser LED Switch",
             "description": "Wire an HTML button with JavaScript to toggle physical breadboard LEDs.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "web_serial_open",
-              "dom_click",
-              "serial_write"
-            ]
+            "blocksFocused": ["Web Text","On Click","LED State"]
           },
           {
             "id": "l2ew-2",
             "title": "CSS Range Sliders for Live PWM Control",
             "description": "Style custom HTML sliders that smoothly dim LEDs and spin motors.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "html_range",
-              "css_variables",
-              "pwm_send"
-            ]
+            "blocksFocused": ["Web Style","Math Number","LED State"]
           }
         ]
       },
@@ -2395,22 +2243,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Live Light & Temperature DOM Cards",
             "description": "Parse incoming serial readings and update CSS gauge bars in real time.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "serial_reader",
-              "dom_text",
-              "css_width"
-            ]
+            "blocksFocused": ["Web Text","Variables Set","Logic Compare"]
           },
           {
             "id": "l2ew-4",
             "title": "Threshold Alerts & Browser Audio Chimes",
             "description": "Change card themes to red and play Web Audio alerts on high readings.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "if_else",
-              "class_list_toggle",
-              "web_audio"
-            ]
+            "blocksFocused": ["Web Style","Controls If","Sound Play Effect"]
           }
         ]
       },
@@ -2425,22 +2265,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Live Sensor History Table & CSV Snapshot",
             "description": "Append timestamped readings to an HTML table for classroom experiments.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "array_push",
-              "dom_table_row",
-              "timestamp"
-            ]
+            "blocksFocused": ["Web Text","DB Save","Wait Timer"]
           },
           {
             "id": "l2ew-6",
             "title": "Capstone: Kone Web IoT Environmental Portal",
             "description": "Launch a responsive browser dashboard monitoring live sensors and controlling relays.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "css_grid",
-              "web_serial_loop",
-              "dom_sync"
-            ]
+            "blocksFocused": ["Web Text","Web Style","LED State"]
           }
         ]
       }
@@ -2501,22 +2333,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "WASD & Arrow-Key Rover Drive",
             "description": "Capture keydown and keyup DOM events to drive and brake a rover cleanly.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "keydown_event",
-              "keyup_event",
-              "rover_drive"
-            ]
+            "blocksFocused": ["On Key Press","Robot Move","Robot Stop"]
           },
           {
             "id": "l2rw-2",
             "title": "On-Screen Cockpit HUD & Speed Gears",
             "description": "Build HTML/CSS speed selectors and directional indicator lights.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "dom_class",
-              "variables_set",
-              "pwm_gear"
-            ]
+            "blocksFocused": ["Web Style","Variables Set","Robot Turn"]
           }
         ]
       },
@@ -2531,22 +2355,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Drawing Ultrasonic Distance Bars on Canvas",
             "description": "Plot live centimeter readings onto a browser sonar grid.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "canvas_arc",
-              "canvas_line",
-              "serial_read"
-            ]
+            "blocksFocused": ["Shape Circle","Robot Distance","Logic Compare"]
           },
           {
             "id": "l2rw-4",
             "title": "Web Waypoint Grid & Sequence Runner",
             "description": "Click grid tiles on a webpage to generate and run rover navigation steps.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "array_queue",
-              "async_wait",
-              "motor_step"
-            ]
+            "blocksFocused": ["On Click","Wait Timer","Robot Move"]
           }
         ]
       },
@@ -2561,22 +2377,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Autonomous Patrol Toggle & Obstacle Counter",
             "description": "Track detected obstacles and mission duration in a live web sidebar.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "counter_var",
-              "timer_interval",
-              "dom_update"
-            ]
+            "blocksFocused": ["Variables Set","Wait Timer","Web Text"]
           },
           {
             "id": "l2rw-6",
             "title": "Capstone: Kone Web Rover Command Center",
             "description": "Deliver a full browser cockpit with WASD control, Canvas radar, and waypoint queue.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "html5_canvas",
-              "web_serial",
-              "hud_layout"
-            ]
+            "blocksFocused": ["On Key Press","Robot Distance","Web Style"]
           }
         ]
       }
@@ -2637,22 +2445,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "PC Serial Monitor & Voltage Converter",
             "description": "Convert raw 0–1023 ADC counts into 0.0V–5.0V desktop readouts.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "serial_read",
-              "math_divide",
-              "format_float"
-            ]
+            "blocksFocused": ["Desktop Window","Math Number","Variables Set"]
           },
           {
             "id": "l2ed-2",
             "title": "Live Rolling Waveform Graph",
             "description": "Plot continuous sensor samples on a scrolling desktop graph.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "list_buffer",
-              "plot_line",
-              "timer_loop"
-            ]
+            "blocksFocused": ["Draw Chart","Wait Timer","Variables Set"]
           }
         ]
       },
@@ -2667,22 +2467,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Session Recorder & Min/Max/Mean Analyzer",
             "description": "Store timed sensor samples in arrays and calculate summary stats.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "lists_append",
-              "math_average",
-              "min_max"
-            ]
+            "blocksFocused": ["Data Create Table","Data Get Max","List Sort"]
           },
           {
             "id": "l2ed-4",
             "title": "CSV Science Report Generator",
             "description": "Format recorded timestamps and sensor columns into downloadable CSV files.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "text_join",
-              "for_each",
-              "file_export"
-            ]
+            "blocksFocused": ["Data Render Chart","DB Save","Desktop Window"]
           }
         ]
       },
@@ -2697,22 +2489,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Automated Pin & Sensor Diagnostic Tester",
             "description": "Sweep through output pins and verify sensor responses automatically.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "for_loop",
-              "digital_write",
-              "status_pass_fail"
-            ]
+            "blocksFocused": ["Repeat Ext","LED State","Ghana Kit Buzzer"]
           },
           {
             "id": "l2ed-6",
             "title": "Capstone: Kone Desktop Circuit Lab Suite",
             "description": "Build a desktop instrumentation app with live plotter, stats, and CSV export.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "serial_logger",
-              "live_chart",
-              "csv_report"
-            ]
+            "blocksFocused": ["Desktop Window","Data Render Chart","DB Save"]
           }
         ]
       }
@@ -2773,22 +2557,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Left/Right Motor Trim & Speed Curve Tuner",
             "description": "Adjust PWM offsets from desktop inputs until the rover drives dead-straight.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "numeric_input",
-              "serial_config",
-              "pwm_trim"
-            ]
+            "blocksFocused": ["Desktop Window","Math Number","Robot Move"]
           },
           {
             "id": "l2rd-2",
             "title": "90-Degree Pivot Duration Calibrator",
             "description": "Test and save exact turn millisecond constants for different floor surfaces.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "variables_set",
-              "timer_test",
-              "preset_save"
-            ]
+            "blocksFocused": ["Variables Set","Wait Timer","Robot Turn"]
           }
         ]
       },
@@ -2803,22 +2579,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "2D Odometry Path Visualizer",
             "description": "Trace estimated X/Y coordinates and heading angles on a desktop map.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "math_trig",
-              "plot_point",
-              "heading_var"
-            ]
+            "blocksFocused": ["Shape Circle","Math Number","Variables Set"]
           },
           {
             "id": "l2rd-4",
             "title": "Proportional Wall-Approach Controller",
             "description": "Scale motor speed proportionally to ultrasonic distance for smooth stops.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "math_map",
-              "logic_clamp",
-              "motor_speed"
-            ]
+            "blocksFocused": ["Robot Distance","Logic Compare","Robot Move"]
           }
         ]
       },
@@ -2833,22 +2601,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Black-Box Telemetry Recorder & Replay",
             "description": "Save ultrasonic and motor logs to inspect why a rover turned at each step.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "list_log",
-              "step_replay",
-              "debug_view"
-            ]
+            "blocksFocused": ["Data Create Table","DB Save","Robot Stop"]
           },
           {
             "id": "l2rd-6",
             "title": "Capstone: Kone Rover Kinematics Workbench",
             "description": "Deliver a desktop engineering tool for motor tuning, 2D path plotting, and log replay.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "calibration_ui",
-              "odometry_map",
-              "log_analyzer"
-            ]
+            "blocksFocused": ["Desktop Window","Robot Distance","Data Render Chart"]
           }
         ]
       }
@@ -2909,22 +2669,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Tactile Jump Button & Debounced Fire Triggers",
             "description": "Wire physical pushbuttons to make a platformer hero jump and shoot.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "digital_read",
-              "serial_event",
-              "sprite_jump"
-            ]
+            "blocksFocused": ["On Click","Character Jump","Game Physics"]
           },
           {
             "id": "l2eg-2",
             "title": "Rotary Potentiometer Steering Wheel",
             "description": "Map a twisting dial knob directly to a spaceship or Pong paddle position.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "analog_read",
-              "math_map",
-              "sprite_set_x"
-            ]
+            "blocksFocused": ["Math Number","Variables Set","Shape Circle"]
           }
         ]
       },
@@ -2939,22 +2691,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Physical 3-LED Health Bar & Damage Buzzer",
             "description": "Turn off breadboard LEDs and sound a piezo tone when the player loses a life.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "on_collision",
-              "serial_write",
-              "digital_write"
-            ]
+            "blocksFocused": ["On Collision","LED State","Ghana Kit Buzzer"]
           },
           {
             "id": "l2eg-4",
             "title": "Light-Sensor Turbo Boost Mechanic",
             "description": "Wave a hand over an LDR sensor to activate shield mode in-game.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "analog_threshold",
-              "sprite_shield",
-              "timer_buff"
-            ]
+            "blocksFocused": ["Logic Compare","Controls If","Update Score"]
           }
         ]
       },
@@ -2969,22 +2713,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "2-Player Breadboard Battle Mode",
             "description": "Support dual button/dial inputs for head-to-head classroom tournaments.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "dual_input",
-              "score_vars",
-              "game_loop"
-            ]
+            "blocksFocused": ["On Key Press","Update Score","Spawn Stars"]
           },
           {
             "id": "l2eg-6",
             "title": "Capstone: Kone Custom Arcade Controller & Game",
             "description": "Present an original 2D arcade game driven by a custom-wired physical controller.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "hardware_input",
-              "led_hud",
-              "game_polish"
-            ]
+            "blocksFocused": ["Game Physics","LED State","Ghana Kit Buzzer"]
           }
         ]
       }
@@ -3045,22 +2781,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Checkpoint Racer: Ultrasonic Gate Triggers",
             "description": "Trigger digital lap timers and fanfare sounds when the rover passes gates.",
             "duration": "45 mins",
-            "blocksFocused": [
-              "ultrasonic_trigger",
-              "timer_lap",
-              "play_sound"
-            ]
+            "blocksFocused": ["Robot Distance","Wait Timer","Sound Play Effect"]
           },
           {
             "id": "l2rg-2",
             "title": "Digital Power-Up Cards & Speed Boosts",
             "description": "Collect on-screen bonuses that temporarily unlock Turbo PWM speed on the rover.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "powerup_timer",
-              "serial_send",
-              "pwm_boost"
-            ]
+            "blocksFocused": ["Spawn Stars","Update Score","Robot Move"]
           }
         ]
       },
@@ -3075,22 +2803,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Patrol Sentinel Bot AI",
             "description": "Program a second rover to patrol a figure-eight zone and block runner paths.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "patrol_loop",
-              "ultrasonic_detect",
-              "buzzer_alert"
-            ]
+            "blocksFocused": ["Repeat Ext","Robot Turn","Ghana Kit Buzzer"]
           },
           {
             "id": "l2rg-4",
             "title": "IR / Light-Sensor Robot Tag Hit-Boxes",
             "description": "Register shield hits on the digital scoreboard when tagged by a light beam.",
             "duration": "50 mins",
-            "blocksFocused": [
-              "sensor_hit",
-              "health_decrement",
-              "ui_flash"
-            ]
+            "blocksFocused": ["On Collision","Controls If","LED State"]
           }
         ]
       },
@@ -3105,22 +2825,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             "title": "Arena Sudden-Death & Victory Celebrations",
             "description": "Trigger synchronized rover victory spins and screen confetti at game end.",
             "duration": "55 mins",
-            "blocksFocused": [
-              "win_condition",
-              "rover_spin",
-              "celebration_fx"
-            ]
+            "blocksFocused": ["Logic Compare","Robot Turn","TTS Speak"]
           },
           {
             "id": "l2rg-6",
             "title": "Capstone: Kone Robo-Arena Mixed-Reality Game",
             "description": "Launch a tabletop robotics game with live digital HUD, checkpoints, and autonomous hazards.",
             "duration": "60 mins",
-            "blocksFocused": [
-              "mixed_reality_loop",
-              "sensor_scoring",
-              "arena_design"
-            ]
+            "blocksFocused": ["Robot Move","Robot Distance","Update Score"]
           }
         ]
       }
