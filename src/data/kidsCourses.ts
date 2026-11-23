@@ -1499,6 +1499,1639 @@ export const KIDS_COURSES: KidsCourse[] = [
       techStack: 'Kone Kids Visual App Builder & Event Logic'
     }
   }
+,
+  // ==========================================
+  // LEVEL 2: FUNDAMENTALS IN ELECTRONICS
+  // ==========================================
+  {
+    "id": "course-l2-elec-fundamentals",
+    "code": "KCA-L2-ELEC-101",
+    "pathway": "Fundamentals in Electronics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "electronics",
+    "title": "Fundamental Coding in Electronics for Kids",
+    "tagline": "Bridge visual code blocks with real breadboards, LEDs, buzzers, and microcontroller pins.",
+    "ageGroup": "Ages 7–11",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "⚡",
+    "color": "#f59e0b",
+    "accentColor": "#d97706",
+    "overview": "Students transition from screen-only code to physical computing by programming GPIO pins, reading push-buttons, and controlling LEDs and piezo buzzers with visual blocks and C++/Python side-by-side.",
+    "prerequisites": "Completion of Junior Logic & Computational Thinking (KCA-KIDS-101) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Electronics & Logic Certificate",
+    "skills": [
+      "Digital I/O Pins",
+      "Breadboard Prototyping",
+      "PWM Dimming",
+      "Sensor Thresholds",
+      "Dual-Pane Block-to-C++",
+      "Circuit Debugging"
+    ],
+    "learningOutcomes": [
+      "Wire safe LED, resistor, and pushbutton circuits on a solderless breadboard",
+      "Control digital HIGH/LOW outputs and PWM brightness using visual loops",
+      "Read analog light and temperature sensors to trigger automated responses",
+      "Inspect generated Arduino C++ and MicroPython code alongside visual blocks",
+      "Diagnose loose jumper wires and polarity errors systematically"
+    ],
+    "modules": [
+      {
+        "id": "l2-elec-fundamentals-mod-1",
+        "title": "Module 1: Digital Pins & Light Signals",
+        "duration": "Week 1–2",
+        "description": "Program GPIO outputs and timed LED patterns.",
+        "lessons": [
+          {
+            "id": "l2ef-1",
+            "title": "Hello Hardware: Blinking External LEDs",
+            "description": "Wire an LED with a 220-ohm resistor and code custom heartbeat blink rhythms.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "digital_write",
+              "wait_ms",
+              "repeat_loop"
+            ]
+          },
+          {
+            "id": "l2ef-2",
+            "title": "PWM Fading & RGB Color Mixing",
+            "description": "Use analogWrite PWM duty cycles to blend smooth RGB colors.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "pwm_write",
+              "for_loop",
+              "math_map"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-fundamentals-mod-2",
+        "title": "Module 2: Switches, Buzzers & Sensors",
+        "duration": "Week 3–4",
+        "description": "Read physical inputs and trigger sound and light alerts.",
+        "lessons": [
+          {
+            "id": "l2ef-3",
+            "title": "Tactile Switches & Debounced Counters",
+            "description": "Read pushbutton states to toggle modes and count presses.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "digital_read",
+              "if_else",
+              "variables_set"
+            ]
+          },
+          {
+            "id": "l2ef-4",
+            "title": "LDR Light Sensor & Piezo Alarm",
+            "description": "Build a twilight detector that sounds a melody when lights dim.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "analog_read",
+              "logic_compare",
+              "tone_play"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-fundamentals-mod-3",
+        "title": "Module 3: Smart Circuit Capstone",
+        "duration": "Week 5–6",
+        "description": "Combine multiple sensors and outputs into a desk gadget.",
+        "lessons": [
+          {
+            "id": "l2ef-5",
+            "title": "Multi-Zone Reaction Timer Circuit",
+            "description": "Program a two-player LED reflex tester with buzzer feedback.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "random_int",
+              "millis_timer",
+              "digital_read"
+            ]
+          },
+          {
+            "id": "l2ef-6",
+            "title": "Capstone: Smart Study Desk Sentinel",
+            "description": "Build an automated ambient lamp and posture/break reminder station.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "sensor_fusion",
+              "state_machine",
+              "cpp_preview"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Smart Study Desk Sentinel",
+      "description": "A microcontroller desk station that adjusts LED lighting based on room brightness and chimes study break intervals.",
+      "previewBadge": "Capstone: Smart Electronics Station",
+      "techStack": "Microcontroller + Breadboard + Dual-Pane IDE"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: FUNDAMENTALS IN ROBOTICS
+  // ==========================================
+  {
+    "id": "course-l2-robo-fundamentals",
+    "code": "KCA-L2-ROBO-101",
+    "pathway": "Fundamentals in Robotics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "robotics",
+    "title": "Fundamental Coding in Robotics for Kids",
+    "tagline": "Program wheeled rovers, servo arms, and ultrasonic eyes to navigate physical spaces.",
+    "ageGroup": "Ages 7–11",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "🤖",
+    "color": "#0ea5e9",
+    "accentColor": "#0284c7",
+    "overview": "Students combine foundational coding loops and conditionals with DC gear motors, motor drivers, and ultrasonic distance sensors to turn static code into autonomous robotic motion.",
+    "prerequisites": "Completion of Junior Logic & Computational Thinking (KCA-KIDS-101) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Robotics & Motion Certificate",
+    "skills": [
+      "Differential Drive",
+      "H-Bridge Motor Control",
+      "Ultrasonic Sensing",
+      "Servo Positioning",
+      "Obstacle Avoidance",
+      "Kinematics Calibration"
+    ],
+    "learningOutcomes": [
+      "Control forward, reverse, pivot, and curved trajectories using dual DC motors",
+      "Calibrate wheel PWM speeds and turn durations for accurate floor navigation",
+      "Read ultrasonic echo distances in centimeters to prevent collisions",
+      "Sweep a micro-servo scanner to inspect left and right clearance paths",
+      "Program an autonomous maze-escaping robot using If/Else decision trees"
+    ],
+    "modules": [
+      {
+        "id": "l2-robo-fundamentals-mod-1",
+        "title": "Module 1: Motors, Wheels & Path Geometry",
+        "duration": "Week 1–2",
+        "description": "Master differential drive and timed maneuvers.",
+        "lessons": [
+          {
+            "id": "l2rf-1",
+            "title": "First Ignition: Motor Polarity & Straight Drive",
+            "description": "Wire an H-bridge motor driver and tune left/right wheel balance.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "motor_run",
+              "wait_sec",
+              "motor_stop"
+            ]
+          },
+          {
+            "id": "l2rf-2",
+            "title": "Geometric Patrol: Squares & Figure-Eights",
+            "description": "Use repeat loops and calibrated 90-degree pivots to trace floor shapes.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "repeat_loop",
+              "motor_turn",
+              "variables_set"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-fundamentals-mod-2",
+        "title": "Module 2: Ultrasonic Eyes & Servo Turrets",
+        "duration": "Week 3–4",
+        "description": "Give the rover spatial awareness.",
+        "lessons": [
+          {
+            "id": "l2rf-3",
+            "title": "Ultrasonic Radar & Auto-Braking",
+            "description": "Measure obstacle distance and brake smoothly before impact.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "ultrasonic_cm",
+              "if_else",
+              "pwm_speed"
+            ]
+          },
+          {
+            "id": "l2rf-4",
+            "title": "Panning Servo Scanner",
+            "description": "Sweep a servo-mounted sensor left and right to find open corridors.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "servo_angle",
+              "logic_compare",
+              "list_store"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-fundamentals-mod-3",
+        "title": "Module 3: Autonomous Rover Capstone",
+        "duration": "Week 5–6",
+        "description": "Integrate drive, sensing, and decision loops.",
+        "lessons": [
+          {
+            "id": "l2rf-5",
+            "title": "Line-Following & Edge Detection",
+            "description": "Use infrared reflectance sensors to track dark paths on white surfaces.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "ir_sensor",
+              "while_loop",
+              "motor_steer"
+            ]
+          },
+          {
+            "id": "l2rf-6",
+            "title": "Capstone: Autonomous Maze Explorer Rover",
+            "description": "Deploy a self-navigating rover that scans, reverses, and escapes box mazes.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "autonomous_loop",
+              "sensor_scan",
+              "telemetry_log"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Autonomous Maze Explorer Rover",
+      "description": "A 2WD ultrasonic-guided rover that scans corridors with a servo turret and navigates obstacle courses independently.",
+      "previewBadge": "Capstone: Autonomous Rover",
+      "techStack": "2WD Chassis + Ultrasonic + Servo + Dual-Pane IDE"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: APP DEV IN ELECTRONICS
+  // ==========================================
+  {
+    "id": "course-l2-elec-appdev",
+    "code": "KCA-L2-ELEC-102",
+    "pathway": "App Dev in Electronics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "electronics",
+    "title": "Application Development in Electronics for Kids",
+    "tagline": "Build interactive software control panels and serial dashboards for physical circuits.",
+    "ageGroup": "Ages 8–12",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "⚡",
+    "color": "#f59e0b",
+    "accentColor": "#d97706",
+    "overview": "Students connect event-driven software applications to physical electronics over USB Serial and Bluetooth, building custom control panels, live sensor gauges, and smart-home simulators.",
+    "prerequisites": "Completion of Application Development for Kids (KCA-KIDS-102) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Hardware App Developer Certificate",
+    "skills": [
+      "Serial Communication",
+      "Hardware Event Handlers",
+      "Live Sensor Gauges",
+      "Threshold Alerts",
+      "Two-Way Telemetry",
+      "Smart-Home Logic"
+    ],
+    "learningOutcomes": [
+      "Transmit button and slider commands from an app UI to a microcontroller",
+      "Parse incoming serial sensor streams to update live app gauges and status cards",
+      "Program automated threshold rules that trigger physical relays and buzzers",
+      "Design multi-screen smart-room controller interfaces with real-time state sync",
+      "Validate packet formatting so hardware never crashes on unexpected input"
+    ],
+    "modules": [
+      {
+        "id": "l2-elec-appdev-mod-1",
+        "title": "Module 1: Serial Bridges & UI Switches",
+        "duration": "Week 1–2",
+        "description": "Send commands from software buttons to hardware pins.",
+        "lessons": [
+          {
+            "id": "l2ea-1",
+            "title": "Serial Handshake: App Buttons to LED Relays",
+            "description": "Toggle physical room lights from custom UI switches over USB Serial.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "serial_write",
+              "on_click",
+              "digital_write"
+            ]
+          },
+          {
+            "id": "l2ea-2",
+            "title": "PWM Dimmer Sliders & Fan Speed Controllers",
+            "description": "Map on-screen slider values (0–255) to live motor and LED intensity.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "on_slider",
+              "serial_send_int",
+              "pwm_write"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-appdev-mod-2",
+        "title": "Module 2: Live Telemetry & Alert Rules",
+        "duration": "Week 3–4",
+        "description": "Stream circuit data back into the app interface.",
+        "lessons": [
+          {
+            "id": "l2ea-3",
+            "title": "Digital Thermometer & Humidity Gauge App",
+            "description": "Read environmental sensors and render live color-coded gauge cards.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "serial_read_line",
+              "ui_gauge_update",
+              "math_round"
+            ]
+          },
+          {
+            "id": "l2ea-4",
+            "title": "Automated Threshold Rules Engine",
+            "description": "Trigger app notifications and hardware buzzers when limits are crossed.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "if_else",
+              "logic_operation",
+              "alert_banner"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-appdev-mod-3",
+        "title": "Module 3: Smart Home Controller Capstone",
+        "duration": "Week 5–6",
+        "description": "Package a full multi-zone hardware control app.",
+        "lessons": [
+          {
+            "id": "l2ea-5",
+            "title": "Scene Presets: Study, Night & Eco Modes",
+            "description": "Save and dispatch multi-pin hardware states with one tap.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "objects_map",
+              "serial_batch",
+              "switch_screen"
+            ]
+          },
+          {
+            "id": "l2ea-6",
+            "title": "Capstone: Kone Smart Room Control App",
+            "description": "Build a full smart-room controller with live sensor charts and device toggles.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "two_way_serial",
+              "state_sync",
+              "ux_polish"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Smart Room Control App",
+      "description": "A two-way desktop/tablet control application that monitors room temperature and light while toggling physical LED zones and alarms.",
+      "previewBadge": "Capstone: Smart Room App",
+      "techStack": "Serial Bridge + Sensor Board + App Builder"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: APP DEV IN ROBOTICS
+  // ==========================================
+  {
+    "id": "course-l2-robo-appdev",
+    "code": "KCA-L2-ROBO-102",
+    "pathway": "App Dev in Robotics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "robotics",
+    "title": "Application Development in Robotics for Kids",
+    "tagline": "Create custom mission-control apps, waypoint planners, and live robot telemetry tools.",
+    "ageGroup": "Ages 8–12",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "🤖",
+    "color": "#0ea5e9",
+    "accentColor": "#0284c7",
+    "overview": "Students engineer mission-control software applications that queue movement waypoints, display live ultrasonic radar readings, and switch robots between manual and autonomous modes.",
+    "prerequisites": "Completion of Application Development for Kids (KCA-KIDS-102) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Robotics Software Engineer Certificate",
+    "skills": [
+      "Command Queues",
+      "Telemetry Dashboards",
+      "Mode State Machines",
+      "Waypoint Sequencing",
+      "Battery & Speed Monitors",
+      "Fail-Safe Protocols"
+    ],
+    "learningOutcomes": [
+      "Build a command-queue app that records and replays multi-step robot paths",
+      "Display live ultrasonic distance bars and motor speed readouts in a dashboard",
+      "Implement emergency-stop fail-safes and connection heartbeat checks",
+      "Switch seamlessly between Manual Drive and Autonomous Patrol states",
+      "Log mission runtimes and obstacle counts into a post-run summary screen"
+    ],
+    "modules": [
+      {
+        "id": "l2-robo-appdev-mod-1",
+        "title": "Module 1: Mission Control UI & Command Queues",
+        "duration": "Week 1–2",
+        "description": "Program drive pads and queued waypoint lists.",
+        "lessons": [
+          {
+            "id": "l2ra-1",
+            "title": "D-Pad Controller & Emergency Stop App",
+            "description": "Create responsive drive buttons with an instant fail-safe halt trigger.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "on_press",
+              "on_release",
+              "serial_cmd"
+            ]
+          },
+          {
+            "id": "l2ra-2",
+            "title": "Waypoint Sequencer: Record & Replay Paths",
+            "description": "Store forward/turn instructions in a list and execute them sequentially.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "lists_append",
+              "for_each",
+              "motor_execute"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-appdev-mod-2",
+        "title": "Module 2: Live Radar & Diagnostics",
+        "duration": "Week 3–4",
+        "description": "Visualize robot sensor telemetry in real time.",
+        "lessons": [
+          {
+            "id": "l2ra-3",
+            "title": "Live Ultrasonic Proximity Radar UI",
+            "description": "Render dynamic warning zones as the robot approaches obstacles.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "serial_parse",
+              "ui_progress_bar",
+              "if_else"
+            ]
+          },
+          {
+            "id": "l2ra-4",
+            "title": "Speed Gear Selector & Mission Timer",
+            "description": "Add Low/Medium/Turbo PWM presets and lap-time tracking.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "variables_set",
+              "timer_tick",
+              "pwm_scale"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-appdev-mod-3",
+        "title": "Module 3: Autonomous Mission Planner Capstone",
+        "duration": "Week 5–6",
+        "description": "Unify manual override and autonomous routines.",
+        "lessons": [
+          {
+            "id": "l2ra-5",
+            "title": "Mode Switcher: Manual vs. Patrol State Machine",
+            "description": "Toggle robot behavior modes cleanly from the control app.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "state_switch",
+              "serial_sync",
+              "status_badge"
+            ]
+          },
+          {
+            "id": "l2ra-6",
+            "title": "Capstone: Kone Rover Mission Control Suite",
+            "description": "Deliver a complete waypoint planner, live radar, and telemetry logger app.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "command_queue",
+              "telemetry_ui",
+              "failsafe_check"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Rover Mission Control Suite",
+      "description": "A mission-control app featuring programmable waypoint lists, live ultrasonic obstacle bars, speed presets, and an emergency stop.",
+      "previewBadge": "Capstone: Rover Mission Control",
+      "techStack": "Wireless Serial + Rover Kit + App Builder"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: MOBILE APP DEV IN ELECTRONICS
+  // ==========================================
+  {
+    "id": "course-l2-elec-mobile",
+    "code": "KCA-L2-ELEC-201",
+    "pathway": "Mobile App Dev in Electronics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "electronics",
+    "title": "Mobile Application Development in Electronics for Kids",
+    "tagline": "Control wireless BLE circuits and pocket IoT gadgets straight from a smartphone app.",
+    "ageGroup": "Ages 9–13",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "⚡",
+    "color": "#f59e0b",
+    "accentColor": "#d97706",
+    "overview": "Students pair smartphone touch gestures, accelerometers, and Bluetooth Low Energy (BLE) with microcontrollers to build wireless smart-lamp controllers, step-triggered wearables, and pocket alarms.",
+    "prerequisites": "Completion of Mobile App Creator for Kids (KCA-KIDS-201) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Mobile IoT Inventor Certificate",
+    "skills": [
+      "Bluetooth Low Energy (BLE)",
+      "Phone Accelerometer to Hardware",
+      "Mobile Touch Controls",
+      "Wireless Packet Parsing",
+      "Haptic & Audio Alerts",
+      "Wearable Circuits"
+    ],
+    "learningOutcomes": [
+      "Pair a mobile app with a BLE microcontroller module to send wireless commands",
+      "Use phone shake and tilt sensors to control physical RGB LEDs and servo angles",
+      "Receive wireless trigger alerts on a phone when a circuit button or sensor trips",
+      "Design thumb-friendly mobile dashboards with connection status indicators",
+      "Build battery-powered portable electronics paired with custom mobile apps"
+    ],
+    "modules": [
+      {
+        "id": "l2-elec-mobile-mod-1",
+        "title": "Module 1: Wireless BLE & Touch Triggers",
+        "duration": "Week 1–2",
+        "description": "Connect mobile screens to wireless microcontrollers.",
+        "lessons": [
+          {
+            "id": "l2em-1",
+            "title": "BLE Pairing & Wireless LED Torch App",
+            "description": "Connect over Bluetooth and toggle physical circuit lights with mobile taps.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "ble_connect",
+              "on_tap",
+              "ble_send"
+            ]
+          },
+          {
+            "id": "l2em-2",
+            "title": "Color Wheel & Mood Lamp Mobile Controller",
+            "description": "Pick colors on a mobile palette to update a physical RGB strip wirelessly.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "color_picker",
+              "rgb_split",
+              "ble_write_bytes"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-mobile-mod-2",
+        "title": "Module 2: Phone Sensors Meet Physical Circuits",
+        "duration": "Week 3–4",
+        "description": "Bridge smartphone motion and audio with hardware.",
+        "lessons": [
+          {
+            "id": "l2em-3",
+            "title": "Tilt-to-Servo & Shake-to-Buzzer Gestures",
+            "description": "Map smartphone accelerometer tilt angles to a physical micro-servo.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "accel_tilt",
+              "math_map",
+              "ble_send_int"
+            ]
+          },
+          {
+            "id": "l2em-4",
+            "title": "Doorbell & Intruder Alert Push Screen",
+            "description": "Trigger a phone chime and vibration when a hardware sensor detects motion.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "ble_on_receive",
+              "vibrate_phone",
+              "play_sound"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-mobile-mod-3",
+        "title": "Module 3: Pocket IoT Capstone",
+        "duration": "Week 5–6",
+        "description": "Build a portable wireless gadget and companion app.",
+        "lessons": [
+          {
+            "id": "l2em-5",
+            "title": "BLE Signal Strength & Auto-Reconnect Logic",
+            "description": "Handle wireless disconnects gracefully with status banners.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "ble_status",
+              "timer_retry",
+              "ui_badge"
+            ]
+          },
+          {
+            "id": "l2em-6",
+            "title": "Capstone: Pocket Smart-Home & Security Companion",
+            "description": "Create a mobile app that controls lights, reads sensors, and alarms on triggers.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "ble_two_way",
+              "mobile_tabs",
+              "ux_testing"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Pocket Smart-Home & Security Companion",
+      "description": "A smartphone app that wirelessly controls RGB mood lighting, tilts a camera mount via phone motion, and alerts on door-sensor triggers.",
+      "previewBadge": "Capstone: Mobile IoT Companion",
+      "techStack": "BLE Microcontroller + Mobile App Builder"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: MOBILE APP DEV IN ROBOTICS
+  // ==========================================
+  {
+    "id": "course-l2-robo-mobile",
+    "code": "KCA-L2-ROBO-201",
+    "pathway": "Mobile App Dev in Robotics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "robotics",
+    "title": "Mobile Application Development in Robotics for Kids",
+    "tagline": "Steer rovers with phone tilt gestures, virtual joysticks, and wireless BLE telemetry.",
+    "ageGroup": "Ages 9–13",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "🤖",
+    "color": "#0ea5e9",
+    "accentColor": "#0284c7",
+    "overview": "Students transform smartphones into wireless robotics controllers using virtual joysticks, accelerometer tilt steering, voice commands, and live BLE obstacle feedback.",
+    "prerequisites": "Completion of Mobile App Creator for Kids (KCA-KIDS-201) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Mobile Robotics Pilot Certificate",
+    "skills": [
+      "Tilt-to-Steer Kinematics",
+      "Virtual Thumb Joysticks",
+      "BLE Rover Telemetry",
+      "Voice-to-Command Mapping",
+      "Deadzone Filtering",
+      "Wireless Fail-Safes"
+    ],
+    "learningOutcomes": [
+      "Convert 2-axis mobile joystick or tilt coordinates into left/right differential motor speeds",
+      "Apply deadzone thresholds so slight hand tremors do not drift the robot",
+      "Stream live ultrasonic distance warnings back to the phone screen",
+      "Trigger horn buzzers, headlight LEDs, and autonomous park routines from mobile buttons",
+      "Implement auto-brake timeout protection if Bluetooth signal drops"
+    ],
+    "modules": [
+      {
+        "id": "l2-robo-mobile-mod-1",
+        "title": "Module 1: Touch Joysticks & BLE Drive",
+        "duration": "Week 1–2",
+        "description": "Build responsive mobile driving controls.",
+        "lessons": [
+          {
+            "id": "l2rm-1",
+            "title": "Wireless Rover Pairing & Touch Pedals",
+            "description": "Connect a mobile app to a BLE rover for forward, reverse, and spin control.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "ble_connect",
+              "on_touch_down",
+              "motor_cmd"
+            ]
+          },
+          {
+            "id": "l2rm-2",
+            "title": "Differential Steering Math & Deadzones",
+            "description": "Translate X/Y joystick drag offsets into smooth left and right wheel speeds.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "touch_xy",
+              "math_clamp",
+              "differential_mix"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-mobile-mod-2",
+        "title": "Module 2: Tilt Steering & Sensor Feedback",
+        "duration": "Week 3–4",
+        "description": "Pilot robots by tilting the phone like a steering wheel.",
+        "lessons": [
+          {
+            "id": "l2rm-3",
+            "title": "Gyro/Accelerometer Tilt Pilot Mode",
+            "description": "Steer the rover smoothly by tilting the smartphone forward and sideways.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "accel_xy",
+              "deadzone_filter",
+              "ble_stream"
+            ]
+          },
+          {
+            "id": "l2rm-4",
+            "title": "Obstacle Proximity Vibration & Headlights",
+            "description": "Vibrate the phone and flash rover LEDs when ultrasonic radar detects walls.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "ble_receive",
+              "if_else",
+              "vibrate_phone"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-mobile-mod-3",
+        "title": "Module 3: Mobile Rover Pilot Capstone",
+        "duration": "Week 5–6",
+        "description": "Combine joystick, tilt, and autonomous macros in one app.",
+        "lessons": [
+          {
+            "id": "l2rm-5",
+            "title": "One-Tap Park & 360-Spin Trick Macros",
+            "description": "Trigger pre-programmed autonomous sequences from mobile action buttons.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "macro_trigger",
+              "state_badge",
+              "ble_send"
+            ]
+          },
+          {
+            "id": "l2rm-6",
+            "title": "Capstone: Kone Tilt-Pilot Rover App",
+            "description": "Deliver a dual-mode (Joystick + Tilt) mobile controller with live radar feedback.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "dual_control_ui",
+              "watchdog_stop",
+              "telemetry_bar"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Tilt-Pilot Rover App",
+      "description": "A smartphone robotics controller supporting both virtual joystick and accelerometer tilt steering with live obstacle alerts.",
+      "previewBadge": "Capstone: Mobile Rover Controller",
+      "techStack": "BLE Rover + Smartphone Sensors + Mobile Builder"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: WEB APP DEV IN ELECTRONICS
+  // ==========================================
+  {
+    "id": "course-l2-elec-web",
+    "code": "KCA-L2-ELEC-401",
+    "pathway": "Web App Dev in Electronics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "electronics",
+    "title": "Web Application Development in Electronics for Kids",
+    "tagline": "Build browser-based IoT dashboards using HTML, CSS, JavaScript, and Web Serial/BLE.",
+    "ageGroup": "Ages 10–14",
+    "level": "Intermediate+",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "⚡",
+    "color": "#f59e0b",
+    "accentColor": "#d97706",
+    "overview": "Students connect real HTML/CSS/JavaScript web pages directly to microcontrollers via Web Serial and Web Bluetooth APIs, creating live browser sensor dashboards and remote LED controllers.",
+    "prerequisites": "Completion of Junior Web Architect & Interactive Sites (KCA-KIDS-401) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Web IoT Architect Diploma",
+    "skills": [
+      "Web Serial API",
+      "DOM Sensor Binding",
+      "CSS Grid Dashboards",
+      "JSON Telemetry Parsing",
+      "Interactive Web Controls",
+      "Browser Hardware Security"
+    ],
+    "learningOutcomes": [
+      "Connect a browser webpage to a USB microcontroller using the Web Serial API",
+      "Update HTML text, CSS progress bars, and SVG gauges dynamically from sensor data",
+      "Send JSON or text commands from HTML buttons and range sliders to hardware pins",
+      "Design responsive dark/light IoT dashboard cards with CSS Flexbox and Grid",
+      "Log timestamped sensor readings in a live browser history table"
+    ],
+    "modules": [
+      {
+        "id": "l2-elec-web-mod-1",
+        "title": "Module 1: Browser-to-Board Connections",
+        "duration": "Week 1–2",
+        "description": "Link HTML/JS interfaces with physical circuits.",
+        "lessons": [
+          {
+            "id": "l2ew-1",
+            "title": "Web Serial Connect & Browser LED Switch",
+            "description": "Wire an HTML button with JavaScript to toggle physical breadboard LEDs.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "web_serial_open",
+              "dom_click",
+              "serial_write"
+            ]
+          },
+          {
+            "id": "l2ew-2",
+            "title": "CSS Range Sliders for Live PWM Control",
+            "description": "Style custom HTML sliders that smoothly dim LEDs and spin motors.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "html_range",
+              "css_variables",
+              "pwm_send"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-web-mod-2",
+        "title": "Module 2: Live Web Sensor Dashboards",
+        "duration": "Week 3–4",
+        "description": "Stream circuit telemetry into dynamic DOM elements.",
+        "lessons": [
+          {
+            "id": "l2ew-3",
+            "title": "Live Light & Temperature DOM Cards",
+            "description": "Parse incoming serial readings and update CSS gauge bars in real time.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "serial_reader",
+              "dom_text",
+              "css_width"
+            ]
+          },
+          {
+            "id": "l2ew-4",
+            "title": "Threshold Alerts & Browser Audio Chimes",
+            "description": "Change card themes to red and play Web Audio alerts on high readings.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "if_else",
+              "class_list_toggle",
+              "web_audio"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-web-mod-3",
+        "title": "Module 3: Web Weather & IoT Portal Capstone",
+        "duration": "Week 5–6",
+        "description": "Build a multi-card browser telemetry portal.",
+        "lessons": [
+          {
+            "id": "l2ew-5",
+            "title": "Live Sensor History Table & CSV Snapshot",
+            "description": "Append timestamped readings to an HTML table for classroom experiments.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "array_push",
+              "dom_table_row",
+              "timestamp"
+            ]
+          },
+          {
+            "id": "l2ew-6",
+            "title": "Capstone: Kone Web IoT Environmental Portal",
+            "description": "Launch a responsive browser dashboard monitoring live sensors and controlling relays.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "css_grid",
+              "web_serial_loop",
+              "dom_sync"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Web IoT Environmental Portal",
+      "description": "A responsive HTML/CSS/JS web dashboard connected to a microcontroller that visualizes live sensor gauges and toggles physical outputs.",
+      "previewBadge": "Capstone: Browser IoT Dashboard",
+      "techStack": "HTML5 + CSS3 + JS Web Serial + Microcontroller"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: WEB APP DEV IN ROBOTICS
+  // ==========================================
+  {
+    "id": "course-l2-robo-web",
+    "code": "KCA-L2-ROBO-401",
+    "pathway": "Web App Dev in Robotics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "robotics",
+    "title": "Web Application Development in Robotics for Kids",
+    "tagline": "Engineer browser-based robot cockpits, live radar canvases, and web waypoint editors.",
+    "ageGroup": "Ages 10–14",
+    "level": "Intermediate+",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "🤖",
+    "color": "#0ea5e9",
+    "accentColor": "#0284c7",
+    "overview": "Students build browser-hosted robotics cockpits using HTML5 Canvas, keyboard event listeners, and Web Serial/Bluetooth to pilot rovers and visualize ultrasonic obstacle sweeps on the web.",
+    "prerequisites": "Completion of Junior Web Architect & Interactive Sites (KCA-KIDS-401) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Web Robotics Engineer Diploma",
+    "skills": [
+      "Keyboard WASD Drive",
+      "HTML5 Canvas Radar",
+      "Web Bluetooth / Serial",
+      "Visual Path Planner",
+      "Live Telemetry HUD",
+      "Async Command Loops"
+    ],
+    "learningOutcomes": [
+      "Bind keyboard arrow and WASD keydown/keyup events to differential rover drive",
+      "Draw a live ultrasonic distance sweep arc on an HTML5 Canvas element",
+      "Build an interactive web waypoint queue where students click to plot rover steps",
+      "Display live motor power, heading state, and obstacle alerts in a CSS HUD",
+      "Ensure safe keyup stop commands so the rover halts immediately when keys release"
+    ],
+    "modules": [
+      {
+        "id": "l2-robo-web-mod-1",
+        "title": "Module 1: Browser Keyboard Cockpit",
+        "duration": "Week 1–2",
+        "description": "Pilot physical or simulated rovers from a webpage.",
+        "lessons": [
+          {
+            "id": "l2rw-1",
+            "title": "WASD & Arrow-Key Rover Drive",
+            "description": "Capture keydown and keyup DOM events to drive and brake a rover cleanly.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "keydown_event",
+              "keyup_event",
+              "rover_drive"
+            ]
+          },
+          {
+            "id": "l2rw-2",
+            "title": "On-Screen Cockpit HUD & Speed Gears",
+            "description": "Build HTML/CSS speed selectors and directional indicator lights.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "dom_class",
+              "variables_set",
+              "pwm_gear"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-web-mod-2",
+        "title": "Module 2: HTML5 Canvas Sonar Visualizer",
+        "duration": "Week 3–4",
+        "description": "Render live robot sensor sweeps in the browser.",
+        "lessons": [
+          {
+            "id": "l2rw-3",
+            "title": "Drawing Ultrasonic Distance Bars on Canvas",
+            "description": "Plot live centimeter readings onto a browser sonar grid.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "canvas_arc",
+              "canvas_line",
+              "serial_read"
+            ]
+          },
+          {
+            "id": "l2rw-4",
+            "title": "Web Waypoint Grid & Sequence Runner",
+            "description": "Click grid tiles on a webpage to generate and run rover navigation steps.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "array_queue",
+              "async_wait",
+              "motor_step"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-web-mod-3",
+        "title": "Module 3: Web Robotics Command Center Capstone",
+        "duration": "Week 5–6",
+        "description": "Integrate cockpit drive, sonar canvas, and waypoint runner.",
+        "lessons": [
+          {
+            "id": "l2rw-5",
+            "title": "Autonomous Patrol Toggle & Obstacle Counter",
+            "description": "Track detected obstacles and mission duration in a live web sidebar.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "counter_var",
+              "timer_interval",
+              "dom_update"
+            ]
+          },
+          {
+            "id": "l2rw-6",
+            "title": "Capstone: Kone Web Rover Command Center",
+            "description": "Deliver a full browser cockpit with WASD control, Canvas radar, and waypoint queue.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "html5_canvas",
+              "web_serial",
+              "hud_layout"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Web Rover Command Center",
+      "description": "A browser-based robotics cockpit featuring WASD keyboard driving, a live HTML5 Canvas ultrasonic radar display, and a clickable waypoint planner.",
+      "previewBadge": "Capstone: Web Rover Cockpit",
+      "techStack": "HTML5 Canvas + JS + Web Serial + Rover"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: DESKTOP APP DEV IN ELECTRONICS
+  // ==========================================
+  {
+    "id": "course-l2-elec-desktop",
+    "code": "KCA-L2-ELEC-301",
+    "pathway": "Desktop App Dev in Electronics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "electronics",
+    "title": "Desktop Application Development in Electronics for Kids",
+    "tagline": "Build PC data-loggers, serial oscilloscopes, and lab diagnostic tools for circuits.",
+    "ageGroup": "Ages 10–14",
+    "level": "Intermediate+",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "⚡",
+    "color": "#f59e0b",
+    "accentColor": "#d97706",
+    "overview": "Students build desktop engineering utilities that capture high-speed sensor streams, plot voltage waveforms, save CSV lab reports, and automate hardware test sequences.",
+    "prerequisites": "Completion of Junior Software Engineer & System Logic (KCA-KIDS-301) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Desktop Instrumentation Certificate",
+    "skills": [
+      "PC Serial Data Logging",
+      "Waveform Plotting",
+      "CSV Lab Export",
+      "Threshold Calibration",
+      "Automated Pin Diagnostics",
+      "Python / Desktop UI"
+    ],
+    "learningOutcomes": [
+      "Stream analog voltage and sensor values from a microcontroller into a desktop utility",
+      "Plot live time-series waveforms to inspect sensor noise and button bounces",
+      "Compute min, max, and average statistics across recorded hardware sessions",
+      "Export structured CSV experiment logs for school science reports",
+      "Run automated pin-check routines to verify LEDs, buzzers, and sensors"
+    ],
+    "modules": [
+      {
+        "id": "l2-elec-desktop-mod-1",
+        "title": "Module 1: Serial Oscilloscope & Live Metrics",
+        "duration": "Week 1–2",
+        "description": "Capture and visualize real-time circuit voltages.",
+        "lessons": [
+          {
+            "id": "l2ed-1",
+            "title": "PC Serial Monitor & Voltage Converter",
+            "description": "Convert raw 0–1023 ADC counts into 0.0V–5.0V desktop readouts.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "serial_read",
+              "math_divide",
+              "format_float"
+            ]
+          },
+          {
+            "id": "l2ed-2",
+            "title": "Live Rolling Waveform Graph",
+            "description": "Plot continuous sensor samples on a scrolling desktop graph.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "list_buffer",
+              "plot_line",
+              "timer_loop"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-desktop-mod-2",
+        "title": "Module 2: Data Logging & Statistical Analysis",
+        "duration": "Week 3–4",
+        "description": "Record and analyze multi-minute hardware experiments.",
+        "lessons": [
+          {
+            "id": "l2ed-3",
+            "title": "Session Recorder & Min/Max/Mean Analyzer",
+            "description": "Store timed sensor samples in arrays and calculate summary stats.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "lists_append",
+              "math_average",
+              "min_max"
+            ]
+          },
+          {
+            "id": "l2ed-4",
+            "title": "CSV Science Report Generator",
+            "description": "Format recorded timestamps and sensor columns into downloadable CSV files.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "text_join",
+              "for_each",
+              "file_export"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-desktop-mod-3",
+        "title": "Module 3: Hardware Lab Bench Capstone",
+        "duration": "Week 5–6",
+        "description": "Combine oscilloscope, logger, and pin tester in one suite.",
+        "lessons": [
+          {
+            "id": "l2ed-5",
+            "title": "Automated Pin & Sensor Diagnostic Tester",
+            "description": "Sweep through output pins and verify sensor responses automatically.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "for_loop",
+              "digital_write",
+              "status_pass_fail"
+            ]
+          },
+          {
+            "id": "l2ed-6",
+            "title": "Capstone: Kone Desktop Circuit Lab Suite",
+            "description": "Build a desktop instrumentation app with live plotter, stats, and CSV export.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "serial_logger",
+              "live_chart",
+              "csv_report"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Desktop Circuit Lab Suite",
+      "description": "A desktop engineering utility that plots live microcontroller sensor waveforms, computes summary statistics, and exports CSV science logs.",
+      "previewBadge": "Capstone: Desktop Circuit Logger",
+      "techStack": "Desktop App Builder + Python Bridge + Microcontroller"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: DESKTOP APP DEV IN ROBOTICS
+  // ==========================================
+  {
+    "id": "course-l2-robo-desktop",
+    "code": "KCA-L2-ROBO-301",
+    "pathway": "Desktop App Dev in Robotics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "robotics",
+    "title": "Desktop Application Development in Robotics for Kids",
+    "tagline": "Engineer desktop PID tuners, kinematics simulators, and fleet telemetry consoles.",
+    "ageGroup": "Ages 10–14",
+    "level": "Intermediate+",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "🤖",
+    "color": "#0ea5e9",
+    "accentColor": "#0284c7",
+    "overview": "Students build desktop robotics engineering consoles to tune motor speed curves, visualize wheel odometry paths, replay recorded telemetry logs, and test navigation logic before field runs.",
+    "prerequisites": "Completion of Junior Software Engineer & System Logic (KCA-KIDS-301) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Robotics Systems Engineer Certificate",
+    "skills": [
+      "Motor Curve Calibration",
+      "2D Path Odometry Plotter",
+      "Parameter Tuning UI",
+      "Telemetry Replay",
+      "Proportional Control",
+      "Python / Desktop Logic"
+    ],
+    "learningOutcomes": [
+      "Build a desktop parameter tuner to adjust rover turn angles and motor trim live",
+      "Plot estimated 2D rover trajectories from heading and speed commands",
+      "Implement proportional speed control so rovers slow smoothly near walls",
+      "Record and replay sensor telemetry logs to debug maze navigation failures",
+      "Bridge visual configuration panels with Python/C++ firmware constants"
+    ],
+    "modules": [
+      {
+        "id": "l2-robo-desktop-mod-1",
+        "title": "Module 1: Motor Calibration & Trim Console",
+        "duration": "Week 1–2",
+        "description": "Tune physical rover mechanics from a desktop tool.",
+        "lessons": [
+          {
+            "id": "l2rd-1",
+            "title": "Left/Right Motor Trim & Speed Curve Tuner",
+            "description": "Adjust PWM offsets from desktop inputs until the rover drives dead-straight.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "numeric_input",
+              "serial_config",
+              "pwm_trim"
+            ]
+          },
+          {
+            "id": "l2rd-2",
+            "title": "90-Degree Pivot Duration Calibrator",
+            "description": "Test and save exact turn millisecond constants for different floor surfaces.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "variables_set",
+              "timer_test",
+              "preset_save"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-desktop-mod-2",
+        "title": "Module 2: 2D Path Plotter & Proportional Control",
+        "duration": "Week 3–4",
+        "description": "Visualize rover movement and smooth braking.",
+        "lessons": [
+          {
+            "id": "l2rd-3",
+            "title": "2D Odometry Path Visualizer",
+            "description": "Trace estimated X/Y coordinates and heading angles on a desktop map.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "math_trig",
+              "plot_point",
+              "heading_var"
+            ]
+          },
+          {
+            "id": "l2rd-4",
+            "title": "Proportional Wall-Approach Controller",
+            "description": "Scale motor speed proportionally to ultrasonic distance for smooth stops.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "math_map",
+              "logic_clamp",
+              "motor_speed"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-desktop-mod-3",
+        "title": "Module 3: Robotics Engineering Workbench Capstone",
+        "duration": "Week 5–6",
+        "description": "Package calibration, path mapping, and log replay.",
+        "lessons": [
+          {
+            "id": "l2rd-5",
+            "title": "Black-Box Telemetry Recorder & Replay",
+            "description": "Save ultrasonic and motor logs to inspect why a rover turned at each step.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "list_log",
+              "step_replay",
+              "debug_view"
+            ]
+          },
+          {
+            "id": "l2rd-6",
+            "title": "Capstone: Kone Rover Kinematics Workbench",
+            "description": "Deliver a desktop engineering tool for motor tuning, 2D path plotting, and log replay.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "calibration_ui",
+              "odometry_map",
+              "log_analyzer"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Rover Kinematics Workbench",
+      "description": "A desktop robotics workstation for tuning motor trim, plotting 2D rover paths, and replaying ultrasonic navigation logs.",
+      "previewBadge": "Capstone: Robotics Workbench",
+      "techStack": "Desktop Builder + Python/C++ + Rover Kit"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: GAME DEV IN ELECTRONICS
+  // ==========================================
+  {
+    "id": "course-l2-elec-gamedev",
+    "code": "KCA-L2-ELEC-501",
+    "pathway": "Game Dev in Electronics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "electronics",
+    "title": "Game Development in Electronics for Kids",
+    "tagline": "Build custom arcade controllers with real buttons, potentiometers, and LED scoreboards.",
+    "ageGroup": "Ages 8–13",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "⚡",
+    "color": "#f59e0b",
+    "accentColor": "#d97706",
+    "overview": "Students ditch the standard keyboard and build their own physical arcade controllers—wiring tactile pushbuttons, analog dial paddles, and physical LED life bars that react to on-screen game events.",
+    "prerequisites": "Completion of 2D Game Engine & Physics Academy (KCA-KIDS-501) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Hardware Arcade Designer Diploma",
+    "skills": [
+      "Custom Arcade Controllers",
+      "Analog Paddle Mapping",
+      "Hardware-to-Sprite Input",
+      "Physical LED Scoreboards",
+      "Buzzer SFX Triggers",
+      "Input Debouncing"
+    ],
+    "learningOutcomes": [
+      "Wire tactile arcade buttons and rotary potentiometers to steer on-screen game sprites",
+      "Map analog dial positions (0–1023) smoothly to paddle or spaceship X coordinates",
+      "Send game events back to hardware to light physical LED life hearts and buzzers",
+      "Eliminate button bounce glitches so jumps and laser shots trigger reliably",
+      "Design and playtest an original 2D game powered by a custom breadboard controller"
+    ],
+    "modules": [
+      {
+        "id": "l2-elec-gamedev-mod-1",
+        "title": "Module 1: Physical Buttons & Analog Paddles",
+        "duration": "Week 1–2",
+        "description": "Turn breadboard components into game controllers.",
+        "lessons": [
+          {
+            "id": "l2eg-1",
+            "title": "Tactile Jump Button & Debounced Fire Triggers",
+            "description": "Wire physical pushbuttons to make a platformer hero jump and shoot.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "digital_read",
+              "serial_event",
+              "sprite_jump"
+            ]
+          },
+          {
+            "id": "l2eg-2",
+            "title": "Rotary Potentiometer Steering Wheel",
+            "description": "Map a twisting dial knob directly to a spaceship or Pong paddle position.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "analog_read",
+              "math_map",
+              "sprite_set_x"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-gamedev-mod-2",
+        "title": "Module 2: Two-Way Hardware Feedback",
+        "duration": "Week 3–4",
+        "description": "Make the circuit react to in-game hits and power-ups.",
+        "lessons": [
+          {
+            "id": "l2eg-3",
+            "title": "Physical 3-LED Health Bar & Damage Buzzer",
+            "description": "Turn off breadboard LEDs and sound a piezo tone when the player loses a life.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "on_collision",
+              "serial_write",
+              "digital_write"
+            ]
+          },
+          {
+            "id": "l2eg-4",
+            "title": "Light-Sensor Turbo Boost Mechanic",
+            "description": "Wave a hand over an LDR sensor to activate shield mode in-game.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "analog_threshold",
+              "sprite_shield",
+              "timer_buff"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-elec-gamedev-mod-3",
+        "title": "Module 3: Custom Arcade Cabinet Capstone",
+        "duration": "Week 5–6",
+        "description": "Build and showcase a hardware-controlled arcade game.",
+        "lessons": [
+          {
+            "id": "l2eg-5",
+            "title": "2-Player Breadboard Battle Mode",
+            "description": "Support dual button/dial inputs for head-to-head classroom tournaments.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "dual_input",
+              "score_vars",
+              "game_loop"
+            ]
+          },
+          {
+            "id": "l2eg-6",
+            "title": "Capstone: Kone Custom Arcade Controller & Game",
+            "description": "Present an original 2D arcade game driven by a custom-wired physical controller.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "hardware_input",
+              "led_hud",
+              "game_polish"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Custom Arcade Controller & Game",
+      "description": "An original 2D arcade game controlled by a custom breadboard gamepad with rotary dial steering, tactile buttons, and physical LED health lights.",
+      "previewBadge": "Capstone: Hardware Arcade System",
+      "techStack": "2D Game Engine + Breadboard Controller"
+    }
+  },
+  // ==========================================
+  // LEVEL 2: GAME DEV IN ROBOTICS
+  // ==========================================
+  {
+    "id": "course-l2-robo-gamedev",
+    "code": "KCA-L2-ROBO-501",
+    "pathway": "Game Dev in Robotics",
+    "hub": "robotics",
+    "roadmapLevel": 2,
+    "hardwareDomain": "robotics",
+    "title": "Game Development in Robotics for Kids",
+    "tagline": "Design mixed-reality tabletop games where physical robots and digital arenas interact.",
+    "ageGroup": "Ages 8–13",
+    "level": "Intermediate",
+    "duration": "6 Weeks • 12 Interactive Labs",
+    "weeklyCommitment": "2.5 Hours / Week",
+    "icon": "🤖",
+    "color": "#0ea5e9",
+    "accentColor": "#0284c7",
+    "overview": "Students merge 2D game mechanics with physical wheeled robots—creating real-world floor obstacle courses synchronized with digital scoreboards, countdown timers, power-up zones, and robot tag battles.",
+    "prerequisites": "Completion of 2D Game Engine & Physics Academy (KCA-KIDS-501) or equivalent visual coding familiarity.",
+    "certificateTitle": "Level 2 Mixed-Reality Robotics Designer Diploma",
+    "skills": [
+      "Mixed-Reality Game Loops",
+      "Robot Tag & Arena Logic",
+      "Sensor Hit Detection",
+      "Digital Scoreboard Sync",
+      "Autonomous Enemy AI Bots",
+      "Game Balance & Rules"
+    ],
+    "learningOutcomes": [
+      "Synchronize physical robot movements with an on-screen game timer, scoreboard, and sound FX",
+      "Use ultrasonic and IR sensors as physical hit-boxes and checkpoint triggers",
+      "Program an autonomous \"guard bot\" that patrols an arena while players dodge it",
+      "Design fair game rules, power-up cooldowns, and win/loss conditions for physical play",
+      "Host a live mixed-reality robotics game tournament with automated scoring"
+    ],
+    "modules": [
+      {
+        "id": "l2-robo-gamedev-mod-1",
+        "title": "Module 1: Physical-Digital Arena Sync",
+        "duration": "Week 1–2",
+        "description": "Connect rover actions to live game rules and timers.",
+        "lessons": [
+          {
+            "id": "l2rg-1",
+            "title": "Checkpoint Racer: Ultrasonic Gate Triggers",
+            "description": "Trigger digital lap timers and fanfare sounds when the rover passes gates.",
+            "duration": "45 mins",
+            "blocksFocused": [
+              "ultrasonic_trigger",
+              "timer_lap",
+              "play_sound"
+            ]
+          },
+          {
+            "id": "l2rg-2",
+            "title": "Digital Power-Up Cards & Speed Boosts",
+            "description": "Collect on-screen bonuses that temporarily unlock Turbo PWM speed on the rover.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "powerup_timer",
+              "serial_send",
+              "pwm_boost"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-gamedev-mod-2",
+        "title": "Module 2: Autonomous Guard Bots & Laser Tag",
+        "duration": "Week 3–4",
+        "description": "Program robotic opponents and sensor hit detection.",
+        "lessons": [
+          {
+            "id": "l2rg-3",
+            "title": "Patrol Sentinel Bot AI",
+            "description": "Program a second rover to patrol a figure-eight zone and block runner paths.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "patrol_loop",
+              "ultrasonic_detect",
+              "buzzer_alert"
+            ]
+          },
+          {
+            "id": "l2rg-4",
+            "title": "IR / Light-Sensor Robot Tag Hit-Boxes",
+            "description": "Register shield hits on the digital scoreboard when tagged by a light beam.",
+            "duration": "50 mins",
+            "blocksFocused": [
+              "sensor_hit",
+              "health_decrement",
+              "ui_flash"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "l2-robo-gamedev-mod-3",
+        "title": "Module 3: Mixed-Reality Robo-Arena Capstone",
+        "duration": "Week 5–6",
+        "description": "Build a complete physical-digital tabletop game.",
+        "lessons": [
+          {
+            "id": "l2rg-5",
+            "title": "Arena Sudden-Death & Victory Celebrations",
+            "description": "Trigger synchronized rover victory spins and screen confetti at game end.",
+            "duration": "55 mins",
+            "blocksFocused": [
+              "win_condition",
+              "rover_spin",
+              "celebration_fx"
+            ]
+          },
+          {
+            "id": "l2rg-6",
+            "title": "Capstone: Kone Robo-Arena Mixed-Reality Game",
+            "description": "Launch a tabletop robotics game with live digital HUD, checkpoints, and autonomous hazards.",
+            "duration": "60 mins",
+            "blocksFocused": [
+              "mixed_reality_loop",
+              "sensor_scoring",
+              "arena_design"
+            ]
+          }
+        ]
+      }
+    ],
+    "capstoneProject": {
+      "title": "Kone Robo-Arena Mixed-Reality Game",
+      "description": "A physical-digital tabletop robotics game combining wheeled rovers, sensor checkpoints, autonomous guard bots, and a live arcade HUD.",
+      "previewBadge": "Capstone: Mixed-Reality Robo-Arena",
+      "techStack": "2D Game Engine + 2WD Rovers + Ultrasonic/IR Sensors"
+    }
+  }
 ];
 
 export const getCourseByPathway = (pathway: Pathway): KidsCourse | undefined => {

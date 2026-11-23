@@ -176,7 +176,22 @@ const PATHWAY_WORLDS: Record<Pathway, { dark: WorldStyle; light: WorldStyle }> =
 
 const HUB_PATHWAYS: Record<HubType, Pathway[]> = {
   coding: ['Fundamentals', 'Application Dev', 'Mobile App Dev', 'Desktop App Dev', 'Web App Dev', 'Game Dev'],
-  robotics: ['Robotics (Robotics 4 Kids)', 'Electronics (Robotics 4 Kids)'],
+  robotics: [
+    'Robotics (Robotics 4 Kids)',
+    'Electronics (Robotics 4 Kids)',
+    'Fundamentals in Electronics',
+    'Fundamentals in Robotics',
+    'App Dev in Electronics',
+    'App Dev in Robotics',
+    'Mobile App Dev in Electronics',
+    'Mobile App Dev in Robotics',
+    'Web App Dev in Electronics',
+    'Web App Dev in Robotics',
+    'Desktop App Dev in Electronics',
+    'Desktop App Dev in Robotics',
+    'Game Dev in Electronics',
+    'Game Dev in Robotics'
+  ],
   ai: ['Data Science (AI 4 Kids)', 'ML (AI 4 Kids)', 'AI (AI 4 Kids)']
 };
 
