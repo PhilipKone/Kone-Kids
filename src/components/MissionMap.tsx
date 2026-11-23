@@ -14,7 +14,7 @@ import {
   Smartphone,
   Monitor,
   Globe,
-  Gamepad2,
+  Gamepad2, Layers,
   BarChart3,
   Cpu,
   Sparkles,
@@ -49,6 +49,21 @@ export const getPathwayIcon = (pathway: string) => {
     case 'AI (AI 4 Kids)': return Sparkles;
     case 'Robotics (Robotics 4 Kids)': return Bot;
     case 'Electronics (Robotics 4 Kids)': return Zap;
+    case 'Application Dev': return Layers;
+    case 'Fundamentals in Electronics':
+    case 'App Dev in Electronics':
+    case 'Mobile App Dev in Electronics':
+    case 'Web App Dev in Electronics':
+    case 'Desktop App Dev in Electronics':
+    case 'Game Dev in Electronics':
+      return Zap;
+    case 'Fundamentals in Robotics':
+    case 'App Dev in Robotics':
+    case 'Mobile App Dev in Robotics':
+    case 'Web App Dev in Robotics':
+    case 'Desktop App Dev in Robotics':
+    case 'Game Dev in Robotics':
+      return Bot;
     default: return Brain;
   }
 };
@@ -103,12 +118,64 @@ const PATHWAY_WORLDS: Record<Pathway, { dark: WorldStyle; light: WorldStyle }> =
   'Electronics (Robotics 4 Kids)': {
     dark: { color: '#fbbf24', glow: 'rgba(251, 191, 36, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: 'âš¡', pathStyle: 'dots' },
     light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(217, 119, 6, 0.03) 1px, transparent 0)', icon: 'âš¡', pathStyle: 'dots' }
+  },
+  'Application Dev': {
+    dark: { color: '#10b981', glow: 'rgba(16, 185, 129, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🧩', pathStyle: 'curve' },
+    light: { color: '#059669', glow: 'rgba(5, 150, 105, 0.1)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '🧩', pathStyle: 'curve' }
+  },
+  'Fundamentals in Electronics': {
+    dark: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' }
+  },
+  'Fundamentals in Robotics': {
+    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' },
+    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' }
+  },
+  'App Dev in Electronics': {
+    dark: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' }
+  },
+  'App Dev in Robotics': {
+    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' },
+    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' }
+  },
+  'Mobile App Dev in Electronics': {
+    dark: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' }
+  },
+  'Mobile App Dev in Robotics': {
+    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' },
+    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' }
+  },
+  'Web App Dev in Electronics': {
+    dark: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' }
+  },
+  'Web App Dev in Robotics': {
+    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' },
+    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' }
+  },
+  'Desktop App Dev in Electronics': {
+    dark: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' }
+  },
+  'Desktop App Dev in Robotics': {
+    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' },
+    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' }
+  },
+  'Game Dev in Electronics': {
+    dark: { color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' },
+    light: { color: '#d97706', glow: 'rgba(217, 119, 6, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '⚡', pathStyle: 'circuit' }
+  },
+  'Game Dev in Robotics': {
+    dark: { color: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', pattern: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' },
+    light: { color: '#0284c7', glow: 'rgba(2, 132, 199, 0.08)', pattern: 'radial-gradient(circle, rgba(14,165,233,0.05) 1px, transparent 0)', icon: '🤖', pathStyle: 'circuit' }
   }
 };
 
 
 const HUB_PATHWAYS: Record<HubType, Pathway[]> = {
-  coding: ['Fundamentals', 'Mobile App Dev', 'Desktop App Dev', 'Web App Dev', 'Game Dev'],
+  coding: ['Fundamentals', 'Application Dev', 'Mobile App Dev', 'Desktop App Dev', 'Web App Dev', 'Game Dev'],
   robotics: ['Robotics (Robotics 4 Kids)', 'Electronics (Robotics 4 Kids)'],
   ai: ['Data Science (AI 4 Kids)', 'ML (AI 4 Kids)', 'AI (AI 4 Kids)']
 };

@@ -30,6 +30,8 @@ export interface KidsCourse {
   code: string; // e.g. KCA-KIDS-101
   pathway: Pathway;
   hub: 'coding' | 'robotics' | 'ai';
+  roadmapLevel?: 1 | 2 | 3;
+  hardwareDomain?: 'software' | 'electronics' | 'robotics';
   title: string;
   tagline: string;
   ageGroup: string; // e.g. "Ages 6–10"
@@ -1383,6 +1385,119 @@ export const KIDS_COURSES: KidsCourse[] = [
         ]
       }
     ]
+  }
+,
+  // ==========================================
+  // 1B. CODING: APPLICATION DEVELOPMENT
+  // ==========================================
+  {
+    id: 'course-kids-app-dev',
+    code: 'KCA-KIDS-102',
+    pathway: 'Application Dev',
+    hub: 'coding',
+    roadmapLevel: 1,
+    hardwareDomain: 'software',
+    title: 'Application Development for Kids',
+    tagline: 'Design interactive user interfaces, event-driven tools, and everyday utility apps from scratch.',
+    ageGroup: 'Ages 8–12',
+    level: 'Beginner',
+    duration: '6 Weeks • 12 Interactive Labs',
+    weeklyCommitment: '2 Hours / Week',
+    icon: '\u{1F9E9}',
+    color: '#10b981',
+    accentColor: '#059669',
+    overview: 'Bridging visual coding fundamentals and real-world software engineering, this course teaches students how everyday apps work under the hood. Kids build interactive forms, decision trees, unit converters, and personal productivity tools using event-driven logic and clean UI layouts.',
+    prerequisites: 'Completion of Junior Logic & Computational Thinking (KCA-KIDS-101) or basic familiarity with loops and variables.',
+    certificateTitle: 'Junior Application Developer Certificate',
+    skills: [
+      'Event-Driven Programming',
+      'UI Layout & Controls',
+      'Conditional Logic (If/Else)',
+      'Input Validation',
+      'State Management',
+      'App Testing & UX'
+    ],
+    learningOutcomes: [
+      'Design intuitive app screens with buttons, text inputs, sliders, and status displays',
+      'Write conditional If/Else logic to respond dynamically to user choices and form inputs',
+      'Build multi-screen navigation flows between menus, tools, and summary views',
+      'Store and update app state such as task lists, timers, and user preferences',
+      'Test apps for edge cases and refine usability based on peer feedback'
+    ],
+    modules: [
+      {
+        id: 'appdev-mod-1',
+        title: 'Module 1: App Screens, Buttons & Events',
+        duration: 'Week 1–2',
+        description: 'Understand how apps listen for clicks, toggles, and user input events.',
+        lessons: [
+          {
+            id: 'appdev-les-1',
+            title: 'Anatomy of an App: Screens, Widgets & Event Handlers',
+            description: 'Build an interactive greeting card and mood-switcher app using click events.',
+            duration: '45 mins',
+            blocksFocused: ['on_click', 'set_text', 'set_color']
+          },
+          {
+            id: 'appdev-les-2',
+            title: 'Smart Forms & Live Input Echo',
+            description: 'Capture user names and numbers from input boxes and validate empty fields.',
+            duration: '45 mins',
+            blocksFocused: ['get_input', 'if_else', 'text_join']
+          }
+        ]
+      },
+      {
+        id: 'appdev-mod-2',
+        title: 'Module 2: Decision Engines & Smart Tools',
+        duration: 'Week 3–4',
+        description: 'Combine Boolean operators and formulas to build practical everyday tools.',
+        lessons: [
+          {
+            id: 'appdev-les-3',
+            title: 'Unit & Currency Converter App',
+            description: 'Program real-time temperature, distance, and GHS/USD conversion calculators.',
+            duration: '50 mins',
+            blocksFocused: ['math_arithmetic', 'variables_set', 'round_number']
+          },
+          {
+            id: 'appdev-les-4',
+            title: 'Study Helper & Quiz Decision Tree',
+            description: 'Create an adaptive study-buddy app that recommends topics based on quiz answers.',
+            duration: '50 mins',
+            blocksFocused: ['logic_compare', 'logic_operation', 'switch_screen']
+          }
+        ]
+      },
+      {
+        id: 'appdev-mod-3',
+        title: 'Module 3: Lists, Timers & Capstone App Suite',
+        duration: 'Week 5–6',
+        description: 'Manage dynamic item lists and package a complete multi-tool student planner.',
+        lessons: [
+          {
+            id: 'appdev-les-5',
+            title: 'Daily Task Manager & Focus Timer',
+            description: 'Add, check off, and clear homework tasks alongside a countdown study timer.',
+            duration: '55 mins',
+            blocksFocused: ['lists_create', 'lists_append', 'timer_loop']
+          },
+          {
+            id: 'appdev-les-6',
+            title: 'Capstone Showcase: Student Life Organizer App',
+            description: 'Combine your task list, focus timer, and quick converter into one polished app.',
+            duration: '60 mins',
+            blocksFocused: ['multi_screen_nav', 'state_persistence', 'ui_polish']
+          }
+        ]
+      }
+    ],
+    capstoneProject: {
+      title: 'Kone Student Life Organizer',
+      description: 'A multi-screen utility application combining a homework checklist, Pomodoro focus timer, and unit converter with custom color themes.',
+      previewBadge: 'Capstone: Multi-Tool Utility App',
+      techStack: 'Kone Kids Visual App Builder & Event Logic'
+    }
   }
 ];
 
