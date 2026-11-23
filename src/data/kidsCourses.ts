@@ -1436,14 +1436,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             title: 'Anatomy of an App: Screens, Widgets & Event Handlers',
             description: 'Build an interactive greeting card and mood-switcher app using click events.',
             duration: '45 mins',
-            blocksFocused: ['on_click', 'set_text', 'set_color']
+            blocksFocused: ['On Click', 'Set Title', 'Set Bg Color']
           },
           {
             id: 'appdev-les-2',
             title: 'Smart Forms & Live Input Echo',
             description: 'Capture user names and numbers from input boxes and validate empty fields.',
             duration: '45 mins',
-            blocksFocused: ['get_input', 'if_else', 'text_join']
+            blocksFocused: ['Text Input', 'Controls If', 'TTS Speak']
           }
         ]
       },
@@ -1458,14 +1458,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             title: 'Unit & Currency Converter App',
             description: 'Program real-time temperature, distance, and GHS/USD conversion calculators.',
             duration: '50 mins',
-            blocksFocused: ['math_arithmetic', 'variables_set', 'round_number']
+            blocksFocused: ['Math Number', 'Variables Set', 'Logic Compare']
           },
           {
             id: 'appdev-les-4',
             title: 'Study Helper & Quiz Decision Tree',
             description: 'Create an adaptive study-buddy app that recommends topics based on quiz answers.',
             duration: '50 mins',
-            blocksFocused: ['logic_compare', 'logic_operation', 'switch_screen']
+            blocksFocused: ['Controls If', 'Logic Compare', 'Sound Play Effect']
           }
         ]
       },
@@ -1480,14 +1480,14 @@ export const KIDS_COURSES: KidsCourse[] = [
             title: 'Daily Task Manager & Focus Timer',
             description: 'Add, check off, and clear homework tasks alongside a countdown study timer.',
             duration: '55 mins',
-            blocksFocused: ['lists_create', 'lists_append', 'timer_loop']
+            blocksFocused: ['Variables Set', 'Wait Timer', 'DB Save']
           },
           {
             id: 'appdev-les-6',
             title: 'Capstone Showcase: Student Life Organizer App',
             description: 'Combine your task list, focus timer, and quick converter into one polished app.',
             duration: '60 mins',
-            blocksFocused: ['multi_screen_nav', 'state_persistence', 'ui_polish']
+            blocksFocused: ['On Click', 'Variables Set', 'DB Save']
           }
         ]
       }
