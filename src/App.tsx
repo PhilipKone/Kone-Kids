@@ -270,7 +270,7 @@ function Home() {
                     }}
                   >
                     <CodingLabIcon size={19} className="playful-svg-icon" />
-                    <span>{t('nav.coding', 'Coding Lab')}</span>
+                    <span>{t('nav.coding', 'Coding')}</span>
                   </Link>
                   <Link
                     to="/robotics"
@@ -291,7 +291,7 @@ function Home() {
                     }}
                   >
                     <RoboticsLabIcon size={19} className="playful-svg-icon" />
-                    <span>{t('nav.robotics', 'Robotics Lab')}</span>
+                    <span>{t('nav.robotics', 'Robotics')}</span>
                   </Link>
                   <Link
                     to="/ai"
@@ -312,7 +312,7 @@ function Home() {
                     }}
                   >
                     <AIStudioIcon size={19} className="playful-svg-icon" />
-                    <span>{t('nav.aiLab', 'AI Studio')}</span>
+                    <span>{t('nav.aiLab', 'AI')}</span>
                   </Link>
                 </div>
               </div>
@@ -1254,7 +1254,7 @@ function AppContent() {
               path="/coding/mission/:missionId" 
               element={
                 <ProgramDetails 
-                  title="Coding Lab" 
+                  title="Coding" 
                   image="/programs/coding.webp" 
                   description="Master the mission!" 
                   accentColor="var(--kids-orange)"
@@ -1265,7 +1265,7 @@ function AppContent() {
               path="/robotics/mission/:missionId" 
               element={
                 <ProgramDetails 
-                  title="Robotics Lab" 
+                  title="Robotics" 
                   image="/programs/robotics.webp" 
                   description="Build and program your robot!" 
                   accentColor="var(--kids-blue)"
@@ -1276,7 +1276,7 @@ function AppContent() {
               path="/ai/mission/:missionId" 
               element={
                 <ProgramDetails 
-                  title="AI Studio" 
+                  title="AI" 
                   image="/programs/ai.webp" 
                   description="Train your first AI model!" 
                   accentColor="#a855f7"
